@@ -9,10 +9,11 @@ public class SceneLoaderScript : MonoBehaviour {
 	public string[] levels;
 	public string sceneToRun;
 
-	public string[] questText;
-
 	// Use this for initialization
 	void Start () {
+		//the example string for storing levels
+		//it turns out that things have to be, um, exactly the name of the scene,
+		//which makes sense. So, if you're looking at this later, be super precise.
 		string[] levels = {"QuestSceneTest", "Blue", "Green", "Red"};
 		sceneToRun = levels[Random.Range(0, (levels.Length -1 ) )];
 
@@ -27,8 +28,6 @@ public class SceneLoaderScript : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit)) {
 
 			if (hit.collider.name.Contains ("Blue")) {
-
-				//if (Input.GetKey (KeyCode.Space)){
 				SceneManager.LoadScene (sceneToRun);
 			}
 		}
