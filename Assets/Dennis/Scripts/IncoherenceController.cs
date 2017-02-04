@@ -10,15 +10,9 @@ public class IncoherenceController : MonoBehaviour {
 	public float incoherence = 0.0f;
 
 	// A list of all of my randomizers
-	List<GameObject> incoherencies;
+	public List<GameObject> incoherencies;
 
-	public void AddIncoherencyToList(GameObject i) {
-		if (i != null) {
-			incoherencies.Add(i);
-		}
-	}
-
-	public void ModifyIncoherence(float amount) {
+	void ModifyIncoherence(float amount) {
 		incoherence += amount;
 		amount = Mathf.Clamp(amount, 0f, 1f);
 	}

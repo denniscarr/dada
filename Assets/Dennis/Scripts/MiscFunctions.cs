@@ -25,4 +25,10 @@ public class MiscFunctions : MonoBehaviour {
 		Debug.LogError("Could not find a game object named "+searchName+" in "+root.name+" or its children.");
 		return null;
 	}
+
+
+	// Maps a value between a new range of two numbers.
+	public static float Map(float value, float inputMin, float inputMax, float outputMin, float outputMax) {
+		return (value - inputMin) * (outputMax - outputMin) / (inputMax - inputMin) + outputMin;
+	}
 }
