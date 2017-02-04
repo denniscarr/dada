@@ -37,26 +37,25 @@ public class Incoherence : MonoBehaviour {
 		}
 
 		currentFrequency = MapIncoherence(frequencyMax, frequencyMin);
+		print("Current frequency: " + currentFrequency);
 			
 		// See if it is time to express my incoherence
 		if (timeSinceLastIncoherence >= currentFrequency) {
-			print("Got past");
-
 			ExpressIncoherence();
 			timeSinceLastIncoherence = 0.0f;
 		}
 
-		timeSinceLastIncoherence += Time.time;
+		timeSinceLastIncoherence += Time.deltaTime;
 	}
 
 
 	// Remaps incoherence from between 0 and 1 to between any two values.
 	public float MapIncoherence(float min, float max) {
-		return MiscFunctions.Map(myController.incoherence, 0f, 1f, min, max);
+		return MiscFunctions.Map(myController.incoherence, threshold, 1f, min, max);
 	}
 
 
 	public virtual void ExpressIncoherence() {
-		print("Expressed (Base)");
+		print ("Expressed");
 	}
 }

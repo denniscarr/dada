@@ -23,7 +23,6 @@ public class UnexpectedlyAddExplosionForce : Incoherence {
 
 	public override void ExpressIncoherence() {
 		base.ExpressIncoherence();
-		print("Expressed (Sub)");
 		rb.AddExplosionForce(MapIncoherence(forceMin, forceMax), transform.position, MapIncoherence(rangeMin, rangeMax));
 	}
 }
