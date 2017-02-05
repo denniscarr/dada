@@ -12,6 +12,7 @@ ModelImporter:
     2300000: mesh_1_Great_Stellated_Dodecahedron
     3300000: mesh_1_Great_Stellated_Dodecahedron
     4300000: mesh_1_Great_Stellated_Dodecahedron
+    6400000: mesh_1_Great_Stellated_Dodecahedron
   materials:
     importMaterials: 1
     materialName: 0
@@ -38,7 +39,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
