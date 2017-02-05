@@ -37,6 +37,43 @@ public class Incoherence : MonoBehaviour {
 		return MiscFunctions.Map(myController.incoherenceMagnitude, 0f, 1f, min, max);
 	}
 
+	protected Vector3 ModifyVector3(float maxChange) {
+		float magFactor = MapIncoherenceMagnitude (0, maxChange);
+		return Random.insideUnitSphere * Random.Range(-magFactor, magFactor);
+	}
+
+	protected Vector3 ModifyVector3(float maxChange, bool stayPositive) {
+		if (stayPositive) {
+			float magFactor = MapIncoherenceMagnitude (0, maxChange);
+			return Random.insideUnitSphere * magFactor;
+		} else {
+			return ModifyVector3 (maxChange);
+		}
+	}
+
+	protected bool ModifyBool(bool boolToModify) {
+		float rand = Random.Range (0f, 1f);
+		if (rand > myController.incoherenceMagnitude) {
+			print ("change bool failed");
+			return boolToModify;
+		} else {
+			print ("change bool succeeded");
+			return !boolToModify;
+		}
+	}
+
+	protected Quaternion ModifyQuaternion(Vector3 eulers, float maxChange) {
+		float magFactor = MapIncoherenceMagnitude (0, maxChange);
+		Vector3 tempVect = eulers;
+		tempVect += Random.insideUnitSphere * Random.Range(-magFactor, magFactor);
+		return Quaternion.Euler (tempVect);
+	}
+
+	protected float ModifyFloat(float maxChange) {
+		float magFactor = MapIncoherenceMagnitude (0, maxChange);
+		return Random.Range(-magFactor, magFactor);
+	}
+
 
 	// This function contains the stuff that actually happens when this incoherence is expressed.
 	// What it actually does depends on the extending script.
