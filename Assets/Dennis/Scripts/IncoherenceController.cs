@@ -39,7 +39,7 @@ public class IncoherenceController : MonoBehaviour {
 				}
 
 				// Reset probability to 0.
-				incoherenceProbability = 0f;
+//				incoherenceProbability = 0f;
 			}
 
 			timeSinceLastCheck = 0f;
