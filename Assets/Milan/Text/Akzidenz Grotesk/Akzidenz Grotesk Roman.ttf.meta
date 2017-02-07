@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 9af4e1ba21bed4cf4b0c3bf68e8a04c6
+timeCreated: 1485976442
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Akzidenz Grotesk Roman
+  fontNames:
+  - Akzidenz Grotesk Roman
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 8ee1e3c29a70146f984cae4b5f872a5e, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

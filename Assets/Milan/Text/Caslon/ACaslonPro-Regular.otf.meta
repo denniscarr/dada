@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 4faa0091017bf4f27a53449185301af1
+timeCreated: 1485976441
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Adobe Caslon Pro
+  fontNames:
+  - Adobe Caslon Pro
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
