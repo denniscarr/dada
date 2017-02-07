@@ -45,7 +45,7 @@ public class Incoherence : MonoBehaviour {
 	protected Vector3 ModifyVector3(float maxChange, bool stayPositive) {
 		if (stayPositive) {
 			float magFactor = MapIncoherenceMagnitude (0, maxChange);
-			return Random.insideUnitSphere * magFactor;
+			return new Vector3 (Random.Range (0, magFactor), Random.Range (0, magFactor), Random.Range (0, magFactor));
 		} else {
 			return ModifyVector3 (maxChange);
 		}
@@ -54,10 +54,8 @@ public class Incoherence : MonoBehaviour {
 	protected bool ModifyBool(bool boolToModify) {
 		float rand = Random.Range (0f, 1f);
 		if (rand > myController.incoherenceMagnitude) {
-			print ("change bool failed");
 			return boolToModify;
 		} else {
-			print ("change bool succeeded");
 			return !boolToModify;
 		}
 	}
@@ -66,6 +64,13 @@ public class Incoherence : MonoBehaviour {
 		float magFactor = MapIncoherenceMagnitude (0, maxChange);
 		Vector3 tempVect = eulers;
 		tempVect += Random.insideUnitSphere * Random.Range(-magFactor, magFactor);
+		return Quaternion.Euler (tempVect);
+	}
+
+	protected Quaternion ModifyQuaternion(Vector3 eulers, float maxChange, bool stayPositive) {
+		float magFactor = MapIncoherenceMagnitude (0, maxChange);
+		Vector3 tempVect = eulers;
+		tempVect += Random.insideUnitSphere * Random.Range(0, magFactor);
 		return Quaternion.Euler (tempVect);
 	}
 
