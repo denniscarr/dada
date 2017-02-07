@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TextFormatting : MonoBehaviour {
+public class TextStyling : MonoBehaviour {
 
 	TextMesh Text;
 	public float speed;
