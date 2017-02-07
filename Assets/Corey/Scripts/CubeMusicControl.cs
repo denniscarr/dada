@@ -22,17 +22,19 @@ public class CubeMusicControl : MonoBehaviour {
 			// rotate cube 1
 			// switch start time to orig. start time + time/4
 
-			SoundCubes [1].transform.Rotate (new Vector3 (0, 90f, 0));
+			SoundCubes [0].transform.Rotate (new Vector3 (0, 90f, 0));
 
 		} else if (Input.GetKeyDown (KeyCode.Alpha2)) {
 			// rotate cube 2
+			SoundCubes [1].transform.Rotate (new Vector3 (0, 90f, 0));
 		} else if (Input.GetKeyDown (KeyCode.Alpha3)) {
 			// rotate cube 3
+			SoundCubes [2].transform.Rotate (new Vector3 (0, 90f, 0));
 		}  
 
 		if ( Input.GetKeyDown(KeyCode.S)) {
 			for (int i = 0; i < SoundCubes.Length; i ++){
-				SoundCubes[i].GetComponent<CS_MusicShifter>().PlayCubeClip();
+				SoundCubes[i].GetComponent<CS_MusicRotate>().PlayCubeClip();
 			}
 		}
 

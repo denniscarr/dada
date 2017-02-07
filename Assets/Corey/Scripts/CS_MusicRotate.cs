@@ -14,8 +14,12 @@ public class CS_MusicRotate : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
 		audioSource = gameObject.GetComponent<AudioSource> ();
-		audioSource.PlayScheduled(audioSource.clip.length * thisCubeRotation);
+		thisCubeRotation = Mathf.Abs(transform.rotation.eulerAngles.y / 360f);
+		thisClipPosition = audioSource.clip.length * (thisCubeRotation / 16f);
+
+		audioSource.PlayScheduled(AudioSettings.dspTime + thisClipPosition);
 	}
 
 	// Update is called once per frame
@@ -34,7 +38,7 @@ public class CS_MusicRotate : MonoBehaviour {
 
 
 
-		yield return new WaitForSeconds((thisSource.clip.length - thisSource.time)/16f);
+		yield return new WaitForSeconds((thisSource.clip.length - thisSource.time)/32f);
 		thisSource.clip = audioClipPool[clipIndex];
 
 		thisSource.Play();
@@ -43,7 +47,13 @@ public class CS_MusicRotate : MonoBehaviour {
 	*/
 
 	public void PlayCubeClip () {
-		audioSource.PlayScheduled(audioSource.clip.length * thisCubeRotation);
+		thisClipPosition = audioSource.clip.length * (thisCubeRotation / 16f);
+		audioSource.PlayScheduled(AudioSettings.dspTime + thisClipPosition);
 
+	}
+
+	public void RotateCube() {
+		
+		gameObject.transform.Rotate (new Vector3 (0f, 90f, 0f));
 	}
 }

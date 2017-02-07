@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: a954e6dc0fe5e4cefab8fd426d52ab4d
+timeCreated: 1485976442
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Akzidenz Grotesk Light
+  fontNames:
+  - Akzidenz Grotesk Light
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
