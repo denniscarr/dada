@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CountThePossblities : MonoBehaviour {
+public class CountThePossblitiesBackup : MonoBehaviour {
 
 	int process = 1;
 	int move = 0;
