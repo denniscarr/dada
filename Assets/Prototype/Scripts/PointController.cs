@@ -2,111 +2,114 @@
 using System.Collections;
 
 public class PointController : MonoBehaviour {
+	
 	bool isCarrying;
-	private Transform t_carried;
-	// Use this for initialization
+	private Transform carriedObject;	// The transform of the carried object
+
+	public float interactionRange = 5f;	// How close an object needs to be for the player to interact with it.
+	public float throwForce = 100f;
+
+	Vector3 carriedObjectSavedScale;
+
+
 	void Start () {
 		isCarrying = false;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		//Debug.Log(Input.mousePosition);
-		RaycastHit hit;
-		//transform.position = ray.origin + new Vector3();
 
-//		if(Physics.Raycast(ray,out hit)){
-//			
-//			if(hit.collider.name.Contains("Cube")){
-//				
-//				if(Input.GetMouseButtonDown(0)){
-//					Transform t = hit.collider.transform;
-//					//Debug.Log(hit.collider.name);
-//					if(t.parent == transform.parent){
-//						Debug.Log("throw "+hit.collider.name);
-//						//Ray ray2 = new Ray(,)
-//						//t_carried = t;
-//						//isCarrying = true;
-//
-//						hit.rigidbody.useGravity = true;
-//						//hit.collider.isTrigger = false;
-//						t.GetComponent<Rigidbody>().AddForce(-transform.forward*500);
-//
-//						hit.transform.SetParent(transform.root.parent);
-//						hit.transform.localScale = Vector3.one;
-//
-//					}else{
-//						Debug.Log("grap");
-//						t.SetParent(transform.parent);
-//						//t.GetComponent<BoxCollider>().enabled = false;
-//						//hit.collider.attachedRigidbody.
-//						//hit.collider.isTrigger = true;
-//						hit.rigidbody.isKinematic = false;
-//						t.localScale = 0.01f*Vector3.one;
-//						//t.localRotation = Quaternion.Euler(45f,0f,45f);
-//						t.localPosition = transform.parent.Find("Cylinder").localPosition+new Vector3(0,0.015f,0);
-//					}
-//				}
-//
-//			}
-//
-//		}
-		if (Physics.Raycast(ray,out hit,Mathf.Infinity,4)){
-			//Debug.Log(hit.collider.name);
-			if(hit.collider.name.Equals("Wall")){
+
+	void Update () {
+
+		// Get all the objects intercepting a ray from the camera to the cursor's position.
+		RaycastHit[] raycastHits = Physics.RaycastAll (Camera.main.ScreenPointToRay(Input.mousePosition), interactionRange);
+
+		// Iterate through those objects.
+		foreach( RaycastHit hit in raycastHits)
+		{
+			// Update cursor object's position.
+			if (hit.collider.name.Equals("Player Wall Rear")) {
 				transform.position = hit.point;
 			}
-		}
 
-		if(isCarrying){
+			// If the player is carrying an object, move the object to the cursor's position.
+			if (isCarrying) {
+				carriedObject.localPosition = transform.localPosition;
+			}
 
-			t_carried.localPosition = transform.localPosition;
-		}
+			/* OBJECT INTERACTION */
+			if (Input.GetMouseButtonDown (0))
+			{
+				if (isCarrying) {
+					ThrowObject ();
+				} else {
+					print ("Clicked on " + hit.transform.name);
 
-		Debug.DrawRay(ray.origin,ray.direction);
-		RaycastHit hit2;
-		//default mask ignoreCast
-		if (Physics.Raycast(ray,out hit2,Mathf.Infinity)){
-			//Debug.Log("4： "+hit2.collider.name);
-			if(hit2.collider.name.Contains("Cube")){
-				//transform.position = hit.point;
-				if(Input.GetMouseButtonDown(0)){
-					Transform t = hit2.collider.transform;
-					if(t.parent == transform.parent){
-						Debug.Log("drag "+hit2.collider.name);
+					// Make sure this object can be interacted with.
+					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+					if (interactionSettings != null) {
+						if (interactionSettings.ableToBeCarried) {
+							PickUpObject (hit.transform);
+						}
 
-						//Ray ray2 = new Ray(,)
-						//t_carried = t;
-						isCarrying = false;
-
-						t.localPosition -= (t.position - Camera.main.transform.position).normalized*0.1f;
-						hit2.rigidbody.useGravity = true;
-						//hit.collider.isTrigger = false;
-						t.GetComponent<Rigidbody>().AddForce(-transform.forward*500);
-
-						hit2.transform.SetParent(transform.root.parent);
-						hit2.transform.localScale = Vector3.one;
-
-					}else{
-						Debug.Log("grap");
-						isCarrying = true;
-						t.SetParent(transform.parent);
-						t_carried = t;
-						//t.GetComponent<BoxCollider>().enabled = false;
-						//hit.collider.attachedRigidbody.
-						//hit.collider.isTrigger = true;
-						hit2.rigidbody.isKinematic = false;
-						t.localScale = 0.01f*Vector3.one;
-						Physics.IgnoreCollision(transform.parent.GetComponent<Collider>(), hit2.collider);
-						//t.localRotation = Quaternion.Euler(45f,0f,45f);
-						t.localPosition = transform.localPosition;//transform.parent.Find("Cylinder").localPosition+new Vector3(0,0.015f,0);
+						if (interactionSettings.usable) {
+							hit.collider.BroadcastMessage ("UsedByPlayer");
+						}
 					}
 				}
 			}
 		}
-
 	}
 
+
+	void PickUpObject(Transform t)
+	{
+		Debug.Log("Player picked up "+ t.name);
+
+		isCarrying = true;
+
+		carriedObject = t;
+
+		carriedObjectSavedScale = carriedObject.localScale;
+		Vector3 newScale = carriedObjectSavedScale * 0.2f;
+		t.localScale = newScale;
+
+		t.SetParent(transform.parent);
+
+		// Disable any colliders on the picked up object
+		Collider[] colliders = t.GetComponentsInChildren<Collider> ();
+		foreach (Collider c in colliders) {
+			c.enabled = false;
+//			c.isTrigger = true;
+		}
+
+		t.GetComponentInChildren<Rigidbody> ().isKinematic = true;
+
+//		Physics.IgnoreCollision(transform.parent.GetComponent<Collider>(), hit2.collider);
+		//t.localRotation = Quaternion.Euler(45f,0f,45f);
+		t.localPosition = transform.localPosition;//transform.parent.Find("Cylinder").localPosition+new Vector3(0,0.015f,0);
+	}
+
+
+	void ThrowObject() {
+		
+		Debug.Log("Player threw "+carriedObject);
+
+		//Ray ray2 = new Ray(,)
+		//t_carried = t;
+		isCarrying = false;
+
+		carriedObject.position -= (carriedObject.position - Camera.main.transform.position).normalized*-3f;
+		carriedObject.transform.parent = null;
+
+		// Reenable any colliders on the picked up object
+		Collider[] colliders = carriedObject.GetComponentsInChildren<Collider> ();
+		foreach (Collider c in colliders) {
+			c.enabled = true;
+		}
+
+		carriedObject.GetComponent<Rigidbody> ().useGravity = true;
+		carriedObject.GetComponent<Rigidbody> ().isKinematic = false;
+		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce, Camera.main.transform.position, 10f);
+
+		carriedObject.transform.localScale = carriedObjectSavedScale;
+	}
 }

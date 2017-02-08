@@ -53,7 +53,6 @@ public class IncoherenceController : MonoBehaviour {
 
 
 	void LateUpdate() {
-		print ("update");
 		Vector3 clampPos = new Vector3 (Mathf.Clamp(transform.root.position.x, -100f, 100f), Mathf.Clamp(transform.root.position.y, 0f, 30f), Mathf.Clamp(transform.root.position.z, -100f, 100f));
 		transform.root.position = clampPos;
 	}

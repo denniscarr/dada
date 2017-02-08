@@ -18,20 +18,20 @@ public class ViewController : MonoBehaviour {
 		_translation = translation;
 	}
 
-	void OnCollisionEnter(Collision other){
-		Debug.Log(other.collider.name+" enter");
-		if(other.collider.name.Contains("Cube")){
-			//isStop = true;
-		}
-	}
+//	void OnCollisionEnter(Collision other){
+//		Debug.Log(other.collider.name+" enter");
+//		if(other.collider.name.Contains("Cube")){
+//			//isStop = true;
+//		}
+//	}
 
-	void OnCollisionExit(Collision other){
-		Debug.Log(other.collider.name+" exit");
-		if(other.collider.name.Contains("Cube")){
-			//isStop = false;
-		}
+//	void OnCollisionExit(Collision other){
+//		Debug.Log(other.collider.name+" exit");
+//		if(other.collider.name.Contains("Cube")){
+//			//isStop = false;
+//		}
+//	}
 
-	}
 //	void OnTriggerEnter(Collider other) {
 //		Debug.Log(other.name);
 //		transform.Translate(0, 0, _translation);
