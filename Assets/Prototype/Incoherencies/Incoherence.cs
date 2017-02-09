@@ -26,7 +26,7 @@ public class Incoherence : MonoBehaviour {
 	protected void Start ()
 	{
 		// Find and get a reference to my incoherence controller
-		myController = MiscFunctions.FindGameObjectInRoot(transform.root, "Incoherence Controller").GetComponent<IncoherenceController>();
+		myController = transform.parent.GetComponent<IncoherenceController>();
 
 		// Add this incoherence to its controller's list
 		myController.incoherencies.Add(gameObject);
