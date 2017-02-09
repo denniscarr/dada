@@ -20,7 +20,7 @@ public class CastRayToCursor : MonoBehaviour {
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit)){
 				//Execute arbitrary code
-				GetComponent<Writer>().CreateWord(hit.point);
+				hit.collider.BroadcastMessage("UsedByPlayer", hit.point);
 			}
 		}
 	}

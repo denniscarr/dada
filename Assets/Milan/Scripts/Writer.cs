@@ -44,7 +44,7 @@ public class Writer : MonoBehaviour {
 	public IEnumerator WriteText(){
 		int wordCount = 0;
 		int lineCount = 0;
-		while(wordIndex < _script[lineIndex].Length){
+		while(wordIndex < _script[lineIndex%_script.Length].Length){
 			if (wordIndex > lineLength) {
 				lineIndex++;
 				wordIndex = 0;
@@ -58,6 +58,10 @@ public class Writer : MonoBehaviour {
 			yield return new WaitForSeconds(speed);
 		}
 		lineIndex++;
+	}
+
+	void UsedByPlayer(Vector3 pos) {
+		StartCoroutine (WriteText ());
 	}
 
 	public GameObject CreateWord(Vector3 pos, Vector3 rotation = default(Vector3)){

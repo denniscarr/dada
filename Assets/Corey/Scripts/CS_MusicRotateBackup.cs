@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CS_MusicRotate : MonoBehaviour {
+public class CS_MusicRotateBackup : MonoBehaviour {
 
+	//public List<GameObject> soundableObjects;
 	AudioSource audioSource;
 
 	public float thisClipPosition;
@@ -21,23 +22,32 @@ public class CS_MusicRotate : MonoBehaviour {
 	}
 
 
-	void UsedByPlayer() {
-		RotateObject ();
-	}
-
-
 	void Update () {
 		thisObjectYRotation = Mathf.Abs(transform.rotation.eulerAngles.y / 360f);
 	}
 
+	/*
+	public IEnumerator NextClip(int sourceNumber, int clipIndex) {
 
-	void PlayObjectClip () {
+		//audio.Play();
+		AudioSource thisSource = soundSources[sourceNumber];
+
+
+
+		yield return new WaitForSeconds((thisSource.clip.length - thisSource.time)/32f);
+		thisSource.clip = audioClipPool[clipIndex];
+
+		thisSource.Play();
+
+	}
+	*/
+
+	public void PlayObjectClip () {
 		thisClipPosition = audioSource.clip.length * (thisObjectYRotation / 16f);
 		audioSource.PlayScheduled(AudioSettings.dspTime + thisClipPosition);
 	}
 
-
-	void RotateObject() {
+	public void RotateObject() {
 		gameObject.transform.Rotate (new Vector3 (0f, 90f, 0f));
 	}
 }

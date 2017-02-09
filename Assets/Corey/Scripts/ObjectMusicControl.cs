@@ -8,17 +8,12 @@ public class ObjectMusicControl : MonoBehaviour {
 
 	public GameObject[] sceneGameObjects;
 
-	// Use this for initialization
+
 	void Start () {
-
 		sceneGameObjects = FindObjectsOfType<GameObject> ();
-
-
-
-		
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
 
 		List<GameObject> soundObjects = new List<GameObject>();
@@ -48,7 +43,7 @@ public class ObjectMusicControl : MonoBehaviour {
 
 		if (Input.GetKeyDown (KeyCode.S)) {
 			for (int i = 0; i < soundObjects.Count; i++) {
-				soundObjects [i].GetComponent<CS_MusicRotate> ().PlayObjectClip ();
+//				soundObjects [i].GetComponent<CS_MusicRotate> ().PlayObjectClip ();
 			}
 		}
 		
