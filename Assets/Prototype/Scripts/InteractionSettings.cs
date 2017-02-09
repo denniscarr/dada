@@ -12,7 +12,7 @@ public class InteractionSettings : MonoBehaviour {
 		get;
 	}
 
-	void Start() {
+	void Awake() {
 		savedScale = transform.localScale;
 	}
 }
