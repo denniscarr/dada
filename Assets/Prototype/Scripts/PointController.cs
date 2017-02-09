@@ -12,13 +12,10 @@ public class PointController : MonoBehaviour {
 	public Plane wallPlane;
 	//public GameObject go;
 
-	Vector3 carriedObjectSavedScale;
-
 
 	void Start () {
 		isCarrying = false;
 		isMouseOnVisor = false;
-		carriedObjectSavedScale = Vector3.zero;
 		//create a plane that the mouse is on
 		wallPlane.SetNormalAndPosition(transform.forward,transform.position);
 	}
@@ -112,8 +109,8 @@ public class PointController : MonoBehaviour {
 		if(t.parent == transform.parent){
 
 		}else{
-			carriedObjectSavedScale = carriedObject.localScale;
-			Vector3 newScale = carriedObjectSavedScale * 0.2f;
+//			carriedObject.GetComponent<InteractionSettings>().SavedScale = carriedObject.localScale;
+			Vector3 newScale = carriedObject.GetComponentInChildren<InteractionSettings>().savedScale*0.2f;
 			t.localScale = newScale;
 			t.SetParent(transform.parent);
 			t.localPosition = transform.localPosition;
@@ -144,7 +141,8 @@ public class PointController : MonoBehaviour {
 		isCarrying = false;
 
 		carriedObject.position -= (carriedObject.position - Camera.main.transform.position).normalized*-3f;
-		carriedObject.transform.parent = null;
+		carriedObject.SetParent (carriedObject.GetComponentInChildren<InteractionSettings> ().originalParent);
+		carriedObject.transform.localScale = carriedObject.GetComponentInChildren<InteractionSettings>().savedScale;
 
 		// Reenable any colliders on the picked up object
 		Collider[] colliders = carriedObject.GetComponentsInChildren<Collider> ();
@@ -156,6 +154,6 @@ public class PointController : MonoBehaviour {
 		carriedObject.GetComponent<Rigidbody> ().isKinematic = false;
 		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce, Camera.main.transform.position, 10f);
 
-		carriedObject.transform.localScale = carriedObjectSavedScale;
+		Debug.Log (carriedObject.GetComponentInChildren<InteractionSettings> ().savedScale);
 	}
 }
