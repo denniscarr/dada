@@ -39,6 +39,9 @@ public class PointController : MonoBehaviour {
 			if (Input.GetMouseButtonDown (0))
 			{
 				if (isCarrying) {
+					if (hit.collider.name == "Visor") {
+						PlaceObjectInVisor ();
+					}
 					ThrowObject ();
 				} else {
 					print ("Clicked on " + hit.transform.name);
@@ -57,6 +60,10 @@ public class PointController : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+
+	void PlaceObjectInVisor() {
 	}
 
 
