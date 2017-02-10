@@ -10,10 +10,22 @@ public class PointController : MonoBehaviour {
 	public float interactionRange = 5f;	// How close an object needs to be for the player to interact with it.
 	public float throwForce = 100f;
 	public Plane wallPlane;
+
+	public Sprite grabHand;
+	public Sprite useHand;
+
+	public Vector2 cursorOffset;
+
+	const int GRAB_MODE = 0;
+	const int USE_MODE = 1;
+	int interactionMode = GRAB_MODE;
+
 	//public GameObject go;
 
 
 	void Start () {
+		Cursor.visible = false;
+
 		isCarrying = false;
 		isMouseOnVisor = false;
 		//create a plane that the mouse is on
@@ -30,14 +42,15 @@ public class PointController : MonoBehaviour {
 		float rayDistance = 10;
 		//update plane
 		wallPlane.SetNormalAndPosition(transform.forward,transform.position);
-		if (wallPlane.Raycast(ray,out rayDistance)){
-			transform.position = ray.GetPoint(rayDistance);;
+		if (wallPlane.Raycast (ray, out rayDistance)) {
+			transform.position = ray.GetPoint (rayDistance);
+			// Offset cursor position.
+			transform.position = new Vector3(transform.position.x + cursorOffset.x, transform.position.y + cursorOffset.y, transform.position.z);
 		}
 
 		// If the player is carrying an object, move the object to the cursor's position.
 		if (isCarrying) {
 			carriedObject.localPosition = transform.localPosition;
-
 		}
 
 		RaycastHit hit;
@@ -155,5 +168,21 @@ public class PointController : MonoBehaviour {
 		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce, Camera.main.transform.position, 10f);
 
 		Debug.Log (carriedObject.GetComponentInChildren<InteractionSettings> ().savedScale);
+	}
+
+
+	void ChangeToGrabMode() {
+		interactionMode = GRAB_MODE;
+		UpdateCursorImage (grabHand);
+	}
+
+	void ChangeToUseMode() {
+		interactionMode = USE_MODE;
+		UpdateCursorImage (useHand);
+	}
+
+
+	void UpdateCursorImage(Sprite newCursor) {
+		GetComponent<SpriteRenderer> ().sprite = newCursor;
 	}
 }
