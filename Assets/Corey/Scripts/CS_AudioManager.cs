@@ -2,9 +2,24 @@
 //http://www.blog.silentkraken.com/2010/04/06/audiomanager/
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Audio;
 
+/// <summary>
+/// This is mostly by Hang Ruan, using it also to assign music clips randomly
+/// Currently written as a singleton.
+/// </summary>
+
 public class CS_AudioManager : MonoBehaviour {
+
+	//public List<GameObject> soundableObjects;
+	public List<AudioSource> soundSources;
+
+	//POPULATE THIS
+	public List<AudioClip> audioClipPool;
+
+	public float thisClipPosition;
+
 
 	private static CS_AudioManager instance = null;
 
@@ -17,6 +32,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	//========================================================================
+	//enforce singleton pattern
+
 	public static CS_AudioManager Instance {
 		get { 
 			return instance;
@@ -33,6 +50,11 @@ public class CS_AudioManager : MonoBehaviour {
 		//DontDestroyOnLoad(this.gameObject);
 	}
 	//========================================================================
+	//SFX INSTANTIATION
+	//========================================================================
+
+	//right now have 2 overloads one for just playing an SFX clip, another for pitch ctrl
+	//could make more overloads for PLaySFX in the future
 
 	public void PlaySFX (AudioClip g_SFX) {
 		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
@@ -53,11 +75,55 @@ public class CS_AudioManager : MonoBehaviour {
 		DestroyObject(t_SFX, g_SFX.length);
 	}
 
+	//========================================================================
+	//DADA-SPECIFIC FUNCTIONS
+	//========================================================================
+
+	void Start() {
+		ReassignMusic ();
+	}
+
+	public void ReassignMusic () {
+
+		soundSources.Clear ();
+		//This will find every object with an AudioSource and assign it a random clip from the pool
+		foreach (GameObject go in GameObject.FindObjectsOfType<GameObject>())  {
+			// first find every game object with the component CS_MusicRotate
+			// TODO - include all music sources
+			if (go.GetComponent<CS_MusicRotate> () != null) {
+				soundSources.Add (go.GetComponent<AudioSource> ());
+			}
+			for (int i = 0; i < soundSources.Count; i ++) {
+				StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
+				soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
+				soundSources [i].Play ();
+			}
+		}
+	}
+
+
+	public IEnumerator NextClip(int sourceNumber, int clipIndex) {
+
+		//audio.Play();
+		AudioSource thisSource = soundSources[sourceNumber];
+
+
+		//TODO - CROSSFADE last clip and next one
+		if (thisSource.clip != null) {
+			yield return new WaitForSeconds ((thisSource.clip.length - thisSource.time) / 16f);
+			thisSource.clip = audioClipPool [clipIndex];
+		}
+		thisSource.Play();
+
+	}
+
 	//================================================================================
 	// Background Music Functions
 	//================================================================================
+	//This stuff will probably be useless to the Dada game
 
 
+	/*
 	public void PlayBGM (AudioClip g_BGM) {
 		if (myAudioSource.isPlaying == false) {
 			myAudioSource.clip = g_BGM;
@@ -93,7 +159,7 @@ public class CS_AudioManager : MonoBehaviour {
 	public void StopBGM () {
 		myAudioSource.Stop ();
 	}
-
+	*/
 
 
 }
