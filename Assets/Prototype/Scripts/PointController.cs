@@ -54,41 +54,46 @@ public class PointController : MonoBehaviour {
 		}
 
 		RaycastHit hit;
-		if(Physics.Raycast(ray,out hit)){
+		if (Physics.Raycast (ray, out hit)) {
 			/* OBJECT INTERACTION */
-			if (Input.GetMouseButtonDown (0))
-			{
-				if (isCarrying) {
-					if (hit.collider.name.Contains("Visor")) {
-						PlaceObjectInVisor ();
-					}else{
-						//if collide with objects except Visor, when carry sth and click, throw object
-						ThrowObject ();
+			if (Input.GetMouseButtonDown (0)) {
+				if (interactionMode == GRAB_MODE) {
+					
+					if (isCarrying) {
+						if (hit.collider.name.Contains ("Visor")) {
+							PlaceObjectInVisor ();
+						} else {
+							//if collide with objects except Visor, when carry sth and click, throw object
+							ThrowObject ();
+						}
+					} else {
+						//print ("Clicked on " + hit.transform.name);
+						//you can not pick up yourself
+						if (hit.transform.name.Contains ("Player")) {
+							return;
+						}
+						// Make sure this object can be interacted with.
+						InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+						if (interactionSettings != null) {
+							if (interactionSettings.ableToBeCarried) {
+								PickUpObject (hit.transform);
+							}
+						}
 					}
-				} else {
-					//print ("Clicked on " + hit.transform.name);
-					//you can not pick up yourself
-					if(hit.transform.name.Contains("Player")){
-						return;
-					}
-					// Make sure this object can be interacted with.
+				} else if (interactionMode == USE_MODE) {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (interactionSettings != null) {
-						if (interactionSettings.ableToBeCarried) {
-							PickUpObject (hit.transform);
-						}
-
 						if (interactionSettings.usable) {
 							hit.collider.BroadcastMessage ("UsedByPlayer");
 						}
 					}
 				}
-			}
 
-		}else{
-			//if do not collider with any object(Visor), when carry sth and click, throw object
-			if (isCarrying && Input.GetMouseButtonDown (0)){
-				ThrowObject ();
+			} else {
+				//if do not collider with any object(Visor), when carry sth and click, throw object
+				if (isCarrying && Input.GetMouseButtonDown (0)) {
+					ThrowObject ();
+				}
 			}
 		}
 			
