@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// OBSOLETE
+/// </summary>
+//
+// OBSOLETE - PLACEHOLDER FOR PLAYER INTERACTION
+//
+
 public class ObjectMusicControl : MonoBehaviour {
 
-
+	/*
 
 	public GameObject[] sceneGameObjects;
+
+	List<GameObject> soundObjects;
 
 
 	void Start () {
@@ -16,7 +25,7 @@ public class ObjectMusicControl : MonoBehaviour {
 
 	void Update () {
 
-		List<GameObject> soundObjects = new List<GameObject>();
+		soundObjects = new List<GameObject>();
 
 		foreach (GameObject thisObject in sceneGameObjects) {
 
@@ -49,4 +58,16 @@ public class ObjectMusicControl : MonoBehaviour {
 		
 
 	}
+
+	public void UsedByPlayer() {
+
+		for (int i = 0; i < soundObjects.Count; i++) {
+			//soundObjects [i].GetComponent<CS_MusicRotate> ().PlayObjectClip ();
+		}
+
+	}
+	*/
+
+
+
 }
