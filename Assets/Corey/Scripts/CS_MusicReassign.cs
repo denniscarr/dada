@@ -24,7 +24,7 @@ public class CS_MusicReassign : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.G)) {
 			UsedByPlayer ();
 		}
-		*/
+	*/
 	}
 
 	public void UsedByPlayer() {
