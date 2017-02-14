@@ -94,25 +94,26 @@ public class CS_AudioManager : MonoBehaviour {
 
 			/* STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) */
 			float rand = Random.Range (0f, 1f);
-			if (rand < 0.05f) {
-				return;
-			}
+			if (rand < 0.75f) {
+				
+			} else {
 
-			if (intSettings.canBeUsedAsSoundSource) {
-				Transform rootTransform = intSettings.transform.parent;
-				rootTransform.gameObject.AddComponent<AudioSource> ();
-				soundSources.Add (rootTransform.gameObject.GetComponent<AudioSource>());
+				if (intSettings.canBeUsedAsSoundSource) {
+					Transform rootTransform = intSettings.transform.parent;
+					rootTransform.gameObject.AddComponent<AudioSource> ();
+					soundSources.Add (rootTransform.gameObject.GetComponent<AudioSource> ());
 
-				// MORE DENNIS PROTOTYPE STUFF:
-				rootTransform.gameObject.GetComponent<AudioSource>().spatialBlend = 1f;
-				rootTransform.gameObject.GetComponent<AudioSource>().maxDistance = 100f;
-				rootTransform.gameObject.GetComponent<AudioSource>().loop = true;
-				rootTransform.gameObject.AddComponent<CS_MusicRotate> ();
-			}
-			for (int i = 0; i < soundSources.Count; i ++) {
-				//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
-				soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
-				soundSources [i].Play ();
+					// MORE DENNIS PROTOTYPE STUFF:
+					rootTransform.gameObject.GetComponent<AudioSource> ().spatialBlend = 1f;
+					rootTransform.gameObject.GetComponent<AudioSource> ().maxDistance = 50f;
+					rootTransform.gameObject.GetComponent<AudioSource> ().loop = true;
+					rootTransform.gameObject.AddComponent<CS_MusicRotate> ();
+				}
+				for (int i = 0; i < soundSources.Count; i++) {
+					//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
+					soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
+					soundSources [i].Play ();
+				}
 			}
 		}
 	}
