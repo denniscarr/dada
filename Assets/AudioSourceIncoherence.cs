@@ -124,4 +124,5 @@ public class AudioSourceIncoherence : Incoherence {
 		public SavedAudioSourceValues() {
 
 		}
+	}
 }
