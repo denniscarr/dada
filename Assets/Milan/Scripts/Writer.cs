@@ -60,7 +60,7 @@ public class Writer : MonoBehaviour {
 		stringIndex++;
 	}
 
-	void UsedByPlayer(Vector3 pos) {
+	void UsedByPlayer() {
 		StartCoroutine (WriteText ());
 	}
 

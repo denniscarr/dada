@@ -22,6 +22,14 @@ public class IncoherenceController : MonoBehaviour {
 
 	void Update() {
 
+		// HACKY FOR PROTO
+		float rando = Random.Range (0f, 1f);
+		if (rando < 0.01) {
+			incoherenceMagnitude += Random.Range (0.0001f, 0.01f);
+			incoherenceProbability += Random.Range (0.0001f, 0.01f);
+		}
+	
+
 		// Clamp incoherence probability and magnitude to between 0 and 1
 		incoherenceProbability = Mathf.Clamp(incoherenceProbability, 0f, 1f);
 		incoherenceMagnitude = Mathf.Clamp(incoherenceMagnitude, 0f, 1f);
@@ -53,8 +61,8 @@ public class IncoherenceController : MonoBehaviour {
 
 
 	void LateUpdate() {
-		Vector3 clampPos = new Vector3 (Mathf.Clamp(transform.parent.position.x, -100f, 100f), Mathf.Clamp(transform.parent.position.y, 0f, 30f), Mathf.Clamp(transform.parent.position.z, -100f, 100f));
-		transform.parent.position = clampPos;
+//		Vector3 clampPos = new Vector3 (Mathf.Clamp(transform.parent.position.x, -100f, 100f), Mathf.Clamp(transform.parent.position.y, 0f, 30f), Mathf.Clamp(transform.parent.position.z, -100f, 100f));
+//		transform.parent.position = clampPos;
 	}
 		
 }
