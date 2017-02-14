@@ -15,7 +15,7 @@ public class CastRayToCursor : MonoBehaviour {
 	}
 
 	void CallFunctionOnCursorDown(){
-		if (Input.GetKey(KeyCode.Mouse0)) {
+		if (Input.GetKeyDown(KeyCode.Mouse0)) {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit)){

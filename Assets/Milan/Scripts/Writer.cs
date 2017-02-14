@@ -8,20 +8,30 @@ public class Writer : MonoBehaviour {
 	public float leading = 1;
 	public Font[] fonts;
 	public GameObject textPrefab;
-	public bool fade, noRotation, delete;
-	public float speed; 
+	public bool fade, noRotation, delete, WordbyWord;
+	public float delay; 
+	public float fadeSpeed;
+	public TextAsset sourceText;
+	Vector3 originalPos;
 
 	Vector3 	spawnPosition;
 	string[][]	_script;
 	int 		wordIndex, lineIndex;
 	int 		stringIndex;
 
-	void Awake () {
+	void Start () {
+		originalPos = transform.position;
 		wordIndex = 0;
 		lineIndex = 0;
 		stringIndex = 0;
 		spawnPosition = transform.position;
-		_script = new string [100][];
+
+		string[] tempText = sourceText.text.Split(new char[] { '\n' });
+		_script = new string[tempText.Length][];
+
+		for (int i = 0; i < tempText.Length; i++) {
+				_script [i] = tempText [i].Split (new char[] { ' ' });
+		}
 	}
 
 	public string[]GetCurrentString(){
@@ -31,56 +41,65 @@ public class Writer : MonoBehaviour {
 	public void SetAndSplitString(string input){
 		if (input != null) {
 			_script[stringIndex] = input.Split (new char[] { ' ' });
-			stringIndex++;
 		}
-		wordIndex = 0;
 	}
 
 	public void SetString(string[] input){
 		_script[stringIndex] = input;
-		wordIndex = 0;
 	}
 
 	public IEnumerator WriteText(){
-		int wordCount = 0;
-		int lineCount = 0;
-		while(wordIndex < _script[lineIndex %_script.Length].Length){
-			if (wordIndex > lineLength) {
-				lineIndex++;
-				wordIndex = 0;
-				spawnPosition.x = transform.position.x;
-				spawnPosition.y -= (float)lineIndex * leading;
-			}else{
-				GameObject newWord = CreateWord (spawnPosition);
-				newWord.AddComponent<BoxCollider2D> ();
-				spawnPosition.x += newWord.GetComponent<BoxCollider2D>().bounds.size.x + tracking;
-			}	
-			yield return new WaitForSeconds(speed);
+		Debug.Log ("Write line");
+
+		string line = "";
+
+		foreach (string s in _script [stringIndex]) {
+			line += s;
 		}
-		stringIndex++;
+		Debug.Log (line);
+
+		foreach (string s in _script [stringIndex]) {
+			CreateWord (spawnPosition);
+			yield return new WaitForSeconds (delay);
+		}
 	}
 
 	void UsedByPlayer() {
-		StartCoroutine (WriteText ());
+		if (WordbyWord) {
+			CreateWord (spawnPosition);
+		} else {
+			StartCoroutine (WriteText ());
+		}
 	}
 
-	public GameObject CreateWord(Vector3 pos, Vector3 rotation = default(Vector3)){
+	public void CreateWord(Vector3 pos, Vector3 rotation = default(Vector3)){
 		GameObject newWord = (GameObject)Instantiate (textPrefab, pos, Quaternion.identity);
 		TextStyling t = newWord.GetComponent<TextStyling> ();
-		t.setText (_script [lineIndex][wordIndex % _script[lineIndex].Length]);
+		t.setText (_script [stringIndex][wordIndex]);
 		Font curFont = fonts [Random.Range (0, fonts.Length)];
 		newWord.GetComponent<TextMesh>().font = curFont;
-		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
-		newWord.transform.localScale *= Random.Range (0.75f, 1.2f);
+//		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
+		newWord.AddComponent<BoxCollider2D> ();
+		spawnPosition.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
+
 		t.fade = fade;
 		if (!noRotation) {
 			t.transform.rotation = Quaternion.Euler (rotation); 
 		}
 		t.delete = delete;
 		t.fadeIn = fade;
-		t.speed = speed;
+		t.speed = fadeSpeed;
 		wordIndex++;
 
-		return newWord;
+		if (wordIndex > _script [stringIndex].Length -1) {
+			wordIndex = 0;
+			spawnPosition.x = originalPos.x;
+			spawnPosition.y -= leading;
+			stringIndex++;
+			if (stringIndex > _script.Length -1) {
+				stringIndex = 0;
+				spawnPosition.y = originalPos.y;
+			}
+		}
 	}
 }
