@@ -86,15 +86,18 @@ public class CS_AudioManager : MonoBehaviour {
 	public void ReassignMusic () {
 
 		soundSources.Clear ();
-		//This will find every object with an AudioSource and assign it a random clip from the pool
-		foreach (GameObject go in GameObject.FindObjectsOfType<GameObject>())  {
+
+		//This will find every object that has canBeUsedAsSoundSource == true and assign it a random clip from the pool
+		foreach (InteractionSettings intSettings in GameObject.FindObjectsOfType<InteractionSettings> ())  {
 			// first find every game object with the component CS_MusicRotate
 			// TODO - include all music sources
-			if (go.GetComponent<CS_MusicRotate> () != null) {
-				soundSources.Add (go.GetComponent<AudioSource> ());
+			if (intSettings.canBeUsedAsSoundSource) {
+				Transform rootTransform = intSettings.gameObject.transform.root;
+				rootTransform.gameObject.AddComponent<AudioSource> ();
+				soundSources.Add (rootTransform.gameObject.GetComponent<AudioSource>());
 			}
 			for (int i = 0; i < soundSources.Count; i ++) {
-				StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
+				//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
 				soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
 				soundSources [i].Play ();
 			}
