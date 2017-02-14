@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Writer : MonoBehaviour {
 
+	public Color textColor = Color.white;
 	public float lineLength = 50;
 	public float tracking = 0.25f;
 	public float leading = 1;
@@ -78,6 +79,7 @@ public class Writer : MonoBehaviour {
 		t.setText (_script [stringIndex][wordIndex]);
 		Font curFont = fonts [Random.Range (0, fonts.Length)];
 		newWord.GetComponent<TextMesh>().font = curFont;
+		newWord.GetComponent<TextMesh> ().color = textColor;
 //		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
 		newWord.AddComponent<BoxCollider2D> ();
 		spawnPosition.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
