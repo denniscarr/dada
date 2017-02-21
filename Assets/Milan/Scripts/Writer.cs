@@ -50,14 +50,12 @@ public class Writer : MonoBehaviour {
 	}
 
 	public IEnumerator WriteText(){
-		Debug.Log ("Write line");
 
 		string line = "";
 
 		foreach (string s in _script [stringIndex]) {
 			line += s;
 		}
-		Debug.Log (line);
 
 		foreach (string s in _script [stringIndex]) {
 			CreateWord (spawnPosition);
