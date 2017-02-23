@@ -29,8 +29,8 @@ public class QuestObject : MonoBehaviour {
 	// SETS THE GRAPHIC TO INDICATE QUESTS
 	// not sure if necessary but hey you know could be useful for something
 	// IT IS STILL BUGGY AND NOT CHANGING, but that can be easily fixed in a real future version
-	// if we even deem this to be necessary.
-	void SetQuestMarker() {
+	// if we even deem this to be necessary, which I'm not convinced it is.
+	public void SetQuestMarker() {
 
 		if (QuestManager.questManager.CheckCompletedQuests (this)) { //check to see if there are any completed quests on this objct + set sprite to available
 			QuestMarker.SetActive (true);
@@ -51,8 +51,8 @@ public class QuestObject : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
+	public void Update () {
+		
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit hit;
 
@@ -78,15 +78,15 @@ public class QuestObject : MonoBehaviour {
 	// nomenclature scheme. again, this is just a frame I'm learning from some guy on the
 	// internet so we can change everything when it comes to that point.
 	// the ontrigger functions are exclusively for flagging to see if something is interactable.
-//	void OnTriggerEnter(Collider col){
-//		if (col.tag == "Player") {
-//			inTrigger = true;
-//		}
-//	}
-//
-//	void OnTriggerExit(Collider col){
-//		if (col.tag == "Player") {
-//			inTrigger = false;
-//		}
-//	}
+	public void OnTriggerEnter(Collider col){
+		if (col.tag == "Player") {
+			inTrigger = true;
+		}
+	}
+
+	public void OnTriggerExit(Collider col){
+		if (col.tag == "Player") {
+			inTrigger = false;
+		}
+	}
 }
