@@ -86,17 +86,34 @@ public class CS_AudioManager : MonoBehaviour {
 	public void ReassignMusic () {
 
 		soundSources.Clear ();
-		//This will find every object with an AudioSource and assign it a random clip from the pool
-		foreach (GameObject go in GameObject.FindObjectsOfType<GameObject>())  {
+
+		//This will find every object that has canBeUsedAsSoundSource == true and assign it a random clip from the pool
+		foreach (InteractionSettings intSettings in GameObject.FindObjectsOfType<InteractionSettings> ())  {
 			// first find every game object with the component CS_MusicRotate
 			// TODO - include all music sources
-			if (go.GetComponent<CS_MusicRotate> () != null) {
-				soundSources.Add (go.GetComponent<AudioSource> ());
-			}
-			for (int i = 0; i < soundSources.Count; i ++) {
-				StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
-				soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
-				soundSources [i].Play ();
+
+			/* STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) */
+			float rand = Random.Range (0f, 1f);
+			if (rand < 0.75f) {
+				
+			} else {
+
+				if (intSettings.canBeUsedAsSoundSource) {
+					Transform rootTransform = intSettings.transform.parent;
+					rootTransform.gameObject.AddComponent<AudioSource> ();
+					soundSources.Add (rootTransform.gameObject.GetComponent<AudioSource> ());
+
+					// MORE DENNIS PROTOTYPE STUFF:
+					rootTransform.gameObject.GetComponent<AudioSource> ().spatialBlend = 1f;
+					rootTransform.gameObject.GetComponent<AudioSource> ().maxDistance = 50f;
+					rootTransform.gameObject.GetComponent<AudioSource> ().loop = true;
+					rootTransform.gameObject.AddComponent<CS_MusicRotate> ();
+				}
+				for (int i = 0; i < soundSources.Count; i++) {
+					//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
+					soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
+					soundSources [i].Play ();
+				}
 			}
 		}
 	}

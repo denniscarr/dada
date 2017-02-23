@@ -28,6 +28,7 @@ public class CS_MusicReassign : MonoBehaviour {
 	}
 
 	public void UsedByPlayer() {
+		Debug.Log ("BeingUsed");
 		CS_AudioManager.Instance.ReassignMusic();
 	}
 

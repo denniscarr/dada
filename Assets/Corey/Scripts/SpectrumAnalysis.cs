@@ -3,18 +3,18 @@ using System.Collections;
 
 public class SpectrumAnalysis : MonoBehaviour {
 
-	public static SpectrumAnalysis instance;
+	//public SpectrumAnalysis instance;
 
 	[HideInInspector]
 	public float[] spectrumData;
 	[HideInInspector]
-	public AudioListener audioListener;
+	public AudioSource audioSource;
 
 
 
 
 	void Awake(){
-
+		/*Deleting Singleton Stuff for now
 		if (instance == null) {
 			instance = this;
 			DontDestroyOnLoad (gameObject);
@@ -22,12 +22,13 @@ public class SpectrumAnalysis : MonoBehaviour {
 		} else if (instance != this) {
 			Destroy (gameObject);
 		}
+		*/
 	}
 
 	// Use this for initialization
 	void Start () {
 		spectrumData = new float[64];
-		audioListener = gameObject.GetComponent<AudioListener> ();
+		audioSource = gameObject.GetComponent<AudioSource> ();
 		//StartCoroutine (GetSpectrumFrameChanges());
 	}
 
@@ -58,14 +59,14 @@ public class SpectrumAnalysis : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		AudioListener.GetSpectrumData( spectrumData, 0, FFTWindow.Rectangular );
 		float wholeEnergy = 0;
 		for (int i = spectrumData.Length / 5 * 2; i < spectrumData.Length / 5 * 2 + spectrumData.Length / 2; i++) {
 			wholeEnergy += spectrumData [i];
 		}
 
-		Debug.Log (wholeEnergy);
+		//Debug.Log (wholeEnergy);
 
 		//Camera.main.backgroundColor =  HSL2RGB(Time.time / 10 - Mathf.FloorToInt(Time.time/10), 0.8f,lightNow);
 
