@@ -22,6 +22,9 @@ public class NPC : MonoBehaviour {
 	// How far the NPC looks for a new point to wander to.
 	public float wanderRange = 10f;
 
+	// How far the NPC looks for objects to interact with.
+	public float interactRange = 10f;
+
 	// Noise variables
 	float noiseSpeed = 0.04f;
 	float noiseX = 0.0f;
@@ -50,6 +53,7 @@ public class NPC : MonoBehaviour {
 			// See if I've reached my target position
 			if (navMeshAgent.velocity.magnitude == 0.0f)
 			{
+				CheckArea ();
 				currentState = GET_TARGET_POSITION;
 			}
 		}
@@ -85,5 +89,30 @@ public class NPC : MonoBehaviour {
 		}
 
 		navMeshAgent.SetDestination(targetPosition);
+	}
+
+	void CheckArea()
+	{
+		// Get a list of all the nearby objects that I could pick up.
+		List<Transform> carriableObjects = new List<Transform>();
+		Collider[] nearbyObjects = Physics.OverlapSphere (transform.position, interactRange);
+		foreach (Collider collider in nearbyObjects)
+		{
+			InteractionSettings intSet = collider.transform.GetComponentInChildren<InteractionSettings> ();
+			if (intSet != null && intSet.ableToBeCarried)
+			{
+				carriableObjects.Add (collider.transform);
+			}
+		}
+
+		// Choose a random object from that list to become my target.
+		if (carriableObjects.Count > 0)
+		{
+			int randomNum = Random.Range (0, carriableObjects.Count);
+
+		} else
+		{
+			Debug.Log ("NPC found nothing in range to pick up.");
+		}
 	}
 }
