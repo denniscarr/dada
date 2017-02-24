@@ -6,11 +6,13 @@ using UnityEngine.AI;
 public class NPC : MonoBehaviour {
 
 	NavMeshAgent navMeshAgent;
+	NPCAnimation npcAnimation;
 
 	// Behavior states
 	int currentState;
 	const int GET_TARGET_POSITION = 0;
 	const int MOVE_TO_TARGET_POSITION = 1;
+	const int MOVE_TOWARDS_OBJECT = 2;
 
 	bool pickupObjects = false;
 
@@ -25,6 +27,8 @@ public class NPC : MonoBehaviour {
 	// How far the NPC looks for objects to interact with.
 	public float interactRange = 10f;
 
+	Transform targetObject;
+
 	// Noise variables
 	float noiseSpeed = 0.04f;
 	float noiseX = 0.0f;
@@ -35,7 +39,8 @@ public class NPC : MonoBehaviour {
 
 	void Start()
 	{
-		navMeshAgent = GetComponent<NavMeshAgent> ();
+		navMeshAgent = transform.parent.GetComponent<NavMeshAgent> ();
+		npcAnimation = GetComponent<NPCAnimation> ();
 
 		currentState = GET_TARGET_POSITION;
 	}
@@ -43,7 +48,8 @@ public class NPC : MonoBehaviour {
 
 	void Update()
 	{
-		if (currentState == GET_TARGET_POSITION) {
+		if (currentState == GET_TARGET_POSITION)
+		{
 			GetTargetPosition ();
 			currentState = MOVE_TO_TARGET_POSITION;
 		}
@@ -51,13 +57,24 @@ public class NPC : MonoBehaviour {
 		else if (currentState == MOVE_TO_TARGET_POSITION)
 		{
 			// See if I've reached my target position
-			if (navMeshAgent.velocity.magnitude == 0.0f)
-			{
+			if (navMeshAgent.velocity.magnitude == 0.0f) {
 				CheckArea ();
-				currentState = GET_TARGET_POSITION;
+				if (targetObject != null) {
+					currentState = MOVE_TOWARDS_OBJECT;
+				} else {
+					currentState = GET_TARGET_POSITION;
+				}
 			}
 		}
+
+		else if (currentState == MOVE_TOWARDS_OBJECT)
+		{
+			// CHECK IF OBJECT IS IN RANGE. IF SO, PICK IT UP.
+		}
+
+		npcAnimation.Move (navMeshAgent.desiredVelocity);
 	}
+
 
 	void GetTargetPosition()
 	{
@@ -91,6 +108,7 @@ public class NPC : MonoBehaviour {
 		navMeshAgent.SetDestination(targetPosition);
 	}
 
+
 	void CheckArea()
 	{
 		// Get a list of all the nearby objects that I could pick up.
@@ -109,8 +127,12 @@ public class NPC : MonoBehaviour {
 		if (carriableObjects.Count > 0)
 		{
 			int randomNum = Random.Range (0, carriableObjects.Count);
+			targetObject = carriableObjects [randomNum];
+			navMeshAgent.SetDestination (targetObject.position);
+			Debug.Log ("NPC is targeting: " + targetObject.name);
+		}
 
-		} else
+		else
 		{
 			Debug.Log ("NPC found nothing in range to pick up.");
 		}
