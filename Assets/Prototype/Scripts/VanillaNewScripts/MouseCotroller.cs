@@ -74,8 +74,7 @@ public class MouseCotroller : MonoBehaviour {
 	void UpdateCursorImage(Sprite newCursor) {
 		GetComponent<Image> ().sprite = newCursor;
 	}
-
-	///////////can only use the object in inventory?
+		
 	void UseHandler(){
 		if(Input.GetMouseButtonDown(0)){
 
