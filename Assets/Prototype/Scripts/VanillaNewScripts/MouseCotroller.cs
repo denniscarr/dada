@@ -20,6 +20,7 @@ public class MouseCotroller : MonoBehaviour {
 
 	public float throwForce = 100f;
 	Camera UpperCamera;
+
 	InterationState state;
 	InteractionMode mode;
 	//store the selected object, which will be null after deselecting
@@ -73,20 +74,35 @@ public class MouseCotroller : MonoBehaviour {
 	void UpdateCursorImage(Sprite newCursor) {
 		GetComponent<Image> ().sprite = newCursor;
 	}
-
-	///////////can only use the object in inventory?
+		
 	void UseHandler(){
 		if(Input.GetMouseButtonDown(0)){
 
+			//a switch used to save if use something in inventory
+			bool isCollidingSomethingInVisor = false;
 			//get the ray to check whether player points at visor from upper camera
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit) && !hit.collider.name.Equals("PlayerVisor")){
+				
+				isCollidingSomethingInVisor = true;
+
 				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
-				if (interactionSettings != null) {
-					if (interactionSettings.usable) {
-						Debug.Log("use "+hit.collider.name+" inside visor");
+				if (isAbleToBeUse(interactionSettings)) {
+					Debug.Log("use "+hit.collider.name+" inside visor");
+					hit.collider.BroadcastMessage ("UsedByPlayer");
+				}
+
+			}
+
+			//if ray is colliding something in visor, then do not detect collision outside visor////may be want to change
+			if(isCollidingSomethingInVisor == false){
+				ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast (ray, out hit)){
+					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+					if (isAbleToBeUse(interactionSettings)) {
+						Debug.Log("use "+hit.collider.name+" outside visor");
 						hit.collider.BroadcastMessage ("UsedByPlayer");
 					}
 				}
@@ -258,6 +274,14 @@ public class MouseCotroller : MonoBehaviour {
 
 	}
 
+	bool isAbleToBeUse(InteractionSettings interactionSettings){
+		if (interactionSettings != null) {
+			if (interactionSettings.usable) {
+				return true;
 
+			}
+		}
+		return false;
+	}
 
 }
