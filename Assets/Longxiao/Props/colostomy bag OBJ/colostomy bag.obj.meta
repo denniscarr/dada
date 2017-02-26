@@ -1,20 +1,22 @@
 fileFormatVersion: 2
-guid: 6720e9b225940244eb0316236f3cd6bb
-timeCreated: 1442336255
-licenseType: Store
+guid: c9a091c3a492ced469429f5babaa804a
+timeCreated: 1488135819
+licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: mesh_1_colostomy_bag
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: AK12IronSight
-    6400000: //RootNode
+    400002: mesh_1_colostomy_bag
+    2300000: mesh_1_colostomy_bag
+    3300000: mesh_1_colostomy_bag
+    4300000: mesh_1_colostomy_bag
+    6400000: mesh_1_colostomy_bag
   materials:
     importMaterials: 1
     materialName: 0
-    materialSearch: 0
+    materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -35,7 +37,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 2.09
     meshCompression: 0
     addColliders: 1
     importBlendShapes: 1
@@ -53,7 +55,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 4
+    tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -71,7 +73,7 @@ ModelImporter:
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
-    skeletonHasParents: 0
+    skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
   humanoidOversampling: 1
