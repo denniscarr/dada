@@ -230,5 +230,15 @@ public class NPCAnimation : MonoBehaviour
 		animator.SetBool ("PickingUp", false);
 	}
 
+    // Called when NPC decides to throw an object.
+    public void ThrowObject() {
+        animator.SetBool ("Throwing", true);
+    }
+
+    // Called at end of throw animation.
+    public void ObjectThrown() {
+        animator.SetBool ("Throwing", false);
+    }
+
 
 }

@@ -14,9 +14,10 @@ public class NPC : MonoBehaviour {
 	const int MOVE_TO_TARGET_POSITION = 1;
 	const int MOVE_TOWARDS_OBJECT = 2;
 	const int PICK_UP_OBJECT = 3;
+    const int THROWING_OBJECT = 4;
 
 	//bool _pickupObjects = false;
-	bool _carryingObject;
+//	bool _carryingObject;
 
 	// Movement types
 	int movementType;
@@ -29,13 +30,21 @@ public class NPC : MonoBehaviour {
 	// How far the NPC looks for objects to interact with.
 	public float interactRange = 10f;
 
-	// Object pickup distance from the NPC
+	// Object pickup distance from the NPC.
 	public float pickupRange = 1f;
+    public float pickupProbability = 0.8f;
+
+    public float throwProbability = 0.8f;  // How likely I am to throw an object.
+    public float throwForce = 20f;  // The force with which I throw objects.
+
 
 	// Reference to this NPC's Hand Transform -- SET IN INSPECTOR
 	[SerializeField] Transform handTransform;
 
 	[SerializeField] Transform targetObject;
+
+    // A reference to the object that I am currently carrying.
+    [SerializeField]Transform carriedObject;
 
 	// Noise variables
 	float noiseSpeed = 0.04f;
@@ -51,7 +60,7 @@ public class NPC : MonoBehaviour {
 		npcAnimation = GetComponent<NPCAnimation> ();
 
 		currentState = GET_TARGET_POSITION;
-		_carryingObject = false;
+//		_carryingObject = false;
 	}
 
 
@@ -59,48 +68,66 @@ public class NPC : MonoBehaviour {
 	{
         if (currentState == GET_TARGET_POSITION)
         {
-            GetTargetPosition();
-            currentState = MOVE_TO_TARGET_POSITION;
+            // If I am not currently carrying an object, look for one to pick up.
+            if (carriedObject == null && targetObject == null)
+            {
+                float rand = Random.Range(0f, 1f);
+                if (rand < pickupProbability)
+                {
+                    CheckArea();
+                }
+            }
+
+            // If I am carrying an object, decide if I want to throw it.
+            if (carriedObject != null && targetObject == null)
+            {
+                float rand = Random.Range(0f, 1f);
+                if (rand < throwProbability)
+                {
+                    npcAnimation.ThrowObject();
+                    currentState = THROWING_OBJECT;
+                }
+            }
+
+            // If I didn't find a target object just move randomly.
+            if (carriedObject == null && targetObject == null)
+            {
+                GetTargetPosition();
+                currentState = MOVE_TO_TARGET_POSITION;
+            }
         }
+
         else if (currentState == MOVE_TO_TARGET_POSITION)
         {
             // See if I've reached my target position
             if (navMeshAgent.velocity.magnitude == 0.0f)
             {
-                if (!_carryingObject)
-                {
-                    CheckArea();
-                }
-
-                if (targetObject != null)
-                {
-                    currentState = MOVE_TOWARDS_OBJECT;
-                }
-                else
-                {
-                    currentState = GET_TARGET_POSITION;
-                }
+                currentState = GET_TARGET_POSITION;
             }
         }
 
         else if (currentState == MOVE_TOWARDS_OBJECT)
         {
+            Debug.Log("Moving towards object");
             // Check if object is in range. If so, pick it up.
             if ((targetObject.transform.position - gameObject.transform.position).magnitude <= pickupRange)
             {
                 // Freeze the object instantly so that it doesn't bounce off my collider & go flying.
                 // Trying to disable the colliders?  for some reason the child object behaves erratically
-                Collider[] childColliders = targetObject.GetComponents<Collider> ();
-                foreach (Collider collider in childColliders) {
+                Collider[] childColliders = targetObject.GetComponents<Collider>();
+                foreach (Collider collider in childColliders)
+                {
                     collider.enabled = false;
                 }
-                targetObject.gameObject.GetComponent<Rigidbody> ().isKinematic = true;
-                targetObject.gameObject.GetComponent<Rigidbody> ().useGravity = false;
-                targetObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = false;
+                targetObject.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                targetObject.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                targetObject.gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 
                 // Disable Incoherence controller.
                 targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
 
+                // Tell my animator to show the picking up animation.
+                npcAnimation.PickupObject();
 
                 Debug.Log("NPC is picking up " + targetObject);
                 currentState = PICK_UP_OBJECT;
@@ -111,19 +138,33 @@ public class NPC : MonoBehaviour {
         {   
             AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
 
-            npcAnimation.PickupObject();
-            if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.26f && !_carryingObject) 
+            if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.26f && carriedObject == null)
             {
                 AttachToHand();
             }
-
-            else if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.95f && _carryingObject)
+            else if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.95f && carriedObject != null)
             {
                 FinishedPickingUp();
             }
         }
+       
+        else if (currentState == THROWING_OBJECT)
+        {
+            Debug.Log("In throwing mode.");
+            AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
+
+            if (asi.IsName("Throwing") && asi.normalizedTime >= 0.5f && carriedObject != null)
+            {
+                ThrowObject();
+            }
+            else if (asi.IsName("Throwing") && asi.normalizedTime >= 0.95f && carriedObject == null)
+            {
+                currentState = GET_TARGET_POSITION;
+            }
+        }
+
         // Stop sending info to the animator if we're in pick up mode.
-		if (currentState != PICK_UP_OBJECT) {
+        if (currentState != PICK_UP_OBJECT && currentState != THROWING_OBJECT) {
 			npcAnimation.Move (navMeshAgent.desiredVelocity);
 		}
 
@@ -191,6 +232,7 @@ public class NPC : MonoBehaviour {
 			int randomNum = Random.Range (0, carriableObjects.Count);
 			targetObject = carriableObjects [randomNum];
 			navMeshAgent.SetDestination (targetObject.position);
+            currentState = MOVE_TOWARDS_OBJECT; 
 			Debug.Log ("NPC is targeting: " + targetObject.name);
 		}
 
@@ -202,18 +244,47 @@ public class NPC : MonoBehaviour {
 
 
 	//This will be called about 40% into the the pickup object animation 
-	public void AttachToHand () {
+	void AttachToHand () {
 		//targetObject.gameObject.GetComponent<Rigidbody> ().enabled= false;
+        carriedObject = targetObject;
 		targetObject.position = handTransform.position;
 		targetObject.SetParent (handTransform);
-		_carryingObject = true;
 	}
 
 	//Called at end of animation in order to reset state to wander
-	public void FinishedPickingUp () {
+	void FinishedPickingUp () {
 		npcAnimation.ObjectPickedUp ();
         Debug.Log("Picked up " + targetObject);
         targetObject = null;
 		currentState = GET_TARGET_POSITION;
 	}
+
+    void ThrowObject()
+    {
+        Debug.Log("Tried to throw");
+        if (carriedObject != null)
+        {
+            Debug.Log("Throwing");
+
+            // Re-activate all the object's dormant properties.
+            Collider[] childColliders = carriedObject.GetComponents<Collider> ();
+            foreach (Collider collider in childColliders) {
+                collider.enabled = true;
+            }
+            carriedObject.gameObject.GetComponent<Rigidbody> ().isKinematic = false;
+            carriedObject.gameObject.GetComponent<Rigidbody> ().useGravity = true;
+            carriedObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = true;
+            carriedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
+
+            // Deparent object.
+            carriedObject.transform.parent = null;
+
+            // Throw object by adding force to it.
+            carriedObject.GetComponent<Rigidbody>().AddForce(transform.forward*throwForce, ForceMode.Impulse);
+
+            npcAnimation.ObjectThrown();
+
+            carriedObject = null;
+        }
+    }
 }
