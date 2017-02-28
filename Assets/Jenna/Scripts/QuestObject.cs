@@ -19,6 +19,9 @@ public class QuestObject : MonoBehaviour {
 	public Sprite questAvailableSprite;
 	public Sprite questReceivableSprite;
 
+	// has it been assigned?
+	public bool assigned = false;
+
 	// Use this for initialization
 	void Start () {
 
@@ -40,6 +43,7 @@ public class QuestObject : MonoBehaviour {
 			QuestMarker.SetActive (true);
 			theImage.sprite = questAvailableSprite;
 			theImage.color = Color.magenta;
+			assigned = true;
 		} else if (QuestManager.questManager.CheckAcceptedQuests (this)) {
 			QuestMarker.SetActive (true);
 			theImage.sprite = questReceivableSprite;

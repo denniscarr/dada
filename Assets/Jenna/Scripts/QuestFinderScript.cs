@@ -21,7 +21,7 @@ public class QuestFinderScript : MonoBehaviour {
 
 		// find the items in the scene and add them to a list of questable items
 		interactables = new List<GameObject> ();
-		objects = GameObject.FindGameObjectsWithTag ("questable");
+		objects = GameObject.FindObjectsOfType<GameObject>();
 		objectsSize = objects.Length;
 
 		// loop through the items in the scene
