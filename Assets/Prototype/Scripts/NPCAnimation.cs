@@ -16,6 +16,7 @@ public class NPCAnimation : MonoBehaviour
 	Rigidbody rigidbody;
 	Animator animator;
 	bool isGrounded;
+	bool isPickingUp;
 	float origGroundCheckDistance;
 	const float half = 0.5f;
 	float turnAmount;
@@ -29,8 +30,8 @@ public class NPCAnimation : MonoBehaviour
 
 	void Start()
 	{
-		animator = transform.parent.GetComponentInChildren<Animator>();
-		rigidbody = transform.parent.GetComponent<Rigidbody>();
+		animator = transform.GetComponent<Animator>();
+		rigidbody = transform.GetComponent<Rigidbody>();
 //		capsule = GetComponent<CapsuleCollider>();
 //		capsuleHeight = capsule.height;
 //		capsuleCenter = capsule.center;
@@ -218,4 +219,16 @@ public class NPCAnimation : MonoBehaviour
 			animator.applyRootMotion = false;
 		}
 	}
+
+	//called when NPC is in pickup range
+	public void PickupObject() {
+		animator.SetBool ("PickingUp", true);
+	}
+
+	//called at end of pickup animation
+	public void ObjectPickedUp() {
+		animator.SetBool ("PickingUp", false);
+	}
+
+
 }
