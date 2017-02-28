@@ -13,8 +13,10 @@ public class NPC : MonoBehaviour {
 	const int GET_TARGET_POSITION = 0;
 	const int MOVE_TO_TARGET_POSITION = 1;
 	const int MOVE_TOWARDS_OBJECT = 2;
+	const int PICK_UP_OBJECT = 3;
 
-	bool pickupObjects = false;
+	//bool _pickupObjects = false;
+	bool _carryingObject;
 
 	// Movement types
 	int movementType;
@@ -27,7 +29,13 @@ public class NPC : MonoBehaviour {
 	// How far the NPC looks for objects to interact with.
 	public float interactRange = 10f;
 
-	Transform targetObject;
+	// Object pickup distance from the NPC
+	public float pickupRange = 1f;
+
+	// Reference to this NPC's Hand Transform -- SET IN INSPECTOR
+	[SerializeField] Transform handTransform;
+
+	[SerializeField] Transform targetObject;
 
 	// Noise variables
 	float noiseSpeed = 0.04f;
@@ -39,10 +47,11 @@ public class NPC : MonoBehaviour {
 
 	void Start()
 	{
-		navMeshAgent = transform.parent.GetComponent<NavMeshAgent> ();
+		navMeshAgent = transform.GetComponent<NavMeshAgent> ();
 		npcAnimation = GetComponent<NPCAnimation> ();
 
 		currentState = GET_TARGET_POSITION;
+		_carryingObject = false;
 	}
 
 
@@ -58,7 +67,10 @@ public class NPC : MonoBehaviour {
 		{
 			// See if I've reached my target position
 			if (navMeshAgent.velocity.magnitude == 0.0f) {
-				CheckArea ();
+				if (!_carryingObject) {
+					CheckArea ();
+				}
+
 				if (targetObject != null) {
 					currentState = MOVE_TOWARDS_OBJECT;
 				} else {
@@ -69,10 +81,28 @@ public class NPC : MonoBehaviour {
 
 		else if (currentState == MOVE_TOWARDS_OBJECT)
 		{
+			
+			if ((targetObject.transform.position - gameObject.transform.position).magnitude <= pickupRange) {
+				currentState = PICK_UP_OBJECT;
+				npcAnimation.PickupObject ();
+
+			}
+
 			// CHECK IF OBJECT IS IN RANGE. IF SO, PICK IT UP.
 		}
 
-		npcAnimation.Move (navMeshAgent.desiredVelocity);
+		if (currentState != PICK_UP_OBJECT) {
+			npcAnimation.Move (navMeshAgent.desiredVelocity);
+		}
+
+		//TODO have them randomly drop object, you know, just for fun
+
+		/*
+		if (_carryingObject && Random.value <= 0.01f) {
+			targetObject.parent = null;
+			_carryingObject = false;
+		}
+		*/
 	}
 
 
@@ -136,5 +166,31 @@ public class NPC : MonoBehaviour {
 		{
 			Debug.Log ("NPC found nothing in range to pick up.");
 		}
+	}
+
+
+	//This will be called about 40% into the the pickup object animation 
+	public void AttachToHand () {
+
+		//trying to disable the colliders?  for some reason the child object behaves erratically
+		Collider[] childColliders = targetObject.gameObject.GetComponents<Collider> ();
+		foreach (Collider collider in childColliders) {
+			collider.enabled = false;
+		}
+		targetObject.gameObject.GetComponent<Rigidbody> ().isKinematic = true;
+		targetObject.gameObject.GetComponent<Rigidbody> ().useGravity = false;
+		targetObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = false;
+
+		//targetObject.gameObject.GetComponent<Rigidbody> ().enabled= false;
+		targetObject.position = handTransform.position;
+		targetObject.SetParent (handTransform);
+		_carryingObject = true;
+		targetObject = null;
+	}
+
+	//Called at end of animation in order to reset state to wander
+	public void FinishedPickingUp () {
+		npcAnimation.ObjectPickedUp ();
+		currentState = GET_TARGET_POSITION;
 	}
 }
