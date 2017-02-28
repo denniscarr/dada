@@ -47,7 +47,7 @@ public class NPC : MonoBehaviour {
 
 	void Start()
 	{
-		navMeshAgent = transform.GetComponent<NavMeshAgent> ();
+        navMeshAgent = transform.parent.GetComponent<NavMeshAgent> ();
 		npcAnimation = GetComponent<NPCAnimation> ();
 
 		currentState = GET_TARGET_POSITION;
@@ -57,40 +57,72 @@ public class NPC : MonoBehaviour {
 
 	void Update()
 	{
-		if (currentState == GET_TARGET_POSITION)
-		{
-			GetTargetPosition ();
-			currentState = MOVE_TO_TARGET_POSITION;
-		}
+        if (currentState == GET_TARGET_POSITION)
+        {
+            GetTargetPosition();
+            currentState = MOVE_TO_TARGET_POSITION;
+        }
+        else if (currentState == MOVE_TO_TARGET_POSITION)
+        {
+            // See if I've reached my target position
+            if (navMeshAgent.velocity.magnitude == 0.0f)
+            {
+                if (!_carryingObject)
+                {
+                    CheckArea();
+                }
 
-		else if (currentState == MOVE_TO_TARGET_POSITION)
-		{
-			// See if I've reached my target position
-			if (navMeshAgent.velocity.magnitude == 0.0f) {
-				if (!_carryingObject) {
-					CheckArea ();
-				}
+                if (targetObject != null)
+                {
+                    currentState = MOVE_TOWARDS_OBJECT;
+                }
+                else
+                {
+                    currentState = GET_TARGET_POSITION;
+                }
+            }
+        }
 
-				if (targetObject != null) {
-					currentState = MOVE_TOWARDS_OBJECT;
-				} else {
-					currentState = GET_TARGET_POSITION;
-				}
-			}
-		}
+        else if (currentState == MOVE_TOWARDS_OBJECT)
+        {
+            // Check if object is in range. If so, pick it up.
+            if ((targetObject.transform.position - gameObject.transform.position).magnitude <= pickupRange)
+            {
+                // Freeze the object instantly so that it doesn't bounce off my collider & go flying.
+                // Trying to disable the colliders?  for some reason the child object behaves erratically
+                Collider[] childColliders = targetObject.GetComponents<Collider> ();
+                foreach (Collider collider in childColliders) {
+                    collider.enabled = false;
+                }
+                targetObject.gameObject.GetComponent<Rigidbody> ().isKinematic = true;
+                targetObject.gameObject.GetComponent<Rigidbody> ().useGravity = false;
+                targetObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = false;
 
-		else if (currentState == MOVE_TOWARDS_OBJECT)
-		{
-			
-			if ((targetObject.transform.position - gameObject.transform.position).magnitude <= pickupRange) {
-				currentState = PICK_UP_OBJECT;
-				npcAnimation.PickupObject ();
+                // Disable Incoherence controller.
+                targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
 
-			}
 
-			// CHECK IF OBJECT IS IN RANGE. IF SO, PICK IT UP.
-		}
+                Debug.Log("NPC is picking up " + targetObject);
+                currentState = PICK_UP_OBJECT;
+            }
+        }
 
+        else if (currentState == PICK_UP_OBJECT)
+        {   
+            AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
+
+            npcAnimation.PickupObject();
+            if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.26f && !_carryingObject) 
+            {
+                AttachToHand();
+            }
+
+            else if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.95f && _carryingObject)
+            {
+                FinishedPickingUp();
+            }
+        }
+        // Stop sending info to the animator if we're in pick up mode.
 		if (currentState != PICK_UP_OBJECT) {
 			npcAnimation.Move (navMeshAgent.desiredVelocity);
 		}
@@ -171,26 +203,17 @@ public class NPC : MonoBehaviour {
 
 	//This will be called about 40% into the the pickup object animation 
 	public void AttachToHand () {
-
-		//trying to disable the colliders?  for some reason the child object behaves erratically
-		Collider[] childColliders = targetObject.gameObject.GetComponents<Collider> ();
-		foreach (Collider collider in childColliders) {
-			collider.enabled = false;
-		}
-		targetObject.gameObject.GetComponent<Rigidbody> ().isKinematic = true;
-		targetObject.gameObject.GetComponent<Rigidbody> ().useGravity = false;
-		targetObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = false;
-
 		//targetObject.gameObject.GetComponent<Rigidbody> ().enabled= false;
 		targetObject.position = handTransform.position;
 		targetObject.SetParent (handTransform);
 		_carryingObject = true;
-		targetObject = null;
 	}
 
 	//Called at end of animation in order to reset state to wander
 	public void FinishedPickingUp () {
 		npcAnimation.ObjectPickedUp ();
+        Debug.Log("Picked up " + targetObject);
+        targetObject = null;
 		currentState = GET_TARGET_POSITION;
 	}
 }
