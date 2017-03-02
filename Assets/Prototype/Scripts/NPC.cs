@@ -24,6 +24,10 @@ public class NPC : MonoBehaviour {
 	const int WANDER_RANDOMLY = 0;
 	const int WANDER_RANDOMLY_NOISE = 1;
 
+    // Used for movement/pathfinding
+//    Vector3 finalDestination = transform.position;
+    float rotateDirection = 0f;     // Which direction I am currently rotating to find my way around an obstacle.
+
 	// How far the NPC looks for a new point to wander to.
 	public float wanderRange = 10f;
 
@@ -100,10 +104,21 @@ public class NPC : MonoBehaviour {
         else if (currentState == MOVE_TO_TARGET_POSITION)
         {
             // See if I've reached my target position
-            if (navMeshAgent.velocity.magnitude == 0.0f)
-            {
-                currentState = GET_TARGET_POSITION;
-            }
+//            if (Vector3.Distance(finalDestination, transform.position) < 0.5f)
+//            {
+//                currentState = GET_TARGET_POSITION;
+//            }
+
+            // If I haven't reached my target position, check to see if there is an obstacle in my way.
+//            else if (Physics.Raycast(transform.position, transform.forward, 5f))
+//            {
+//                // If I haven't chosen a rotation direction, choose one.
+//                if (rotateDirection == 0f)
+//                {
+//                    // See if my target position is to my left or right.
+////                    if (Vector3.Angle(
+//                }
+//            }
         }
 
         else if (currentState == MOVE_TOWARDS_OBJECT)
@@ -208,7 +223,7 @@ public class NPC : MonoBehaviour {
 			targetPosition.z += randomCircle.y;
 		}
 
-		navMeshAgent.SetDestination(targetPosition);
+//        finalDestination = targetPosition;
 	}
 
 
