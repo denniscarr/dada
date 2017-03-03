@@ -7,8 +7,7 @@ namespace SimpleManager
 	/////////////////////////////////////////////////
 	// BASE CLASSES
 	/////////////////////////////////////////////////
-	public interface IManaged
-	{
+	public interface IManaged{
 		void OnCreated();
 		void OnDestroyed();
 	}
@@ -30,6 +29,15 @@ namespace SimpleManager
 		public List<T> FindAll(Predicate<T> predicate)
 		{
 			return ManagedObjects.FindAll(predicate);
+		}
+
+		public void ClearDestroyedObjects(){
+			
+			foreach (T t in ObjectsAwaitingDestruction) {
+				Destroy (t);
+			}
+
+			ObjectsAwaitingDestruction.Clear ();
 		}
 	}
 }
