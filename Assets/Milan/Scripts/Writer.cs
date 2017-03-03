@@ -31,13 +31,19 @@ public class Writer : MonoBehaviour {
 		stringIndex = 0;
 		spawnPosition = transform.position;
 
-		string[] tempText = sourceText.text.Split(new char[] { '\n' });
-		_script = new string[tempText.Length][];
-
-		for (int i = 0; i < tempText.Length; i++) {
-				_script [i] = tempText [i].Split (new char[] { ' ' });
-		}
+        SetScript(sourceText.text);
 	}
+
+    void SetScript(string _text)
+    {
+        string[] tempText = _text.Split(new char[] { '\n' });
+
+        _script = new string[tempText.Length][];
+
+        for (int i = 0; i < tempText.Length; i++) {
+            _script [i] = tempText [i].Split (new char[] { ' ' });
+        }
+    }
 
 	public string[]GetCurrentString(){
 		return _script[stringIndex % _script.Length];
@@ -99,9 +105,11 @@ public class Writer : MonoBehaviour {
 		checkIndex ();
 
 		GameObject newWord = (GameObject)Instantiate (textPrefab, pos, Quaternion.identity);
+        newWord.transform.parent = transform.parent;
+
 		TextStyling t = newWord.GetComponent<TextStyling> ();
 		t.setText (_script [stringIndex][wordIndex]);
-		Font curFont = fonts [Random.Range (0, fonts.Length)];
+		Font curFont = fonts [Random.Range (0, fonts.Length-1)];
 		newWord.GetComponent<TextMesh>().font = curFont;
 		newWord.GetComponent<TextMesh> ().color = textColor;
 		if(!Gibberish){
