@@ -5,8 +5,8 @@ using UnityEngine;
 public class NPC : MonoBehaviour {
 
     // BEHAVIOR STATES
-    enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject};
-    BehaviorState currentState = BehaviorState.NormalMovement;
+    public enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject};
+    public BehaviorState currentState = BehaviorState.NormalMovement;
 
     // USED FOR MOVEMENT
     Vector3 baseDirection;  // The general direction that I want to wander in.
@@ -25,7 +25,7 @@ public class NPC : MonoBehaviour {
     // USED FOR PICKING UP OBJECTS
     Transform targetObject;
     Transform carriedObject;
-    float objectPickupRange = 1f;
+    float objectPickupRange = 2f;
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
     float pickupThrowTimer;  // Used to determine how long picking up/throwing takes if this NPC does not use an animator.
     [SerializeField] float pickupProbability = 0.2f;
@@ -303,8 +303,9 @@ public class NPC : MonoBehaviour {
             // Decide how long until I next check my surroundings.
             evaluateSurroundingsFreqCurrent = Random.Range(evaluateSurroundingsFreqMin, evaluateSurroundingsFreqMax);
             timeSinceLastEvaluation = 0.0f;
+
+            currentState = BehaviorState.NormalMovement;
         }
- 
     }
 
 

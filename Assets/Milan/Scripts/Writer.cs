@@ -98,7 +98,7 @@ public class Writer : MonoBehaviour {
 		Font curFont = fonts [Random.Range (0, fonts.Length-1)];
 		newWord.GetComponent<TextMesh>().font = curFont;
 		newWord.GetComponent<TextMesh> ().color = textColor;
-//		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
+		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
 		newWord.AddComponent<BoxCollider2D> ();
 		spawnPosition.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
 
