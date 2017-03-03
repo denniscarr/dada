@@ -258,7 +258,7 @@ public class NPC : MonoBehaviour {
 	}
 
 
-	//This will be called about 40% into the the pickup object animation 
+	// This will be called about 40% into the the pickup object animation 
 	void AttachToHand () {
 		//targetObject.gameObject.GetComponent<Rigidbody> ().enabled= false;
         carriedObject = targetObject;
@@ -266,7 +266,7 @@ public class NPC : MonoBehaviour {
 		targetObject.SetParent (handTransform);
 	}
 
-	//Called at end of animation in order to reset state to wander
+	// Called at end of animation in order to reset state to wander
 	void FinishedPickingUp () {
 		npcAnimation.ObjectPickedUp ();
         Debug.Log("Picked up " + targetObject);
