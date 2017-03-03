@@ -1,278 +1,351 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class NPC : MonoBehaviour {
 
-	NavMeshAgent navMeshAgent;
-	NPCAnimation npcAnimation;
+    // BEHAVIOR STATES
+    enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject};
+    BehaviorState currentState = BehaviorState.NormalMovement;
 
-	// Behavior states
-	int currentState;
-	const int GET_TARGET_POSITION = 0;
-	const int MOVE_TO_TARGET_POSITION = 1;
-	const int MOVE_TOWARDS_OBJECT = 2;
-	const int PICK_UP_OBJECT = 3;
-    const int THROWING_OBJECT = 4;
+    // USED FOR MOVEMENT
+    Vector3 baseDirection;  // The general direction that I want to wander in.
+    float meanderRange = 1f;  // How far I meander from the base direction.
+    [SerializeField] float moveForce = 5f;
+    [SerializeField] float maxVelocity = 10f;
+    bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame.
 
-	//bool _pickupObjects = false;
-//	bool _carryingObject;
+    // USED FOR CHECKING ENVIRONMENT
+    [SerializeField] float evaluateSurroundingsFreqMin = 2f;  // How often I stop to check my surroundings.
+    [SerializeField] float evaluateSurroundingsFreqMax = 10f;
+    float evaluateSurroundingsFreqCurrent;
+    float timeSinceLastEvaluation;
+    [SerializeField] float evaluationRange = 5f;
 
-	// Movement types
-	int movementType;
-	const int WANDER_RANDOMLY = 0;
-	const int WANDER_RANDOMLY_NOISE = 1;
+    // USED FOR PICKING UP OBJECTS
+    Transform targetObject;
+    Transform carriedObject;
+    float objectPickupRange = 1f;
+    [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
+    float pickupThrowTimer;  // Used to determine how long picking up/throwing takes if this NPC does not use an animator.
+    [SerializeField] float pickupProbability = 0.2f;
 
-    // Used for movement/pathfinding
-//    Vector3 finalDestination = transform.position;
-    float rotateDirection = 0f;     // Which direction I am currently rotating to find my way around an obstacle.
+    // USED FOR THROWING OBJECTS
+    float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
+    float throwForce = 20f;     
+    Transform throwTarget;  // The object I will throw my carried object at.
 
-	// How far the NPC looks for a new point to wander to.
-	public float wanderRange = 10f;
+    // FOR PERLIN NOISE
+    float noiseSpeed = 1f;
+    float noiseX = 0.0f;
+    float noiseY = 0.0f;
+    float noiseXOffset = 100f;
+    float noiseYOffset = 1000f;
 
-	// How far the NPC looks for objects to interact with.
-	public float interactRange = 10f;
+    // COMPONENT REFERENCES
+    Rigidbody rb;
+    NPCAnimation npcAnimation;
 
-	// Object pickup distance from the NPC.
-	public float pickupRange = 1f;
-    public float pickupProbability = 0.8f;
+    void Start()
+    {
+        rb = transform.parent.GetComponent<Rigidbody>();
 
-    public float throwProbability = 0.8f;  // How likely I am to throw an object.
-    public float throwForce = 20f;  // The force with which I throw objects.
-
-
-	// Reference to this NPC's Hand Transform -- SET IN INSPECTOR
-	[SerializeField] Transform handTransform;
-
-	[SerializeField] Transform targetObject;
-
-    // A reference to the object that I am currently carrying.
-    [SerializeField]Transform carriedObject;
-
-	// Noise variables
-	float noiseSpeed = 0.04f;
-	float noiseX = 0.0f;
-	float noiseY = 0.0f;
-	float noiseXOffset = 100f;
-	float noiseYOffset = 1000f;
-
-
-	void Start()
-	{
-        navMeshAgent = transform.parent.GetComponent<NavMeshAgent> ();
-		npcAnimation = GetComponent<NPCAnimation> ();
-
-		currentState = GET_TARGET_POSITION;
-//		_carryingObject = false;
-	}
-
-
-	void Update()
-	{
-        if (currentState == GET_TARGET_POSITION)
+        // See if I have an animator before I try to use NPCAnimation.
+        if (transform.parent.GetComponentInChildren<Animator>() != null)
         {
-            // If I am not currently carrying an object, look for one to pick up.
-            if (carriedObject == null && targetObject == null)
-            {
-                float rand = Random.Range(0f, 1f);
-                if (rand < pickupProbability)
-                {
-                    CheckArea();
-                }
-            }
-
-            // If I am carrying an object, decide if I want to throw it.
-            if (carriedObject != null && targetObject == null)
-            {
-                float rand = Random.Range(0f, 1f);
-                if (rand < throwProbability)
-                {
-                    npcAnimation.ThrowObject();
-                    currentState = THROWING_OBJECT;
-                }
-            }
-
-            // If I didn't find a target object just move randomly.
-            if (carriedObject == null && targetObject == null)
-            {
-                GetTargetPosition();
-                currentState = MOVE_TO_TARGET_POSITION;
-            }
+            npcAnimation = GetComponent<NPCAnimation>();
         }
 
-        else if (currentState == MOVE_TO_TARGET_POSITION)
+        // If I have no hand position assigned, create one.
+        if (handTransform == null)
         {
-            // See if I've reached my target position
-//            if (Vector3.Distance(finalDestination, transform.position) < 0.5f)
-//            {
-//                currentState = GET_TARGET_POSITION;
-//            }
-
-            // If I haven't reached my target position, check to see if there is an obstacle in my way.
-//            else if (Physics.Raycast(transform.position, transform.forward, 5f))
-//            {
-//                // If I haven't chosen a rotation direction, choose one.
-//                if (rotateDirection == 0f)
-//                {
-//                    // See if my target position is to my left or right.
-////                    if (Vector3.Angle(
-//                }
-//            }
+            GameObject handObject = new GameObject("Hand");
+            handObject.transform.parent = transform.parent;
+            handObject.transform.localPosition = transform.parent.forward*2f;
+            handObject.transform.Translate(new Vector3(0f, 1f, 0f));
+            handTransform = handObject.transform;
         }
 
-        else if (currentState == MOVE_TOWARDS_OBJECT)
+        EvaluateSurroundings();
+    }
+
+
+    void Update()
+    {
+        updateAnimation = false;
+
+        // MOVING NORMALLY (WANDERING & INTERMITENTLY EVALUATING SURROUNDINGS)
+        if (currentState == BehaviorState.NormalMovement)
         {
-            Debug.Log("Moving towards object");
-            // Check if object is in range. If so, pick it up.
-            if ((targetObject.transform.position - gameObject.transform.position).magnitude <= pickupRange)
+            // See if it's time to check my surroundings.
+            timeSinceLastEvaluation += Time.deltaTime;
+            if (timeSinceLastEvaluation >= evaluateSurroundingsFreqCurrent)
+            {
+                EvaluateSurroundings();
+            }
+
+            // See if I'm about to hit something. If so, get a new direction.
+            if (Physics.Raycast(transform.parent.position, baseDirection, 4f))
+            {
+                RandomizeBaseDirection();
+            }
+                
+            // Get a meandering path towards my base direction with perlin noise.
+            Vector3 meanderDirection = baseDirection + new Vector3(
+                                           MyMath.Map(Mathf.PerlinNoise(noiseX, 0.0f), 0f, 1f, -meanderRange, meanderRange),
+                                           0f,
+                                           MyMath.Map(Mathf.PerlinNoise(0.0f, noiseY), 0f, 1f, -meanderRange, meanderRange)
+                                       );
+                
+            noiseX += noiseSpeed * Time.deltaTime;
+            noiseY += noiseSpeed * Time.deltaTime;
+
+            MoveInDirection(meanderDirection);
+
+            updateAnimation = true;
+        }
+
+        // MOVING TO A PARTICULAR OBJECT
+        else if (currentState == BehaviorState.MoveToObject)
+        {
+            // Check to see if this object has become unable to be picked up (usually because it was picked up by another NPC)
+            if (targetObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried == false)
+            {
+                EvaluateSurroundings();
+                return;
+            }
+
+            // Check if target object is in range. If so, pick it up.
+            if (Vector3.Distance(targetObject.position, transform.parent.position) <= objectPickupRange)
             {
                 // Freeze the object instantly so that it doesn't bounce off my collider & go flying.
-                // Trying to disable the colliders?  for some reason the child object behaves erratically
                 Collider[] childColliders = targetObject.GetComponents<Collider>();
                 foreach (Collider collider in childColliders)
                 {
                     collider.enabled = false;
                 }
+
                 targetObject.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                 targetObject.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 targetObject.gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 
-                // Disable Incoherence controller.
-                targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
+                // Disable Incoherence controller && NPC AI
+                if (targetObject.FindChild("Incoherence Controller") != null) targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
+                if (targetObject.FindChild("NPC AI") != null) targetObject.FindChild("NPC AI").gameObject.SetActive(false);
+
+                // Set this item to not able to be carried so that no other NPCs try to pick it up.
+                targetObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried = false;
 
                 // Tell my animator to show the picking up animation.
-                npcAnimation.PickupObject();
+                if (npcAnimation != null) npcAnimation.PickupObject();
 
-                Debug.Log("NPC is picking up " + targetObject);
-                currentState = PICK_UP_OBJECT;
+                Debug.Log(transform.parent.name + " is picking up " + targetObject);
+
+                pickupThrowTimer = 0f;
+
+                currentState = BehaviorState.PickUpObject;
             }
+
+            // If the current object is not yet in range, move towards it.
+            else
+            {
+                // Move to target object.
+                Vector3 directionToTarget = targetObject.position - transform.parent.position;
+                MoveInDirection(directionToTarget);
+            }
+
+            updateAnimation = true;
         }
 
-        else if (currentState == PICK_UP_OBJECT)
-        {   
-            AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
-
-            if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.26f && carriedObject == null)
-            {
-                AttachToHand();
-            }
-            else if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.95f && carriedObject != null)
-            {
-                FinishedPickingUp();
-            }
-        }
-       
-        else if (currentState == THROWING_OBJECT)
+        // PICKING UP
+        else if (currentState == BehaviorState.PickUpObject)
         {
-            Debug.Log("In throwing mode.");
-            AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
+            // If we are using npcAnimation, then use the animation position to determine when the object should attach to my hand, etc.
+            if (npcAnimation != null)
+            {
+                AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
 
-            if (asi.IsName("Throwing") && asi.normalizedTime >= 0.5f && carriedObject != null)
-            {
-                ThrowObject();
+                if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.26f && carriedObject == null)
+                {
+                    AttachToHand();
+                }
+                else if (asi.IsName("PickingUp") && asi.normalizedTime >= 0.95f && carriedObject != null)
+                {
+                    FinishedPickingUp();
+                }
             }
-            else if (asi.IsName("Throwing") && asi.normalizedTime >= 0.95f && carriedObject == null)
+
+            // If we are not using npcAnimation, then just use a timer.
+            else
             {
-                currentState = GET_TARGET_POSITION;
+                pickupThrowTimer += Time.deltaTime;
+
+                if (pickupThrowTimer >= 1f)
+                {
+                    AttachToHand();
+                    FinishedPickingUp();
+                }
             }
         }
 
-        // Stop sending info to the animator if we're in pick up mode.
-        if (currentState != PICK_UP_OBJECT && currentState != THROWING_OBJECT) {
-			npcAnimation.Move (navMeshAgent.desiredVelocity);
-		}
+        // THROWING
+        else if (currentState == BehaviorState.ThrowObject)
+        {
+            // See if I am facing the object that I want to throw at, and if not then rotate towards it.
+            Vector3 flatTargetPos = throwTarget.transform.position;
+            flatTargetPos = new Vector3(throwTarget.transform.position.x, transform.parent.position.y, throwTarget.transform.position.z);
+            float angleToTarget = Vector3.Angle(transform.parent.forward, flatTargetPos - transform.parent.position);
+            if (angleToTarget > 0.5f)
+            {
+                Debug.Log("Angle to target: " + angleToTarget);
+                transform.parent.rotation = Quaternion.RotateTowards(transform.parent.rotation, Quaternion.LookRotation(throwTarget.position - transform.parent.position), 5f);
+                transform.parent.rotation = Quaternion.Euler(new Vector3(0f, transform.parent.rotation.eulerAngles.y, 0f));
+            }
 
-		//TODO have them randomly drop object, you know, just for fun
+            // If I am facing my target, throw the object
+            else
+            {
+                // If this NPC uses an animator, use that to determine throw timing.
+                if (npcAnimation != null)
+                {
+                    AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
 
-		/*
-		if (_carryingObject && Random.value <= 0.01f) {
-			targetObject.parent = null;
-			_carryingObject = false;
-		}
-		*/
-	}
+                    if (asi.IsName("Throwing") && asi.normalizedTime >= 0.5f && carriedObject != null)
+                    {
+                        ThrowObject();
+                    }
+                    else if (asi.IsName("Throwing") && asi.normalizedTime >= 0.95f && carriedObject == null)
+                    {
+                        EvaluateSurroundings();
+                    }
+                }
 
+                // Otherwise determine timing manually.
+                else
+                {
+                    pickupThrowTimer += Time.deltaTime;
 
-	void GetTargetPosition()
-	{
-		Vector3 targetPosition = transform.localPosition;
-
-		if (movementType == WANDER_RANDOMLY_NOISE)
-		{
-			// Get a random direction with perlin noise.
-			Vector3 direction = new Vector3 (
-				MyMath.Map (Mathf.PerlinNoise (noiseX, 0.0f), 0f, 1f, -1f, 1f),
-				transform.localPosition.y,
-				MyMath.Map (Mathf.PerlinNoise(0.0f, noiseY), 0f, 1f, -1f, 1f)
-			);
-
-			direction.Normalize ();
-
-			targetPosition += direction;
-
-			noiseX += noiseSpeed;
-			noiseY += noiseSpeed;
-		}
-
-		if (movementType == WANDER_RANDOMLY)
-		{
-			// Get a random direction with perlin noise.
-			Vector2 randomCircle = Random.insideUnitCircle*wanderRange;
-			targetPosition.x += randomCircle.x;
-			targetPosition.z += randomCircle.y;
-		}
-
-//        finalDestination = targetPosition;
-	}
+                    if (pickupThrowTimer >= 1f)
+                    {
+                        ThrowObject();
+                        EvaluateSurroundings();
+                    }
+                }
+            }
+        }
 
 
-	void CheckArea()
-	{
-		// Get a list of all the nearby objects that I could pick up.
-		List<Transform> carriableObjects = new List<Transform>();
-		Collider[] nearbyObjects = Physics.OverlapSphere (transform.position, interactRange);
-		foreach (Collider collider in nearbyObjects)
-		{
-			InteractionSettings intSet = collider.transform.GetComponentInChildren<InteractionSettings> ();
-			if (intSet != null && intSet.ableToBeCarried)
-			{
-				carriableObjects.Add (collider.transform);
-			}
-		}
-
-		// Choose a random object from that list to become my target.
-		if (carriableObjects.Count > 0)
-		{
-			int randomNum = Random.Range (0, carriableObjects.Count);
-			targetObject = carriableObjects [randomNum];
-			navMeshAgent.SetDestination (targetObject.position);
-            currentState = MOVE_TOWARDS_OBJECT; 
-			Debug.Log ("NPC is targeting: " + targetObject.name);
-		}
-
-		else
-		{
-			Debug.Log ("NPC found nothing in range to pick up.");
-		}
-	}
+        // Send information to the animation script.
+        if (npcAnimation != null && updateAnimation) npcAnimation.Move(rb.velocity);
+    }
 
 
-	// This will be called about 40% into the the pickup object animation 
-	void AttachToHand () {
-		//targetObject.gameObject.GetComponent<Rigidbody> ().enabled= false;
+    // Check the surrounding area and see if there is anything that interests me.
+    void EvaluateSurroundings()
+    {
+        // Evaluate nearby objects.
+        List<Transform> carriableObjects = new List<Transform>();
+        List<Transform> throwTargets = new List<Transform>();
+
+        Collider[] nearbyObjects = Physics.OverlapSphere (transform.position, evaluationRange);
+        foreach (Collider collider in nearbyObjects)
+        {
+            // Make sure this collider does not belong to me.
+            if (collider.transform != carriedObject && collider.transform != transform.parent)
+            {
+                // If I am not currently carrying an object, then add this object to a list of carriable objects in range.
+                if (carriedObject == null)
+                {
+                    InteractionSettings intSet = collider.transform.GetComponentInChildren<InteractionSettings>();
+                    if (intSet != null && intSet.ableToBeCarried)
+                    {
+                        carriableObjects.Add(collider.transform);
+                    }
+                }
+
+                // If I am carrying an object, decide whether I want to throw it at this object.
+                else if (carriedObject != null)
+                {
+                    throwTargets.Add(collider.transform);
+                }
+            }
+        }
+
+        // See if I want to pick something up
+        if (carriableObjects.Count > 0 && Random.Range(0f, 1f) <= pickupProbability)
+        {
+            int randomNum = Random.Range (0, carriableObjects.Count);
+            targetObject = carriableObjects [randomNum];
+            currentState = BehaviorState.MoveToObject;
+            Debug.Log (transform.parent.name + " is targeting: " + targetObject.name);
+        }
+
+        // See if I want to throw something.
+        else if (throwTargets.Count > 0 && Random.Range(0f, 1f) <= throwProbability)
+        {
+            throwTarget = GetComponent<Collider>().transform;
+            if (npcAnimation != null) npcAnimation.ThrowObject();
+            pickupThrowTimer = 0f;
+            currentState = BehaviorState.ThrowObject;
+
+            Debug.Log(transform.parent.name + " is going to throw something at " + throwTarget.name);
+        }
+
+        // If I decided not to pick anything up.
+        else
+        {
+            Debug.Log (transform.parent.name + " found nothing in range to pick up.");
+            RandomizeBaseDirection();
+
+            // Decide how long until I next check my surroundings.
+            evaluateSurroundingsFreqCurrent = Random.Range(evaluateSurroundingsFreqMin, evaluateSurroundingsFreqMax);
+            timeSinceLastEvaluation = 0.0f;
+        }
+ 
+    }
+
+
+    void AttachToHand()
+    {
         carriedObject = targetObject;
-		targetObject.position = handTransform.position;
-		targetObject.SetParent (handTransform);
-	}
+        targetObject.position = handTransform.position;
+        targetObject.SetParent (handTransform);
+    }
 
-	// Called at end of animation in order to reset state to wander
-	void FinishedPickingUp () {
-		npcAnimation.ObjectPickedUp ();
-        Debug.Log("Picked up " + targetObject);
+
+    // Called at end of animation in order to reset state to wander
+    void FinishedPickingUp ()
+    {
+        if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
+        Debug.Log(transform.parent.name + " Picked up " + targetObject);
         targetObject = null;
-		currentState = GET_TARGET_POSITION;
-	}
+        currentState = BehaviorState.NormalMovement;
+    }
+
+
+    // Gets a new base direction.
+    void RandomizeBaseDirection()
+    {
+        Vector2 randomInCircle = Random.insideUnitCircle;
+        baseDirection = new Vector3(randomInCircle.x, 0f, randomInCircle.y);
+        baseDirection.Normalize();
+    }
+
+
+    void MoveInDirection(Vector3 _direction)
+    {
+        // Turn me to face the meander direction.
+        transform.parent.rotation = Quaternion.RotateTowards(
+            Quaternion.LookRotation(transform.parent.forward),
+            Quaternion.LookRotation(_direction),
+            150f * Time.deltaTime
+        );
+
+        // Move me forwards
+        rb.AddForce(transform.parent.forward * moveForce * Time.deltaTime, ForceMode.Acceleration);
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
+    }
+
 
     void ThrowObject()
     {
@@ -289,7 +362,9 @@ public class NPC : MonoBehaviour {
             carriedObject.gameObject.GetComponent<Rigidbody> ().isKinematic = false;
             carriedObject.gameObject.GetComponent<Rigidbody> ().useGravity = true;
             carriedObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = true;
-            carriedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
+            if (carriedObject.FindChild("Incoherence Controller") != null) carriedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
+            if (carriedObject.FindChild("NPC AI") != null) carriedObject.FindChild("NPC AI").gameObject.SetActive(true);
+            carriedObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried = true;
 
             // Deparent object.
             carriedObject.transform.parent = null;
@@ -297,7 +372,7 @@ public class NPC : MonoBehaviour {
             // Throw object by adding force to it.
             carriedObject.GetComponent<Rigidbody>().AddForce(transform.forward*throwForce, ForceMode.Impulse);
 
-            npcAnimation.ObjectThrown();
+            if (npcAnimation != null) npcAnimation.ObjectThrown();
 
             carriedObject = null;
         }
