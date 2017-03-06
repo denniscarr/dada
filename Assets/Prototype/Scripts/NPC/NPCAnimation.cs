@@ -14,7 +14,7 @@ public class NPCAnimation : MonoBehaviour
 	[SerializeField] float groundCheckDistance = 0.1f;
 
 	Rigidbody rigidbody;
-	Animator animator;
+	public Animator animator;
 	bool isGrounded;
 	bool isPickingUp;
 	float origGroundCheckDistance;
@@ -30,8 +30,8 @@ public class NPCAnimation : MonoBehaviour
 
 	void Start()
 	{
-		animator = transform.GetComponent<Animator>();
-		rigidbody = transform.GetComponent<Rigidbody>();
+		animator = transform.parent.GetComponentInChildren<Animator>();
+		rigidbody = transform.parent.GetComponent<Rigidbody>();
 //		capsule = GetComponent<CapsuleCollider>();
 //		capsuleHeight = capsule.height;
 //		capsuleCenter = capsule.center;
@@ -220,15 +220,25 @@ public class NPCAnimation : MonoBehaviour
 		}
 	}
 
-	//called when NPC is in pickup range
+	// Called when NPC is in pickup range
 	public void PickupObject() {
 		animator.SetBool ("PickingUp", true);
 	}
 
-	//called at end of pickup animation
+	// Called at end of pickup animation
 	public void ObjectPickedUp() {
 		animator.SetBool ("PickingUp", false);
 	}
+
+    // Called when NPC decides to throw an object.
+    public void ThrowObject() {
+        animator.SetBool ("Throwing", true);
+    }
+
+    // Called at end of throw animation.
+    public void ObjectThrown() {
+        animator.SetBool ("Throwing", false);
+    }
 
 
 }

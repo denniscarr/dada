@@ -102,6 +102,7 @@ public class CS_AudioManager : MonoBehaviour {
 					Transform rootTransform = intSettings.transform.parent;
 					rootTransform.gameObject.AddComponent<AudioSource> ();
 					soundSources.Add (rootTransform.gameObject.GetComponent<AudioSource> ());
+					intSettings.usable = true;
 
 					// MORE DENNIS PROTOTYPE STUFF:
 					rootTransform.gameObject.GetComponent<AudioSource> ().spatialBlend = 1f;
