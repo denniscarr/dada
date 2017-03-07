@@ -4,9 +4,10 @@ using System.Collections;
 public class Writer : MonoBehaviour {
 
 	public Color textColor = Color.white;
-	public float lineLength = 50;
-    public float lineSpacing = 2f;
-	public float tracking = 0.25f;
+	float lineLength = 3f;
+    float lineSpacing = 1f;
+    float textSize = 0.1f;
+	public float tracking = 0.1f;
 	public float leading = 1;
 	public Font[] fonts;
 	public GameObject textPrefab;
@@ -82,20 +83,24 @@ public class Writer : MonoBehaviour {
     {
         SetScript(_text);
 
-        Debug.Log("Writing: " + _text);
-
         CreateTextBox (transform.position);
     }
 
 
     public void CreateTextBox(Vector3 basePosition)
     {
-        float tallestWordSize = 0f;
+        basePosition.y += 2f;
 
-        while (wordIndex < _script [stringIndex].Length -1)
+        spawnPosition = Vector3.zero;
+
+        GameObject textContainer = new GameObject("Text Container");
+        textContainer.transform.position = basePosition;
+
+        while (wordIndex < _script [stringIndex].Length)
         {
             // Instantiate the text object.
             GameObject newWord = (GameObject) Instantiate(textPrefab, basePosition, Quaternion.identity);
+            newWord.transform.parent = textContainer.transform;
 
             // Set styling & text for the next word.
             TextStyling textStyling = newWord.GetComponent<TextStyling>();
@@ -106,24 +111,34 @@ public class Writer : MonoBehaviour {
             newWord.GetComponent<TextMesh>().color = textColor;
             newWord.GetComponent<Renderer>().sharedMaterial = currentFont.material;
 
+            // Set this word's local position.
+            newWord.transform.localPosition = spawnPosition;
+            newWord.transform.localScale = new Vector3(textSize, textSize, textSize);
+
+            // Text styling stuff.
+            textStyling.fade = fade;
+            textStyling.delete = delete;
+            textStyling.fadeIn = fade;
+            textStyling.speed = fadeSpeed;
+
             // Get the position of the next word.
-            spawnPosition.x += newWord.GetComponent<Renderer>().bounds.size.x + tracking;
-            Debug.Log(_script[stringIndex][wordIndex] + ": " + newWord.GetComponent<Renderer>().bounds.size.x);
+            spawnPosition.x += (newWord.GetComponent<Renderer>().bounds.size.x + tracking);
 
             // If the next word would appear outside the space set aside per line, go to the next line.
             if (spawnPosition.x > lineLength)
             {
                 spawnPosition.y -= lineSpacing;
-                spawnPosition.x = basePosition.x;
+                spawnPosition.x = 0;
             }
-
-            // Parent the word to this NPC and set its local position.
-            newWord.transform.position = spawnPosition;
-//            newWord.transform.parent = transform.parent;
 
             wordIndex += 1;
         }
 
+        // Rotate the text containter towards the player.
+        textContainer.transform.LookAt(Camera.main.transform);
+        textContainer.transform.Rotate(0f, 180f, 0f);
+
+        // Set all values back to zero.
         wordIndex = 0;
         spawnPosition = Vector3.zero;
     }

@@ -16,7 +16,7 @@ public class NPC : MonoBehaviour {
     bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame.
 
     // USED FOR CHECKING ENVIRONMENT
-    [SerializeField] float evaluateSurroundingsFreqMin = 2f;  // How often I stop to check my surroundings.
+    [SerializeField] float evaluateSurroundingsFreqMin = 2f;  // How often I stop to check my surroundings for objects of interest.
     [SerializeField] float evaluateSurroundingsFreqMax = 10f;
     float evaluateSurroundingsFreqCurrent;
     float timeSinceLastEvaluation;
@@ -282,7 +282,7 @@ public class NPC : MonoBehaviour {
         {
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
             currentState = BehaviorState.MoveToObject;
-            writer.WriteSpecifiedString("I want a " + targetObject.name + ".");
+            writer.WriteSpecifiedString("I want that " + targetObject.name + ".");
         }
 
         // See if I want to throw something.
