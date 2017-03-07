@@ -17,6 +17,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	//POPULATE THIS
 	public List<AudioClip> audioClipPool;
+	public List<AudioClip> voiceClipPool;
+	public List<AudioClip> instClipPool;
 
 	public float thisClipPosition;
 
@@ -108,7 +110,7 @@ public class CS_AudioManager : MonoBehaviour {
 					rootTransform.gameObject.GetComponent<AudioSource> ().spatialBlend = 1f;
 					rootTransform.gameObject.GetComponent<AudioSource> ().maxDistance = 50f;
 					rootTransform.gameObject.GetComponent<AudioSource> ().loop = true;
-					rootTransform.gameObject.AddComponent<CS_MusicRotate> ();
+					//rootTransform.gameObject.AddComponent<CS_MusicRotate> ();
 				}
 				for (int i = 0; i < soundSources.Count; i++) {
 					//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
