@@ -47,13 +47,19 @@ public class PlayerController : MonoBehaviour {
 			mode = mode == ControlMode.ZOOM_IN_MODE? ControlMode.ZOOM_OUT_MODE:ControlMode.ZOOM_IN_MODE;
 			Debug.Log("mode change to:"+ mode);
 
+			//when it is zoom out mood,change to zoom in
 			if(canvas.activeInHierarchy == true){
+				//conceal canvas and change to fps control
 				canvas.SetActive(false);
 				fpController.enabled = true;
+
 				Debug.Log(canvas.activeInHierarchy);
 			}else{
+				//when it is zoom in mood,change to zoom out
 				canvas.SetActive(true);
 				fpController.enabled = false;
+				//change camera to original rotation
+				Camera.main.transform.eulerAngles = Vector3.zero;//(-Camera.main.transform.eulerAngles,Space.Self);
 				Debug.Log(canvas.activeInHierarchy);
 			}
 		}
