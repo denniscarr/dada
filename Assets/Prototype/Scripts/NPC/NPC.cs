@@ -88,7 +88,7 @@ public class NPC : MonoBehaviour {
             }
 
             // See if I'm about to hit something. If so, get a new direction.
-            if (Physics.Raycast(transform.parent.position, baseDirection, 4f))
+            if (Physics.Raycast(transform.parent.position, baseDirection, 5f))
             {
                 RandomizeBaseDirection();
             }
@@ -237,7 +237,6 @@ public class NPC : MonoBehaviour {
             }
         }
 
-
         // Send information to the animation script.
         if (npcAnimation != null && updateAnimation) npcAnimation.Move(rb.velocity);
     }
@@ -279,7 +278,7 @@ public class NPC : MonoBehaviour {
         {
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
             currentState = BehaviorState.MoveToObject;
-            writer.WriteSpecifiedString("I want a" + targetObject.name + ".");
+//            writer.WriteSpecifiedString("I want a" + targetObject.name + ".");
         }
 
         // See if I want to throw something.
@@ -290,13 +289,13 @@ public class NPC : MonoBehaviour {
             pickupThrowTimer = 0f;
             currentState = BehaviorState.ThrowObject;
 
-            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + targetObject.name + ".");
+//            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
         }
 
         // If I decided not to pick anything up.
         else
         {
-            writer.WriteSpecifiedString("There is nothing here.");
+//            writer.WriteSpecifiedString("There is nothing here.");
 
             RandomizeBaseDirection();
 
@@ -311,7 +310,7 @@ public class NPC : MonoBehaviour {
 
     void AttachToHand()
     {
-        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
+//        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
 
         carriedObject = targetObject;
         targetObject.position = handTransform.position;
