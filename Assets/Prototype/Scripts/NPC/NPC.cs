@@ -5,8 +5,8 @@ using UnityEngine;
 public class NPC : MonoBehaviour {
 
     // BEHAVIOR STATES
-    enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject};
-    BehaviorState currentState = BehaviorState.NormalMovement;
+    public enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject};
+    public BehaviorState currentState = BehaviorState.NormalMovement;
 
     // USED FOR MOVEMENT
     Vector3 baseDirection;  // The general direction that I want to wander in.
@@ -25,13 +25,13 @@ public class NPC : MonoBehaviour {
     // USED FOR PICKING UP OBJECTS
     Transform targetObject;
     Transform carriedObject;
-    float objectPickupRange = 1f;
+    float objectPickupRange = 2f;
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
     float pickupThrowTimer;  // Used to determine how long picking up/throwing takes if this NPC does not use an animator.
     [SerializeField] float pickupProbability = 0.2f;
 
     // USED FOR THROWING OBJECTS
-    float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
+    public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
     float throwForce = 20f;     
     Transform throwTarget;  // The object I will throw my carried object at.
 
@@ -88,7 +88,10 @@ public class NPC : MonoBehaviour {
             }
 
             // See if I'm about to hit something. If so, get a new direction.
-            if (Physics.Raycast(transform.parent.position, baseDirection, 4f))
+            Vector3 rayPos = transform.parent.position;
+            rayPos.y = 1f;
+            Debug.DrawRay(rayPos, baseDirection*5f, Color.cyan);
+            if (Physics.Raycast(rayPos, baseDirection, 5f))
             {
                 RandomizeBaseDirection();
             }
@@ -237,7 +240,6 @@ public class NPC : MonoBehaviour {
             }
         }
 
-
         // Send information to the animation script.
         if (npcAnimation != null && updateAnimation) npcAnimation.Move(rb.velocity);
     }
@@ -279,7 +281,7 @@ public class NPC : MonoBehaviour {
         {
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
             currentState = BehaviorState.MoveToObject;
-            writer.WriteSpecifiedString("I want a" + targetObject.name + ".");
+//            writer.WriteSpecifiedString("I want a" + targetObject.name + ".");
         }
 
         // See if I want to throw something.
@@ -290,27 +292,28 @@ public class NPC : MonoBehaviour {
             pickupThrowTimer = 0f;
             currentState = BehaviorState.ThrowObject;
 
-            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + targetObject.name + ".");
+//            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
         }
 
         // If I decided not to pick anything up.
         else
         {
-            writer.WriteSpecifiedString("There is nothing here.");
+//            writer.WriteSpecifiedString("There is nothing here.");
 
             RandomizeBaseDirection();
 
             // Decide how long until I next check my surroundings.
             evaluateSurroundingsFreqCurrent = Random.Range(evaluateSurroundingsFreqMin, evaluateSurroundingsFreqMax);
             timeSinceLastEvaluation = 0.0f;
+
+            currentState = BehaviorState.NormalMovement;
         }
- 
     }
 
 
     void AttachToHand()
     {
-        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
+//        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
 
         carriedObject = targetObject;
         targetObject.position = handTransform.position;
