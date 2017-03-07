@@ -90,7 +90,6 @@ public class NPC : MonoBehaviour {
             // See if I'm about to hit something. If so, get a new direction.
             Vector3 rayPos = transform.parent.position;
             rayPos.y = 1f;
-            Debug.DrawRay(rayPos, baseDirection*5f, Color.cyan);
             if (Physics.Raycast(rayPos, baseDirection, 5f))
             {
                 RandomizeBaseDirection();
@@ -203,7 +202,6 @@ public class NPC : MonoBehaviour {
             float angleToTarget = Vector3.Angle(transform.parent.forward, flatTargetPos - transform.parent.position);
             if (angleToTarget > 0.5f)
             {
-                Debug.Log("Angle to target: " + angleToTarget);
                 transform.parent.rotation = Quaternion.RotateTowards(transform.parent.rotation, Quaternion.LookRotation(throwTarget.position - transform.parent.position), 5f);
                 transform.parent.rotation = Quaternion.Euler(new Vector3(0f, transform.parent.rotation.eulerAngles.y, 0f));
             }

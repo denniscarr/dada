@@ -5,6 +5,7 @@ public class Writer : MonoBehaviour {
 
 	public Color textColor = Color.white;
 	public float lineLength = 50;
+    public float lineSpacing = 2f;
 	public float tracking = 0.25f;
 	public float leading = 1;
 	public Font[] fonts;
@@ -83,11 +84,7 @@ public class Writer : MonoBehaviour {
 
         Debug.Log("Writing: " + _text);
 
-        if (WordbyWord) {
-            CreateWord (transform.position);
-        } else {
-            StartCoroutine (WriteText ());
-        }
+        CreateTextBox (transform.position);
     }
 
 
@@ -110,16 +107,25 @@ public class Writer : MonoBehaviour {
             newWord.GetComponent<Renderer>().sharedMaterial = currentFont.material;
 
             // Get the position of the next word.
-            spawnPosition.x += newWord.GetComponent<Renderer>().bounds.size.x;
-//            Debug.DrawRay();
+            spawnPosition.x += newWord.GetComponent<Renderer>().bounds.size.x + tracking;
+            Debug.Log(_script[stringIndex][wordIndex] + ": " + newWord.GetComponent<Renderer>().bounds.size.x);
+
+            // If the next word would appear outside the space set aside per line, go to the next line.
             if (spawnPosition.x > lineLength)
             {
-//                spawnPosition.y += lineSpacing;   // Re-add lineSpacing to script.
+                spawnPosition.y -= lineSpacing;
                 spawnPosition.x = basePosition.x;
             }
 
-            newWord.transform.parent = transform.parent;
+            // Parent the word to this NPC and set its local position.
+            newWord.transform.position = spawnPosition;
+//            newWord.transform.parent = transform.parent;
+
+            wordIndex += 1;
         }
+
+        wordIndex = 0;
+        spawnPosition = Vector3.zero;
     }
 
 	public void CreateWord(Vector3 pos, Vector3 rotation = default(Vector3))
