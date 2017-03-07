@@ -52,15 +52,18 @@ public class PlayerController : MonoBehaviour {
 				//conceal canvas and change to fps control
 				canvas.SetActive(false);
 				fpController.enabled = true;
-
+					
 				Debug.Log(canvas.activeInHierarchy);
 			}else{
 				//when it is zoom in mood,change to zoom out
 				canvas.SetActive(true);
 				fpController.enabled = false;
-				//change camera to original rotation
-				Camera.main.transform.eulerAngles = Vector3.zero;//(-Camera.main.transform.eulerAngles,Space.Self);
-				Debug.Log(canvas.activeInHierarchy);
+				Cursor.lockState = CursorLockMode.None;
+
+				//reset the main camera to be parallel to the plane
+				Camera.main.transform.localEulerAngles = Vector3.zero;//.SetLookRotation(forward,Vector3.up);
+				//update upper node rotation with the player
+				uppernode.localRotation = transform.localRotation;
 			}
 		}
 
