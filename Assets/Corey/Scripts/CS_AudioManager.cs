@@ -1,3 +1,4 @@
+
 ﻿//http://www.cnblogs.com/gameprogram/archive/2012/08/15/2640357.html
 //http://www.blog.silentkraken.com/2010/04/06/audiomanager/
 using UnityEngine;
