@@ -60,7 +60,7 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		AudioListener.GetSpectrumData( spectrumData, 0, FFTWindow.Rectangular );
+		audioSource.GetSpectrumData( spectrumData, 0, FFTWindow.Rectangular );
 		float wholeEnergy = 0;
 		for (int i = spectrumData.Length / 5 * 2; i < spectrumData.Length / 5 * 2 + spectrumData.Length / 2; i++) {
 			wholeEnergy += spectrumData [i];

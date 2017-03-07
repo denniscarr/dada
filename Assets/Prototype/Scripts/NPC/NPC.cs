@@ -16,7 +16,7 @@ public class NPC : MonoBehaviour {
     bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame.
 
     // USED FOR CHECKING ENVIRONMENT
-    [SerializeField] float evaluateSurroundingsFreqMin = 2f;  // How often I stop to check my surroundings.
+    [SerializeField] float evaluateSurroundingsFreqMin = 2f;  // How often I stop to check my surroundings for objects of interest.
     [SerializeField] float evaluateSurroundingsFreqMax = 10f;
     float evaluateSurroundingsFreqCurrent;
     float timeSinceLastEvaluation;
@@ -64,7 +64,10 @@ public class NPC : MonoBehaviour {
         {
             GameObject handObject = new GameObject("Hand");
             handObject.transform.parent = transform.parent;
-            handObject.transform.localPosition = transform.parent.forward*2f;
+
+            handObject.transform.localPosition = Vector3.zero;
+            handObject.transform.localScale = new Vector3(1f, 1f, 1f);
+            handObject.transform.rotation = Quaternion.identity;
             handObject.transform.Translate(new Vector3(0f, 1f, 0f));
             handTransform = handObject.transform;
         }
@@ -90,7 +93,6 @@ public class NPC : MonoBehaviour {
             // See if I'm about to hit something. If so, get a new direction.
             Vector3 rayPos = transform.parent.position;
             rayPos.y = 1f;
-            Debug.DrawRay(rayPos, baseDirection*5f, Color.cyan);
             if (Physics.Raycast(rayPos, baseDirection, 5f))
             {
                 RandomizeBaseDirection();
@@ -203,7 +205,6 @@ public class NPC : MonoBehaviour {
             float angleToTarget = Vector3.Angle(transform.parent.forward, flatTargetPos - transform.parent.position);
             if (angleToTarget > 0.5f)
             {
-                Debug.Log("Angle to target: " + angleToTarget);
                 transform.parent.rotation = Quaternion.RotateTowards(transform.parent.rotation, Quaternion.LookRotation(throwTarget.position - transform.parent.position), 5f);
                 transform.parent.rotation = Quaternion.Euler(new Vector3(0f, transform.parent.rotation.eulerAngles.y, 0f));
             }
@@ -281,7 +282,7 @@ public class NPC : MonoBehaviour {
         {
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
             currentState = BehaviorState.MoveToObject;
-//            writer.WriteSpecifiedString("I want a" + targetObject.name + ".");
+            writer.WriteSpecifiedString("I want that " + targetObject.name + ".");
         }
 
         // See if I want to throw something.
@@ -292,13 +293,13 @@ public class NPC : MonoBehaviour {
             pickupThrowTimer = 0f;
             currentState = BehaviorState.ThrowObject;
 
-//            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
+            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
         }
 
         // If I decided not to pick anything up.
         else
         {
-//            writer.WriteSpecifiedString("There is nothing here.");
+            writer.WriteSpecifiedString("There is nothing here.");
 
             RandomizeBaseDirection();
 
