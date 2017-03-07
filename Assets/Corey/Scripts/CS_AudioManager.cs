@@ -104,6 +104,7 @@ public class CS_AudioManager : MonoBehaviour {
 					Transform rootTransform = intSettings.transform.parent;
 					rootTransform.gameObject.AddComponent<AudioSource> ();
 					soundSources.Add (rootTransform.gameObject.GetComponent<AudioSource> ());
+					rootTransform.gameObject.AddComponent<MusicToColor> ();
 					intSettings.usable = true;
 
 					// MORE DENNIS PROTOTYPE STUFF:
