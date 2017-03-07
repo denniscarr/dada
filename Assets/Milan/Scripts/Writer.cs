@@ -81,10 +81,44 @@ public class Writer : MonoBehaviour {
     {
         SetScript(_text);
 
+        Debug.Log("Writing: " + _text);
+
         if (WordbyWord) {
             CreateWord (transform.position);
         } else {
             StartCoroutine (WriteText ());
+        }
+    }
+
+
+    public void CreateTextBox(Vector3 basePosition)
+    {
+        float tallestWordSize = 0f;
+
+        while (wordIndex < _script [stringIndex].Length -1)
+        {
+            // Instantiate the text object.
+            GameObject newWord = (GameObject) Instantiate(textPrefab, basePosition, Quaternion.identity);
+
+            // Set styling & text for the next word.
+            TextStyling textStyling = newWord.GetComponent<TextStyling>();
+            textStyling.setText(_script[stringIndex][wordIndex]);
+            Font currentFont = fonts[Random.Range(0, fonts.Length - 1)];
+
+            newWord.GetComponent<TextMesh>().font = currentFont;
+            newWord.GetComponent<TextMesh>().color = textColor;
+            newWord.GetComponent<Renderer>().sharedMaterial = currentFont.material;
+
+            // Get the position of the next word.
+            spawnPosition.x += newWord.GetComponent<Renderer>().bounds.size.x;
+//            Debug.DrawRay();
+            if (spawnPosition.x > lineLength)
+            {
+//                spawnPosition.y += lineSpacing;   // Re-add lineSpacing to script.
+                spawnPosition.x = basePosition.x;
+            }
+
+            newWord.transform.parent = transform.parent;
         }
     }
 

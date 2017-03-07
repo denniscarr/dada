@@ -281,7 +281,7 @@ public class NPC : MonoBehaviour {
         {
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
             currentState = BehaviorState.MoveToObject;
-//            writer.WriteSpecifiedString("I want a" + targetObject.name + ".");
+            writer.WriteSpecifiedString("I want a " + targetObject.name + ".");
         }
 
         // See if I want to throw something.
@@ -292,13 +292,13 @@ public class NPC : MonoBehaviour {
             pickupThrowTimer = 0f;
             currentState = BehaviorState.ThrowObject;
 
-//            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
+            writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
         }
 
         // If I decided not to pick anything up.
         else
         {
-//            writer.WriteSpecifiedString("There is nothing here.");
+            writer.WriteSpecifiedString("There is nothing here.");
 
             RandomizeBaseDirection();
 
