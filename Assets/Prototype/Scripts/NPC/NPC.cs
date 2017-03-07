@@ -31,7 +31,7 @@ public class NPC : MonoBehaviour {
     [SerializeField] float pickupProbability = 0.2f;
 
     // USED FOR THROWING OBJECTS
-    float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
+    public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
     float throwForce = 20f;     
     Transform throwTarget;  // The object I will throw my carried object at.
 
@@ -88,7 +88,10 @@ public class NPC : MonoBehaviour {
             }
 
             // See if I'm about to hit something. If so, get a new direction.
-            if (Physics.Raycast(transform.parent.position, baseDirection, 5f))
+            Vector3 rayPos = transform.parent.position;
+            rayPos.y = 1f;
+            Debug.DrawRay(rayPos, baseDirection*5f, Color.cyan);
+            if (Physics.Raycast(rayPos, baseDirection, 5f))
             {
                 RandomizeBaseDirection();
             }
