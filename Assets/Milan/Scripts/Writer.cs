@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+
 public class Writer : MonoBehaviour {
 
 	public Color textColor = Color.white;
@@ -10,7 +10,6 @@ public class Writer : MonoBehaviour {
 	public Font[] fonts;
 	public GameObject textPrefab;
 	public bool fade, noRotation, delete, WordbyWord;
-	public bool Gibberish;
 	public float delay; 
 	public float fadeSpeed;
 	public TextAsset sourceText;
@@ -21,10 +20,7 @@ public class Writer : MonoBehaviour {
 	int 		wordIndex, lineIndex;
 	int 		stringIndex;
 
-	List<GameObject> currentText;
-
 	void Start () {
-		currentText = new List<GameObject> ();
 		originalPos = transform.position;
 		wordIndex = 0;
 		lineIndex = 0;
@@ -63,47 +59,37 @@ public class Writer : MonoBehaviour {
 
 		string line = "";
 
-		foreach (string s in _script [stringIndex % _script.Length]) {
-			line += s + " ";
+		foreach (string s in _script [stringIndex]) {
+			line += s;
+		}
+
+		foreach (string s in _script [stringIndex]) {
+			CreateWord (spawnPosition);
 			yield return new WaitForSeconds (delay);
-			transform.LookAt (GameObject.Find ("Player").transform);
 		}
-
-		GetComponent<TextMesh> ().text = line;
-		stringIndex++;
-
-		//deprecated code for spawning individual gameObjects for words. 
-//		foreach (string s in _script [stringIndex]) {
-//			CreateWord (spawnPosition);
-//			yield return new WaitForSeconds (delay);
-//		}
-	}
-
-	public void WriteWord(){
-		if (wordIndex > _script [stringIndex % _script.Length].Length -1) {
-			GetComponent<TextMesh> ().text = "";
-			stringIndex++;
-			wordIndex = 0;
-		}
-
-		transform.LookAt (GameObject.Find ("Player").transform);
-
-		GetComponent<TextMesh> ().text += _script [stringIndex % _script.Length][wordIndex] + " ";
-		wordIndex++;
 	}
 
 	void UsedByPlayer() {
 		if (WordbyWord) {
-			WriteWord ();
+			CreateWord (spawnPosition);
 		} else {
 			StartCoroutine (WriteText ());
 		}
 	}
 
-	public void CreateWord(Vector3 pos, Vector3 rotation = default(Vector3)){
+    public void WriteSpecifiedString(string _text)
+    {
+        SetScript(_text);
 
-		checkIndex ();
+        if (WordbyWord) {
+            CreateWord (transform.position);
+        } else {
+            StartCoroutine (WriteText ());
+        }
+    }
 
+	public void CreateWord(Vector3 pos, Vector3 rotation = default(Vector3))
+    {
 		GameObject newWord = (GameObject)Instantiate (textPrefab, pos, Quaternion.identity);
         newWord.transform.parent = transform.parent;
 
@@ -112,9 +98,7 @@ public class Writer : MonoBehaviour {
 		Font curFont = fonts [Random.Range (0, fonts.Length-1)];
 		newWord.GetComponent<TextMesh>().font = curFont;
 		newWord.GetComponent<TextMesh> ().color = textColor;
-		if(!Gibberish){
-			newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
-		}
+		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
 		newWord.AddComponent<BoxCollider2D> ();
 		spawnPosition.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
 
@@ -125,22 +109,14 @@ public class Writer : MonoBehaviour {
 		t.delete = delete;
 		t.fadeIn = fade;
 		t.speed = fadeSpeed;
-
-		currentText.Add (newWord);
 		wordIndex++;
 
-	}
-
-	void checkIndex(){
-		if (wordIndex > _script [stringIndex].Length) {
+		if (wordIndex > _script [stringIndex].Length -1) {
 			wordIndex = 0;
 			spawnPosition.x = originalPos.x;
 			spawnPosition.y -= leading;
 			stringIndex++;
-			foreach (GameObject g in currentText) {
-				Destroy (g);
-			}
-			if (stringIndex >= _script.Length) {
+			if (stringIndex > _script.Length -1) {
 				stringIndex = 0;
 				spawnPosition.y = originalPos.y;
 			}
