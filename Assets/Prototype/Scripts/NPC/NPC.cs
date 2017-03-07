@@ -64,7 +64,10 @@ public class NPC : MonoBehaviour {
         {
             GameObject handObject = new GameObject("Hand");
             handObject.transform.parent = transform.parent;
-            handObject.transform.localPosition = transform.parent.forward*2f;
+
+            handObject.transform.localPosition = Vector3.zero;
+            handObject.transform.localScale = new Vector3(1f, 1f, 1f);
+            handObject.transform.rotation = Quaternion.identity;
             handObject.transform.Translate(new Vector3(0f, 1f, 0f));
             handTransform = handObject.transform;
         }

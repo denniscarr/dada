@@ -30,8 +30,10 @@ public class MouseCotroller : MonoBehaviour {
 	Plane draggedPlane;
 	Transform cubeOnDraggedPlane;
 	Vector3 inPointForPlaneFromCube;
+
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
 	float clickGapCount;
+
 	// Use this for initialization
 	void Start () {
 		clickGapCount = 0;
