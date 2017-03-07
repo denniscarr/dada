@@ -78,6 +78,16 @@ public class CS_AudioManager : MonoBehaviour {
 		DestroyObject(t_SFX, g_SFX.length);
 	}
 
+	public void Play3DSFX(AudioClip g_SFX, Vector3 g_position) {
+		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
+		t_SFX.name = "SFX_" + g_SFX.name;
+		t_SFX.transform.position = g_position;
+		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
+		t_SFX.GetComponent<AudioSource> ().outputAudioMixerGroup = SFXGroup;
+		t_SFX.GetComponent<AudioSource> ().Play ();
+		DestroyObject(t_SFX, g_SFX.length);
+	}
+
 	//========================================================================
 	//DADA-SPECIFIC FUNCTIONS
 	//========================================================================
