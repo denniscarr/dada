@@ -27,4 +27,12 @@ public class CS_PlaySFX : MonoBehaviour {
 		} else
 			CS_AudioManager.Instance.PlaySFX (mySFX [t_number], playVolume);
 	}
+
+	public void PlayRandomSFX () {
+		PlaySFX (Random.Range (0, mySFX.Length));
+	}
+
+	public void PlaySFXPitchJitter(int t_number, float jitterAmt) {
+		CS_AudioManager.Instance.PlaySFX (mySFX [t_number], (Random.value * jitterAmt) - (jitterAmt / 2f));
+	}
 }
