@@ -34,7 +34,7 @@ namespace SimpleManager
 		public void ClearDestroyedObjects(){
 			
 			foreach (T t in ObjectsAwaitingDestruction) {
-				Destroy (t);
+				ManagedObjects.Remove (t);
 			}
 
 			ObjectsAwaitingDestruction.Clear ();
