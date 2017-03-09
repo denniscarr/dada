@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour {
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
 	float pressGapCount;
 
+	CS_PlaySFX playSFXScript;
+
 	// Use this for initialization
 	void Start () {
 		fpController = this.GetComponent<FirstPersonController>();
@@ -34,11 +36,15 @@ public class PlayerController : MonoBehaviour {
 		}else{
 			fpController.enabled = false;
 		}
+			
+		playSFXScript = this.GetComponent<CS_PlaySFX> ();
 
 	}
 
 
 	void Update() {
+
+		//Debug.Log(Globe.prefab);
 		//if press tab, mode change to another
 		pressGapCount += Time.deltaTime;
 
@@ -46,6 +52,9 @@ public class PlayerController : MonoBehaviour {
 			
 			mode = mode == ControlMode.ZOOM_IN_MODE? ControlMode.ZOOM_OUT_MODE:ControlMode.ZOOM_IN_MODE;
 			Debug.Log("mode change to:"+ mode);
+
+			//play sound effect for mode switch
+			playSFXScript.PlaySFX (1);
 
 			//when it is zoom out mood,change to zoom in
 			if(canvas.activeInHierarchy == true){

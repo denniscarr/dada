@@ -34,6 +34,9 @@ public class MouseCotroller : MonoBehaviour {
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
 	float clickGapCount;
 
+	//For Sound Effects
+	CS_PlaySFX sfxScript;
+
 	// Use this for initialization
 	void Start () {
 		clickGapCount = 0;
@@ -48,6 +51,8 @@ public class MouseCotroller : MonoBehaviour {
 			UpperCamera.transform.forward,
 			UpperCamera.transform.parent.TransformPoint(inPointForPlaneFromCube));
 		cubeOnDraggedPlane.gameObject.SetActive(false);
+
+		sfxScript = gameObject.GetComponent<CS_PlaySFX> ();
 
 	}
 	
@@ -92,6 +97,7 @@ public class MouseCotroller : MonoBehaviour {
 
 				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 				if (isAbleToBeUse(interactionSettings)) {
+					sfxScript.PlaySFX (0);
 					Debug.Log("use "+hit.collider.name+" inside visor");
 					hit.collider.BroadcastMessage ("UsedByPlayer");
 				}
@@ -193,6 +199,7 @@ public class MouseCotroller : MonoBehaviour {
 			//update the postion
 			UpdateDraggedObjectPosition(pickedUpObject);
 
+			sfxScript.PlaySFX (0);
 
 		}
 			
@@ -255,6 +262,7 @@ public class MouseCotroller : MonoBehaviour {
 	}
 
 	void ThrowObject() {
+		sfxScript.PlaySFX (1);
 
 		Transform carriedObject = selectedObject;
 
