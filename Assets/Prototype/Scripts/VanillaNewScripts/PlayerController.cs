@@ -36,12 +36,8 @@ public class PlayerController : MonoBehaviour {
 		}else{
 			fpController.enabled = false;
 		}
-
-<<<<<<< HEAD
-
-=======
+			
 		playSFXScript = this.GetComponent<CS_PlaySFX> ();
->>>>>>> origin/master
 
 	}
 
