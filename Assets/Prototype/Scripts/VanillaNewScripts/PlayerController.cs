@@ -36,13 +36,15 @@ public class PlayerController : MonoBehaviour {
 		}else{
 			fpController.enabled = false;
 		}
-
+			
 		playSFXScript = this.GetComponent<CS_PlaySFX> ();
 
 	}
 
 
 	void Update() {
+
+		//Debug.Log(Globe.prefab);
 		//if press tab, mode change to another
 		pressGapCount += Time.deltaTime;
 
