@@ -35,10 +35,14 @@ public class PlayerController : MonoBehaviour {
 			fpController.enabled = false;
 		}
 
+
+
 	}
 
 
 	void Update() {
+
+		//Debug.Log(Globe.prefab);
 		//if press tab, mode change to another
 		pressGapCount += Time.deltaTime;
 
