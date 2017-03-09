@@ -3,38 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : SimpleManager.Manager<Level> {
-	
-	public float tileScale;
+
+	Level currentLevel;
+	public float tileScale = 1;
 	private float xOffset, yOffset;
+	private Texture2D[] maps;
 
 	void Start(){
+		maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
+
+		Level.xOrigin = Random.Range (0, 10000);
+		Level.yOrigin = Random.Range (0, 10000);
+
 		Create ();
 	}
 
 	public override Level Create(){
 
-		GameObject Level = new GameObject();
-		Level l = Level.AddComponent <Level> ();
-		LevelObjectManager m = Level.AddComponent<LevelObjectManager> ();
+		GameObject newLevel = new GameObject();
+		Level l = newLevel.AddComponent <Level> ();
 
-		Level.transform.position += (Vector3.right) * xOffset/1.5f;
-		Level.transform.position -= (Vector3.up) * yOffset/2;
-		Level.name = "Level" + ManagedObjects.Count;
+		newLevel.transform.position += (Vector3.right) * xOffset;
+		newLevel.transform.position += (Vector3.forward) * yOffset;
+		newLevel.name = "Level " + ManagedObjects.Count;
 
-		l.minSize = 50;
-		l.maxSize = 50;
+		if (maps.Length > 0) {
+			l.bitmap = maps [Random.Range (0, maps.Length)];
+		}
 
-		l.xOrigin = Random.Range (0, 10000);
-		l.yOrigin = Random.Range (0, 10000);
+		l._width = 25;
+		l._height = 25;
 
-		//??
-//		l.xOrigin = xOffset*l.stepSize;
-//		l.yOrigin = yOffset;
+		l.tileScale = tileScale;
+
 
 		l.OnCreated ();
 
-		xOffset += l._width;
-		yOffset += l._height;
+		Level.xOrigin += l._width / Level.noiseScale;
+//		Level.yOrigin += l._height / Level.noiseScale;
+		xOffset += l._width * tileScale;
+//		yOffset += l._height * tileScale;
+
+		currentLevel = l;
 
 		ManagedObjects.Add (l);
 		return l;
