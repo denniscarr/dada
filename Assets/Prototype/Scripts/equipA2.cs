@@ -13,6 +13,7 @@ public class equipA2 : MonoBehaviour {
     private bool activatePrompt = false;
     private GameObject player;
     public float speed = 1;
+	public float ASpeed = 10;
 
 	Transform t_gun;
 
@@ -50,6 +51,11 @@ public class equipA2 : MonoBehaviour {
         {
             MoveToCamera();
         }
+
+		if (Input.GetKeyDown (abandonKey)) {
+			abandonItem ();
+		
+		}
     }
 
     void MoveToCamera ()
@@ -62,9 +68,17 @@ public class equipA2 : MonoBehaviour {
 		transform.position = t_gun.position;
 		transform.rotation = t_gun.rotation;
 		transform.SetParent(t_gun.parent,true);
-
+		equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = false;
         Debug.Log("why");
     }
 
+	void abandonItem ()
+	{
+		GetComponent<Collider>().enabled = true;
+		GetComponent<Rigidbody>().useGravity = true;
+		GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+		transform.SetParent (null);
+		equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = true;
+	}
     
 }
