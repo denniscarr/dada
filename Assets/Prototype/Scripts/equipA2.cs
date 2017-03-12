@@ -13,11 +13,17 @@ public class equipA2 : MonoBehaviour {
     private bool activatePrompt = false;
     private GameObject player;
     public float speed = 1;
+	public float ASpeed = 10;
+
+	Transform t_gun;
+
 
     // Use this for initialization
     void Start () {
         equipPrompt.SetActive(false);
-
+		player = GameObject.Find("FPSController");
+		t_gun = GameObject.Find("Modern Russian AR (1)").transform;
+		t_gun.gameObject.SetActive(false);
     }
 
     void OnTriggerExit(Collider equipCol)
@@ -45,15 +51,34 @@ public class equipA2 : MonoBehaviour {
         {
             MoveToCamera();
         }
+
+		if (Input.GetKeyDown (abandonKey)) {
+			abandonItem ();
+		
+		}
     }
 
     void MoveToCamera ()
     {
-        player = GameObject.Find("FPSController");
+        
         float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, step);
+        //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, step);
+		GetComponent<Collider>().enabled = false;
+		GetComponent<Rigidbody>().useGravity = false;
+		transform.position = t_gun.position;
+		transform.rotation = t_gun.rotation;
+		transform.SetParent(t_gun.parent,true);
+		equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = false;
         Debug.Log("why");
     }
 
+	void abandonItem ()
+	{
+		GetComponent<Collider>().enabled = true;
+		GetComponent<Rigidbody>().useGravity = true;
+		GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+		transform.SetParent (null);
+		equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = true;
+	}
     
 }

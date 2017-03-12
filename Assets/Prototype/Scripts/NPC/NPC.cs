@@ -29,6 +29,8 @@ public class NPC : MonoBehaviour {
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
     float pickupThrowTimer;  // Used to determine how long picking up/throwing takes if this NPC does not use an animator.
     [SerializeField] float pickupProbability = 0.2f;
+    [SerializeField] float giveUpTime = 10f; // How long it takes for this NPC to give up when they are unable to reach their targeted object.
+    float giveUpTimer = 0f; // Used for keeping track of when to give up.
 
     // USED FOR THROWING OBJECTS
     public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
@@ -116,6 +118,14 @@ public class NPC : MonoBehaviour {
         // MOVING TO A PARTICULAR OBJECT
         else if (currentState == BehaviorState.MoveToObject)
         {
+            // See if I have taken too long to reach this object and should thus give up.
+            giveUpTimer += Time.deltaTime;
+            if (giveUpTimer >= giveUpTime)
+            {
+                writer.WriteSpecifiedString("I give up.")
+                EvaluateSurroundings();
+            }
+
             // Check to see if this object has become unable to be picked up (usually because it was picked up by another NPC)
             if (targetObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried == false)
             {
@@ -280,9 +290,10 @@ public class NPC : MonoBehaviour {
         // See if I want to pick something up
         if (carriableObjects.Count > 0 && Random.Range(0f, 1f) <= pickupProbability)
         {
+            giveUpTimer = 0f;
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
-            currentState = BehaviorState.MoveToObject;
             writer.WriteSpecifiedString("I want that " + targetObject.name + ".");
+            currentState = BehaviorState.MoveToObject;
         }
 
         // See if I want to throw something.

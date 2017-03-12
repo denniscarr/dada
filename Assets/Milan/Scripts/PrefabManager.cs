@@ -4,29 +4,17 @@ using UnityEngine;
 
 public class PrefabManager : MonoBehaviour {
 
-	private static PrefabManager instance = null;
-
-	public static PrefabManager Instance {
-		get { 
-			return instance;
-		}
-	}
-
-	public GameObject PLAYER;
-	public GameObject TEXT;
+	public GameObject PLAYERPREFAB;
+	public GameObject TEXTOBJECT;
 	public GameObject SPRITE;
-	public GameObject NPC;
 	public GameObject TILE;
-	public GameObject[] PROCGENPOOL;
+	public GameObject[] LEVELPREFABS;
+	public GameObject[] NPCPREFABS;
 
+	public Sprite[] _sprites;
 
-	void Awake () {
-		if (instance != null && instance != this) {
-			Destroy(this.gameObject);
-		} else {
-			instance = this;
-		}
-		DontDestroyOnLoad(this.gameObject);
+	void Awake(){
+		_sprites = Resources.LoadAll<Sprite> ("");
+		NPCPREFABS = Resources.LoadAll<GameObject> ("ObjectPrefabs");
 	}
-
 }

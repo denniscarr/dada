@@ -1,14 +1,16 @@
 fileFormatVersion: 2
 guid: a477ec528d9d947aab6c812d028d8e4c
-timeCreated: 1488314660
+timeCreated: 1488917951
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-  - PLAYER: {fileID: 1092953581650078, guid: 9918bb226540d4b6481bbedfadbbcd93, type: 2}
-  - TEXT: {fileID: 1000013632052358, guid: 246816265d2934bad9b1f1918faae76c, type: 2}
-  - SPRITE: {fileID: 1170617040855258, guid: 4723bda76e93a48dcb76f60f176238bd, type: 2}
-  - NPC: {fileID: 1182615009284916, guid: 82e19a92f96474a49ab1634d24c87879, type: 2}
+  - PLAYERPREFAB: {fileID: 1717871930422726, guid: 2416e4379ed2b4dc6b91a4a13eb72c96,
+      type: 2}
+  - TEXTOBJECT: {fileID: 1000013632052358, guid: 246816265d2934bad9b1f1918faae76c,
+      type: 2}
+  - SPRITE: {fileID: 1092953581650078, guid: 9918bb226540d4b6481bbedfadbbcd93, type: 2}
+  - TILE: {fileID: 1182615009284916, guid: 82e19a92f96474a49ab1634d24c87879, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
