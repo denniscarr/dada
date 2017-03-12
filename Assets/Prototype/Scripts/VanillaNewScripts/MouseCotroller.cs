@@ -12,6 +12,7 @@ public enum InterationState{
 public enum InteractionMode{
 	GRAB_MODE = 0,
 	USE_MODE = 1,
+	INROOM_MODE = 2,
 }
 
 public class MouseCotroller : MonoBehaviour {
@@ -42,7 +43,7 @@ public class MouseCotroller : MonoBehaviour {
 		clickGapCount = 0;
 		state = InterationState.NONE_SELECTED_STATE;
 
-		UpperCamera = GameObject.Find("UpperCamera").GetComponent<Camera>();
+		//UpperCamera = GameObject.Find("UpperCamera").GetComponent<Camera>();
 		Cursor.visible = false;
 		cubeOnDraggedPlane = GameObject.Find("CubeOnSelectedPlane").transform;
 		selectedObject = null;
@@ -64,8 +65,13 @@ public class MouseCotroller : MonoBehaviour {
 		switch(mode){
 		case InteractionMode.GRAB_MODE:GrabHandler();;break;
 		case InteractionMode.USE_MODE:UseHandler();;break;
+		case InteractionMode.INROOM_MODE:InRoomHandler();break;
 		}
 			
+	}
+
+	void InRoomHandler(){
+
 	}
 
 	void ChangeToGrabMode() {

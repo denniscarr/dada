@@ -102,38 +102,11 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
-	public float horizontalSpeed = 2.0F;
-	public float verticalSpeed = 2.0F;
-
 	void ZoomInMove(){
 		//follow mouse
 		if(uppercamera.fieldOfView > 10f){
 			uppercamera.fieldOfView --;
 		}
-//
-//		float h = horizontalSpeed * Input.GetAxis("Mouse X");
-//		float v = verticalSpeed * Input.GetAxis("Mouse Y");
-//
-//		Transform cameraT = Camera.main.transform;
-//		cameraT.Rotate(v, h, 0);
-//
-//		if (Input.GetKey(KeyCode.W))
-//		{
-//			transform.Translate(cameraT.forward * speed * Time.deltaTime);
-//		}
-//		else if (Input.GetKey(KeyCode.S))
-//		{
-//			transform.Translate(-cameraT.forward * speed * Time.deltaTime);
-//		}
-//		else if (Input.GetKey(KeyCode.A))
-//		{
-//			transform.Translate(-cameraT.right * speed * Time.deltaTime);
-//		}
-//		else if(Input.GetKey(KeyCode.D))
-//		{
-//			transform.Translate(cameraT.right * speed * Time.deltaTime);
-//		}
-
 	}
 
 }
