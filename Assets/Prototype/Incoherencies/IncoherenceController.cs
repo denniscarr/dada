@@ -22,14 +22,6 @@ public class IncoherenceController : MonoBehaviour {
 
 	void Update() {
 
-		// HACKY FOR PROTO
-		float rando = Random.Range (0f, 1f);
-		if (rando < 0.01) {
-			incoherenceMagnitude += Random.Range (0.0001f, 0.01f);
-			incoherenceProbability += Random.Range (0.0001f, 0.01f);
-		}
-	
-
 		// Clamp incoherence probability and magnitude to between 0 and 1
 		incoherenceProbability = Mathf.Clamp(incoherenceProbability, 0f, 1f);
 		incoherenceMagnitude = Mathf.Clamp(incoherenceMagnitude, 0f, 1f);
@@ -39,10 +31,12 @@ public class IncoherenceController : MonoBehaviour {
 		if (timeSinceLastCheck >= howOftenToCheckProbability)
 		{
 			float rand = Random.Range(0f, 1f);
-			if (rand < incoherenceProbability) {
+			if (rand < incoherenceProbability)
+            {
 				
 				// If so, choose a random incoherency from my list and tell it to express a timed incoherence
-				if (incoherencies.Count > 0) {
+				if (incoherencies.Count > 0)
+                {
 					incoherencies[Random.Range(0, incoherencies.Count)].SendMessage("ExpressTimedIncoherence", incoherenceMagnitude);
 				}
 
@@ -53,7 +47,8 @@ public class IncoherenceController : MonoBehaviour {
 			timeSinceLastCheck = 0f;
 		}
 
-		else {
+		else
+        {
 			timeSinceLastCheck += Time.deltaTime;
 		}
 

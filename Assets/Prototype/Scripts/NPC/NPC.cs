@@ -25,7 +25,7 @@ public class NPC : MonoBehaviour {
     // USED FOR PICKING UP OBJECTS
     Transform targetObject;
     Transform carriedObject;
-    float objectPickupRange = 2f;
+    [SerializeField] float objectPickupRange = 3f;  // How close this NPC has to be to an object in order to pick it up.
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
     float pickupThrowTimer;  // Used to determine how long picking up/throwing takes if this NPC does not use an animator.
     [SerializeField] float pickupProbability = 0.2f;
