@@ -5,7 +5,7 @@ using UnityEngine;
 public class NPC : MonoBehaviour {
 
     // BEHAVIOR STATES
-    public enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject};
+    public enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject, SayingHello};
     public BehaviorState currentState = BehaviorState.NormalMovement;
 
     // USED FOR MOVEMENT
@@ -263,7 +263,7 @@ public class NPC : MonoBehaviour {
         List<Transform> carriableObjects = new List<Transform>();
         List<Transform> throwTargets = new List<Transform>();
 
-        Collider[] nearbyObjects = Physics.OverlapSphere (transform.position, evaluationRange);
+        Collider[] nearbyObjects = Physics.OverlapSphere (transform.parent.position, evaluationRange);
         foreach (Collider collider in nearbyObjects)
         {
             // Make sure this collider does not belong to me.
