@@ -122,7 +122,7 @@ public class NPC : MonoBehaviour {
             giveUpTimer += Time.deltaTime;
             if (giveUpTimer >= giveUpTime)
             {
-                writer.WriteSpecifiedString("I give up.")
+                writer.WriteSpecifiedString("I give up.");
                 EvaluateSurroundings();
             }
 
@@ -310,8 +310,6 @@ public class NPC : MonoBehaviour {
         // If I decided not to pick anything up.
         else
         {
-            writer.WriteSpecifiedString("There is nothing here.");
-
             RandomizeBaseDirection();
 
             // Decide how long until I next check my surroundings.
