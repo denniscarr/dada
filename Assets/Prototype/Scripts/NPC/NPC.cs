@@ -11,6 +11,7 @@ public class NPC : MonoBehaviour {
     // USED FOR MOVEMENT
     Vector3 baseDirection;  // The general direction that I want to wander in.
     float meanderRange = 1f;  // How far I meander from the base direction.
+    float lookForwardRange = 10f;    // How far this NPC looks in front of them for objects/obstacles to react to.
     [SerializeField] float moveForce = 5f;
     [SerializeField] float maxVelocity = 10f;
     bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame.
@@ -27,15 +28,22 @@ public class NPC : MonoBehaviour {
     Transform carriedObject;
     [SerializeField] float objectPickupRange = 3f;  // How close this NPC has to be to an object in order to pick it up.
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
-    float pickupThrowTimer;  // Used to determine how long picking up/throwing takes if this NPC does not use an animator.
     [SerializeField] float pickupProbability = 0.2f;
     [SerializeField] float giveUpTime = 10f; // How long it takes for this NPC to give up when they are unable to reach their targeted object.
     float giveUpTimer = 0f; // Used for keeping track of when to give up.
+
+    // USED FOR SAYING HELLO
+    float helloLength = 2f; // How long this NPC pauses to say hello. (Only applies if this NPC does not have an animator, if they do then we'll just wait until the waving animation ends.
+    string helloName;   // The name of the object that we're going to say hello to
+    bool saidHello; // Whether we already displayed out hello text during the current wave.
 
     // USED FOR THROWING OBJECTS
     public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
     float throwForce = 20f;     
     Transform throwTarget;  // The object I will throw my carried object at.
+
+    // GENERAL USE
+    float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
 
     // FOR PERLIN NOISE
     float noiseSpeed = 1f;
@@ -92,27 +100,90 @@ public class NPC : MonoBehaviour {
                 EvaluateSurroundings();
             }
 
-            // See if I'm about to hit something. If so, get a new direction.
+            // See what's directly in front of me.
             Vector3 rayPos = transform.parent.position;
+            RaycastHit hit;
+
+            // Raise the origin of the ray slightly so that it's above ground.
             rayPos.y = 1f;
-            if (Physics.Raycast(rayPos, baseDirection, 5f))
+
+            if (Physics.Raycast(rayPos, baseDirection, out hit, lookForwardRange))
             {
+                // See if the object we're looking at is a player or another NPC. (For waving hello.)
+                if ( hit.collider.GetComponentInChildren<NPC>() != null ||
+                     hit.collider.name == "Player")
+                {
+                    // Store the object's name now so that we don't have to raycast.
+                    helloName = hit.collider.name;
+
+                    // Get prepare to switch to 'saying hello' mode.
+                    if (npcAnimation != null) npcAnimation.WaveHello();
+                    generalTimer = 0f;
+                    currentState = BehaviorState.SayingHello;
+                    return;
+                }
+
                 RandomizeBaseDirection();
             }
-                
+
             // Get a meandering path towards my base direction with perlin noise.
             Vector3 meanderDirection = baseDirection + new Vector3(
                                            MyMath.Map(Mathf.PerlinNoise(noiseX, 0.0f), 0f, 1f, -meanderRange, meanderRange),
                                            0f,
                                            MyMath.Map(Mathf.PerlinNoise(0.0f, noiseY), 0f, 1f, -meanderRange, meanderRange)
                                        );
-                
+
             noiseX += noiseSpeed * Time.deltaTime;
             noiseY += noiseSpeed * Time.deltaTime;
 
             MoveInDirection(meanderDirection);
 
             updateAnimation = true;
+        }
+
+        // SAYING HELLO TO NPC OR PLAYER
+        else if (currentState == BehaviorState.SayingHello)
+        {
+            // If this NPC uses an animator.
+            if (npcAnimation != null)
+            {
+                AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
+                
+                // Display text.
+                if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.4f && !saidHello)
+                {
+                    writer.WriteSpecifiedString("Hello, " + helloName + ".");
+                    saidHello = true;
+                }
+
+                // Finish waving.
+                else if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f)
+                {
+                    npcAnimation.WaveHelloFinished();
+                    saidHello = false;
+                    currentState = BehaviorState.NormalMovement;
+                }
+            }
+
+            // If this NPC does not use an animator.
+            else
+            {
+                generalTimer += Time.deltaTime;
+
+                // Display text.
+                if (generalTimer >= helloLength*0.5f && !saidHello)
+                {
+                    writer.WriteSpecifiedString("Hello, " + helloName + ".");
+                    saidHello = true;
+                }
+
+                // Finish waving.
+                else if (generalTimer >= helloLength)
+                {
+                    saidHello = false;
+                    currentState = BehaviorState.NormalMovement;
+                }
+            }
         }
 
         // MOVING TO A PARTICULAR OBJECT
@@ -156,11 +227,7 @@ public class NPC : MonoBehaviour {
 
                 // Tell my animator to show the picking up animation.
                 if (npcAnimation != null) npcAnimation.PickupObject();
-
-                Debug.Log(transform.parent.name + " is picking up " + targetObject);
-
-                pickupThrowTimer = 0f;
-
+                generalTimer = 0f;
                 currentState = BehaviorState.PickUpObject;
             }
 
@@ -196,9 +263,9 @@ public class NPC : MonoBehaviour {
             // If we are not using npcAnimation, then just use a timer.
             else
             {
-                pickupThrowTimer += Time.deltaTime;
+                generalTimer += Time.deltaTime;
 
-                if (pickupThrowTimer >= 1f)
+                if (generalTimer >= 1f)
                 {
                     AttachToHand();
                     FinishedPickingUp();
@@ -240,9 +307,9 @@ public class NPC : MonoBehaviour {
                 // Otherwise determine timing manually.
                 else
                 {
-                    pickupThrowTimer += Time.deltaTime;
+                    generalTimer += Time.deltaTime;
 
-                    if (pickupThrowTimer >= 1f)
+                    if (generalTimer >= 1f)
                     {
                         ThrowObject();
                         EvaluateSurroundings();
@@ -301,7 +368,7 @@ public class NPC : MonoBehaviour {
         {
             throwTarget = throwTargets[Random.Range(0, throwTargets.Count)];
             if (npcAnimation != null) npcAnimation.ThrowObject();
-            pickupThrowTimer = 0f;
+            generalTimer = 0f;
             currentState = BehaviorState.ThrowObject;
 
             writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");

@@ -242,5 +242,14 @@ public class NPCAnimation : MonoBehaviour
         animator.SetBool ("Throwing", false);
     }
 
+    // Called when NPC decides to say hello.
+    public void WaveHello()
+    {
+        animator.SetBool("WavingHello", true);
+    }
 
+    public void WaveHelloFinished()
+    {
+        animator.SetBool("WavingHello", false);
+    }
 }
