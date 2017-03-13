@@ -113,8 +113,15 @@ public class NPC : MonoBehaviour {
                 if ( hit.collider.GetComponentInChildren<NPC>() != null ||
                      hit.collider.name == "Player")
                 {
-                    // Store the object's name now so that we don't have to raycast.
-                    helloName = hit.collider.name;
+                    // If we're saying hello to ourself, acknowledge it.
+                    if (hit.collider.transform == transform.parent)
+                    {
+                        helloName = "myself";
+                    }
+                    else
+                    {
+                        helloName = hit.collider.name;
+                    }
 
                     // Get prepare to switch to 'saying hello' mode.
                     if (npcAnimation != null) npcAnimation.WaveHello();
@@ -152,7 +159,7 @@ public class NPC : MonoBehaviour {
                 // Display text.
                 if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.4f && !saidHello)
                 {
-                    writer.WriteSpecifiedString("Hello, " + helloName + ".");
+                    writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
                 }
 
@@ -173,7 +180,7 @@ public class NPC : MonoBehaviour {
                 // Display text.
                 if (generalTimer >= helloLength*0.5f && !saidHello)
                 {
-                    writer.WriteSpecifiedString("Hello, " + helloName + ".");
+                    writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
                 }
 
