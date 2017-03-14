@@ -149,7 +149,9 @@ public class NPC : MonoBehaviour {
             // If there is nothing directly in front of me then do a raycast downwards to make sure I'm not at the edge of a cliff
             else
             {
-                if (!Physics.Raycast(rayDirection.normalized * lookForwardRange, Vector3.down, 5f))
+                print("Doing this");
+                Debug.DrawRay(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down*5f, Color.magenta);
+                if (!Physics.Raycast(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down, 5f))
                 {
                     RandomizeBaseDirection();
                 }
