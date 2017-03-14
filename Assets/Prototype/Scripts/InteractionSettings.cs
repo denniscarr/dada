@@ -8,6 +8,7 @@ public class InteractionSettings : MonoBehaviour {
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource;
 	public bool canBeUsedForQuests;
+    public Transform carryingObject;    // If I am being held, this is the object that is holding me.
 
 	[HideInInspector]
 	public Vector3 savedScale;

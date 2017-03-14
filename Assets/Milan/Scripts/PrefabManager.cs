@@ -12,7 +12,7 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject[] NPCPREFABS;
 	public AudioClip[] Tones;
 
-	private Sprite[] _sprites;
+	public Sprite[] _sprites;
 
 	void Awake(){
 		_sprites = Resources.LoadAll<Sprite> ("");
