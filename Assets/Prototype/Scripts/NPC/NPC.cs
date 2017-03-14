@@ -5,15 +5,16 @@ using UnityEngine;
 public class NPC : MonoBehaviour {
 
     // BEHAVIOR STATES
-    public enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject};
+    public enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject, SayingHello};
     public BehaviorState currentState = BehaviorState.NormalMovement;
 
     // USED FOR MOVEMENT
     Vector3 baseDirection;  // The general direction that I want to wander in.
     float meanderRange = 1f;  // How far I meander from the base direction.
+    float lookForwardRange = 10f;    // How far this NPC looks in front of them for objects/obstacles to react to.
     [SerializeField] float moveForce = 5f;
     [SerializeField] float maxVelocity = 10f;
-    bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame.
+    bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame
 
     // USED FOR CHECKING ENVIRONMENT
     [SerializeField] float evaluateSurroundingsFreqMin = 2f;  // How often I stop to check my surroundings for objects of interest.
@@ -25,15 +26,24 @@ public class NPC : MonoBehaviour {
     // USED FOR PICKING UP OBJECTS
     Transform targetObject;
     Transform carriedObject;
-    float objectPickupRange = 2f;
+    [SerializeField] float objectPickupRange = 3f;  // How close this NPC has to be to an object in order to pick it up.
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
-    float pickupThrowTimer;  // Used to determine how long picking up/throwing takes if this NPC does not use an animator.
     [SerializeField] float pickupProbability = 0.2f;
+    [SerializeField] float giveUpTime = 10f; // How long it takes for this NPC to give up when they are unable to reach their targeted object.
+    float giveUpTimer = 0f; // Used for keeping track of when to give up.
+
+    // USED FOR SAYING HELLO
+    float helloLength = 2f; // How long this NPC pauses to say hello. (Only applies if this NPC does not have an animator, if they do then we'll just wait until the waving animation ends.
+    string helloName;   // The name of the object that we're going to say hello to
+    bool saidHello; // Whether we already displayed out hello text during the current wave.
 
     // USED FOR THROWING OBJECTS
     public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
     float throwForce = 20f;     
     Transform throwTarget;  // The object I will throw my carried object at.
+
+    // GENERAL USE
+    float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
 
     // FOR PERLIN NOISE
     float noiseSpeed = 1f;
@@ -80,6 +90,27 @@ public class NPC : MonoBehaviour {
     {
         updateAnimation = false;
 
+        // SEE IF THE OBJECT I WAS CARRYING WAS STOLEN
+        if (carriedObject != null && carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent)
+        {
+            // Tell the object to stop ignoring collisions with me.
+            Collider[] childColliders = carriedObject.GetComponents<Collider>();
+            foreach (Collider collider in childColliders)
+            {
+                Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), false);
+            }
+
+            npcAnimation.ObjectPickedUp();
+            npcAnimation.ObjectThrown();
+
+            writer.WriteSpecifiedString(
+                "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
+                );
+
+            carriedObject = null;
+            EvaluateSurroundings();
+        }
+
         // MOVING NORMALLY (WANDERING & INTERMITENTLY EVALUATING SURROUNDINGS)
         if (currentState == BehaviorState.NormalMovement)
         {
@@ -90,21 +121,68 @@ public class NPC : MonoBehaviour {
                 EvaluateSurroundings();
             }
 
-            // See if I'm about to hit something. If so, get a new direction.
-            Vector3 rayPos = transform.parent.position;
-            rayPos.y = 1f;
-            if (Physics.Raycast(rayPos, baseDirection, 5f))
+            // See what's directly in front of me.
+            Vector3 rayOrigin = transform.parent.position;
+            RaycastHit hit;
+
+            // Raise the origin of the ray slightly so that it's above ground.
+            rayOrigin.y += 1f;
+
+            // Get a ray direction that is modified to follow the current slope of the ground.
+            Vector3 rayDirection = transform.parent.forward;
+            if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 5f))
             {
-                RandomizeBaseDirection();
+                rayDirection = Vector3.ProjectOnPlane(rayDirection, hit.normal);
             }
-                
+
+            Debug.DrawRay(rayOrigin, rayDirection * lookForwardRange, Color.red);
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out hit, lookForwardRange))
+            {
+                // See if the object we're looking at is a player or another NPC. (For waving hello.)
+                if ( hit.collider.GetComponentInChildren<NPC>() != null ||
+                     hit.collider.name == "Player")
+                {
+                    // If we're saying hello to ourself, acknowledge it.
+                    if (hit.collider.transform == transform.parent)
+                    {
+                        helloName = "myself";
+                    }
+                    else
+                    {
+                        helloName = hit.collider.name;
+                    }
+
+                    // Get prepare to switch to 'saying hello' mode.
+                    if (npcAnimation != null) npcAnimation.WaveHello();
+                    generalTimer = 0f;
+                    currentState = BehaviorState.SayingHello;
+                }
+
+                // If this object is not interesting to me then consider it an obstacle and get a new direction.
+                else
+                {
+                    RandomizeBaseDirection();
+                }
+            }
+
+            // If there is nothing directly in front of me then do a raycast downwards to make sure I'm not at the edge of a cliff
+            else
+            {
+                Debug.DrawRay(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down*5f, Color.magenta);
+                if (!Physics.Raycast(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down, 5f))
+                {
+                    RandomizeBaseDirection();
+                }
+            }
+
             // Get a meandering path towards my base direction with perlin noise.
             Vector3 meanderDirection = baseDirection + new Vector3(
                                            MyMath.Map(Mathf.PerlinNoise(noiseX, 0.0f), 0f, 1f, -meanderRange, meanderRange),
                                            0f,
                                            MyMath.Map(Mathf.PerlinNoise(0.0f, noiseY), 0f, 1f, -meanderRange, meanderRange)
                                        );
-                
+
             noiseX += noiseSpeed * Time.deltaTime;
             noiseY += noiseSpeed * Time.deltaTime;
 
@@ -113,15 +191,63 @@ public class NPC : MonoBehaviour {
             updateAnimation = true;
         }
 
+        // SAYING HELLO TO NPC OR PLAYER
+        else if (currentState == BehaviorState.SayingHello)
+        {
+            // If this NPC uses an animator.
+            if (npcAnimation != null)
+            {
+                AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
+                
+                // Display text.
+                if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.4f && !saidHello)
+                {
+                    writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
+                    saidHello = true;
+                }
+
+                // Finish waving.
+                else if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f)
+                {
+                    npcAnimation.WaveHelloFinished();
+                    saidHello = false;
+                    EvaluateSurroundings();
+                }
+            }
+
+            // If this NPC does not use an animator.
+            else
+            {
+                generalTimer += Time.deltaTime;
+
+                // Display text.
+                if (generalTimer >= helloLength*0.5f && !saidHello)
+                {
+                    writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
+                    saidHello = true;
+                }
+
+                // Finish waving.
+                else if (generalTimer >= helloLength)
+                {
+                    saidHello = false;
+                    EvaluateSurroundings();
+                }
+            }
+        }
+
         // MOVING TO A PARTICULAR OBJECT
         else if (currentState == BehaviorState.MoveToObject)
         {
-            // Check to see if this object has become unable to be picked up (usually because it was picked up by another NPC)
-            if (targetObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried == false)
+            // See if I have taken too long to reach this object and should thus give up.
+            giveUpTimer += Time.deltaTime;
+            if (giveUpTimer >= giveUpTime)
             {
+                writer.WriteSpecifiedString("I give up.");
                 EvaluateSurroundings();
-                return;
             }
+
+            SeeIfTargetObjectWasPickedUp();
 
             // Check if target object is in range. If so, pick it up.
             if (Vector3.Distance(targetObject.position, transform.parent.position) <= objectPickupRange)
@@ -130,27 +256,22 @@ public class NPC : MonoBehaviour {
                 Collider[] childColliders = targetObject.GetComponents<Collider>();
                 foreach (Collider collider in childColliders)
                 {
-                    collider.enabled = false;
+                    Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), true);
                 }
 
                 targetObject.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                 targetObject.gameObject.GetComponent<Rigidbody>().useGravity = false;
-                targetObject.gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 
                 // Disable Incoherence controller && NPC AI
                 if (targetObject.FindChild("Incoherence Controller") != null) targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
                 if (targetObject.FindChild("NPC AI") != null) targetObject.FindChild("NPC AI").gameObject.SetActive(false);
 
-                // Set this item to not able to be carried so that no other NPCs try to pick it up.
-                targetObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried = false;
+                // Tell this object that it is being carried by me.
+                targetObject.GetComponentInChildren<InteractionSettings>().carryingObject = transform.parent;
 
                 // Tell my animator to show the picking up animation.
                 if (npcAnimation != null) npcAnimation.PickupObject();
-
-                Debug.Log(transform.parent.name + " is picking up " + targetObject);
-
-                pickupThrowTimer = 0f;
-
+                generalTimer = 0f;
                 currentState = BehaviorState.PickUpObject;
             }
 
@@ -168,6 +289,8 @@ public class NPC : MonoBehaviour {
         // PICKING UP
         else if (currentState == BehaviorState.PickUpObject)
         {
+            SeeIfTargetObjectWasPickedUp();
+
             // If we are using npcAnimation, then use the animation position to determine when the object should attach to my hand, etc.
             if (npcAnimation != null)
             {
@@ -186,14 +309,15 @@ public class NPC : MonoBehaviour {
             // If we are not using npcAnimation, then just use a timer.
             else
             {
-                pickupThrowTimer += Time.deltaTime;
+                generalTimer += Time.deltaTime;
 
-                if (pickupThrowTimer >= 1f)
+                if (generalTimer >= 1f)
                 {
                     AttachToHand();
                     FinishedPickingUp();
                 }
             }
+
         }
 
         // THROWING
@@ -230,9 +354,9 @@ public class NPC : MonoBehaviour {
                 // Otherwise determine timing manually.
                 else
                 {
-                    pickupThrowTimer += Time.deltaTime;
+                    generalTimer += Time.deltaTime;
 
-                    if (pickupThrowTimer >= 1f)
+                    if (generalTimer >= 1f)
                     {
                         ThrowObject();
                         EvaluateSurroundings();
@@ -253,7 +377,7 @@ public class NPC : MonoBehaviour {
         List<Transform> carriableObjects = new List<Transform>();
         List<Transform> throwTargets = new List<Transform>();
 
-        Collider[] nearbyObjects = Physics.OverlapSphere (transform.position, evaluationRange);
+        Collider[] nearbyObjects = Physics.OverlapSphere (transform.parent.position, evaluationRange);
         foreach (Collider collider in nearbyObjects)
         {
             // Make sure this collider does not belong to me.
@@ -263,7 +387,7 @@ public class NPC : MonoBehaviour {
                 if (carriedObject == null)
                 {
                     InteractionSettings intSet = collider.transform.GetComponentInChildren<InteractionSettings>();
-                    if (intSet != null && intSet.ableToBeCarried)
+                    if (intSet != null && intSet.ableToBeCarried && intSet.carryingObject == null)
                     {
                         carriableObjects.Add(collider.transform);
                     }
@@ -280,9 +404,10 @@ public class NPC : MonoBehaviour {
         // See if I want to pick something up
         if (carriableObjects.Count > 0 && Random.Range(0f, 1f) <= pickupProbability)
         {
+            giveUpTimer = 0f;
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
-            currentState = BehaviorState.MoveToObject;
             writer.WriteSpecifiedString("I want that " + targetObject.name + ".");
+            currentState = BehaviorState.MoveToObject;
         }
 
         // See if I want to throw something.
@@ -290,7 +415,7 @@ public class NPC : MonoBehaviour {
         {
             throwTarget = throwTargets[Random.Range(0, throwTargets.Count)];
             if (npcAnimation != null) npcAnimation.ThrowObject();
-            pickupThrowTimer = 0f;
+            generalTimer = 0f;
             currentState = BehaviorState.ThrowObject;
 
             writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
@@ -299,8 +424,6 @@ public class NPC : MonoBehaviour {
         // If I decided not to pick anything up.
         else
         {
-            writer.WriteSpecifiedString("There is nothing here.");
-
             RandomizeBaseDirection();
 
             // Decide how long until I next check my surroundings.
@@ -317,6 +440,7 @@ public class NPC : MonoBehaviour {
 //        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
 
         carriedObject = targetObject;
+        carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = transform.parent;
         targetObject.position = handTransform.position;
         targetObject.SetParent (handTransform);
     }
@@ -325,6 +449,9 @@ public class NPC : MonoBehaviour {
     // Called at end of animation in order to reset state to wander
     void FinishedPickingUp ()
     {
+		if (targetObject.gameObject.GetComponent<AudioSource> ()) {
+			CS_AudioManager.Instance.RetuneRadio (targetObject);
+		}
         if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
         Debug.Log(transform.parent.name + " Picked up " + targetObject);
         targetObject = null;
@@ -358,22 +485,19 @@ public class NPC : MonoBehaviour {
 
     void ThrowObject()
     {
-        Debug.Log("Tried to throw");
         if (carriedObject != null)
         {
-            Debug.Log("Throwing");
-
             // Re-activate all the object's dormant properties.
             Collider[] childColliders = carriedObject.GetComponents<Collider> ();
             foreach (Collider collider in childColliders) {
-                collider.enabled = true;
+                Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), false);
             }
             carriedObject.gameObject.GetComponent<Rigidbody> ().isKinematic = false;
             carriedObject.gameObject.GetComponent<Rigidbody> ().useGravity = true;
             carriedObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = true;
             if (carriedObject.FindChild("Incoherence Controller") != null) carriedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
             if (carriedObject.FindChild("NPC AI") != null) carriedObject.FindChild("NPC AI").gameObject.SetActive(true);
-            carriedObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried = true;
+            carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
             // Deparent object.
             carriedObject.transform.parent = null;
@@ -384,6 +508,19 @@ public class NPC : MonoBehaviour {
             if (npcAnimation != null) npcAnimation.ObjectThrown();
 
             carriedObject = null;
+        }
+    }
+
+
+    void SeeIfTargetObjectWasPickedUp()
+    {
+        if (targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != null && targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent)
+        {
+            writer.WriteSpecifiedString(
+                "Hey! I wanted that " + targetObject.name + ", " + targetObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + "!"
+                );
+            npcAnimation.ObjectPickedUp();
+            EvaluateSurroundings();
         }
     }
 }
