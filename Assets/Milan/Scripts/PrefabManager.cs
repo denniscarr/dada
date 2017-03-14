@@ -10,12 +10,14 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject TILE;
 	public GameObject[] LEVELPREFABS;
 	public GameObject[] NPCPREFABS;
+	public AudioClip[] Tones;
 
 	private Sprite[] _sprites;
 
 	void Awake(){
 		_sprites = Resources.LoadAll<Sprite> ("");
 		NPCPREFABS = Resources.LoadAll<GameObject> ("ObjectPrefabs");
+		Tones = Resources.LoadAll<AudioClip> ("Tones");
 	}
 
 	public GameObject ObjectFactory(int x){
@@ -29,6 +31,10 @@ public class PrefabManager : MonoBehaviour {
 			break;
 		case 7:
 			newObject = Instantiate (Services.Prefabs.LEVELPREFABS[2], Vector3.zero, Quaternion.identity) as GameObject;
+			break;
+		case 5:
+			newObject = Instantiate (Services.Prefabs.LEVELPREFABS [4], Vector3.zero, Quaternion.identity) as GameObject;
+			newObject.GetComponent<AudioSource> ().clip = Tones [Random.Range (0, Tones.Length-1)];
 			break;
 		case 3:
 			newObject = Instantiate (Services.Prefabs.LEVELPREFABS[1], Vector3.zero, Quaternion.identity) as GameObject;

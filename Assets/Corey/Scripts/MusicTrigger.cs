@@ -6,14 +6,19 @@ public class MusicTrigger: MonoBehaviour {
 
 	public float overlapRadius;
 
-	List<AudioSource> objectSources;
+	public List<AudioSource> objectSources;
 
-	float playProbability;
+	public float playProbability;
+
+	public int numberPlaying;
+	public float percentPlaying;
+
+	public float baseProbability = 0.001f;
 
 	// Use this for initialization
 	void Start () {
 
-		playProbability = 0.1f;
+		playProbability = baseProbability;
 		
 	}
 	
@@ -23,6 +28,7 @@ public class MusicTrigger: MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+		numberPlaying = 0;
 		Collider[] collidedObjects = Physics.OverlapSphere (transform.position, overlapRadius);
 		objectSources = new List<AudioSource> ();
 		foreach (Collider collider in collidedObjects) {
@@ -31,13 +37,27 @@ public class MusicTrigger: MonoBehaviour {
 			}
 		}
 
+
+		//find all toneSources, find out if they're playing
 		foreach (AudioSource source in objectSources) {
 			if (source.isPlaying) {
-				playProbability += 0.1f;
+				numberPlaying++;
 			}
 		}
+
+		//adjust the playProbability based on number of sound sources playing
+		if (objectSources.Count > 0) {
+			percentPlaying = numberPlaying / objectSources.Count;
+		}
+
+		playProbability = Mathf.Clamp(percentPlaying, 1f, 10f);
+
+		//adjust playProbability to fixed delta step
+		playProbability *= baseProbability;
+
+
 		foreach (AudioSource source in objectSources) {
-			if (Random.value < playProbability) {
+			if (Random.value < playProbability && !source.isPlaying) {
 				source.Play ();
 			}
 		}
