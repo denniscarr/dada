@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Attach to player object to trigger tone 
+/// objects in the scene
+/// </summary>
 public class MusicTrigger: MonoBehaviour {
 
 	public float overlapRadius;

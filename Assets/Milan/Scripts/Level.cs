@@ -137,6 +137,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	public GameObject ObjectFactory(int x){
 
+		//MusicProcGen -- load tones from folder
+		//this functionality will probably be migrated to the tone object prefab
+		AudioClip[] Tones = Resources.LoadAll<AudioClip> ("Tones");
+
 		GameObject newObject = null;
 
 		switch (x) {
@@ -147,6 +151,15 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		case 7:
 			newObject = Instantiate (Services.Prefabs.LEVELPREFABS[2], Vector3.zero, Quaternion.identity) as GameObject;
 			break;
+
+		////////////////////
+		//  Music Object  //
+		////////////////////
+		case 6: 
+			newObject = Instantiate (Services.Prefabs.LEVELPREFABS [4], Vector3.zero, Quaternion.identity) as GameObject;
+			newObject.GetComponent<AudioSource> ().clip = Tones [Random.Range (0, Tones.Length - 1)];
+			break;
+
 		case 4:
 			newObject = Instantiate (Services.Prefabs.LEVELPREFABS[1], Vector3.zero, Quaternion.identity) as GameObject;
 			break;
