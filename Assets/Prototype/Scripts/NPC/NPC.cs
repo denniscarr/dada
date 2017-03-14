@@ -90,6 +90,27 @@ public class NPC : MonoBehaviour {
     {
         updateAnimation = false;
 
+        // SEE IF THE OBJECT I WAS CARRYING WAS STOLEN
+        if (carriedObject != null && carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent)
+        {
+            // Tell the object to stop ignoring collisions with me.
+            Collider[] childColliders = carriedObject.GetComponents<Collider>();
+            foreach (Collider collider in childColliders)
+            {
+                Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), false);
+            }
+
+            npcAnimation.ObjectPickedUp();
+            npcAnimation.ObjectThrown();
+
+            writer.WriteSpecifiedString(
+                "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
+                );
+
+            carriedObject = null;
+            EvaluateSurroundings();
+        }
+
         // MOVING NORMALLY (WANDERING & INTERMITENTLY EVALUATING SURROUNDINGS)
         if (currentState == BehaviorState.NormalMovement)
         {
@@ -136,7 +157,6 @@ public class NPC : MonoBehaviour {
                     if (npcAnimation != null) npcAnimation.WaveHello();
                     generalTimer = 0f;
                     currentState = BehaviorState.SayingHello;
-                    return;
                 }
 
                 // If this object is not interesting to me then consider it an obstacle and get a new direction.
@@ -149,7 +169,6 @@ public class NPC : MonoBehaviour {
             // If there is nothing directly in front of me then do a raycast downwards to make sure I'm not at the edge of a cliff
             else
             {
-                print("Doing this");
                 Debug.DrawRay(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down*5f, Color.magenta);
                 if (!Physics.Raycast(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down, 5f))
                 {
@@ -193,7 +212,6 @@ public class NPC : MonoBehaviour {
                     npcAnimation.WaveHelloFinished();
                     saidHello = false;
                     EvaluateSurroundings();
-                    return;
                 }
             }
 
@@ -214,7 +232,6 @@ public class NPC : MonoBehaviour {
                 {
                     saidHello = false;
                     EvaluateSurroundings();
-                    return;
                 }
             }
         }
@@ -230,12 +247,7 @@ public class NPC : MonoBehaviour {
                 EvaluateSurroundings();
             }
 
-            // Check to see if this object has become unable to be picked up (usually because it was picked up by another NPC)
-            if (targetObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried == false)
-            {
-                EvaluateSurroundings();
-                return;
-            }
+            SeeIfTargetObjectWasPickedUp();
 
             // Check if target object is in range. If so, pick it up.
             if (Vector3.Distance(targetObject.position, transform.parent.position) <= objectPickupRange)
@@ -244,19 +256,18 @@ public class NPC : MonoBehaviour {
                 Collider[] childColliders = targetObject.GetComponents<Collider>();
                 foreach (Collider collider in childColliders)
                 {
-                    collider.enabled = false;
+                    Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), true);
                 }
 
                 targetObject.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                 targetObject.gameObject.GetComponent<Rigidbody>().useGravity = false;
-                targetObject.gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 
                 // Disable Incoherence controller && NPC AI
                 if (targetObject.FindChild("Incoherence Controller") != null) targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
                 if (targetObject.FindChild("NPC AI") != null) targetObject.FindChild("NPC AI").gameObject.SetActive(false);
 
-                // Set this item to not able to be carried so that no other NPCs try to pick it up.
-                targetObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried = false;
+                // Tell this object that it is being carried by me.
+                targetObject.GetComponentInChildren<InteractionSettings>().carryingObject = transform.parent;
 
                 // Tell my animator to show the picking up animation.
                 if (npcAnimation != null) npcAnimation.PickupObject();
@@ -278,6 +289,8 @@ public class NPC : MonoBehaviour {
         // PICKING UP
         else if (currentState == BehaviorState.PickUpObject)
         {
+            SeeIfTargetObjectWasPickedUp();
+
             // If we are using npcAnimation, then use the animation position to determine when the object should attach to my hand, etc.
             if (npcAnimation != null)
             {
@@ -373,7 +386,7 @@ public class NPC : MonoBehaviour {
                 if (carriedObject == null)
                 {
                     InteractionSettings intSet = collider.transform.GetComponentInChildren<InteractionSettings>();
-                    if (intSet != null && intSet.ableToBeCarried)
+                    if (intSet != null && intSet.ableToBeCarried && intSet.carryingObject == null)
                     {
                         carriableObjects.Add(collider.transform);
                     }
@@ -410,7 +423,6 @@ public class NPC : MonoBehaviour {
         // If I decided not to pick anything up.
         else
         {
-            print("I'm doing this.");
             RandomizeBaseDirection();
 
             // Decide how long until I next check my surroundings.
@@ -427,6 +439,7 @@ public class NPC : MonoBehaviour {
 //        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
 
         carriedObject = targetObject;
+        carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = transform.parent;
         targetObject.position = handTransform.position;
         targetObject.SetParent (handTransform);
     }
@@ -468,22 +481,19 @@ public class NPC : MonoBehaviour {
 
     void ThrowObject()
     {
-        Debug.Log("Tried to throw");
         if (carriedObject != null)
         {
-            Debug.Log("Throwing");
-
             // Re-activate all the object's dormant properties.
             Collider[] childColliders = carriedObject.GetComponents<Collider> ();
             foreach (Collider collider in childColliders) {
-                collider.enabled = true;
+                Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), false);
             }
             carriedObject.gameObject.GetComponent<Rigidbody> ().isKinematic = false;
             carriedObject.gameObject.GetComponent<Rigidbody> ().useGravity = true;
             carriedObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = true;
             if (carriedObject.FindChild("Incoherence Controller") != null) carriedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
             if (carriedObject.FindChild("NPC AI") != null) carriedObject.FindChild("NPC AI").gameObject.SetActive(true);
-            carriedObject.GetComponentInChildren<InteractionSettings>().ableToBeCarried = true;
+            carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
             // Deparent object.
             carriedObject.transform.parent = null;
@@ -494,6 +504,19 @@ public class NPC : MonoBehaviour {
             if (npcAnimation != null) npcAnimation.ObjectThrown();
 
             carriedObject = null;
+        }
+    }
+
+
+    void SeeIfTargetObjectWasPickedUp()
+    {
+        if (targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != null && targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent)
+        {
+            writer.WriteSpecifiedString(
+                "Hey! I wanted that " + targetObject.name + ", " + targetObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + "!"
+                );
+            npcAnimation.ObjectPickedUp();
+            EvaluateSurroundings();
         }
     }
 }
