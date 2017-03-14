@@ -139,7 +139,20 @@ public class NPC : MonoBehaviour {
                     return;
                 }
 
-                RandomizeBaseDirection();
+                // If this object is not interesting to me then consider it an obstacle and get a new direction.
+                else
+                {
+                    RandomizeBaseDirection();
+                }
+            }
+
+            // If there is nothing directly in front of me then do a raycast downwards to make sure I'm not at the edge of a cliff
+            else
+            {
+                if (!Physics.Raycast(rayDirection.normalized * lookForwardRange, Vector3.down, 5f))
+                {
+                    RandomizeBaseDirection();
+                }
             }
 
             // Get a meandering path towards my base direction with perlin noise.
