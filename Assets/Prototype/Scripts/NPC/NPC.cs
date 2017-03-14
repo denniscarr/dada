@@ -14,7 +14,7 @@ public class NPC : MonoBehaviour {
     float lookForwardRange = 10f;    // How far this NPC looks in front of them for objects/obstacles to react to.
     [SerializeField] float moveForce = 5f;
     [SerializeField] float maxVelocity = 10f;
-    bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame.
+    bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame
 
     // USED FOR CHECKING ENVIRONMENT
     [SerializeField] float evaluateSurroundingsFreqMin = 2f;  // How often I stop to check my surroundings for objects of interest.
@@ -101,13 +101,22 @@ public class NPC : MonoBehaviour {
             }
 
             // See what's directly in front of me.
-            Vector3 rayPos = transform.parent.position;
+            Vector3 rayOrigin = transform.parent.position;
             RaycastHit hit;
 
             // Raise the origin of the ray slightly so that it's above ground.
-            rayPos.y = 1f;
+            rayOrigin.y += 1f;
 
-            if (Physics.Raycast(rayPos, baseDirection, out hit, lookForwardRange))
+            // Get a ray direction that is modified to follow the current slope of the ground.
+            Vector3 rayDirection = transform.parent.forward;
+            if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 5f))
+            {
+                rayDirection = Vector3.ProjectOnPlane(rayDirection, hit.normal);
+            }
+
+            Debug.DrawRay(rayOrigin, rayDirection * lookForwardRange, Color.red);
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out hit, lookForwardRange))
             {
                 // See if the object we're looking at is a player or another NPC. (For waving hello.)
                 if ( hit.collider.GetComponentInChildren<NPC>() != null ||
@@ -168,7 +177,8 @@ public class NPC : MonoBehaviour {
                 {
                     npcAnimation.WaveHelloFinished();
                     saidHello = false;
-                    currentState = BehaviorState.NormalMovement;
+                    EvaluateSurroundings();
+                    return;
                 }
             }
 
@@ -188,7 +198,8 @@ public class NPC : MonoBehaviour {
                 else if (generalTimer >= helloLength)
                 {
                     saidHello = false;
-                    currentState = BehaviorState.NormalMovement;
+                    EvaluateSurroundings();
+                    return;
                 }
             }
         }
@@ -384,6 +395,7 @@ public class NPC : MonoBehaviour {
         // If I decided not to pick anything up.
         else
         {
+            print("I'm doing this.");
             RandomizeBaseDirection();
 
             // Decide how long until I next check my surroundings.

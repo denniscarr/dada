@@ -21,7 +21,7 @@ public class NPCAnimation : MonoBehaviour
 	const float half = 0.5f;
 	float turnAmount;
 	float forwardAmount;
-	Vector3 groundNormal;
+	[HideInInspector] public Vector3 groundNormal;
 //	float capsuleHeight;
 //	Vector3 capsuleCenter;
 //	CapsuleCollider capsule;
