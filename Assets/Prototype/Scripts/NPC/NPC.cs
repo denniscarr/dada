@@ -317,6 +317,7 @@ public class NPC : MonoBehaviour {
                     FinishedPickingUp();
                 }
             }
+
         }
 
         // THROWING
@@ -448,6 +449,9 @@ public class NPC : MonoBehaviour {
     // Called at end of animation in order to reset state to wander
     void FinishedPickingUp ()
     {
+		if (targetObject.gameObject.GetComponent<AudioSource> ()) {
+			CS_AudioManager.Instance.RetuneRadio (targetObject);
+		}
         if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
         Debug.Log(transform.parent.name + " Picked up " + targetObject);
         targetObject = null;

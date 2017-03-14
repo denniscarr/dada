@@ -21,6 +21,8 @@ public class CS_AudioManager : MonoBehaviour {
 	public List<AudioClip> voiceClipPool;
 	public List<AudioClip> instClipPool;
 
+	public AudioClip radioStaticClip;
+
 	public float thisClipPosition;
 
 
@@ -107,22 +109,28 @@ public class CS_AudioManager : MonoBehaviour {
 
 			/* STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) */
 			float rand = Random.Range (0f, 1f);
-			if (rand < 0.75f) {
+			if (rand < 0.1f) {
 				
 			} else {
 
 				if (intSettings.canBeUsedAsSoundSource) {
+					
+
 					Transform rootTransform = intSettings.transform.parent;
-					rootTransform.gameObject.AddComponent<AudioSource> ();
-					soundSources.Add (rootTransform.gameObject.GetComponent<AudioSource> ());
+					AudioSource clipSource = rootTransform.gameObject.AddComponent<AudioSource> ();
+					AudioSource staticSource = rootTransform.gameObject.AddComponent<AudioSource> ();
+					staticSource.clip = radioStaticClip;
+
+					soundSources.Add (clipSource);
 					rootTransform.gameObject.AddComponent<MusicToColor> ();
 					intSettings.usable = true;
 
 					// MORE DENNIS PROTOTYPE STUFF:
-					rootTransform.gameObject.GetComponent<AudioSource> ().spatialBlend = 1f;
-					rootTransform.gameObject.GetComponent<AudioSource> ().maxDistance = 50f;
-					rootTransform.gameObject.GetComponent<AudioSource> ().loop = true;
-					//rootTransform.gameObject.AddComponent<CS_MusicRotate> ();
+					clipSource.spatialBlend = 1f;
+					clipSource.maxDistance = 50f;
+					clipSource.loop = true;
+			
+					rootTransform.gameObject.AddComponent<SoundCrossfade> ();
 				}
 				for (int i = 0; i < soundSources.Count; i++) {
 					//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
@@ -148,6 +156,25 @@ public class CS_AudioManager : MonoBehaviour {
 		thisSource.Play();
 
 	}
+
+	public IEnumerator WaitForStaticEnd() {
+		yield return new WaitForSeconds(radioStaticClip.length/2);
+
+	}
+
+	public void RetuneRadio (Transform radioTransform) {
+		//this will crossfade to the radio static sound, reassign a clip, then transition to that clip
+		radioTransform.gameObject.GetComponent<SoundCrossfade>().CrossFade(radioStaticClip, 0.6f, 1f);
+
+		StartCoroutine ("WaitForStaticEnd");
+
+		AudioClip newClip = audioClipPool [Random.Range (0, audioClipPool.Count)];
+
+		radioTransform.gameObject.GetComponent<SoundCrossfade> ().CrossFade (newClip, 0.6f, 2f);
+
+
+	}
+
 
 	//================================================================================
 	// Background Music Functions
