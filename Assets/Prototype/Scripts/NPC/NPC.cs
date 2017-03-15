@@ -57,6 +57,9 @@ public class NPC : MonoBehaviour {
     NPCAnimation npcAnimation;
     Writer writer;
 
+	//SFX Reference
+	CS_PlaySFX voicePlayer;
+
     void Start()
     {
         rb = transform.parent.GetComponent<Rigidbody>();
@@ -68,6 +71,8 @@ public class NPC : MonoBehaviour {
         }
 
         writer = GetComponent<Writer>();
+
+		voicePlayer = GetComponent<CS_PlaySFX> ();
 
         // If I have no hand position assigned, create one.
         if (handTransform == null)
@@ -107,8 +112,11 @@ public class NPC : MonoBehaviour {
                 "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
                 );
 
-            carriedObject = null;
+			voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+            
+			carriedObject = null;
             EvaluateSurroundings();
+
         }
 
         // MOVING NORMALLY (WANDERING & INTERMITENTLY EVALUATING SURROUNDINGS)
@@ -204,6 +212,9 @@ public class NPC : MonoBehaviour {
                 {
                     writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
+
+					//Play Voice Sound Effect
+					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
                 }
 
                 // Finish waving.
@@ -225,6 +236,9 @@ public class NPC : MonoBehaviour {
                 {
                     writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
+				
+					//Play Voice Sound Effect
+					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
                 }
 
                 // Finish waving.
@@ -408,6 +422,9 @@ public class NPC : MonoBehaviour {
             targetObject = carriableObjects [Random.Range (0, carriableObjects.Count)];
             writer.WriteSpecifiedString("I want that " + targetObject.name + ".");
             currentState = BehaviorState.MoveToObject;
+
+			//Play Voice Sound Effect
+			voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
         }
 
         // See if I want to throw something.
@@ -419,6 +436,8 @@ public class NPC : MonoBehaviour {
             currentState = BehaviorState.ThrowObject;
 
             writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
+			//Play Voice Sound Effect
+			voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
         }
 
         // If I decided not to pick anything up.
