@@ -18,7 +18,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	//POPULATE THIS
 	public List<AudioClip> audioClipPool;
-	public List<AudioClip> voiceClipPool;
+	public AudioClip[] voiceClipPool;
 	public List<AudioClip> instClipPool;
 
 	public AudioClip radioStaticClip;
@@ -52,6 +52,8 @@ public class CS_AudioManager : MonoBehaviour {
 			instance = this;
 		}
 
+
+		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
 		//DontDestroyOnLoad(this.gameObject);
 	}
 	//========================================================================
@@ -93,6 +95,8 @@ public class CS_AudioManager : MonoBehaviour {
 	//========================================================================
 	//DADA-SPECIFIC FUNCTIONS
 	//========================================================================
+
+
 
 	void Start() {
 		ReassignMusic ();
