@@ -29,6 +29,15 @@ public class QuestManager : MonoBehaviour {
 		DontDestroyOnLoad(gameObject);
 
 	}
+
+	void Update() {
+		if (currentQuestList.Count > 0) {
+			foreach (Quest q in currentQuestList) {
+				q.CheckStatus ();
+
+			}
+		}
+	}
 		
 	public void QuestRequest(QuestObject NPCQuestObject) {
 

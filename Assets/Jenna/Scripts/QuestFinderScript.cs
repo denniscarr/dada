@@ -17,11 +17,15 @@ public class QuestFinderScript : MonoBehaviour
 	GameObject[] objects;
 	// for seeing if they're interactable
 	public List<GameObject> interactables = new List<GameObject> ();
+	public List<GameObject> questItems = new List<GameObject> ();
 	int interactablesSize;
 	int objectsSize;
 
 	// for seeing if they have QuestObject script
 	public List<GameObject> hasObjectScript = new List<GameObject> ();
+
+	// to talk abot this in other scripts
+	public bool canBeUsed = false;
 
 	void Start ()
 	{
@@ -46,13 +50,17 @@ public class QuestFinderScript : MonoBehaviour
 					float ranger = Random.Range (0f, 1f);
 					if (ranger > 0.5f) {
 						iset.canBeUsedForQuests = true;
+						canBeUsed = true;
 					} else {
 						iset.canBeUsedForQuests = false;
+						canBeUsed = false;
 					}
 
 					foreach (GameObject go in interactables) {
 						if (iset.canBeUsedForQuests == true) {
 						
+							questItems.Add (go);
+
 							//add quest object script
 							QuestObject quo = go.GetComponent<QuestObject> ();
 							if (quo != null) {
