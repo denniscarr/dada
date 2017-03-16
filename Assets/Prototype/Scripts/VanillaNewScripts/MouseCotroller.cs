@@ -172,9 +172,19 @@ public class MouseCotroller : MonoBehaviour {
 
 	void PickUpObject(Transform pickedUpObject){
 
+        // Make sure we're reading from the correct interaction settings (rather than that of the object being carried by an NPC for instance)
+        InteractionSettings intSet = null;
+        for (int i = 0; i < pickedUpObject.childCount; i++)
+        {
+            if (pickedUpObject.GetChild(i).parent == pickedUpObject && pickedUpObject.GetChild(i).GetComponent<InteractionSettings>() != null)
+            {
+                print("donezo!");
+                intSet = pickedUpObject.GetChild(i).GetComponent<InteractionSettings>();
+            }
+        }
+
 		//check if click on something selectable
-		if(isAbleToBeCarried(pickedUpObject.GetComponentInChildren<InteractionSettings>())){
-			
+		if(isAbleToBeCarried(intSet)){
 			selectedObject = pickedUpObject;
 			state = InterationState.DRAG_STATE;
 			//prevent from vaild click repeatly in a second
@@ -201,6 +211,7 @@ public class MouseCotroller : MonoBehaviour {
 
 			sfxScript.PlaySFX (0);
 
+            intSet.carryingObject = GameObject.Find("Player").transform;
 		}
 			
 	}
@@ -250,11 +261,15 @@ public class MouseCotroller : MonoBehaviour {
 			}
 				
 			clickGapCount = 0;
-			Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
-			body.useGravity = true;
-			body.freezeRotation = false;
+            Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
+            body.isKinematic = false;
+            body.useGravity = true;
+            body.freezeRotation = false;
+            if (selectedObject.FindChild("Incoherence Controller") != null) selectedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
+            if (selectedObject.FindChild("NPC AI") != null) selectedObject.FindChild("NPC AI").gameObject.SetActive(true);
+            selectedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
-			selectedObject = null;
+            selectedObject = null;
 			//change state back
 			state = InterationState.NONE_SELECTED_STATE;
 		}
