@@ -36,8 +36,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			l.bitmap = maps [Random.Range (0, maps.Length)];
 		}
 
-		l._width = width - ManagedObjects.Count;
-		l._height = length - ManagedObjects.Count;
+		l._width = width;
+		l._height = length;
 
 		l.tileScale = tileScale;
 
