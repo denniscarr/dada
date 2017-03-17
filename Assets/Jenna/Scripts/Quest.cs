@@ -8,7 +8,7 @@ using UnityEngine;
 // will be useful later, hopefully -J
 
 [System.Serializable]
-public class Quest : MonoBehaviour {
+public class Quest: MonoBehaviour {
 
 	// an enum is a number of integers that we can give a name, apparently
 	// the curly brackets are possible states that a quest "progress" can be in.

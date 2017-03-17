@@ -34,7 +34,6 @@ public class QuestManager : MonoBehaviour {
 		if (currentQuestList.Count > 0) {
 			foreach (Quest q in currentQuestList) {
 				q.CheckStatus ();
-
 			}
 		}
 	}

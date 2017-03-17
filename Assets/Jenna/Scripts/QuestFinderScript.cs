@@ -16,7 +16,7 @@ public class QuestFinderScript : MonoBehaviour
 {
 	GameObject[] objects;
 	// for seeing if they're interactable
-	public List<GameObject> interactables = new List<GameObject> ();
+	private List<GameObject> interactables = new List<GameObject> ();
 	public List<GameObject> questItems = new List<GameObject> ();
 	int interactablesSize;
 	int objectsSize;
@@ -24,10 +24,7 @@ public class QuestFinderScript : MonoBehaviour
 	// for seeing if they have QuestObject script
 	public List<GameObject> hasObjectScript = new List<GameObject> ();
 
-	// to talk abot this in other scripts
-	public bool canBeUsed = false;
-
-	void Start ()
+	void Awake ()
 	{
 
 		// find the items in the scene and add them to a list of questable items
@@ -40,7 +37,6 @@ public class QuestFinderScript : MonoBehaviour
 			InteractionSettings iset = objects [i].GetComponentInChildren<InteractionSettings> ();
 			if (iset != null) {
 				GameObject iset1 = iset.gameObject.transform.parent.gameObject;
-				//interactables.Add (iset.gameObject);
 				if (!interactables.Contains (iset1)) {
 					interactables.Add (iset1);
 				}
@@ -50,16 +46,16 @@ public class QuestFinderScript : MonoBehaviour
 					float ranger = Random.Range (0f, 1f);
 					if (ranger > 0.5f) {
 						iset.canBeUsedForQuests = true;
-						canBeUsed = true;
 					} else {
 						iset.canBeUsedForQuests = false;
-						canBeUsed = false;
 					}
 
 					foreach (GameObject go in interactables) {
 						if (iset.canBeUsedForQuests == true) {
 						
-							questItems.Add (go);
+							if (!questItems.Contains (go)) {
+								questItems.Add (go);
+							}
 
 							//add quest object script
 							QuestObject quo = go.GetComponent<QuestObject> ();
@@ -76,14 +72,6 @@ public class QuestFinderScript : MonoBehaviour
 						}
 					}
 				}
-						// I think the generator will have to be a get/set maybe, or a function,
-						// not really sure, but it'll go here
-						// it's hard because, like, the iset had to be nested in the for loop because reasons
-						// so it'll be hard to access outside of this function.
-						// I guess it'll all go in start for now, it's not like it can go anywhere else
-						// might make load times kind of slow, but it'll be done before the player is there
-						// what will be difficult, however, is making it reactive when new objects are added
-						// but that's something I/we can handle later.
 				}
 			}
 		}
