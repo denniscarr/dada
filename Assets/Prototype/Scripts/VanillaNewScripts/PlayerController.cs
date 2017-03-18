@@ -13,6 +13,11 @@ public class PlayerController : MonoBehaviour {
 	public float speed = 10.0F;
 	public float rotationSpeed = 100.0F;
 
+	public float ZoomInUpperCameraFoV = 10f;
+	public float ZoomOutUpperCameraFoV = 16f;
+	public float ZoomInMainCameraFoV = 33f;
+	public float ZoomOutMainCameraFoV = 45f;
+
 	ControlMode mode;
 	private Transform uppernode;
 	Camera uppercamera;
@@ -144,8 +149,11 @@ public class PlayerController : MonoBehaviour {
 
 	void ZoomOutMove(){
 		//using W & S to go forward and backward, A & D to rotate left and right
-		if(uppercamera.fieldOfView < 16f){
+		if(uppercamera.fieldOfView < ZoomOutUpperCameraFoV){
 			uppercamera.fieldOfView ++;
+		}
+		if(Camera.main.fieldOfView < ZoomOutMainCameraFoV){
+			Camera.main.fieldOfView ++;
 		}
 		float translation = Input.GetAxis("Vertical") * speed;
 		float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
@@ -162,8 +170,13 @@ public class PlayerController : MonoBehaviour {
 
 	void ZoomInMove(){
 		//follow mouse
-		if(uppercamera.fieldOfView > 10f){
+		if(uppercamera.fieldOfView > ZoomInUpperCameraFoV){
+			//Debug.Log(uppercamera.fieldOfView);
 			uppercamera.fieldOfView --;
+		}
+
+		if(Camera.main.fieldOfView > ZoomInMainCameraFoV){
+			Camera.main.fieldOfView --;
 		}
 	}
 

@@ -161,7 +161,7 @@ public class MouseCotroller : MonoBehaviour {
 			if (Physics.Raycast (ray, out hit) && !hit.collider.name.Equals("PlayerVisor")){
 				
 				Debug.Log("click "+hit.collider.name+" inside visor");
-				PickUpObject(hit.collider.transform);
+				PickUpObject(hit.collider.transform,true);
 				return;
 
 			}
@@ -169,15 +169,17 @@ public class MouseCotroller : MonoBehaviour {
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			//RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)) {
-				
-				PickUpObject(hit.collider.transform);
+
+				Transform pickedUpObject = hit.collider.transform;
+				PickUpObject(pickedUpObject,false);
+
 			}
 		}
 
 
 	}
 
-	void PickUpObject(Transform pickedUpObject){
+	void PickUpObject(Transform pickedUpObject, bool isInVisor){
 
         // Make sure we're reading from the correct interaction settings (rather than that of the object being carried by an NPC for instance)
         InteractionSettings intSet = null;
@@ -190,17 +192,7 @@ public class MouseCotroller : MonoBehaviour {
             }
         }
 
-		float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
-		float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
-		if(distance < 0){
-			Debug.Log("error");
-		}
-		float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-		float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
-		float scale = frustumHeightInside/frustumHeight;
-		Debug.Log(transform.forward);
-		Debug.Log(pickedUpObject.position -  Camera.main.transform.position);
-		Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
+
 		//Debug.Log(distanceInside/distance);
 		//check if click on something selectable
 		if(isAbleToBeCarried(intSet)){
@@ -220,6 +212,7 @@ public class MouseCotroller : MonoBehaviour {
 				Debug.Log("click "+pickedUpObject.name+" inside visor");
 			}
 
+
 			//pickedUpObject.localScale = 
 			Rigidbody body = pickedUpObject.GetComponentInChildren<Rigidbody>();
 			body.useGravity = false;
@@ -227,9 +220,18 @@ public class MouseCotroller : MonoBehaviour {
 			//set layer to ignoreraycast 
 			pickedUpObject.gameObject.layer = 2;
 
+			if(!isInVisor){
+				float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
+				float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
+				float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+				float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+				float scale = frustumHeightInside/frustumHeight;
+				Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
+				pickedUpObject.localScale *= scale;
+			}
+				
 			//update the postion
 			UpdateDraggedObjectPosition(pickedUpObject);
-			pickedUpObject.localScale *= scale;
 			sfxScript.PlaySFX (0);
 
             intSet.carryingObject = GameObject.Find("Player").transform;
