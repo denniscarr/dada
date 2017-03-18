@@ -10,6 +10,9 @@ public class SpectrumAnalysis : MonoBehaviour {
 	[HideInInspector]
 	public AudioSource audioSource;
 
+	public float[] bandBuffer;
+	float [] bufferDecrease;
+
 
 
 
@@ -28,6 +31,9 @@ public class SpectrumAnalysis : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		spectrumData = new float[64];
+		bandBuffer = new float[64];
+		bufferDecrease = new float[64];
+
 		audioSource = gameObject.GetComponent<AudioSource> ();
 		//StartCoroutine (GetSpectrumFrameChanges());
 	}
@@ -60,7 +66,9 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		audioSource.GetSpectrumData( spectrumData, 0, FFTWindow.Rectangular );
+		audioSource.GetSpectrumData( spectrumData, 0, FFTWindow.Blackman );
+
+		BandBuffer ();
 		float wholeEnergy = 0;
 		for (int i = spectrumData.Length / 5 * 2; i < spectrumData.Length / 5 * 2 + spectrumData.Length / 2; i++) {
 			wholeEnergy += spectrumData [i];
@@ -103,6 +111,22 @@ public class SpectrumAnalysis : MonoBehaviour {
 			b = 0f;
 		}
 		return (input * k + b);
+	}
+
+	void BandBuffer() {
+
+		for (int i = 0; i < 64; i++) {
+			if (spectrumData [i] > bandBuffer [i]) {
+				bandBuffer [i] = spectrumData [i];
+				bufferDecrease[i] = 0.005f;
+			}
+
+			if (spectrumData [i] < bandBuffer [i]) {
+				bandBuffer [i] -= bufferDecrease [i]; 
+				bufferDecrease [i] *= 1.2f;
+			}
+		}
+		
 	}
 
 

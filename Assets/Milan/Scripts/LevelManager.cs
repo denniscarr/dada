@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelManager : SimpleManager.Manager<Level> {
 
 	Level currentLevel;
+	public int width, length;
 	public float tileScale = 1;
 	private float xOffset, yOffset;
 	private Texture2D[] maps;
@@ -14,8 +15,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
+	}
 
-		Create ();
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.Space)){
+			Create ();
+		}
 	}
 
 	public override Level Create(){
@@ -24,15 +29,15 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level l = newLevel.AddComponent <Level> ();
 
 		newLevel.transform.position += (Vector3.right) * xOffset;
-		newLevel.transform.position += (Vector3.forward) * yOffset;
+		newLevel.transform.position -= (Vector3.up) * yOffset;
 		newLevel.name = "Level " + ManagedObjects.Count;
 
 		if (maps.Length > 0) {
 			l.bitmap = maps [Random.Range (0, maps.Length)];
 		}
 
-		l._width = 25;
-		l._height = 25;
+		l._width = width;
+		l._height = length;
 
 		l.tileScale = tileScale;
 
@@ -41,8 +46,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		Level.xOrigin += l._width / Level.noiseScale;
 //		Level.yOrigin += l._height / Level.noiseScale;
-		xOffset += l._width * tileScale;
-//		yOffset += l._height * tileScale;
+		xOffset += l._width/2;
+		yOffset += l._height * 2;
 
 		currentLevel = l;
 

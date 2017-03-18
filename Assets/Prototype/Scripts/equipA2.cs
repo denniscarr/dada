@@ -11,8 +11,11 @@ public class equipA2 : MonoBehaviour {
     public KeyCode equipKey = KeyCode.E;
     public KeyCode abandonKey = KeyCode.G;
     private bool activatePrompt = false;
+	private bool equipTrigger = false;
     private GameObject player;
     public float speed = 1;
+	public float ASpeed = 10;
+	public bool equipped = false;
 
 	Transform t_gun;
 
@@ -23,20 +26,32 @@ public class equipA2 : MonoBehaviour {
 		player = GameObject.Find("FPSController");
 		t_gun = GameObject.Find("Modern Russian AR (1)").transform;
 		t_gun.gameObject.SetActive(false);
+		equipTrigger = false;
+		equipped = false;
+		Debug.Log (equipTrigger);
     }
 
     void OnTriggerExit(Collider equipCol)
     {
+		
         equipPrompt.SetActive(false);
+		Debug.Log ("Trigger exit");
+		equipTrigger = false;
     }
 
     void OnTriggerEnter(Collider equipCol)
     {
+		if (equipCol.gameObject.name == "FPSController") {
+			equipTrigger = true;
+		}
+		Debug.Log ("trigger enter "+equipCol.name);
         equipPrompt.SetActive(true);
         if (Input.GetKeyDown(equipKey))
         {
             activatePrompt = true;
+
         }
+
     }
 
     // Update is called once per frame
@@ -45,11 +60,17 @@ public class equipA2 : MonoBehaviour {
         {
             equipPrompt.SetActive(true);
         }
-
-        if (Input.GetKeyDown(equipKey))
+		Debug.Log (equipTrigger);
+        if (equipTrigger == true && Input.GetKeyDown(equipKey))
         {
             MoveToCamera();
+			equipped = true;
         }
+
+		if (Input.GetKeyDown (abandonKey)) {
+			abandonItem ();
+			equipped = false;
+		}
     }
 
     void MoveToCamera ()
@@ -62,9 +83,17 @@ public class equipA2 : MonoBehaviour {
 		transform.position = t_gun.position;
 		transform.rotation = t_gun.rotation;
 		transform.SetParent(t_gun.parent,true);
-
+		equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = false;
         Debug.Log("why");
     }
 
+	void abandonItem ()
+	{
+		GetComponent<Collider>().enabled = true;
+		GetComponent<Rigidbody>().useGravity = true;
+		GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+		transform.SetParent (null);
+		equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = true;
+	}
     
 }

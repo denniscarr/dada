@@ -21,7 +21,7 @@ public class NPCAnimation : MonoBehaviour
 	const float half = 0.5f;
 	float turnAmount;
 	float forwardAmount;
-	Vector3 groundNormal;
+	[HideInInspector] public Vector3 groundNormal;
 //	float capsuleHeight;
 //	Vector3 capsuleCenter;
 //	CapsuleCollider capsule;
@@ -43,12 +43,11 @@ public class NPCAnimation : MonoBehaviour
 
 	public void Move(Vector3 move)
 	{
-
 		// convert the world relative moveInput vector into a local-relative
 		// turn amount and forward amount required to head in the desired
 		// direction.
 		if (move.magnitude > 1f) move.Normalize();
-		move = transform.InverseTransformDirection(move);
+		move = transform.parent.InverseTransformDirection(move);
 		CheckGroundStatus();
 		move = Vector3.ProjectOnPlane(move, groundNormal);
 		turnAmount = Mathf.Atan2(move.x, move.z);
@@ -71,6 +70,9 @@ public class NPCAnimation : MonoBehaviour
 
 		// send input and other state parameters to the animator
 		UpdateAnimator(move);
+
+        // Move my animator's local position back to 0,0,0 to hack-fix a bug I couldn't figure out.
+        //animator.transform.localPosition = new Vector3(0f, 0f, 0f);
 	}
 
 
@@ -141,9 +143,9 @@ public class NPCAnimation : MonoBehaviour
 		// which affects the movement speed because of the root motion.
 		if (isGrounded && move.magnitude > 0)
 		{
-			animator.speed = animSpeedMultiplier;
-		}
-		else
+            animator.speed = animSpeedMultiplier;
+        }
+        else
 		{
 			// don't use that while airborne
 			animator.speed = 1;
@@ -178,23 +180,23 @@ public class NPCAnimation : MonoBehaviour
 	{
 		// help the character turn faster (this is in addition to root rotation in the animation)
 		float turnSpeed = Mathf.Lerp(stationaryTurnSpeed, movingTurnSpeed, forwardAmount);
-		transform.Rotate(0, turnAmount * turnSpeed * Time.deltaTime, 0);
+		transform.parent.Rotate(0, turnAmount * turnSpeed * Time.deltaTime, 0);
 	}
 
 
 	public void OnAnimatorMove()
 	{
-		// we implement this function to override the default root motion.
-		// this allows us to modify the positional speed before it's applied.
-		if (isGrounded && Time.deltaTime > 0)
-		{
-			Vector3 v = (animator.deltaPosition * moveSpeedMultiplier) / Time.deltaTime;
+        // we implement this function to override the default root motion.
+        // this allows us to modify the positional speed before it's applied.
+        if (isGrounded && Time.deltaTime > 0)
+        {
+            Vector3 v = (animator.deltaPosition * moveSpeedMultiplier) / Time.deltaTime;
 
-			// we preserve the existing y part of the current velocity.
-			v.y = rigidbody.velocity.y;
-			rigidbody.velocity = v;
-		}
-	}
+            // we preserve the existing y part of the current velocity.
+            v.y = rigidbody.velocity.y;
+            rigidbody.velocity = v;
+        }
+    }
 
 
 	void CheckGroundStatus()
@@ -202,15 +204,15 @@ public class NPCAnimation : MonoBehaviour
 		RaycastHit hitInfo;
 #if UNITY_EDITOR
 		// helper to visualise the ground check ray in the scene view
-		Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * groundCheckDistance));
+		Debug.DrawLine(transform.parent.position + (Vector3.up * 0.1f), transform.parent.position + (Vector3.up * 0.1f) + (Vector3.down * groundCheckDistance));
 #endif
 		// 0.1f is a small offset to start the ray from inside the character
 		// it is also good to note that the transform position in the sample assets is at the base of the character
-		if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, groundCheckDistance))
+		if (Physics.Raycast(transform.parent.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, groundCheckDistance))
 		{
 			groundNormal = hitInfo.normal;
 			isGrounded = true;
-			animator.applyRootMotion = true;
+			//animator.applyRootMotion = true;
 		}
 		else
 		{
@@ -240,5 +242,14 @@ public class NPCAnimation : MonoBehaviour
         animator.SetBool ("Throwing", false);
     }
 
+    // Called when NPC decides to say hello.
+    public void WaveHello()
+    {
+        animator.SetBool("WavingHello", true);
+    }
 
+    public void WaveHelloFinished()
+    {
+        animator.SetBool("WavingHello", false);
+    }
 }
