@@ -22,6 +22,8 @@ public class MusicToVertex : MonoBehaviour {
 	//array of mesh vertices
 	Vector3 [] vertices;
 
+	Renderer thisRenderer; 
+
 	public float displacementStrength = 20f;
 	public float returnSmoothing = 0.01f;
 
@@ -34,22 +36,21 @@ public class MusicToVertex : MonoBehaviour {
 		thisAnalyzer = gameObject.GetComponent<SpectrumAnalysis> ();
 		thisMesh = gameObject.GetComponent<MeshFilter>().mesh;
 
-		originalMesh = thisMesh.vertices;
-		vertices = thisMesh.vertices;
+		thisRenderer = gameObject.GetComponent<Renderer> ();
+
+	
 
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		float newSpectrumPoint = thisAnalyzer.bandBuffer [2];
-		float otherSpectrumPoint = thisAnalyzer.bandBuffer [6];
-		ReturnToOriginal ();
-		for (int i = 0; i < originalMesh.Length; i++) {
-			vertices [i] += Random.value > 0.5f ? thisMesh.normals[i] * newSpectrumPoint * displacementStrength : 
-				thisMesh.normals[i] * otherSpectrumPoint * displacementStrength;
-		}
-		thisMesh.vertices = vertices;
-		thisMesh.RecalculateBounds ();
+		float otherSpectrumPoint = thisAnalyzer.bandBuffer [3];
+
+		thisRenderer.material.SetFloat ("_Lacunarity", newSpectrumPoint * 20f);
+		thisRenderer.material.SetColor ("_Offset", new Color (newSpectrumPoint * 5f, newSpectrumPoint * 5f, 
+			otherSpectrumPoint * 10f, 0f));
+		thisRenderer.material.SetFloat ("_Displacement", otherSpectrumPoint * 20f);
 
 	}
 
