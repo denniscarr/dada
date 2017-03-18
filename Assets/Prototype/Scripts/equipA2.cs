@@ -16,6 +16,7 @@ public class equipA2 : MonoBehaviour {
     public float speed = 1;
 	public float ASpeed = 10;
 	public bool equipped = false;
+	public GameObject refrence;
 
 	Transform t_gun;
 
@@ -24,7 +25,7 @@ public class equipA2 : MonoBehaviour {
     void Start () {
         equipPrompt.SetActive(false);
 		player = GameObject.Find("FPSController");
-		t_gun = GameObject.Find("Modern Russian AR (1)").transform;
+		t_gun = refrence.transform;
 		t_gun.gameObject.SetActive(false);
 		equipTrigger = false;
 		equipped = false;
