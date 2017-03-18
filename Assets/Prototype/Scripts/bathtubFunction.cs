@@ -25,6 +25,10 @@ public class bathtubFunction : MonoBehaviour {
 
 	void vibrate() {
 		GetComponent<Rigidbody> ().AddForce (transform.up * bathtubForce);
-		GetComponent<Rigidbody> ().AddForce (-transform.up * bathtubForce);
+		Invoke ("vibrate2", 0.3f);
+	}
+
+	void vibrate2() {
+		GetComponent<Rigidbody> ().AddForce (-transform.right * bathtubForce);
 	}
 }
