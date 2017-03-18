@@ -12,7 +12,7 @@ public enum InterationState{
 public enum InteractionMode{
 	GRAB_MODE = 0,
 	USE_MODE = 1,
-	INROOM_MODE = 2,
+//	INROOM_MODE = 2,
 }
 
 public class MouseCotroller : MonoBehaviour {
@@ -20,7 +20,7 @@ public class MouseCotroller : MonoBehaviour {
 	public Sprite useHand;
 
 	public float throwForce = 100f;
-	Camera UpperCamera;
+	public Camera UpperCamera;
 
 	InterationState state;
 	InteractionMode mode;
@@ -29,7 +29,8 @@ public class MouseCotroller : MonoBehaviour {
 
 	//inpoint get from the reference cube for dragging plane, which is visible at the scene but hide later
 	Plane draggedPlane;
-	Transform cubeOnDraggedPlane;
+	public Transform cubeOnDraggedPlane;
+	public PlayerController playercontroller;
 	Vector3 inPointForPlaneFromCube;
 
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
@@ -42,10 +43,9 @@ public class MouseCotroller : MonoBehaviour {
 	void Start () {
 		clickGapCount = 0;
 		state = InterationState.NONE_SELECTED_STATE;
-
 		//UpperCamera = GameObject.Find("UpperCamera").GetComponent<Camera>();
 		Cursor.visible = false;
-		cubeOnDraggedPlane = GameObject.Find("CubeOnSelectedPlane").transform;
+		//cubeOnDraggedPlane = GameObject.Find("CubeOnSelectedPlane").transform;
 		selectedObject = null;
 		inPointForPlaneFromCube = cubeOnDraggedPlane.position;
 		draggedPlane.SetNormalAndPosition(
@@ -61,18 +61,14 @@ public class MouseCotroller : MonoBehaviour {
 	void FixedUpdate () {
 		//update the mouse position
 		transform.position = Input.mousePosition;
-
+//		Debug.Log(Camera.main.transform.forward);
 		switch(mode){
 		case InteractionMode.GRAB_MODE:GrabHandler();;break;
 		case InteractionMode.USE_MODE:UseHandler();;break;
-		case InteractionMode.INROOM_MODE:InRoomHandler();break;
 		}
 			
 	}
 
-	void InRoomHandler(){
-
-	}
 
 	void ChangeToGrabMode() {
 		mode = InteractionMode.GRAB_MODE;
@@ -97,17 +93,21 @@ public class MouseCotroller : MonoBehaviour {
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 
 			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit) && !hit.collider.name.Equals("PlayerVisor")){
-				
-				isCollidingSomethingInVisor = true;
+			if (Physics.Raycast (ray, out hit)){
+				if(hit.collider.name.Equals("PlayerVisor")){
+					if(!playercontroller.isInRoomMode()){
+						playercontroller.SendMessage("ChangeToInRoomMode");
+					}
+				}else{
+					isCollidingSomethingInVisor = true;
 
-				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
-				if (isAbleToBeUse(interactionSettings)) {
-					sfxScript.PlaySFX (0);
-					Debug.Log("use "+hit.collider.name+" inside visor");
-					hit.collider.BroadcastMessage ("UsedByPlayer");
+					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+					if (isAbleToBeUse(interactionSettings)) {
+						sfxScript.PlaySFX (0);
+						Debug.Log("use "+hit.collider.name+" inside visor");
+						hit.collider.BroadcastMessage ("UsedByPlayer");
+					}
 				}
-
 			}
 
 			//if ray is colliding something in visor, then do not detect collision outside visor////may be want to change
@@ -126,6 +126,7 @@ public class MouseCotroller : MonoBehaviour {
 	}
 
 	void GrabHandler(){
+		
 		clickGapCount += Time.deltaTime;
 		if(clickGapCount > 0.1f){
 
@@ -177,7 +178,18 @@ public class MouseCotroller : MonoBehaviour {
 	}
 
 	void PickUpObject(Transform pickedUpObject){
-
+		float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
+		float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
+		if(distance < 0){
+			Debug.Log("error");
+		}
+		float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+		float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+		float scale = frustumHeightInside/frustumHeight;
+		Debug.Log(transform.forward);
+		Debug.Log(pickedUpObject.position -  Camera.main.transform.position);
+		Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
+		//Debug.Log(distanceInside/distance);
 		//check if click on something selectable
 		if(isAbleToBeCarried(pickedUpObject.GetComponentInChildren<InteractionSettings>())){
 			
@@ -189,6 +201,7 @@ public class MouseCotroller : MonoBehaviour {
 			if(pickedUpObject.parent != UpperCamera.transform.parent){
 				//change the parent of selected object
 				pickedUpObject.SetParent(UpperCamera.transform.parent);
+
 				//stop gravity simulation and free rotation
 				Debug.Log("click "+pickedUpObject.name+" outside visor");
 
@@ -196,6 +209,7 @@ public class MouseCotroller : MonoBehaviour {
 				Debug.Log("click "+pickedUpObject.name+" inside visor");
 			}
 
+			//pickedUpObject.localScale = 
 			Rigidbody body = pickedUpObject.GetComponentInChildren<Rigidbody>();
 			body.useGravity = false;
 			body.freezeRotation = true;
@@ -204,7 +218,7 @@ public class MouseCotroller : MonoBehaviour {
 
 			//update the postion
 			UpdateDraggedObjectPosition(pickedUpObject);
-
+			pickedUpObject.localScale *= scale;
 			sfxScript.PlaySFX (0);
 
 		}

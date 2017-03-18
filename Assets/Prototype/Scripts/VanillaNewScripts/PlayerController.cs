@@ -6,13 +6,14 @@ using UnityStandardAssets.Characters.FirstPerson;
 public enum ControlMode{
 	ZOOM_IN_MODE = -1,
 	ZOOM_OUT_MODE = 1,//can see inventory
+	IN_ROOM_MODE = 0,
 }
 
 public class PlayerController : MonoBehaviour {
 	public float speed = 10.0F;
 	public float rotationSpeed = 100.0F;
 
-	ControlMode mode{ get;set;}
+	ControlMode mode;
 	private Transform uppernode;
 	Camera uppercamera;
 	GameObject canvas;
@@ -22,29 +23,49 @@ public class PlayerController : MonoBehaviour {
 
 	CS_PlaySFX playSFXScript;
 
+	Transform inRoomNode;
+
+	//count the time enter the front pic
+	//float enterTimeCount;
+
 	// Use this for initialization
 	void Start () {
+		//enterTimeCount = 0;
+		Cursor.lockState = CursorLockMode.None;
+		mode = ControlMode.ZOOM_OUT_MODE;
 		fpController = this.GetComponent<FirstPersonController>();
-		canvas = GameObject.Find("Canvas");
-		mode = ControlMode.ZOOM_IN_MODE;
-		uppernode = GameObject.Find("UpperNode").transform;
+		Transform root = transform.parent;
+		canvas = root.FindChild("Canvas").gameObject;
+		uppernode = root.FindChild("UpperNode");
+		inRoomNode = uppernode.FindChild("InRoomNode");
 		pressGapCount = 0f;
 		uppercamera = uppernode.FindChild("UpperCamera").GetComponent<Camera>();
+
 		if(mode == ControlMode.ZOOM_IN_MODE){
 			canvas.SetActive(false);
-
-		}else{
+			inRoomNode.gameObject.SetActive(false);
+		}else if(mode == ControlMode.ZOOM_OUT_MODE){
 			fpController.enabled = false;
+			inRoomNode.gameObject.SetActive(false);
+		}else if(mode == ControlMode.IN_ROOM_MODE){
+			fpController.enabled = false;
+			uppercamera.enabled = false;
+			canvas.SetActive(false);
+			gameObject.SetActive(false);
+
+			inRoomNode.gameObject.SetActive(true);
 		}
 			
 		playSFXScript = this.GetComponent<CS_PlaySFX> ();
 
 	}
 
+	void OnEnable(){
+		Start();
+	}
 
 	void Update() {
 
-		//Debug.Log(Globe.prefab);
 		//if press tab, mode change to another
 		pressGapCount += Time.deltaTime;
 
@@ -52,19 +73,20 @@ public class PlayerController : MonoBehaviour {
 			
 			mode = mode == ControlMode.ZOOM_IN_MODE? ControlMode.ZOOM_OUT_MODE:ControlMode.ZOOM_IN_MODE;
 			Debug.Log("mode change to:"+ mode);
-
+			//Debug.Log(transform.position);
 			//play sound effect for mode switch
 			playSFXScript.PlaySFX (1);
 
-			//when it is zoom out mood,change to zoom in
+
 			if(canvas.activeInHierarchy == true){
+				//zoom out -> zoom in
 				//conceal canvas and change to fps control
 				canvas.SetActive(false);
 				fpController.enabled = true;
+				//Debug.Log(transform.position);
 					
-				Debug.Log(canvas.activeInHierarchy);
 			}else{
-				//when it is zoom in mood,change to zoom out
+				//zoom in mood -> zoom out
 				canvas.SetActive(true);
 				fpController.enabled = false;
 				Cursor.lockState = CursorLockMode.None;
@@ -79,8 +101,44 @@ public class PlayerController : MonoBehaviour {
 		switch(mode){
 		case ControlMode.ZOOM_IN_MODE:ZoomInMove();;break;
 		case ControlMode.ZOOM_OUT_MODE:ZoomOutMove();break;
-
+		case ControlMode.IN_ROOM_MODE:InRoomMove();break;
 		}
+		//Debug.Log(transform.position);
+	}
+
+	void InRoomMove(){
+	}
+
+
+
+	public ControlMode getControlMode(){
+		return mode;
+	}
+
+	public bool isInRoomMode(){
+		if(mode == ControlMode.IN_ROOM_MODE){
+			return true;
+		}
+		return false;
+	}
+
+	void ChangeToInRoomMode(){
+		mode = ControlMode.IN_ROOM_MODE;
+		inRoomNode.FindChild("CameraForScreen").position = Camera.main.transform.position;
+		inRoomNode.FindChild("CameraForScreen").rotation = Camera.main.transform.rotation;
+		fpController.enabled = false;
+		uppercamera.enabled = false;
+		canvas.SetActive(false);
+		//gameObject.SetActive(false);
+		inRoomNode.gameObject.SetActive(true);//player in room enable
+		gameObject.SetActive(false);
+
+	}
+
+	void InRoomChangeToZoomOut(){
+		Debug.Log("in room -> zoom out");
+		uppercamera.enabled = true;
+		canvas.SetActive(true);
 
 	}
 
