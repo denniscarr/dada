@@ -15,7 +15,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	void Start(){
 		maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
-		NoiseRemapping = new float[10];
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -30,6 +29,10 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	}
 
 	public override Level Create(){
+		NoiseRemapping = new float[Random.Range (8, 15)];
+		for(int i = 0; i < NoiseRemapping.Length; i++){
+			NoiseRemapping[i] = Random.Range(0.00f, 1.00f);
+		}
 
 		GameObject newLevel = new GameObject();
 		Level l = newLevel.AddComponent <Level> ();

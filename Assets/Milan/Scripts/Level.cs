@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Level : MonoBehaviour, SimpleManager.IManaged {
 
-	public static float noiseScale = 0.05f;
+	public static float noiseScale = 0.02f;
 	public static float xOrigin, yOrigin;
 
 	float tileScale;
 	int _width, _length, _height;
 	string directory; 
 	public Texture2D _bitmap;
+	float colorRange = 0.1f;
 
 	bool playerPlaced;
 	bool usePerlin = false;
@@ -34,11 +35,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.parent = transform;
 		ground.name = "ground";
 
-		gradient = new Color[10];
+		gradient = new Color[Services.LevelGen.NoiseRemapping.Length];
 		for (int i = 0; i < gradient.Length; i++) {
 			float upper = (1 / (float)gradient.Length) * (float)i;
 			float lower = Mathf.Clamp(upper - 1/(float)gradient.Length, 0, upper - 1/(float)gradient.Length);
-			gradient [i] = new Color (Random.Range(lower, upper), Random.Range(lower, upper), Random.Range(lower, upper));
+//			float rand = Random.Range (lower, upper);
+			gradient [i] = new Color (Random.Range (lower, upper), Random.Range (lower, upper), Random.Range (lower, upper));
 		}
 
 		Camera.main.clearFlags = CameraClearFlags.Color;
@@ -142,15 +144,26 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				float perlinVal = 0;
 
 				if (usePerlin) {
-					perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
+					perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 5, 0.5f);
 				} else {
 					Color c = _bitmap.GetPixel (x, y);
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
 				}
 
 				int tileIndex = Mathf.FloorToInt (perlinVal * 10);
-				float stepSize = 1/gradient.Length;
-				_bitmap.SetPixel (x, y, gradient[Mathf.Clamp(tileIndex, 0, gradient.Length -1)]);
+
+				int remapIndex = Mathf.RoundToInt (perlinVal * Services.LevelGen.NoiseRemapping.Length);
+				float difference = (perlinVal * Services.LevelGen.NoiseRemapping.Length) - (float)remapIndex;
+				perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
+
+				if (remapIndex < Services.LevelGen.NoiseRemapping.Length-1 && difference > 0) {
+					perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
+				} else {
+					if (remapIndex > 0 && difference < 0) {
+						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs(difference));
+					}
+				}
+				_bitmap.SetPixel (x, y, gradient[Mathf.RoundToInt(perlinVal * (gradient.Length-1))]);
 
 				vertices [i] = new Vector3 (x, (perlinVal * _height), y);
 				vertices [i] *= tileScale;
@@ -173,7 +186,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		GameObject newObject = null;
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
-		int objectType = Mathf.CeilToInt (x * 10);
+		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.STATICPREFABS.Length-1));
 
 		//Generate wall if at edge of map
 		//		if(index.x == 0 || index.x == width || index.y == 0 || index.y == length){
