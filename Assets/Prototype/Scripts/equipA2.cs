@@ -16,6 +16,7 @@ public class equipA2 : MonoBehaviour {
     public float speed = 1;
 	public float ASpeed = 10;
 	public bool equipped = false;
+	public GameObject refrence;
 
 	Transform t_gun;
 
@@ -24,7 +25,7 @@ public class equipA2 : MonoBehaviour {
     void Start () {
         equipPrompt.SetActive(false);
 		player = GameObject.Find("FPSController");
-		t_gun = GameObject.Find("Modern Russian AR (1)").transform;
+		t_gun = refrence.transform;
 		t_gun.gameObject.SetActive(false);
 		equipTrigger = false;
 		equipped = false;
@@ -35,7 +36,7 @@ public class equipA2 : MonoBehaviour {
     {
 		
         equipPrompt.SetActive(false);
-		Debug.Log ("Trigger exit");
+		Debug.Log ("Trigger exit:"+equipCol.name);
 		equipTrigger = false;
     }
 
@@ -46,20 +47,20 @@ public class equipA2 : MonoBehaviour {
 		}
 		Debug.Log ("trigger enter "+equipCol.name);
         equipPrompt.SetActive(true);
-        if (Input.GetKeyDown(equipKey))
+        /*if (Input.GetKeyDown(equipKey))
         {
-            activatePrompt = true;
+			activatePrompt = true;
 
-        }
+        }*/
 
     }
 
     // Update is called once per frame
     void Update () {
-        if (activatePrompt && Input.GetKeyDown(equipKey))
+        /*if (activatePrompt && Input.GetKeyDown(equipKey))
         {
             equipPrompt.SetActive(true);
-        }
+        }*/
 		Debug.Log (equipTrigger);
         if (equipTrigger == true && Input.GetKeyDown(equipKey))
         {

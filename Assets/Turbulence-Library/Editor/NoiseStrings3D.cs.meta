@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: 4c2021f696270e44ba16ef360212d732
-timeCreated: 1488136536
-licenseType: Free
+guid: 552e991027859c042b591373d94fb7b3
+labels:
+- Noise
+- Procedural
 MonoImporter:
   serializedVersion: 2
   defaultReferences: []
