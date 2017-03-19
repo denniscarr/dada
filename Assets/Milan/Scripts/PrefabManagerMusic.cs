@@ -8,7 +8,7 @@ public class PrefabManagerMusic : MonoBehaviour {
 	public GameObject TEXTOBJECT;
 	public GameObject SPRITE;
 	public GameObject TILE;
-	public GameObject[] LEVELPREFABS;
+	public GameObject[] STATICPREFABS;
 	public GameObject[] NPCPREFABS;
 	public AudioClip[] Tones;
 
@@ -27,17 +27,17 @@ public class PrefabManagerMusic : MonoBehaviour {
 		switch (x) {
 
 		case 8:
-			newObject = Instantiate (Services.Prefabs.LEVELPREFABS[3], Vector3.zero, Quaternion.identity) as GameObject;
+			newObject = Instantiate (Services.Prefabs.STATICPREFABS[3], Vector3.zero, Quaternion.identity) as GameObject;
 			break;
 		case 7:
-			newObject = Instantiate (Services.Prefabs.LEVELPREFABS[2], Vector3.zero, Quaternion.identity) as GameObject;
+			newObject = Instantiate (Services.Prefabs.STATICPREFABS[2], Vector3.zero, Quaternion.identity) as GameObject;
 			break;
 		case 5:
-			newObject = Instantiate (Services.Prefabs.LEVELPREFABS [4], Vector3.zero, Quaternion.identity) as GameObject;
+			newObject = Instantiate (Services.Prefabs.STATICPREFABS [4], Vector3.zero, Quaternion.identity) as GameObject;
 			newObject.GetComponent<AudioSource> ().clip = Tones [Random.Range (0, Tones.Length)];
 			break;
 		case 3:
-			newObject = Instantiate (Services.Prefabs.LEVELPREFABS[1], Vector3.zero, Quaternion.identity) as GameObject;
+			newObject = Instantiate (Services.Prefabs.STATICPREFABS[1], Vector3.zero, Quaternion.identity) as GameObject;
 			break;
 		default:
 			return null;

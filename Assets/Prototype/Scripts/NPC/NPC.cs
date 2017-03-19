@@ -72,6 +72,9 @@ public class NPC : MonoBehaviour {
 
         writer = GetComponent<Writer>();
 
+		if (gameObject.GetComponent<CS_PlaySFX>() == null) {
+			gameObject.AddComponent<CS_PlaySFX> ();
+		}
 		voicePlayer = GetComponent<CS_PlaySFX> ();
 
         // If I have no hand position assigned, create one.
@@ -472,7 +475,6 @@ public class NPC : MonoBehaviour {
 			CS_AudioManager.Instance.RetuneRadio (targetObject);
 		}
         if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
-        Debug.Log(transform.parent.name + " Picked up " + targetObject);
         targetObject = null;
         currentState = BehaviorState.NormalMovement;
     }

@@ -6,11 +6,10 @@ public class GameManager : MonoBehaviour {
 
 	public void Init(){
 
-		Services.Player = GameObject.FindGameObjectWithTag ("Player");
 		Services.Prefabs = gameObject.GetComponent<PrefabManager> ();
 		Services.Quests = gameObject.GetComponent<QuestManager> ();
 		Services.LevelGen = gameObject.GetComponent<LevelManager> ();
-
+		Services.Player = Instantiate (Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
 	}
 		
 	void Awake () {
