@@ -8,7 +8,7 @@ using UnityEngine;
 // will be useful later, hopefully -J
 
 [System.Serializable]
-public class Quest {
+public class Quest: MonoBehaviour {
 
 	// an enum is a number of integers that we can give a name, apparently
 	// the curly brackets are possible states that a quest "progress" can be in.
@@ -69,4 +69,8 @@ public class Quest {
 
 	// this one we can maybe keep since we do have an inventory system eventually i think
 	public int itemReward;
+
+	public virtual void CheckStatus()
+	{
+	}
 }
