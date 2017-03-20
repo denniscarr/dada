@@ -19,15 +19,23 @@ public class QuestManager : MonoBehaviour {
 
 	void Awake() {
 		
-//		if (questManager == null) {
-//			questManager = this;
-//		} else if (questManager != this) {
-//			Destroy (gameObject);
-//		}
-//		// ^^^ the above makes sure we don't have multiple managers in the game at once
-//		// unless that's what we want!!!
-//		DontDestroyOnLoad(gameObject);
+		if (questManager == null) {
+			questManager = this;
+		} else if (questManager != this) {
+			Destroy (gameObject);
+		}
+		// ^^^ the above makes sure we don't have multiple managers in the game at once
+		// unless that's what we want!!!
+		DontDestroyOnLoad(gameObject);
 
+	}
+
+	void Update() {
+		if (currentQuestList.Count > 0) {
+			foreach (Quest q in currentQuestList) {
+				q.CheckStatus ();
+			}
+		}
 	}
 		
 	public void QuestRequest(QuestObject NPCQuestObject) {
