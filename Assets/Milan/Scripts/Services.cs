@@ -8,5 +8,5 @@ public static class Services{
 	public static LevelManager LevelGen {get; set;}
 	public static PrefabManager Prefabs {get; set;}
 	public static QuestManager Quests {get; set;}
-
+	public static CS_AudioManager AudioManager { get; set; }
 }
