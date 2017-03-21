@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 6fb532284ee3b4fc0a19e344a34b67dd
+timeCreated: 1485976442
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Akzidenz Grotesk CE Light
+  fontNames:
+  - Akzidenz Grotesk CE Light
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 7ffbc1b3f539f4f1bb5ecb3d4518ccfe, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

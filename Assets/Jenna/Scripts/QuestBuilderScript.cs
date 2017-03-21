@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-// ******* I AM NOT CERTAIN IF THIS SHOULD GO IN THE QUEST MANAGER, OR IF IT SHOULD BE ADDED
-// TO QUESTABLE OBJECTS VIA THE QUESTFINDER SCRIPT; RIGHT NOW ON MANAGER**********
+// LOCATION: QUEST MANAGER
 
 public class QuestBuilderScript : MonoBehaviour {
 

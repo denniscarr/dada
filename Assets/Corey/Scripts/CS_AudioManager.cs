@@ -33,7 +33,12 @@ public class CS_AudioManager : MonoBehaviour {
 
 	[SerializeField] AudioSource myAudioSource;
 
+	[SerializeField] AudioMixer dadaMixer;
+
 	[SerializeField] AudioMixerGroup SFXGroup;
+
+	[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshots;
+	AudioMixerSnapshot[] altitudeBlend = new AudioMixerSnapshot[loLandsSnapshot, hiLandsSnapshots];
 
 
 
@@ -168,6 +173,19 @@ public class CS_AudioManager : MonoBehaviour {
 
 		radioTransform.gameObject.GetComponent<SoundCrossfade> ().CrossFade (newClip, 0.6f, 2f);
 
+
+	}
+
+	public void AltitudeMusic() {
+		float maxLevelHeight = Services.LevelGen.height + Services.LevelGen.currentLevel.transform.position.y;
+		float minLevelHeight = Services.LevelGen.currentLevel.transform.position.y;
+
+		float normalizedHeights = (Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
+
+
+		float[] weights = new float[normalizedHeights, 1.0f - normalizedHeights];
+
+		dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.0f);
 
 	}
 
