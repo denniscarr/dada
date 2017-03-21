@@ -4,10 +4,12 @@ using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
 
+
 namespace UnityStandardAssets.Characters.FirstPerson
 {
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]
+	//[RequireComponent(typeof (PlayerController))]
     public class FirstPersonController : MonoBehaviour
     {
         [SerializeField] private bool m_IsWalking;
@@ -44,10 +46,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 		float footstepCooldown;
 
+		private bool m_isFPSMode;
+
         // Use this for initialization
         private void Start()
         {
-			
+			m_isFPSMode = false;
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
@@ -61,6 +65,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			footstepCooldown = 0f;
         }
 
+		public bool isFPSMode{
+			get{
+				return m_isFPSMode;
+			}
+			set{
+				m_isFPSMode = value;
+			}
+		}
 
 		void OnEnable(){
 			//Debug.Log("enable fps");
@@ -108,8 +120,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 
 			//FOOTSTEP AUDIO METHODS AREN'T WORKING
+			float magnitude = m_isFPSMode? m_Input.magnitude:m_Input.y;
 
-			if (Mathf.Abs (m_Input.magnitude) > 0.2f && footstepCooldown > 0.5f) {
+			if (Mathf.Abs (magnitude) > 0.2f && footstepCooldown > 0.5f) {
 				int n = Random.Range(1, m_FootstepSounds.Length);
 				m_AudioSource.clip = m_FootstepSounds[n];
 				m_AudioSource.Play();
@@ -123,7 +136,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 
             // always move along the camera forward as it is the direction that it being aimed at
-            Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
+			Vector3 desiredMove = m_isFPSMode?
+				transform.forward*m_Input.y + transform.right*m_Input.x
+				:transform.forward*m_Input.y;
 
             // get a normal for the surface that is being touched to move along it
             RaycastHit hitInfo;
@@ -156,7 +171,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
 
-            m_MouseLook.UpdateCursorLock();
+			if(m_isFPSMode){
+            	m_MouseLook.UpdateCursorLock();
+			}
 			footstepCooldown += Time.fixedDeltaTime;
         }
 
@@ -246,7 +263,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Input = new Vector2(horizontal, vertical);
 
             // normalize input if it exceeds 1 in combined length:
-            if (m_Input.sqrMagnitude > 1)
+			if (m_Input.sqrMagnitude > 1 && m_isFPSMode)
             {
                 m_Input.Normalize();
             }
@@ -263,7 +280,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+			if(m_isFPSMode){
+            	m_MouseLook.LookRotation (transform, m_Camera.transform);
+			}else{
+				float rotation = m_Input.x * 100f;
+				rotation *= Time.deltaTime;
+				transform.Rotate(0, rotation, 0);
+				//m_CharacterController.
+
+			}
         }
 
 

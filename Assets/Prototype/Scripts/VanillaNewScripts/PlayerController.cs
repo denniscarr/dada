@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
 
 public enum ControlMode{
@@ -10,9 +11,15 @@ public enum ControlMode{
 }
 
 public class PlayerController : MonoBehaviour {
-	public float speed = 10.0F;
-	public float rotationSpeed = 100.0F;
+	private float speed = 1.0F;
+	private float rotationSpeed = 100.0F;
 
+	public float ZoomInUpperCameraFoV = 10f;
+	public float ZoomOutUpperCameraFoV = 16f;
+	public float ZoomInMainCameraFoV = 33f;
+	public float ZoomOutMainCameraFoV = 45f;
+
+	private List<GameObject> equipTips;
 	ControlMode mode;
 	private Transform uppernode;
 	Camera uppercamera;
@@ -24,12 +31,16 @@ public class PlayerController : MonoBehaviour {
 	CS_PlaySFX playSFXScript;
 
 	Transform inRoomNode;
-
+	Transform t_gun;
 	//count the time enter the front pic
 	//float enterTimeCount;
 
 	// Use this for initialization
 	void Start () {
+		//equipTips = 
+		//t_gun = transform.GetChild(0).GetChild(0);
+		//t_gun.gameObject.SetActive(false);
+		//equipTips = new List<GameObject>();
 		//enterTimeCount = 0;
 		Cursor.lockState = CursorLockMode.None;
 		mode = ControlMode.ZOOM_OUT_MODE;
@@ -45,10 +56,12 @@ public class PlayerController : MonoBehaviour {
 			canvas.SetActive(false);
 			inRoomNode.gameObject.SetActive(false);
 		}else if(mode == ControlMode.ZOOM_OUT_MODE){
-			fpController.enabled = false;
+			//fpController.enabled = false;
+			fpController.isFPSMode = false;
 			inRoomNode.gameObject.SetActive(false);
 		}else if(mode == ControlMode.IN_ROOM_MODE){
-			fpController.enabled = false;
+			//fpController.enabled = false;
+			fpController.isFPSMode = false;
 			uppercamera.enabled = false;
 			canvas.SetActive(false);
 			gameObject.SetActive(false);
@@ -59,6 +72,47 @@ public class PlayerController : MonoBehaviour {
 		playSFXScript = this.GetComponent<CS_PlaySFX> ();
 
 	}
+
+//	void OnTriggerEnter(Collider other) {
+//		
+//		if(other.transform.parent.name.Equals("InteractableObjectManager")){
+//			Debug.Log(other.gameObject);
+//			//if(equipTips.Find())
+//			//if(equipTipNode.f)
+//			//txtEquipTip.text = "Press E to Equip "+other.gameObject.name;
+//
+//		}
+//	}
+
+//	void OnTriggerStay(Collider other) {
+//
+//		if(other.transform.parent.name.Equals("InteractableObjectManager")){
+//			//Debug.Log(other.gameObject);
+//			if(Input.GetKeyDown(KeyCode.E)){
+//				MoveToCamera(other.transform);
+//				//send message
+//			}
+//		}
+//	}
+//
+//	void OnTriggerExit(Collider other) {
+//		if(other.transform.parent.name.Equals("InteractableObjectManager")){
+//			//Debug.Log(other.transform);
+//
+//		}
+//	}
+//
+//	void MoveToCamera (Transform hitObject)
+//	{
+//		//Transform t_gun = transform.FindChild(0).FindChild(0);
+//		hitObject.position = t_gun.position;
+//		hitObject.rotation = t_gun.rotation;
+//		hitObject.SetParent(t_gun.parent,true);
+//		hitObject.GetComponent<Collider>().enabled = false;
+//		hitObject.GetComponent<Rigidbody>().useGravity = false;
+//		//equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = false;
+//	}
+
 
 	void OnEnable(){
 		Start();
@@ -82,13 +136,15 @@ public class PlayerController : MonoBehaviour {
 				//zoom out -> zoom in
 				//conceal canvas and change to fps control
 				canvas.SetActive(false);
-				fpController.enabled = true;
+				fpController.isFPSMode = true;
+				//fpController.enabled = true;
 				//Debug.Log(transform.position);
 					
 			}else{
 				//zoom in mood -> zoom out
 				canvas.SetActive(true);
-				fpController.enabled = false;
+				fpController.isFPSMode = false;
+				//fpController.enabled = false;
 				Cursor.lockState = CursorLockMode.None;
 
 				//reset the main camera to be parallel to the plane
@@ -109,10 +165,17 @@ public class PlayerController : MonoBehaviour {
 	void InRoomMove(){
 	}
 
-
-
-	public ControlMode getControlMode(){
-		return mode;
+	public ControlMode getControlMode{
+		get
+		{
+			//Some other code
+			return mode;
+		}
+		set
+		{
+			//Some other code
+			mode = value;
+		}
 	}
 
 	public bool isInRoomMode(){
@@ -126,10 +189,12 @@ public class PlayerController : MonoBehaviour {
 		mode = ControlMode.IN_ROOM_MODE;
 		inRoomNode.FindChild("CameraForScreen").position = Camera.main.transform.position;
 		inRoomNode.FindChild("CameraForScreen").rotation = Camera.main.transform.rotation;
-		fpController.enabled = false;
+
+		//?????????
+		//fpController.enabled = false;
 		uppercamera.enabled = false;
 		canvas.SetActive(false);
-		//gameObject.SetActive(false);
+
 		inRoomNode.gameObject.SetActive(true);//player in room enable
 		gameObject.SetActive(false);
 
@@ -144,27 +209,52 @@ public class PlayerController : MonoBehaviour {
 
 	void ZoomOutMove(){
 		//using W & S to go forward and backward, A & D to rotate left and right
-		if(uppercamera.fieldOfView < 16f){
+		if(uppercamera.fieldOfView < ZoomOutUpperCameraFoV){
 			uppercamera.fieldOfView ++;
 		}
-		float translation = Input.GetAxis("Vertical") * speed;
-		float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
-		translation *= Time.deltaTime;
-		rotation *= Time.deltaTime;
-		transform.Translate(0, 0, translation);
+		if(Camera.main.fieldOfView < ZoomOutMainCameraFoV){
+			Camera.main.fieldOfView ++;
+		}
+//		float translation = Input.GetAxis("Vertical") * speed;
+//		float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
+//		translation *= Time.deltaTime;
+//		rotation *= Time.deltaTime;
+//		transform.Translate(0, 0, translation);
 		//update uppercamera simultaneously
-		uppernode.Translate(0, 0, translation);
-		transform.Rotate(0, rotation, 0);
-		uppernode.Rotate(0, rotation, 0);
+//		transform.Rotate(0, rotation, 0);
+//		uppernode.Rotate(0, rotation, 0);
+//
+//		RaycastHit hit;
+//		Ray ray = new Ray(transform.position, Vector3.down);
+//		if (Physics.Raycast(ray,out hit)) {
+//			Vector3 slope = hit.normal;
+//			transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
+//
+//			//Adjust character based on normal
+//		}
+
+		updateUpper();
 
 
 	}
 
+	void updateUpper(){
+		
+		uppernode.rotation = transform.rotation;
+	}
+
 	void ZoomInMove(){
 		//follow mouse
-		if(uppercamera.fieldOfView > 10f){
+		if(uppercamera.fieldOfView > ZoomInUpperCameraFoV){
+			//Debug.Log(uppercamera.fieldOfView);
 			uppercamera.fieldOfView --;
 		}
+
+		if(Camera.main.fieldOfView > ZoomInMainCameraFoV){
+			Camera.main.fieldOfView --;
+		}
+
+		//updateUpper();
 	}
 
 }
