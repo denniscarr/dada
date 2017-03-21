@@ -9,8 +9,9 @@ public class GameManager : MonoBehaviour {
 		Services.Prefabs = gameObject.GetComponent<PrefabManager> ();
 		Services.Quests = gameObject.GetComponent<QuestManager> ();
 		Services.LevelGen = gameObject.GetComponent<LevelManager> ();
-		Services.Player = Instantiate (Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
 		Services.AudioManager = gameObject.GetComponent<CS_AudioManager> ();
+		Instantiate (Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
+		Services.Player = GameObject.Find ("Player");
 	}
 		
 	void Awake () {

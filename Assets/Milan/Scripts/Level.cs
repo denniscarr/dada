@@ -34,12 +34,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground = Instantiate (Services.Prefabs.TILE, Vector3.zero, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
 		ground.name = "ground";
-
+	
 		gradient = new Color[Services.LevelGen.NoiseRemapping.Length];
 		for (int i = 0; i < gradient.Length; i++) {
 			float upper = (1 / (float)gradient.Length) * (float)i;
 			float lower = Mathf.Clamp(upper - 1/(float)gradient.Length, 0, upper - 1/(float)gradient.Length);
-//			float rand = Random.Range (lower, upper);
 			gradient [i] = new Color (Random.Range (lower, upper), Random.Range (lower, upper), Random.Range (lower, upper));
 		}
 
@@ -61,85 +60,98 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		uvs = new Vector2[vertices.Length];
 		tris = new int[_width * _length * 6];
 
+		ground.GetComponent<MeshFilter> ().mesh = terrain;
+		ground.GetComponent<Renderer> ().material.mainTexture = _bitmap;
+		ground.AddComponent<MeshCollider> ();
+
 		GenerateChunk();
+		OutputBitmap ();
+	}
+
+	void Update(){
+//		GeneratePieceWise();
 	}
 
 	public void GeneratePieceWise(){
 
 		Vector3 playerPos = Services.Player.transform.position;
 
-		float xCoord = xOrigin + ((playerPos.x + 1) * noiseScale);
-		float yCoord = yOrigin + ((playerPos.z + 1) * noiseScale);
+		int yIndex = Mathf.RoundToInt ((playerPos.z / tileScale));
+		int xIndex = Mathf.RoundToInt ((playerPos.x / tileScale));
 
-		for (int y = -1; y < 2; y++) {
+		for (int y = -1, ti = -6, vi = -1; y < 2; y++, vi++) {
 
-			xCoord = xOrigin + ((playerPos.x + 1) * noiseScale);
+			int yPos = yIndex + y;
 
-			int yPos = (int)playerPos.z + y;
+			for (int x = -1; x < 2; x++, ti += 6, vi++) {
 
-			for (int x = -1; x < 2; x++) {
-
-				int xPos = (int)playerPos.x + x;
+				int xPos = xIndex + x;
 				int vertIndex = xPos * yPos;
-				float luminosity = 0;
+				float perlinVal = 0;
+				int t = ti + vertIndex;
+				int v = vi + vertIndex;
 
-				if(vertices[vertIndex] == null){
+				if(xPos >= 0 && xPos < _width && yPos > 0 && yPos < _length){
 					
+					if (usePerlin) {
+						perlinVal = OctavePerlin (((xOrigin + xPos) * noiseScale), ((yOrigin + yPos) * noiseScale), 5, 0.5f);
+					} else {
+						Color c = _bitmap.GetPixel (xPos, yPos);
+						perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
+					}
 
-				if (usePerlin) {
-					luminosity = Mathf.PerlinNoise (xCoord + (noiseScale * x), yCoord + (noiseScale * y));
-				} else {
-					Color c = _bitmap.GetPixel (xPos, yPos);
-					luminosity = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
-				}
-					
-				if (luminosity > 0.6f) {
-					vertices [vertIndex] = (new Vector3 (x, 0.7f * _height, y));
-				} else {
-					vertices [vertIndex] = (new Vector3 (x, luminosity * _height, y));
-				}
+					int tileIndex = Mathf.FloorToInt (perlinVal * 10);
 
-				int tileIndex = Mathf.FloorToInt (luminosity * 10);
-				_bitmap.SetPixel (x, y, gradient[Mathf.Clamp(tileIndex, 0, gradient.Length -1)]);
-				
-				LevelObjectFactory (luminosity, vertices[vertIndex], new Vector2(xPos, yPos));
-				
+					int remapIndex = Mathf.RoundToInt (perlinVal * Services.LevelGen.NoiseRemapping.Length);
+					float difference = (perlinVal * Services.LevelGen.NoiseRemapping.Length) - (float)remapIndex;
+					perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
+
+					if (remapIndex < Services.LevelGen.NoiseRemapping.Length-1 && difference > 0) {
+						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
+					} else {
+						if (remapIndex > 0 && difference < 0) {
+							perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs(difference));
+						}
+					}
+					_bitmap.SetPixel (x, y, gradient[Mathf.RoundToInt(perlinVal * (gradient.Length-1))]);
+
+					vertices [vertIndex] = new Vector3 (xPos, (perlinVal * _height), yPos);
+					vertices [vertIndex] *= tileScale;
+					vertices [vertIndex] += transform.position;
+
+					uvs [vertIndex] = new Vector2 ((float)xPos / _width, (float)yPos / _length);
+
+					LevelObjectFactory (perlinVal, vertices [vertIndex], new Vector2 (x, y));
+
+					tris[t] = v;
+					tris[t + 3] = tris[t + 2] = v + 1;
+					tris[t + 4] = tris[t + 1] = v + _width + 1;
+					tris[t + 5] = v + _width + 2;
 				}
 			}
 		}
-	}
 
-	float OctavePerlin(float x, float y, int octaves, float persistence) {
-		float total = 0;
-		float frequency = 1;
-		float amplitude = 1;
-		float maxValue = 0;  // Used for normalizing result to 0.0 - 1.0
+		terrain.vertices = vertices;
+		terrain.uv = uvs;
 
-		for(int i=0;i<octaves;i++) {
-			total += Mathf.PerlinNoise(x * frequency, y * frequency) * amplitude;
-
-			maxValue += amplitude;
-
-			amplitude *= persistence;
-			frequency *= 2;
-		}
-
-		return total/maxValue;
+		ground.GetComponent<MeshFilter> ().mesh = terrain;
+		ground.GetComponent<Renderer> ().material.mainTexture = _bitmap;
+		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 	}
 
 	void GenerateChunk(){
 		 
+		int highestPointIndex = 0;
+		float highestPoint = 0;
+
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
 
-		for (int i = 0, y = 0; y <= _length; y++) {
+		for (int i = 0, y = 0; y <= _length; y++, yCoord++) {
 
 			xCoord = xOrigin;
-			yCoord ++;
 
-			for (int x = 0; x <= _width; x++, i++){
-
-				xCoord ++;
+			for (int x = 0; x <= _width; x++, i++, xCoord++){
 
 				float perlinVal = 0;
 
@@ -169,6 +181,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				vertices [i] *= tileScale;
 				vertices [i] += transform.position;
 
+				if (vertices [i].y > highestPoint) {
+					highestPoint = vertices [i].y;
+					highestPointIndex = i;
+				}
+
 				uvs [i] = new Vector2 ((float)x / _width, (float)y / _length);
 
 				LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
@@ -177,9 +194,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		_bitmap.filterMode = FilterMode.Point;
 		_bitmap.Apply ();
-		Services.Player.transform.position = transform.position + (transform.right * _width/2) + (transform.forward * _length/2) + (Vector3.up * 100);
-
-		OutputBitmap ();
+		Services.Player.transform.position = vertices[highestPointIndex] + (Vector3.up * 2);
 	}
 		
 	public GameObject LevelObjectFactory(float x, Vector3 pos, Vector2 index){
@@ -188,50 +203,39 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
 		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
 
-		//Generate wall if at edge of map
-		//		if(index.x == 0 || index.x == width || index.y == 0 || index.y == length){
-		//			newObject = Instantiate(Services.Prefabs.STATICPREFABS[0], pos, Quaternion.identity) as GameObject;
-		//			newObject.transform.localScale += transform.up * 10;
-		//			newObject.name = "wall";
-		//			newObject.transform.parent = gameObject.transform;
-		//
-		//			if (index.x == 0 || index.x == width) {
-		//				newObject.transform.localScale += (transform.forward * tileScale) - transform.forward;
-		//			} 
-		//			if (index.y == 0 || index.y == length){
-		//				newObject.transform.localScale += (transform.right * tileScale) - transform.right;
-		//			}
-		//			newObject.GetComponent<Renderer> ().material.color = floorColor;
-		//			return newObject;
-		//		}
+//		Generate wall if at edge of map
+		if(index.x == 0 || index.x == _width || index.y == 0 || index.y == _length){
 
-		if (objectType >= Services.Prefabs.NPCPREFABS.Length || !Services.Prefabs.NPCPREFABS [objectType]) {
+			return null;
+//			newObject = Instantiate(Services.Prefabs.STATICPREFABS[1], pos, Quaternion.identity) as GameObject;
+//			newObject.transform.localScale += transform.up * 10;
+//			newObject.name = "wall";
+//			newObject.transform.parent = gameObject.transform;
+//
+//			if (index.x == 0 || index.x == _width) {
+//				newObject.transform.localScale += (transform.forward * tileScale) - transform.forward;
+//			} 
+//			if (index.y == 0 || index.y == _length){
+//				newObject.transform.localScale += (transform.right * tileScale) - transform.right;
+//			}
+//			newObject.GetComponent<Renderer> ().material.color = floorColor;
+//			return newObject;
+		}
+
+		if (objectType >= Services.Prefabs.NPCPREFABS.Length || !Services.Prefabs.STATICPREFABS [Mathf.RoundToInt (x * (Services.Prefabs.STATICPREFABS.Length-1))]) {
 			return null;
 		}
 
-		newObject = Instantiate (Services.Prefabs.NPCPREFABS [objectType], Vector3.zero, Quaternion.identity);
+		newObject = Instantiate (Services.Prefabs.NPCPREFABS [Random.Range(0, Services.Prefabs.NPCPREFABS.Length)], Vector3.zero, Quaternion.identity);
 //		if (newObject.GetComponentInChildren<InteractionSettings> () == null) {
 //			newObject.AddComponent<InteractionSettings> ();
 //		}
+
 		newObject.AddComponent<AudioSource> ().playOnAwake = false;
 		newObject.AddComponent<SphereCollider> ().isTrigger = true;
 		newObject.tag = "ToneTrigger";
 		newObject.GetComponent<AudioSource> ().clip = Services.AudioManager.tonesClipPool [Mathf.RoundToInt(x * (Services.AudioManager.tonesClipPool.Length - 1))];
 
-//
-//		GameObject Sprite = Instantiate (Services.Prefabs.SPRITE, Vector3.zero, Quaternion.identity);
-//
-//		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
-//		//		Texture2D newTexture = SpriteBlending(Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)].texture, floorColor);
-//
-//		Sprite newSprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
-//		Sprite.GetComponent<SpriteRenderer> ().sprite = newSprite;
-//		Sprite.transform.localScale /= Sprite.GetComponentInChildren<Renderer> ().bounds.size.x;
-//		Sprite.transform.localScale *= tileScale;
-//		Sprite.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
-//		Sprite.transform.position = newObject.transform.position + (Vector3.up * newObject.GetComponentInChildren<Renderer> ().bounds.extents.y);
-//		Sprite.transform.parent = newObject.transform;
-//
 		if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
 			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
 		} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
@@ -241,8 +245,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
 		//		newObject.GetComponentInChildren<Renderer> ().material.mainTexture = newSprite.texture;
 
-		//RESIZING SPRITES
-
 		// Objects scale up with map size?
 		//		newObject.transform.localScale *= tileScale;
 
@@ -250,7 +252,19 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.position = pos;
 		newObject.transform.position += Vector3.up * (newObject.GetComponentInChildren<Renderer>().bounds.extents.y);
 		newObject.transform.parent = transform;
-		//		newObject.name = "Tile " + pos.x /tileScale + ", " + pos.y/tileScale;
+
+		//ADDING SPRITE
+//		GameObject Sprite = Instantiate (Services.Prefabs.SPRITE, Vector3.zero, Quaternion.identity);
+//
+//		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
+//		//		Texture2D newTexture = SpriteBlending(Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)].texture, floorColor);
+//
+//		Sprite newSprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
+//		Sprite.GetComponent<SpriteRenderer> ().sprite = newSprite;
+//		Sprite.transform.localScale /= Sprite.GetComponentInChildren<Renderer> ().bounds.size.x;
+//		Sprite.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
+//		Sprite.transform.position = newObject.transform.position + (Vector3.up * newObject.GetComponentInChildren<Renderer> ().bounds.extents.y);
+//		Sprite.transform.parent = newObject.transform;
 
 		return newObject;
 	}
@@ -284,6 +298,24 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 	}
 
+	float OctavePerlin(float x, float y, int octaves, float persistence) {
+		float total = 0;
+		float frequency = 1;
+		float amplitude = 1;
+		float maxValue = 0;  // Used for normalizing result to 0.0 - 1.0
+
+		for(int i=0;i<octaves;i++) {
+			total += Mathf.PerlinNoise(x * frequency, y * frequency) * amplitude;
+
+			maxValue += amplitude;
+
+			amplitude *= persistence;
+			frequency *= 2;
+		}
+
+		return total/maxValue;
+	}
+
 	public void OutputBitmap(){
 
 		terrain.vertices = vertices;
@@ -300,9 +332,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		terrain.triangles = tris;
 		terrain.uv = uvs;
 
-		ground.GetComponent<MeshFilter>().mesh = terrain;
-		ground.AddComponent<MeshCollider> ().sharedMesh = terrain;
+		ground.GetComponent<MeshFilter> ().mesh = terrain;
 		ground.GetComponent<Renderer> ().material.mainTexture = _bitmap;
+		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 	}
 
 	public void OnDestroyed(){

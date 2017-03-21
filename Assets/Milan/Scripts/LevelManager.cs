@@ -22,12 +22,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Create ();
 	}
 
-	void Update(){
-		if(Input.GetKeyDown(KeyCode.Space)){
-			Create ();
-		}
-	}
-
 	public override Level Create(){
 		NoiseRemapping = new float[Random.Range (8, 15)];
 		for(int i = 0; i < NoiseRemapping.Length; i++){
