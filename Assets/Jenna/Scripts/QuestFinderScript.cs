@@ -24,7 +24,7 @@ public class QuestFinderScript : MonoBehaviour
 	// for seeing if they have QuestObject script
 	public List<GameObject> hasObjectScript = new List<GameObject> ();
 
-	void Awake ()
+	void Start ()
 	{
 
 		// find the items in the scene and add them to a list of questable items

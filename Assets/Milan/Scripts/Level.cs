@@ -186,7 +186,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		GameObject newObject = null;
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
-		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.STATICPREFABS.Length-1));
+		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
 
 		//Generate wall if at edge of map
 		//		if(index.x == 0 || index.x == width || index.y == 0 || index.y == length){
@@ -205,36 +205,40 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		//			return newObject;
 		//		}
 
-		if (objectType >= Services.Prefabs.STATICPREFABS.Length || !Services.Prefabs.STATICPREFABS [objectType]) {
+		if (objectType >= Services.Prefabs.NPCPREFABS.Length || !Services.Prefabs.NPCPREFABS [objectType]) {
 			return null;
 		}
 
-		newObject = Instantiate (Services.Prefabs.STATICPREFABS [objectType], Vector3.zero, Quaternion.identity);
-
+		newObject = Instantiate (Services.Prefabs.NPCPREFABS [objectType], Vector3.zero, Quaternion.identity);
+//		if (newObject.GetComponentInChildren<InteractionSettings> () == null) {
+//			newObject.AddComponent<InteractionSettings> ();
+//		}
 		newObject.AddComponent<AudioSource> ().playOnAwake = false;
 		newObject.AddComponent<SphereCollider> ().isTrigger = true;
 		newObject.tag = "ToneTrigger";
 		newObject.GetComponent<AudioSource> ().clip = Services.AudioManager.tonesClipPool [Mathf.RoundToInt(x * (Services.AudioManager.tonesClipPool.Length - 1))];
 
-
-		GameObject Sprite = Instantiate (Services.Prefabs.SPRITE, Vector3.zero, Quaternion.identity);
-
-		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
-		//		Texture2D newTexture = SpriteBlending(Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)].texture, floorColor);
-
-		Sprite newSprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
-		Sprite.GetComponent<SpriteRenderer> ().sprite = newSprite;
-		Sprite.transform.localScale /= Sprite.GetComponentInChildren<Renderer> ().bounds.size.x;
-
+//
+//		GameObject Sprite = Instantiate (Services.Prefabs.SPRITE, Vector3.zero, Quaternion.identity);
+//
+//		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
+//		//		Texture2D newTexture = SpriteBlending(Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)].texture, floorColor);
+//
+//		Sprite newSprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
+//		Sprite.GetComponent<SpriteRenderer> ().sprite = newSprite;
+//		Sprite.transform.localScale /= Sprite.GetComponentInChildren<Renderer> ().bounds.size.x;
+//		Sprite.transform.localScale *= tileScale;
+//		Sprite.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
+//		Sprite.transform.position = newObject.transform.position + (Vector3.up * newObject.GetComponentInChildren<Renderer> ().bounds.extents.y);
+//		Sprite.transform.parent = newObject.transform;
+//
 		if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
 			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
 		} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
 			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
 		}
-
-		Sprite.transform.localScale *= tileScale;
+			
 		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
-		Sprite.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
 		//		newObject.GetComponentInChildren<Renderer> ().material.mainTexture = newSprite.texture;
 
 		//RESIZING SPRITES
@@ -245,9 +249,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.localScale *= Random.Range (0.50f, 1.50f);
 		newObject.transform.position = pos;
 		newObject.transform.position += Vector3.up * (newObject.GetComponentInChildren<Renderer>().bounds.extents.y);
-		Sprite.transform.position = newObject.transform.position + (Vector3.up * newObject.GetComponentInChildren<Renderer> ().bounds.extents.y);
 		newObject.transform.parent = transform;
-		Sprite.transform.parent = newObject.transform;
 		//		newObject.name = "Tile " + pos.x /tileScale + ", " + pos.y/tileScale;
 
 		return newObject;
