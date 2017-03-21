@@ -5,13 +5,13 @@ using UnityEngine;
 public class NPC : MonoBehaviour {
 
     // BEHAVIOR STATES
-    public enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject, SayingHello};
-    public BehaviorState currentState = BehaviorState.NormalMovement;
+    enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject, SayingHello};
+    BehaviorState currentState;
 
     // USED FOR MOVEMENT
     Vector3 baseDirection;  // The general direction that I want to wander in.
     float meanderRange = 1f;  // How far I meander from the base direction.
-    float lookForwardRange = 10f;    // How far this NPC looks in front of them for objects/obstacles to react to.
+    float lookForwardRange = 5f;    // How far this NPC looks in front of them for objects/obstacles to react to.
     [SerializeField] float moveForce = 5f;
     [SerializeField] float maxVelocity = 10f;
     bool updateAnimation = false;    // Whether I should send movement information to the animator script this frame
@@ -91,6 +91,7 @@ public class NPC : MonoBehaviour {
         }
 
         EvaluateSurroundings();
+        currentState = BehaviorState.NormalMovement;
     }
 
 
@@ -115,14 +116,24 @@ public class NPC : MonoBehaviour {
                 "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
                 );
 
-			//Play Voice Sound Effect
-			Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
-				, transform.position);
+            //Play Voice Sound Effect
+            if (Services.AudioManager != null)
+            {
+                Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+                    , transform.position);
+            }
             
 			carriedObject = null;
             EvaluateSurroundings();
+        }
+
+
+        // SEE IF I SHOULD USE MY HELD ITEM.
+        if (carriedObject != null)
+        {
 
         }
+
 
         // MOVING NORMALLY (WANDERING & INTERMITENTLY EVALUATING SURROUNDINGS)
         if (currentState == BehaviorState.NormalMovement)
@@ -134,26 +145,58 @@ public class NPC : MonoBehaviour {
                 EvaluateSurroundings();
             }
 
-            // See what's directly in front of me.
+            // Check for obstacles.
             Vector3 rayOrigin = transform.parent.position;
             RaycastHit hit;
 
             // Raise the origin of the ray slightly so that it's above ground.
             rayOrigin.y += 1f;
 
+            Vector3 rayDirection = baseDirection;
+
             // Get a ray direction that is modified to follow the current slope of the ground.
-            Vector3 rayDirection = transform.parent.forward;
             if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 5f))
             {
                 rayDirection = Vector3.ProjectOnPlane(rayDirection, hit.normal);
             }
 
             Debug.DrawRay(rayOrigin, rayDirection * lookForwardRange, Color.red);
+            Debug.DrawRay(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down * lookForwardRange, Color.magenta, 0.1f);
+
+            // Do a raycast in the base direction to see if we're heading towards a wall or cliff.
+            bool sawAnObstacle = false;
+            if (Physics.Raycast(rayOrigin, baseDirection, out hit, lookForwardRange))
+            {
+                // If this is not an object I can interact with, it's probably a wall.
+                if (hit.collider.GetComponent<InteractionSettings>() == null)
+                {
+                    sawAnObstacle = true;
+                    RandomizeBaseDirection();
+                }
+            }
+
+            // If there is nothing directly in front of me then do a raycast downwards to make sure I'm not at the edge of a cliff.
+            else if (!Physics.Raycast(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down, lookForwardRange))
+            {
+                sawAnObstacle = true;
+                RandomizeBaseDirection();
+            }
+
+            // Check for other objects directly in front of me.
+            rayDirection = transform.parent.forward;
+
+            // Get a ray direction that is modified to follow the current slope of the ground.
+            if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 5f))
+            {
+                rayDirection = Vector3.ProjectOnPlane(rayDirection, hit.normal);
+            }
+
+            Debug.DrawRay(rayOrigin, rayDirection * lookForwardRange, Color.blue);
 
             if (Physics.Raycast(rayOrigin, rayDirection, out hit, lookForwardRange))
             {
                 // See if the object we're looking at is a player or another NPC. (For waving hello.)
-                if ( hit.collider.GetComponentInChildren<NPC>() != null ||
+                if (hit.collider.GetComponentInChildren<NPC>() != null ||
                      hit.collider.name == "Player")
                 {
                     // If we're saying hello to ourself, acknowledge it.
@@ -171,35 +214,31 @@ public class NPC : MonoBehaviour {
                     generalTimer = 0f;
                     currentState = BehaviorState.SayingHello;
                 }
-
-                // If this object is not interesting to me then consider it an obstacle and get a new direction.
-                else
-                {
-                    RandomizeBaseDirection();
-                }
-            }
-
-            // If there is nothing directly in front of me then do a raycast downwards to make sure I'm not at the edge of a cliff
-            else
-            {
-                Debug.DrawRay(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down*5f, Color.magenta);
-                if (!Physics.Raycast(rayOrigin + rayDirection.normalized * lookForwardRange, Vector3.down, 5f))
-                {
-                    RandomizeBaseDirection();
-                }
             }
 
             // Get a meandering path towards my base direction with perlin noise.
             Vector3 meanderDirection = baseDirection + new Vector3(
-                                           MyMath.Map(Mathf.PerlinNoise(noiseX, 0.0f), 0f, 1f, -meanderRange, meanderRange),
-                                           0f,
-                                           MyMath.Map(Mathf.PerlinNoise(0.0f, noiseY), 0f, 1f, -meanderRange, meanderRange)
-                                       );
+                                            MyMath.Map(Mathf.PerlinNoise(noiseX, 0.0f), 0f, 1f, -meanderRange, meanderRange),
+                                            0f,
+                                            MyMath.Map(Mathf.PerlinNoise(0.0f, noiseY), 0f, 1f, -meanderRange, meanderRange)
+                                        );
 
             noiseX += noiseSpeed * Time.deltaTime;
             noiseY += noiseSpeed * Time.deltaTime;
 
-            MoveInDirection(meanderDirection);
+            // Get a meander that is modified to follow the current slope of the ground
+            if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 5f))
+            {
+                meanderDirection = Vector3.ProjectOnPlane(meanderDirection, hit.normal);
+            }
+
+            if (!sawAnObstacle) MoveInDirection(meanderDirection);
+            else
+            {
+                float tempVel = rb.velocity.z;
+                tempVel *= 0.3f;
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, tempVel);
+            }
 
             updateAnimation = true;
         }
@@ -207,6 +246,8 @@ public class NPC : MonoBehaviour {
         // SAYING HELLO TO NPC OR PLAYER
         else if (currentState == BehaviorState.SayingHello)
         {
+            Debug.Log("Saying Hello");
+
             // If this NPC uses an animator.
             if (npcAnimation != null)
             {
@@ -219,11 +260,11 @@ public class NPC : MonoBehaviour {
                     saidHello = true;
 
 					//Play Voice Sound Effect
-					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+					//voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
                 }
 
                 // Finish waving.
-                else if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f)
+                else if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f && saidHello)
                 {
                     npcAnimation.WaveHelloFinished();
                     saidHello = false;
@@ -247,7 +288,7 @@ public class NPC : MonoBehaviour {
                 }
 
                 // Finish waving.
-                else if (generalTimer >= helloLength)
+                else if (generalTimer >= helloLength && saidHello)
                 {
                     saidHello = false;
                     EvaluateSurroundings();
@@ -392,6 +433,8 @@ public class NPC : MonoBehaviour {
     // Check the surrounding area and see if there is anything that interests me.
     void EvaluateSurroundings()
     {
+        Debug.Log("Evaluating");
+
         // Evaluate nearby objects.
         List<Transform> carriableObjects = new List<Transform>();
         List<Transform> throwTargets = new List<Transform>();
@@ -428,9 +471,12 @@ public class NPC : MonoBehaviour {
             writer.WriteSpecifiedString("I want that " + targetObject.name + ".");
             currentState = BehaviorState.MoveToObject;
 
-			//Play Voice Sound Effect
-			Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
-				, transform.position);
+            //Play Voice Sound Effect
+            if (Services.AudioManager != null)
+            {
+                Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+                    , transform.position);
+            }
         }
 
         // See if I want to throw something.
@@ -442,10 +488,12 @@ public class NPC : MonoBehaviour {
             currentState = BehaviorState.ThrowObject;
 
             writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
-			//Play Voice Sound Effect
-			//Play Voice Sound Effect
-			Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
-				, transform.position);
+            //Play Voice Sound Effect
+            if (Services.AudioManager != null)
+            {
+                Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+                    , transform.position);
+            }
         }
 
         // If I decided not to pick anything up.
@@ -457,7 +505,7 @@ public class NPC : MonoBehaviour {
             evaluateSurroundingsFreqCurrent = Random.Range(evaluateSurroundingsFreqMin, evaluateSurroundingsFreqMax);
             timeSinceLastEvaluation = 0.0f;
 
-            currentState = BehaviorState.NormalMovement;
+            //currentState = BehaviorState.NormalMovement;
         }
     }
 
@@ -476,7 +524,7 @@ public class NPC : MonoBehaviour {
     // Called at end of animation in order to reset state to wander
     void FinishedPickingUp ()
     {
-		if (targetObject.gameObject.GetComponent<AudioSource> ()) {
+		if (targetObject.gameObject.GetComponent<AudioSource> () && Services.AudioManager != null) {
 			Services.AudioManager.RetuneRadio (targetObject);
 		}
         if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
@@ -488,6 +536,7 @@ public class NPC : MonoBehaviour {
     // Gets a new base direction.
     void RandomizeBaseDirection()
     {
+        Debug.Log("Randomizing. Current state: "+currentState);
         Vector2 randomInCircle = Random.insideUnitCircle;
         baseDirection = new Vector3(randomInCircle.x, 0f, randomInCircle.y);
         baseDirection.Normalize();
