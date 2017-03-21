@@ -2,15 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// do i need to make a property for this...
-// like a get (object.getcomponent) --> return bool true else return false
-// and then a set if object.getcomponent return bool true add to list
-// else don't
-
-// but why or how is that different than a for loop?
-
-// note to self: make a function to check automatically if something ain't on a list
-// and if it ain't, add it, else don't
+// LOCATION: QUEST MANAGER
 
 public class QuestFinderScript : MonoBehaviour
 {

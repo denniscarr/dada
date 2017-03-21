@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QuestObject : MonoBehaviour {
+// LOCATION: QUEST OBJECT
 
-	//!!! THIS GOES ON QUEST GIVER OBJECTS, SO PROBABLY EVERYTHING !!!
+public class QuestObject : MonoBehaviour {
 
 	private bool inTrigger = false;
 
