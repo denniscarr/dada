@@ -160,7 +160,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public void RetuneRadio (Transform radioTransform) {
 		//this will crossfade to the radio static sound, reassign a clip, then transition to that clip
-		radioTransform.gameObject.GetComponent<SoundCrossfade>().CrossFade(radioStaticClip, 0.6f, 1f);
+		radioTransform.gameObject.AddComponent<SoundCrossfade>().CrossFade(radioStaticClip, 0.6f, 1f);
 
 		StartCoroutine ("WaitForStaticEnd");
 

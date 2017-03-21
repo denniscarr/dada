@@ -58,7 +58,7 @@ public class NPC : MonoBehaviour {
     Writer writer;
 
 	//SFX Reference
-	CS_PlaySFX voicePlayer;
+	//CS_PlaySFX voicePlayer;
 
     void Start()
     {
@@ -72,10 +72,12 @@ public class NPC : MonoBehaviour {
 
         writer = GetComponent<Writer>();
 
+		/*
 		if (gameObject.GetComponent<CS_PlaySFX>() == null) {
 			gameObject.AddComponent<CS_PlaySFX> ();
 		}
 		voicePlayer = GetComponent<CS_PlaySFX> ();
+		*/
 
         // If I have no hand position assigned, create one.
         if (handTransform == null)
@@ -115,7 +117,9 @@ public class NPC : MonoBehaviour {
                 "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
                 );
 
-			voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+			//Play Voice Sound Effect
+			Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+				, transform.position);
             
 			carriedObject = null;
             EvaluateSurroundings();
@@ -217,7 +221,8 @@ public class NPC : MonoBehaviour {
                     saidHello = true;
 
 					//Play Voice Sound Effect
-					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+					Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+						, transform.position);
                 }
 
                 // Finish waving.
@@ -241,9 +246,10 @@ public class NPC : MonoBehaviour {
                     saidHello = true;
 				
 					//Play Voice Sound Effect
-					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+					Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+						, transform.position);
                 }
-
+		
                 // Finish waving.
                 else if (generalTimer >= helloLength)
                 {
@@ -427,7 +433,8 @@ public class NPC : MonoBehaviour {
             currentState = BehaviorState.MoveToObject;
 
 			//Play Voice Sound Effect
-			voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+			Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+				, transform.position);
         }
 
         // See if I want to throw something.
@@ -440,7 +447,9 @@ public class NPC : MonoBehaviour {
 
             writer.WriteSpecifiedString("Have this " + carriedObject.name + ", " + throwTarget.name + ".");
 			//Play Voice Sound Effect
-			voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+			//Play Voice Sound Effect
+			Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+				, transform.position);
         }
 
         // If I decided not to pick anything up.
@@ -471,9 +480,12 @@ public class NPC : MonoBehaviour {
     // Called at end of animation in order to reset state to wander
     void FinishedPickingUp ()
     {
+		// this is throwing errors for some fucking reason
+		/*
 		if (targetObject.gameObject.GetComponent<AudioSource> ()) {
 			Services.AudioManager.RetuneRadio (targetObject);
 		}
+		*/
         if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
         targetObject = null;
         currentState = BehaviorState.NormalMovement;
