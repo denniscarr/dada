@@ -210,6 +210,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 
 		newObject = Instantiate (Services.Prefabs.STATICPREFABS [objectType], Vector3.zero, Quaternion.identity);
+
+		newObject.AddComponent<AudioSource> ().playOnAwake = false;
+		newObject.AddComponent<SphereCollider> ().isTrigger = true;
+		newObject.tag = "ToneTrigger";
+		newObject.GetComponent<AudioSource> ().clip = Services.AudioManager.tonesClipPool [Mathf.RoundToInt(x * (Services.AudioManager.tonesClipPool.Length - 1))];
+
+
 		GameObject Sprite = Instantiate (Services.Prefabs.SPRITE, Vector3.zero, Quaternion.identity);
 
 		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
@@ -240,6 +247,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.position += Vector3.up * (newObject.GetComponentInChildren<Renderer>().bounds.extents.y);
 		Sprite.transform.position = newObject.transform.position + (Vector3.up * newObject.GetComponentInChildren<Renderer> ().bounds.extents.y);
 		newObject.transform.parent = transform;
+		Sprite.transform.parent = newObject.transform;
 		//		newObject.name = "Tile " + pos.x /tileScale + ", " + pos.y/tileScale;
 
 		return newObject;

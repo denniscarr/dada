@@ -19,6 +19,7 @@ public class CS_AudioManager : MonoBehaviour {
 	//POPULATE THIS
 	public List<AudioClip> audioClipPool;
 	public AudioClip[] voiceClipPool;
+	public AudioClip[] tonesClipPool;
 	public List<AudioClip> instClipPool;
 
 	public AudioClip radioStaticClip;
@@ -43,7 +44,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Awake () {
 		
-
+		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
 		//DontDestroyOnLoad(this.gameObject);
 	}
