@@ -58,7 +58,7 @@ public class NPC : MonoBehaviour {
     Writer writer;
 
 	//SFX Reference
-	CS_PlaySFX voicePlayer;
+	//CS_PlaySFX voicePlayer;
 
     void Start()
     {
@@ -72,10 +72,12 @@ public class NPC : MonoBehaviour {
 
         writer = GetComponent<Writer>();
 
+		/*
 		if (gameObject.GetComponent<CS_PlaySFX>() == null) {
 			gameObject.AddComponent<CS_PlaySFX> ();
 		}
 		voicePlayer = GetComponent<CS_PlaySFX> ();
+		*/
 
         // If I have no hand position assigned, create one.
         if (handTransform == null)
@@ -219,7 +221,8 @@ public class NPC : MonoBehaviour {
                     saidHello = true;
 
 					//Play Voice Sound Effect
-					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+					Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+						, transform.position);
                 }
 
                 // Finish waving.
@@ -243,9 +246,10 @@ public class NPC : MonoBehaviour {
                     saidHello = true;
 				
 					//Play Voice Sound Effect
-					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+					Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+						, transform.position);
                 }
-
+		
                 // Finish waving.
                 else if (generalTimer >= helloLength)
                 {
@@ -476,9 +480,12 @@ public class NPC : MonoBehaviour {
     // Called at end of animation in order to reset state to wander
     void FinishedPickingUp ()
     {
+		// this is throwing errors for some fucking reason
+		/*
 		if (targetObject.gameObject.GetComponent<AudioSource> ()) {
 			Services.AudioManager.RetuneRadio (targetObject);
 		}
+		*/
         if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
         targetObject = null;
         currentState = BehaviorState.NormalMovement;
