@@ -26,6 +26,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public float thisClipPosition;
 
+	public float objectDensity;
+
 
 	//private static CS_AudioManager instance = null;
 
@@ -37,7 +39,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	[SerializeField] AudioMixerGroup SFXGroup;
 
-	[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshots;
+	[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshot;
 	AudioMixerSnapshot[] altitudeBlend;
 
 
@@ -49,7 +51,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Awake () {
 
-		altitudeBlend = new AudioMixerSnapshot[2] {loLandsSnapshot, hiLandsSnapshots};
+		altitudeBlend = new AudioMixerSnapshot[2] {hiLandsSnapshot, loLandsSnapshot};
 		
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
@@ -184,13 +186,14 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public void AltitudeMusic() {
 		float maxLevelHeight = ((float) Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float) Services.LevelGen.currentLevel.transform.position.y;
-		Debug.Log ("maxHeight: " + maxLevelHeight);
-		float minLevelHeight = (float) Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
-		Debug.Log ("minHeight: " + minLevelHeight);
-		float normalizedHeights = (float) (Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
-		Debug.Log (normalizedHeights);
 
-		float[] weights = new float[2] {normalizedHeights, 1.0f - normalizedHeights};
+		float minLevelHeight = (float) Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
+
+		float normalizedHeights = (float) (Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
+
+		float clampedNormHeights = Mathf.Clamp (Mathf.Log (normalizedHeights) + 1f, 0f, 1f);
+
+		float[] weights = new float[2] {clampedNormHeights,1.0f - clampedNormHeights};
 
 		dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.0f);
 
