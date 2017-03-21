@@ -65,7 +65,7 @@ public class D_Equip : MonoBehaviour {
         // Disable collision & gravity.
 		GetComponentInParent<Collider>().enabled = false;
         GetComponent<Collider>().enabled = false;
-		GetComponentInParent<Rigidbody>().isKinematic = true;
+		if (GetComponentInParent<Rigidbody>() != null) GetComponentInParent<Rigidbody>().isKinematic = true;
 
         // Set position & parentage.
 		transform.parent.position = equipReference.position;
@@ -73,14 +73,14 @@ public class D_Equip : MonoBehaviour {
 		transform.parent.SetParent(equipReference, true);
     }
 
-	void abandonItem ()
+	public void abandonItem ()
 	{
         transform.parent.SetParent(null);
 
         // Re-enable collision & stuff.
         GetComponentInParent<Collider>().enabled = true;
         GetComponent<Collider>().enabled = true;
-		GetComponentInParent<Rigidbody>().isKinematic = false;
+		if (GetComponentInParent<Rigidbody>() != null) GetComponentInParent<Rigidbody>().isKinematic = false;
         transform.parent.localScale = originalScale;
 
 		GetComponentInParent<Rigidbody>().AddForce(transform.forward * ASpeed);

@@ -25,7 +25,7 @@ using UnityEngine;
 	}
 }*/
 
-public class refrigeratorFunction: D_Function
+public class D_refrigeratorFunction: D_Function
 {
 	public float refrigeratorSpeed = 10000f;
 
