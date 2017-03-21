@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class refrigeratorFunction : MonoBehaviour {
+/*public class refrigeratorFunction : MonoBehaviour {
     public GameObject refrigerator;
     public float refrigeratorSpeed = 10000f;
     public KeyCode useRefrigerator = KeyCode.Mouse0;
@@ -22,5 +22,28 @@ public class refrigeratorFunction : MonoBehaviour {
             refrigerator.transform.GetChild(2).gameObject.GetComponent<Collider>().enabled = true;
             Debug.Log("lol");
         }
+	}
+}*/
+
+public class refrigeratorFunction: D_Function
+{
+	public float refrigeratorSpeed = 10000f;
+
+	new void Start()
+	{
+		base.Start();
+	}
+
+	public override void Use ()
+	{
+		base.Use();
+
+		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
+			transform.parent.SetParent (null);
+			transform.parent.GetComponentInChildren<D_Equip> ().abandonItem ();
+		}
+
+		GetComponentInParent<Rigidbody>().AddForce(transform.right * refrigeratorSpeed);
+		Debug.Log("lol");
 	}
 }

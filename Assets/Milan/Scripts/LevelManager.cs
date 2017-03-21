@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelManager : SimpleManager.Manager<Level> {
 
-	Level currentLevel;
+	public Level currentLevel;
 	public int width, length, height;
 	public float tileScale = 1;
 
@@ -20,12 +20,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level.yOrigin = Random.Range (0, 10000);
 
 		Create ();
-	}
-
-	void Update(){
-		if(Input.GetKeyDown(KeyCode.Space)){
-			Create ();
-		}
 	}
 
 	public override Level Create(){

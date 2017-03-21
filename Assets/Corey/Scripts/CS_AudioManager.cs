@@ -33,7 +33,12 @@ public class CS_AudioManager : MonoBehaviour {
 
 	[SerializeField] AudioSource myAudioSource;
 
+	[SerializeField] AudioMixer dadaMixer;
+
 	[SerializeField] AudioMixerGroup SFXGroup;
+
+	[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshots;
+	AudioMixerSnapshot[] altitudeBlend;
 
 
 
@@ -43,6 +48,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	void Awake () {
+
+		altitudeBlend = new AudioMixerSnapshot[2] {loLandsSnapshot, hiLandsSnapshots};
 		
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
@@ -92,6 +99,10 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Start() {
 		ReassignMusic ();
+	}
+
+	void Update() {
+		AltitudeMusic ();
 	}
 
 	public void ReassignMusic () {
@@ -168,6 +179,20 @@ public class CS_AudioManager : MonoBehaviour {
 
 		radioTransform.gameObject.GetComponent<SoundCrossfade> ().CrossFade (newClip, 0.6f, 2f);
 
+
+	}
+
+	public void AltitudeMusic() {
+		float maxLevelHeight = ((float) Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float) Services.LevelGen.currentLevel.transform.position.y;
+		Debug.Log ("maxHeight: " + maxLevelHeight);
+		float minLevelHeight = (float) Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
+		Debug.Log ("minHeight: " + minLevelHeight);
+		float normalizedHeights = (float) (Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
+		Debug.Log (normalizedHeights);
+
+		float[] weights = new float[2] {normalizedHeights, 1.0f - normalizedHeights};
+
+		dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.0f);
 
 	}
 
