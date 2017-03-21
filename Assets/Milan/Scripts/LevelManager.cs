@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelManager : SimpleManager.Manager<Level> {
 
-	Level currentLevel;
+	public Level currentLevel;
 	public int width, length, height;
 	public float tileScale = 1;
 
