@@ -100,13 +100,15 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	void Start() {
-		ReassignMusic ();
+		//ReassignMusic ();
 	}
 
 	void Update() {
 		AltitudeMusic ();
 	}
 
+
+	/*
 	public void ReassignMusic () {
 
 		soundSources.Clear ();
@@ -116,7 +118,7 @@ public class CS_AudioManager : MonoBehaviour {
 			// first find every game object with the component CS_MusicRotate
 			// TODO - include all music sources
 
-			/* STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) */
+			// STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) 
 			float rand = Random.Range (0f, 1f);
 			if (rand < 0.1f) {
 				
@@ -149,6 +151,7 @@ public class CS_AudioManager : MonoBehaviour {
 			}
 		}
 	}
+	*/
 
 
 	public IEnumerator NextClip(int sourceNumber, int clipIndex) {
@@ -171,6 +174,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	}
 
+	/*
+
 	public void RetuneRadio (Transform radioTransform) {
 		//this will crossfade to the radio static sound, reassign a clip, then transition to that clip
 		radioTransform.gameObject.AddComponent<SoundCrossfade>().CrossFade(radioStaticClip, 0.6f, 1f);
@@ -183,6 +188,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	}
+	*/
 
 	public void AltitudeMusic() {
 		float maxLevelHeight = ((float) Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float) Services.LevelGen.currentLevel.transform.position.y;
