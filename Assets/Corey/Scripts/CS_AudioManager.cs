@@ -26,7 +26,7 @@ public class CS_AudioManager : MonoBehaviour {
 	public float thisClipPosition;
 
 
-	private static CS_AudioManager instance = null;
+	//private static CS_AudioManager instance = null;
 
 	[SerializeField] GameObject myPrefabSFX;
 
@@ -39,19 +39,10 @@ public class CS_AudioManager : MonoBehaviour {
 	//========================================================================
 	//enforce singleton pattern
 
-	public static CS_AudioManager Instance {
-		get { 
-			return instance;
-		}
-	}
+
 
 	void Awake () {
-		if (instance != null && instance != this) {
-			Destroy(this.gameObject);
-		} else {
-			instance = this;
-		}
-
+		
 
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
 		//DontDestroyOnLoad(this.gameObject);

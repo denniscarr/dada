@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class CS_PlaySFX : MonoBehaviour {
 	public AudioClip[] mySFX;
 
@@ -28,10 +29,10 @@ public class CS_PlaySFX : MonoBehaviour {
 	}
 
 	public void PlaySFXPitchJitter(int t_number, float jitterAmt) {
-		CS_AudioManager.Instance.PlaySFX (mySFX [t_number], (Random.value * jitterAmt) - (jitterAmt / 2f));
+		Services.AudioManager.PlaySFX (mySFX [t_number], (Random.value * jitterAmt) - (jitterAmt / 2f));
 	}
 
 	public void Play3DSFX(int t_number) {
-		CS_AudioManager.Instance.Play3DSFX (mySFX [t_number], transform.position); 
+		Services.AudioManager.Play3DSFX (mySFX [t_number], transform.position); 
 	}
 }

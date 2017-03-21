@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof (AudioSource))]
 public class SpectrumAnalysis : MonoBehaviour {
 
 	//public SpectrumAnalysis instance;
@@ -30,6 +31,8 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		audioSource = gameObject.GetComponent<AudioSource> ();
 		spectrumData = new float[64];
 		bandBuffer = new float[64];
 		bufferDecrease = new float[64];

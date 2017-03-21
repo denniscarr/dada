@@ -18,7 +18,7 @@ public class ImpactSound : MonoBehaviour {
 
 	void OnCollisionEnter(Collision other) {
 
-		CS_AudioManager.Instance.Play3DSFX (collisionSound, transform.position);
+		Services.AudioManager.Play3DSFX (collisionSound, transform.position);
 
 	}
 }
