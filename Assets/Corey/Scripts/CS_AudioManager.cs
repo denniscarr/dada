@@ -51,7 +51,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Awake () {
 
-		altitudeBlend = new AudioMixerSnapshot[2] {hiLandsSnapshot, loLandsSnapshot};
+		altitudeBlend = new AudioMixerSnapshot[] {hiLandsSnapshot, loLandsSnapshot};
 		
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
@@ -199,9 +199,9 @@ public class CS_AudioManager : MonoBehaviour {
 
 		float clampedNormHeights = Mathf.Clamp (Mathf.Log (normalizedHeights) + 1f, 0f, 1f);
 
-		float[] weights = new float[2] {clampedNormHeights,1.0f - clampedNormHeights};
+		float[] weights = new float[] {clampedNormHeights, 1.0f - clampedNormHeights};
 
-		dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.0f);
+		dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
 
 	}
 
