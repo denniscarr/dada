@@ -26,6 +26,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public float thisClipPosition;
 
+	public float objectDensity;
+
 
 	//private static CS_AudioManager instance = null;
 
@@ -37,7 +39,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	[SerializeField] AudioMixerGroup SFXGroup;
 
-	[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshots;
+	[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshot;
 	AudioMixerSnapshot[] altitudeBlend;
 
 
@@ -49,7 +51,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Awake () {
 
-		altitudeBlend = new AudioMixerSnapshot[2] {loLandsSnapshot, hiLandsSnapshots};
+		altitudeBlend = new AudioMixerSnapshot[2] {hiLandsSnapshot, loLandsSnapshot};
 		
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
@@ -98,13 +100,15 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	void Start() {
-		ReassignMusic ();
+		//ReassignMusic ();
 	}
 
 	void Update() {
 		AltitudeMusic ();
 	}
 
+
+	/*
 	public void ReassignMusic () {
 
 		soundSources.Clear ();
@@ -114,7 +118,7 @@ public class CS_AudioManager : MonoBehaviour {
 			// first find every game object with the component CS_MusicRotate
 			// TODO - include all music sources
 
-			/* STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) */
+			// STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) 
 			float rand = Random.Range (0f, 1f);
 			if (rand < 0.1f) {
 				
@@ -147,6 +151,7 @@ public class CS_AudioManager : MonoBehaviour {
 			}
 		}
 	}
+	*/
 
 
 	public IEnumerator NextClip(int sourceNumber, int clipIndex) {
@@ -169,6 +174,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	}
 
+	/*
+
 	public void RetuneRadio (Transform radioTransform) {
 		//this will crossfade to the radio static sound, reassign a clip, then transition to that clip
 		radioTransform.gameObject.AddComponent<SoundCrossfade>().CrossFade(radioStaticClip, 0.6f, 1f);
@@ -181,16 +188,18 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	}
+	*/
 
 	public void AltitudeMusic() {
 		float maxLevelHeight = ((float) Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float) Services.LevelGen.currentLevel.transform.position.y;
-		Debug.Log ("maxHeight: " + maxLevelHeight);
-		float minLevelHeight = (float) Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
-		Debug.Log ("minHeight: " + minLevelHeight);
-		float normalizedHeights = (float) (Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
-		Debug.Log (normalizedHeights);
 
-		float[] weights = new float[2] {normalizedHeights, 1.0f - normalizedHeights};
+		float minLevelHeight = (float) Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
+
+		float normalizedHeights = (float) (Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
+
+		float clampedNormHeights = Mathf.Clamp (Mathf.Log (normalizedHeights) + 1f, 0f, 1f);
+
+		float[] weights = new float[2] {clampedNormHeights,1.0f - clampedNormHeights};
 
 		dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.0f);
 
