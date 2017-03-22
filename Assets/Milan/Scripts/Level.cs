@@ -134,7 +134,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	void GenerateChunk(){
 		 
 		int highestPointIndex = 0;
-		highestPoint = 0;
+		highestPoint = -Mathf.Infinity;
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -180,12 +180,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 				uvs [i] = new Vector2 ((float)x / _width, (float)y / _length);
 
-//				LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
+				LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
 			}
 		}
 			
 		_bitmap.filterMode = FilterMode.Point;
 		_bitmap.Apply ();
+		Debug.Log (highestPointIndex);
 		Services.Player.transform.position = vertices[highestPointIndex] + Vector3.up;
 	}
 		
