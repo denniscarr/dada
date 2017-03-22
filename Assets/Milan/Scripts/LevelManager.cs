@@ -26,10 +26,10 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	void Update(){
 		
-		Camera.main.backgroundColor = gradient.Evaluate(((Services.Player.transform.position.y - currentLevel.transform.position.y)/((float)height * (float)tileScale)));
+		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, gradient.Evaluate(((Services.Player.transform.position.y - currentLevel.transform.position.y)/((float)height * (float)tileScale))), Time.deltaTime * 2);
 		RenderSettings.fogColor = Camera.main.backgroundColor;
 
-		if (Mathf.Abs(currentLevel.transform.position.y - Services.Player.transform.position.y) > 20) {
+		if (currentLevel.transform.position.y - Services.Player.transform.position.y > 0) {
 			currentLevel.enabled = false;
 			Create ();
 		}

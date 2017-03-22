@@ -173,20 +173,37 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				vertices [i] *= tileScale;
 				vertices [i] += transform.position;
 
-				if (vertices [i].y > highestPoint) {
-					highestPoint = vertices [i].y;
-					highestPointIndex = i;
-				}
-
 				uvs [i] = new Vector2 ((float)x / _width, (float)y / _length);
+				//		Generate wall if at edge of map
+				if (x == 0 || x == _width || y == 0 || y == _length) {
 
-				LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
+					//			newObject = Instantiate(Services.Prefabs.STATICPREFABS[1], pos, Quaternion.identity) as GameObject;
+					//			newObject.transform.localScale += transform.up * 10;
+					//			newObject.name = "wall";
+					//			newObject.transform.parent = gameObject.transform;
+					//
+					//			if (index.x == 0 || index.x == _width) {
+					//				newObject.transform.localScale += (transform.forward * tileScale) - transform.forward;
+					//			} 
+					//			if (index.y == 0 || index.y == _length){
+					//				newObject.transform.localScale += (transform.right * tileScale) - transform.right;
+					//			}
+					//			newObject.GetComponent<Renderer> ().material.color = floorColor;
+					//			return newObject;
+
+				} else {
+					if (vertices [i].y > highestPoint) {
+						highestPoint = vertices [i].y;
+						highestPointIndex = i;
+					}
+
+					LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
+				}
 			}
 		}
 			
 		_bitmap.filterMode = FilterMode.Point;
 		_bitmap.Apply ();
-		Debug.Log (highestPointIndex);
 		Services.Player.transform.position = vertices[highestPointIndex] + Vector3.up;
 	}
 		
@@ -195,25 +212,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		GameObject newObject = null;
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
 		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
-
-//		Generate wall if at edge of map
-		if(index.x == 0 || index.x == _width || index.y == 0 || index.y == _length){
-
-			return null;
-//			newObject = Instantiate(Services.Prefabs.STATICPREFABS[1], pos, Quaternion.identity) as GameObject;
-//			newObject.transform.localScale += transform.up * 10;
-//			newObject.name = "wall";
-//			newObject.transform.parent = gameObject.transform;
-//
-//			if (index.x == 0 || index.x == _width) {
-//				newObject.transform.localScale += (transform.forward * tileScale) - transform.forward;
-//			} 
-//			if (index.y == 0 || index.y == _length){
-//				newObject.transform.localScale += (transform.right * tileScale) - transform.right;
-//			}
-//			newObject.GetComponent<Renderer> ().material.color = floorColor;
-//			return newObject;
-		}
 
 		if (objectType >= Services.Prefabs.NPCPREFABS.Length || !Services.Prefabs.STATICPREFABS [Mathf.RoundToInt (x * (Services.Prefabs.STATICPREFABS.Length-1))]) {
 			return null;
