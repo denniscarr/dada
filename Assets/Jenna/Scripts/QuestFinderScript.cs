@@ -9,10 +9,10 @@ public class QuestFinderScript : MonoBehaviour
 	GameObject[] objects;
 	// for seeing if they're interactable
 	private List<GameObject> interactables = new List<GameObject> ();
-	[HideInInspector]
+	//[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
 	// for seeing if they have QuestObject script
-	[HideInInspector]
+	//[HideInInspector]
 	public List<GameObject> hasObjectScript = new List<GameObject> ();
 	// for seeing if they can be picked up
 	public List<GameObject> pickups = new List<GameObject> ();
@@ -23,12 +23,14 @@ public class QuestFinderScript : MonoBehaviour
 
 	// more things will go here as more quests are built
 
-	void Start (){
+	public void FindQuests (){
 
 		// find the items in the scene and add them to a list of questable items
 		interactables = new List<GameObject> ();
 		objects = GameObject.FindObjectsOfType<GameObject> ();
 		objectsSize = objects.Length;
+
+		Debug.Log ("something");
 
 		// loop through the items in the scene
 		for (int i = 0; i < objectsSize; i++) {
