@@ -24,6 +24,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	int[] tris;
 	Color hue;
 	public Color[] palette;
+
+
 	public void OnCreated(){
 
 		_width = Services.LevelGen.width;
@@ -87,20 +89,22 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
 				}
 
-				int tileIndex = Mathf.FloorToInt (perlinVal * 10);
+                int remapIndex = Mathf.RoundToInt((perlinVal * Services.LevelGen.NoiseRemapping.Length-1));
+                float difference = ((perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex);
+                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
 
-				int remapIndex = Mathf.RoundToInt (perlinVal * Services.LevelGen.NoiseRemapping.Length);
-				float difference = (perlinVal * Services.LevelGen.NoiseRemapping.Length) - (float)remapIndex;
-				perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
-
-				if (remapIndex < Services.LevelGen.NoiseRemapping.Length-1 && difference > 0) {
-					perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
-				} else {
-					if (remapIndex > 0 && difference < 0) {
-						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs(difference));
-					}
-				}
-				_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
+                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 2 && difference > 0)
+                {
+                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
+                }
+                else
+                {
+                    if (remapIndex > 0 && difference < 0)
+                    {
+                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
+                    }
+                }
+                _bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
 				vertices [i] = new Vector3 (x, (perlinVal * _height), y);
 				vertices [i] *= tileScale;
@@ -137,23 +141,23 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
 		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
 
-		if (index.x == 0 || index.x == _width || index.y == 0 || index.y == _length) {
+		//if (index.x == 0 || index.x == _width || index.y == 0 || index.y == _length) {
 
-		newObject = Instantiate(Services.Prefabs.STATICPREFABS[1], Vector3.zero, Quaternion.identity) as GameObject;
-		newObject.transform.localScale += transform.up * 10;
-		newObject.name = "wall";
-		newObject.transform.parent = transform;
-		newObject.transform.localPosition = pos;
+		//newObject = Instantiate(Services.Prefabs.STATICPREFABS[1], Vector3.zero, Quaternion.identity) as GameObject;
+		//newObject.transform.localScale += transform.up * 10;
+		//newObject.name = "wall";
+		//newObject.transform.parent = transform;
+		//newObject.transform.localPosition = pos;
 
-		if (index.x == 0 || index.x == _width) {
-			newObject.transform.localScale += (transform.forward * tileScale) - transform.forward;
-		} 
-		if (index.y == 0 || index.y == _length){
-			newObject.transform.localScale += (transform.right * tileScale) - transform.right;
-		}
-		newObject.GetComponent<Renderer> ().material.color = floorColor;
-		return newObject;
-		}
+		//if (index.x == 0 || index.x == _width) {
+		//	newObject.transform.localScale += (transform.forward * tileScale) - transform.forward;
+		//} 
+		//if (index.y == 0 || index.y == _length){
+		//	newObject.transform.localScale += (transform.right * tileScale) - transform.right;
+		//}
+		//newObject.GetComponent<Renderer> ().material.color = floorColor;
+		//return newObject;
+		//}
 
 		if (objectType >= Services.Prefabs.NPCPREFABS.Length || !Services.Prefabs.STATICPREFABS [Mathf.RoundToInt (x * (Services.Prefabs.STATICPREFABS.Length-1))]) {
 			return null;

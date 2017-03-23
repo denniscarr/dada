@@ -26,7 +26,9 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	void Start()
     {
-		maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
+        SceneManager.sceneLoaded += OnSceneChange;
+
+        maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -66,19 +68,21 @@ public class LevelManager : SimpleManager.Manager<Level> {
         {
             //if office scene, load proc gen scene
             if (levelNum % 2 == 0) {
-				SceneManager.LoadScene ("ProofOfConcept");
-				Services.Player = GameObject.Find ("Player");
-			} else {
+                SceneManager.LoadScene("ProofOfConcept");
+            } else {
 				SceneManager.LoadScene ("Audio Prototype");
 				Services.Player = GameObject.Find ("Player");
 			}
 
-            GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+            Services.Player.transform.position = Vector3.zero;
+            Services.Player.transform.rotation = Quaternion.identity;
+
+            levelNum++;
 
 			if (currentLevel != null) currentLevel.enabled = false;
-			Create ();
-		}
-	}
+
+        }
+    }
 
 	void SetGradient(){
 		GradientColorKey[] gck;
@@ -102,6 +106,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public override Level Create(){
 		NoiseRemapping = new float[Random.Range (8, 15)];
+
 		for(int i = 0; i < NoiseRemapping.Length; i++){
 			NoiseRemapping[i] = Random.Range(0.00f, 1.00f);
 		}
@@ -117,6 +122,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			l._bitmap = maps [Random.Range (0, maps.Length)];
 		}
 
+        Debug.Log("Length: "+NoiseRemapping.Length);
 		l.OnCreated ();
 
         Services.IncoherenceManager.HandleObjects();
@@ -136,4 +142,15 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		ManagedObjects.Remove (l);
 		Destroy (l);
 	}
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneChange;
+    }
+
+    void OnSceneChange(Scene scene, LoadSceneMode mode)
+    {
+        GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+        Create();
+    } 
 }
