@@ -17,6 +17,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	bool playerPlaced;
 	bool usePerlin = false;
 
+	ParticleSystem p;
 	GameObject ground;
 	Vector3[] vertices;
 	Mesh terrain;
@@ -32,6 +33,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		_height = Services.LevelGen.height;
 		_length = Services.LevelGen.length;
 		tileScale = Services.LevelGen.tileScale;
+
+		p = Instantiate (Services.Prefabs.PARTICLESYSTEM, Vector3.zero, Quaternion.identity).GetComponent<ParticleSystem>();
+		ParticleSystem tempP = p;
+		ParticleSystem.ShapeModule s = tempP.shape;
+		s.box = new Vector3 (_width, _height, _length) * tileScale;
+		p = tempP;
+		p.gameObject.transform.parent = transform;
+		p.transform.localPosition = new Vector3 (_width / 2, _height / 2, _length / 2) * tileScale;
 
 		ground = Instantiate (Services.Prefabs.TILE, Vector3.zero, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
