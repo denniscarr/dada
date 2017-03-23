@@ -5,6 +5,9 @@ using UnityEngine;
 public class IncoherenceManager : MonoBehaviour {
 
     public float globalIncoherence = 0.0f;
+
+    public float interactionIncrease = 0.05f;  // How much an object's incoherence increases when the player interacts with that object.
+
     [SerializeField] float replaceObjectThreshold = 0.1f; // How high global incoherence needs to be before we start replacing interactive objects.
     [SerializeField] float affectStaticObjectThreshold = 0.9f; // How high global incoherence needs to be before we start affecting all game objects (bad things will happen.)
 
