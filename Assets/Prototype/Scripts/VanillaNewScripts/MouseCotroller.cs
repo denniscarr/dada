@@ -220,8 +220,10 @@ public class MouseCotroller : MonoBehaviour {
 
 			//pickedUpObject.localScale = 
 			Rigidbody body = pickedUpObject.GetComponentInChildren<Rigidbody>();
-			body.useGravity = false;
-			body.freezeRotation = true;
+			if(body){
+				body.useGravity = false;
+				body.freezeRotation = true;
+			}
 			//set layer to ignoreraycast 
 			pickedUpObject.gameObject.layer = 2;
 
@@ -295,9 +297,11 @@ public class MouseCotroller : MonoBehaviour {
 				
 			clickGapCount = 0;
             Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
-            body.isKinematic = false;
-            body.useGravity = true;
-            body.freezeRotation = false;
+			if(body){
+	            body.isKinematic = false;
+	            body.useGravity = true;
+	            body.freezeRotation = false;
+			}
             if (selectedObject.FindChild("Incoherence Controller") != null) selectedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
             if (selectedObject.FindChild("NPC AI") != null) selectedObject.FindChild("NPC AI").gameObject.SetActive(true);
             selectedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
