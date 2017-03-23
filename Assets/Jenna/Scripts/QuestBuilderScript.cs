@@ -44,6 +44,7 @@ public class QuestBuilderScript : MonoBehaviour {
 	}
 
 	// generate quest when "q" is pressed
+	// maybe create a new parameter, like when w is pressed, or an object is taken, or the mouse is clicked
 	public void Generate() {
 		// pick an object for it
 		questThing = ranger % length;

@@ -8,7 +8,6 @@ using UnityEngine;
 public class PickupQuest : Quest {
 
 	// finding object
-	public int timesPressed;
 	public GameObject parentObject;
 
 	// scripts
@@ -42,19 +41,22 @@ public class PickupQuest : Quest {
 //	 check to see if the thing has been picked up
 //	 if so YAY FINISH
 
-		if (parentObject != null && parentObject.GetComponent<InteractionSettings>() != null) {
-			Debug.Log (parentObject.name);
-			if (parentObject.GetComponent<InteractionSettings> ().carryingObject.name == "Player") {
-				if (parentObject.GetComponent<InteractionSettings> ().carryingObjectCarryingObject) {
-					pickedUp = true;
-					numberofPickups++;
-					pickedUp = false;
-					text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
-				}
+		if (parentObject != null && parentObject.GetComponentInChildren<InteractionSettings>() != null)
+		{
+			if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
+			    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
+			    !pickedUp) {
+				numberofPickups++;
+				text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
 
 				if (numberofPickups >= requiredPickups) {
 					FinishQuest ();
 				}
+
+				pickedUp = true;
+			
+			} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
+				pickedUp = false;
 			}
 		}
 	}
@@ -63,7 +65,7 @@ public class PickupQuest : Quest {
 
 		parentObject = builder.objeto;
 		objectScript = parentObject.GetComponent<QuestObject> ();
-		requiredPickups = Random.Range (1, 10);
+		requiredPickups = Random.Range (1, 5);
 
 		// store the transform for later text spawning
 		float positionX = parentObject.transform.position.x;
