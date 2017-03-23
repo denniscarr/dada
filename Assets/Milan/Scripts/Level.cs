@@ -111,6 +111,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					vertices [vertIndex] *= tileScale;
 					vertices [vertIndex] += transform.position;
 
+
+
+
 					uvs [vertIndex] = new Vector2 ((float)xPos / _width, (float)yPos / _length);
 
 					LevelObjectFactory (perlinVal, vertices [vertIndex], new Vector2 (x, y));
@@ -173,6 +176,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				vertices [i] *= tileScale;
 				vertices [i] += transform.position;
 
+				//Generate Tone Prefab between 0.25 _height and 0.5 _height
+				if ((perlinVal * _height) > 0f && (perlinVal * _height) < _height * 0.5f) {
+
+					GameObject newObject = Instantiate (Services.AudioManager.tonePillowObject, vertices[i], Quaternion.identity);
+
+				}
+
 				if (vertices [i].y > highestPoint) {
 					highestPoint = vertices [i].y;
 					highestPointIndex = i;
@@ -226,7 +236,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		newObject.AddComponent<AudioSource> ().playOnAwake = false;
 		newObject.AddComponent<SphereCollider> ().isTrigger = true;
-		newObject.tag = "ToneTrigger";
+		//newObject.tag = "ToneTrigger";
 		newObject.GetComponent<AudioSource> ().clip = Services.AudioManager.tonesClipPool [Mathf.RoundToInt(x * (Services.AudioManager.tonesClipPool.Length - 1))];
 
 		if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {

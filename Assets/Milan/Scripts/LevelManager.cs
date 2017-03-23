@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : SimpleManager.Manager<Level> {
-
+	public static LevelManager levelManager;
 	public Level currentLevel;
 	public int width, length, height;
 	public float tileScale = 1;
@@ -13,7 +14,23 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	private Texture2D[] maps;
 	private Gradient gradient;
 
+	void Awake() {
+
+		if (levelManager == null) {
+			levelManager = this;
+		} else if (levelManager != this) {
+			Destroy (gameObject);
+		}
+		SceneManager.LoadScene ("Audio Prototype");
+		Services.Player = GameObject.Find ("Player");
+
+
+	}
+
 	void Start(){
+
+
+
 		maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
@@ -21,15 +38,28 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level.noiseScale = perlinFrequency;
 		gradient = new Gradient ();
 
-		Create ();
+		//Create ();
 	}
 
 	void Update(){
-		
-		Camera.main.backgroundColor = gradient.Evaluate(((Services.Player.transform.position.y - currentLevel.transform.position.y)/((float)height * (float)tileScale)));
+		Services.Player = GameObject.Find ("Player");
+		if (currentLevel != null) {
+			Camera.main.backgroundColor = gradient.Evaluate (((Services.Player.transform.position.y - currentLevel.transform.position.y) / ((float)height * (float)tileScale)));
+		}
 		RenderSettings.fogColor = Camera.main.backgroundColor;
 
-		if (Mathf.Abs(currentLevel.transform.position.y - Services.Player.transform.position.y) > 20) {
+		//Debug.Log(SceneManager.GetActiveScene().buildIndex);
+
+		if (Services.Player.transform.position.y < -20) {
+			//if office scene, load proc gen scene
+			if (SceneManager.GetActiveScene ().buildIndex == 1) {
+				SceneManager.LoadScene (0);
+				Services.Player = GameObject.Find ("Player");
+			} else {
+				SceneManager.LoadScene (1);
+				Services.Player = GameObject.Find ("Player");
+			}
+
 			currentLevel.enabled = false;
 			Create ();
 		}
@@ -73,15 +103,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		}
 
 		l.OnCreated ();
-	
-		SetGradient ();
+
+        Services.IncoherenceManager.HandleObjects();
+
+        SetGradient();
 		Level.xOrigin += width / Level.noiseScale;
 		Level.yOrigin += height / Level.noiseScale;
 
 		xOffset += width;
 		yOffset += height;
 
-		ManagedObjects.Add (l);
+        ManagedObjects.Add (l);
 		return l;
 	}
 

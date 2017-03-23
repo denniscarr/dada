@@ -254,7 +254,8 @@ public class NPC : MonoBehaviour {
                     saidHello = true;
 
 					//Play Voice Sound Effect
-					//voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+					Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+						, transform.position);
                 }
 
                 // Finish waving.
@@ -278,7 +279,8 @@ public class NPC : MonoBehaviour {
                     saidHello = true;
 				
 					//Play Voice Sound Effect
-					voicePlayer.Play3DSFX(Random.Range(0, voicePlayer.mySFX.Length));
+					Services.AudioManager.Play3DSFX(Services.AudioManager.voiceClipPool[Random.Range(0, Services.AudioManager.voiceClipPool.Length - 1)]
+						, transform.position);
                 }
 
                 // Finish waving.

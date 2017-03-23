@@ -16,8 +16,30 @@ public class IncoherenceController : MonoBehaviour {
 	public float howOftenToCheckProbability = 1f;
 	float timeSinceLastCheck = 0f;
 
+    // Incoherence prefabs.
+    [SerializeField] GameObject rigidbodyIncoherence;
+    [SerializeField] GameObject transformIncoherence;
+
 	// A list of all of the incoherencies controlled by this controller. Incoherencies will add themselves to this list.
 	public List<GameObject> incoherencies;
+
+
+    private void Start()
+    {
+        // Add appropriate incoherencies.
+        if (transform.parent.GetComponent<Rigidbody>() != null && GetComponentInChildren<RigidbodyIncoherence>() == null)
+        {
+            Instantiate(rigidbodyIncoherence, transform);
+        }
+
+        if (GetComponentInChildren<TransformIncoherence>() == null)
+        {
+            Instantiate(transformIncoherence, transform);
+        }
+
+        // For debugging, disable transform incoherence.
+        GetComponentInChildren<TransformIncoherence>().enabled = false;
+    }
 
 
 	void Update() {
