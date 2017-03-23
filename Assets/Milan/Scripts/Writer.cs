@@ -117,7 +117,7 @@ public class Writer : MonoBehaviour {
 
             // Text styling stuff.
             textStyling.fade = fade;
-            textStyling.delete = delete;
+            textStyling.delete = true;
             textStyling.fadeIn = fade;
             textStyling.speed = fadeSpeed;
 

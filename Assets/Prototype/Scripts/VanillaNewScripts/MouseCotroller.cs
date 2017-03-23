@@ -105,7 +105,7 @@ public class MouseCotroller : MonoBehaviour {
 					if (isAbleToBeUse(interactionSettings)) {
 						sfxScript.PlaySFX (0);
 						Debug.Log("use "+hit.collider.name+" inside visor");
-						hit.collider.BroadcastMessage ("UsedByPlayer");
+						hit.collider.BroadcastMessage ("Use");
 					}
 				}
 			}
