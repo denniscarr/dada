@@ -15,16 +15,20 @@ public class InteractionSettings : MonoBehaviour {
         get { return _carryingObject; }
         set
         {
+			if (value == null){ _carryingObject = null;return;}
+
             // If the thing that picked me up was the player, increase my incoherence.
             if (value.name == "Player")
             {
-                transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+				if (transform.parent.GetComponentInChildren<IncoherenceController>() != null){
+					transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+				}
             }
 
             else
             {
                 // If the thing that picked me up was an NPC, increase that NPC's incoherence to my incoherence.
-                if (GetComponent<IncoherenceController>() != null && GetComponent<IncoherenceController>().incoherenceMagnitude > value.GetComponent<IncoherenceController>().incoherenceMagnitude)
+				if (transform.parent.GetComponent<IncoherenceController>() != null && transform.parent.GetComponent<IncoherenceController>().incoherenceMagnitude > value.GetComponent<IncoherenceController>().incoherenceMagnitude)
                 {
                     value.GetComponent<IncoherenceController>().incoherenceMagnitude = GetComponent<IncoherenceController>().incoherenceMagnitude;
                 }
