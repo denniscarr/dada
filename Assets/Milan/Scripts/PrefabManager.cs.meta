@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: a477ec528d9d947aab6c812d028d8e4c
-timeCreated: 1488917951
+timeCreated: 1490235828
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
@@ -11,7 +11,7 @@ MonoImporter:
       type: 2}
   - SPRITE: {fileID: 1092953581650078, guid: 9918bb226540d4b6481bbedfadbbcd93, type: 2}
   - TILE: {fileID: 1182615009284916, guid: 82e19a92f96474a49ab1634d24c87879, type: 2}
-  executionOrder: 0
+  executionOrder: -499
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

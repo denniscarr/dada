@@ -19,6 +19,6 @@ public class D_GunFunction: D_Function
         Debug.Log("Used Gun");
 
 		GameObject shoot = Instantiate (projectile, transform.position, Quaternion.identity) as GameObject;
-		shoot.GetComponent<Rigidbody> ().AddForce (GameObject.Find("Modern Russian AR").transform.right * muzzleVelocity);
+		shoot.GetComponent<Rigidbody> ().AddForce (transform.right * muzzleVelocity);
 	}
 }

@@ -32,7 +32,6 @@ public class D_Equip : MonoBehaviour {
 
     void OnTriggerExit(Collider collider)
     {
-		Debug.Log ("Trigger exit");
 		readyToEquip = false;
     }
 

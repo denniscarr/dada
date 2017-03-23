@@ -430,7 +430,7 @@ public class NPC : MonoBehaviour {
         // Decide whether to use my carried object.
         if (carriedObject != null && Random.value >= useProbability)
         {
-            carriedObject.BroadcastMessage("Use");
+            carriedObject.BroadcastMessage("Use", SendMessageOptions.DontRequireReceiver);
         }
 
         // Evaluate nearby objects.
