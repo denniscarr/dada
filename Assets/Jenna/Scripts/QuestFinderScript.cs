@@ -21,16 +21,12 @@ public class QuestFinderScript : MonoBehaviour
 	int interactablesSize;
 	int objectsSize;
 
-	// more things will go here as more quests are built
-
 	public void FindQuests (){
 
 		// find the items in the scene and add them to a list of questable items
 		interactables = new List<GameObject> ();
 		objects = GameObject.FindObjectsOfType<GameObject> ();
 		objectsSize = objects.Length;
-
-		Debug.Log ("something");
 
 		// loop through the items in the scene
 		for (int i = 0; i < objectsSize; i++) {

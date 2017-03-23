@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿/*
+using UnityEngine;
+using UnityEditor;
 using System.Collections;
 
 public class ProductRotator : MonoBehaviour {
@@ -21,9 +23,10 @@ public class ProductRotator : MonoBehaviour {
 		rotation += rotateAmount.y;
 		print (rotation);
 		if (rotation > 360.0f) {			
-			UnityEditor.EditorApplication.isPlaying = false;
+			//EditorApplication.isPlaying = false;
 		}
 
 	}
 
 }
+*/

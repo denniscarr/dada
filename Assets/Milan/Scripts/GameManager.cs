@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    public GameObject playerController;
+
 	public void Init(){
 
 		Services.Prefabs = gameObject.GetComponent<PrefabManager> ();
@@ -11,15 +13,16 @@ public class GameManager : MonoBehaviour {
 		Services.LevelGen = gameObject.GetComponent<LevelManager> ();
 		Services.AudioManager = gameObject.GetComponent<CS_AudioManager> ();
         Services.IncoherenceManager = gameObject.GetComponent<IncoherenceManager>();
-        Instantiate(Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
+        //Instantiate(Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
 		Services.Player = GameObject.Find ("Player");
 	}
 		
 	void Awake () {
 
-		DontDestroyOnLoad (gameObject);
+        Instantiate(playerController, Vector3.zero, Quaternion.identity);
 		Init ();
-
+        DontDestroyOnLoad (gameObject);
+        DontDestroyOnLoad(Services.Player);
 	}
 
 	
