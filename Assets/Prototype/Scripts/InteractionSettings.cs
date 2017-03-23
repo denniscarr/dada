@@ -8,10 +8,9 @@ public class InteractionSettings : MonoBehaviour {
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource;
 	public bool canBeUsedForQuests;
-    public Transform carryingObject;    // If I am being held, this is the object that is holding me.
 	public bool carryingObjectCarryingObject;	// If carrying object is holding me
     public Transform _carryingObject;
-    public Transform carryingObject // If I am being held, this is the object that is holding me.
+	public Transform carryingObject // If I am being held, this is the object that is holding me.
     {
         get { return _carryingObject; }
         set

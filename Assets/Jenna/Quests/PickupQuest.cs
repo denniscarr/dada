@@ -42,7 +42,7 @@ public class PickupQuest : Quest {
 //	 check to see if the thing has been picked up
 //	 if so YAY FINISH
 
-		if (parentObject != null) {
+		if (parentObject != null && parentObject.GetComponent<InteractionSettings>() != null) {
 			Debug.Log (parentObject.name);
 			if (parentObject.GetComponent<InteractionSettings> ().carryingObject.name == "Player") {
 				if (parentObject.GetComponent<InteractionSettings> ().carryingObjectCarryingObject) {
