@@ -73,15 +73,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		}
 
 		l.OnCreated ();
-	
-		SetGradient ();
+
+        Services.IncoherenceManager.HandleObjects();
+
+        SetGradient();
 		Level.xOrigin += width / Level.noiseScale;
 		Level.yOrigin += height / Level.noiseScale;
 
 		xOffset += width;
 		yOffset += height;
 
-		ManagedObjects.Add (l);
+        ManagedObjects.Add (l);
 		return l;
 	}
 

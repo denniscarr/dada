@@ -10,6 +10,7 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject TILE;
 	public GameObject[] STATICPREFABS;
 	public GameObject[] NPCPREFABS;
+    public GameObject[] FUNCTIONPREFABS;
 	public AudioClip[] Tones;
 
 	public Sprite[] _sprites;
@@ -17,6 +18,7 @@ public class PrefabManager : MonoBehaviour {
 	void Awake(){
 		_sprites = Resources.LoadAll<Sprite> ("");
 		NPCPREFABS = Resources.LoadAll<GameObject> ("Object Prefabs");
+        FUNCTIONPREFABS = Resources.LoadAll<GameObject> ("Functions");
 		Tones = Resources.LoadAll<AudioClip> ("Tones");
 	}
 }

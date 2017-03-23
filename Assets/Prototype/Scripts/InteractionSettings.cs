@@ -16,7 +16,8 @@ public class InteractionSettings : MonoBehaviour {
 	[HideInInspector]
 	public Transform originalParent;
 
-	void Start() {
+	void Start()
+    {
 		savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
 	}

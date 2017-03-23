@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour {
 		Services.Quests = gameObject.GetComponent<QuestManager> ();
 		Services.LevelGen = gameObject.GetComponent<LevelManager> ();
 		Services.AudioManager = gameObject.GetComponent<CS_AudioManager> ();
-		Instantiate (Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
+        Services.IncoherenceManager = gameObject.GetComponent<IncoherenceManager>();
+        Instantiate(Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
 		Services.Player = GameObject.Find ("Player");
 	}
 		
