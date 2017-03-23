@@ -525,7 +525,7 @@ public class NPC : MonoBehaviour {
     void FinishedPickingUp ()
     {
 		if (targetObject.gameObject.GetComponent<AudioSource> () && Services.AudioManager != null) {
-			Services.AudioManager.RetuneRadio (targetObject);
+			//Services.AudioManager.RetuneRadio (targetObject);
 		}
         if (npcAnimation != null) npcAnimation.ObjectPickedUp ();
         targetObject = null;

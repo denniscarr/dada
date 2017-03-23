@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Level : MonoBehaviour, SimpleManager.IManaged {
 
-	public static float noiseScale = 0.02f;
+	public static float noiseScale;
 	public static float xOrigin, yOrigin;
 
 	float tileScale;
@@ -12,6 +12,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	string directory; 
 	public Texture2D _bitmap;
 	float colorRange = 0.1f;
+	public float highestPoint = 1;
 
 	bool playerPlaced;
 	bool usePerlin = false;
@@ -22,8 +23,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	Vector2[] uvs;
 	int[] tris;
 	Color hue;
-	Color[] gradient;
-
+	public Color[] palette;
 	public void OnCreated(){
 
 		_width = Services.LevelGen.width;
@@ -35,17 +35,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.parent = transform;
 		ground.name = "ground";
 	
-		gradient = new Color[Services.LevelGen.NoiseRemapping.Length];
-		for (int i = 0; i < gradient.Length; i++) {
-			float upper = (1 / (float)gradient.Length) * (float)i;
-			float lower = Mathf.Clamp(upper - 1/(float)gradient.Length, 0, upper - 1/(float)gradient.Length);
-			gradient [i] = new Color (Random.Range (lower, upper), Random.Range (lower, upper), Random.Range (lower, upper));
+		palette = new Color[Services.LevelGen.NoiseRemapping.Length];
+		for (int i = 0; i < palette.Length; i++) {
+			float upper = (1 / (float)palette.Length) * (float)i;
+			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
+			palette [i] = new Color (Random.Range (lower, upper), Random.Range (lower, upper), Random.Range (lower, upper));
 		}
-
-		Camera.main.clearFlags = CameraClearFlags.Color;
-		Camera.main.backgroundColor = gradient [gradient.Length -1];
-		RenderSettings.fogColor = gradient [gradient.Length -1];
-
+			
 		if (_bitmap == null) {
 			usePerlin = true;
 			_bitmap = new Texture2D (_width + 1, _length + 1);
@@ -66,10 +62,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		GenerateChunk();
 		OutputBitmap ();
-	}
-
-	void Update(){
-//		GeneratePieceWise();
 	}
 
 	public void GeneratePieceWise(){
@@ -113,7 +105,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 							perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs(difference));
 						}
 					}
-					_bitmap.SetPixel (x, y, gradient[Mathf.RoundToInt(perlinVal * (gradient.Length-1))]);
+					_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
 					vertices [vertIndex] = new Vector3 (xPos, (perlinVal * _height), yPos);
 					vertices [vertIndex] *= tileScale;
@@ -142,7 +134,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	void GenerateChunk(){
 		 
 		int highestPointIndex = 0;
-		float highestPoint = 0;
+		highestPoint = -Mathf.Infinity;
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -175,7 +167,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs(difference));
 					}
 				}
-				_bitmap.SetPixel (x, y, gradient[Mathf.RoundToInt(perlinVal * (gradient.Length-1))]);
+				_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
 				vertices [i] = new Vector3 (x, (perlinVal * _height), y);
 				vertices [i] *= tileScale;
@@ -191,10 +183,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
 			}
 		}
-
+			
 		_bitmap.filterMode = FilterMode.Point;
 		_bitmap.Apply ();
-		Services.Player.transform.position = vertices[highestPointIndex] + (Vector3.up * 2);
+		Debug.Log (highestPointIndex);
+		Services.Player.transform.position = vertices[highestPointIndex] + Vector3.up;
 	}
 		
 	public GameObject LevelObjectFactory(float x, Vector3 pos, Vector2 index){
