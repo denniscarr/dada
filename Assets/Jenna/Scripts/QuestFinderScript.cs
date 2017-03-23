@@ -9,10 +9,10 @@ public class QuestFinderScript : MonoBehaviour
 	GameObject[] objects;
 	// for seeing if they're interactable
 	private List<GameObject> interactables = new List<GameObject> ();
-	//[HideInInspector]
+	[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
 	// for seeing if they have QuestObject script
-	//[HideInInspector]
+	[HideInInspector]
 	public List<GameObject> hasObjectScript = new List<GameObject> ();
 	// for seeing if they can be picked up
 	public List<GameObject> pickups = new List<GameObject> ();
@@ -75,6 +75,34 @@ public class QuestFinderScript : MonoBehaviour
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+
+	void Update(){
+		for (int i = 0; i < questItems.Count; i++) {
+			foreach (GameObject item in questItems) {
+				if (item == null) {
+					questItems.Remove (item);
+				}
+			}
+		}
+
+		for (int i = 0; i < pickups.Count; i++) {
+			foreach (GameObject pickup in pickups) {
+				if (pickup == null) {
+					pickups.Remove (pickup);
+				}
+			}
+		}
+
+		QuestManager manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
+
+		for (int i = 0; i < manager.questList.Count; i++) {
+			foreach (Quest questy in manager.questList) {
+				if (questy == null) {
+					manager.questList.Remove (questy);
 				}
 			}
 		}
