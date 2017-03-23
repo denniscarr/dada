@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : SimpleManager.Manager<Level> {
 	public static LevelManager levelManager;
 	public Level currentLevel;
+    public int levelNum = 0;
 	public int width, length, height;
 	public float tileScale = 1;
 	public float[] NoiseRemapping;
@@ -14,23 +15,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	private Texture2D[] maps;
 	private Gradient gradient;
 
-	void Awake() {
-
-		if (levelManager == null) {
+	void Awake()
+    {
+        if (levelManager == null) {
 			levelManager = this;
 		} else if (levelManager != this) {
 			Destroy (gameObject);
 		}
-		SceneManager.LoadScene ("Audio Prototype");
-		Services.Player = GameObject.Find ("Player");
-
-
 	}
 
-	void Start(){
-
-
-
+	void Start()
+    {
 		maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
@@ -38,10 +33,26 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level.noiseScale = perlinFrequency;
 		gradient = new Gradient ();
 
-		//Create ();
-	}
+        if (SceneManager.GetActiveScene().name == "ProofOfConcept")
+        {
+            levelNum = 1;
+        }
 
-	void Update(){
+        // If the current level is the apartment level.
+        if (levelNum % 2 == 0)
+        {
+
+        }
+
+        // If the current level is a procedural level.
+        else
+        {
+            Create();
+        }
+    }
+
+	void Update()
+    {
 		Services.Player = GameObject.Find ("Player");
 		if (currentLevel != null) {
 			Camera.main.backgroundColor = gradient.Evaluate (((Services.Player.transform.position.y - currentLevel.transform.position.y) / ((float)height * (float)tileScale)));
@@ -50,17 +61,21 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		//Debug.Log(SceneManager.GetActiveScene().buildIndex);
 
-		if (Services.Player.transform.position.y < -20) {
-			//if office scene, load proc gen scene
-			if (SceneManager.GetActiveScene ().buildIndex == 1) {
-				SceneManager.LoadScene (0);
+        // If the player has jumped off the level.
+		if (Services.Player.transform.position.y < -20)
+        {
+            //if office scene, load proc gen scene
+            if (levelNum % 2 == 0) {
+				SceneManager.LoadScene ("ProofOfConcept");
 				Services.Player = GameObject.Find ("Player");
 			} else {
-				SceneManager.LoadScene (1);
+				SceneManager.LoadScene ("Audio Prototype");
 				Services.Player = GameObject.Find ("Player");
 			}
 
-			currentLevel.enabled = false;
+            GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+
+			if (currentLevel != null) currentLevel.enabled = false;
 			Create ();
 		}
 	}
