@@ -24,7 +24,7 @@ public class InteractionSettings : MonoBehaviour {
             else
             {
                 // If the thing that picked me up was an NPC, increase that NPC's incoherence to my incoherence.
-                if (GetComponent<IncoherenceController>().incoherenceMagnitude > value.GetComponent<IncoherenceController>().incoherenceMagnitude)
+                if (GetComponent<IncoherenceController>() != null && GetComponent<IncoherenceController>().incoherenceMagnitude > value.GetComponent<IncoherenceController>().incoherenceMagnitude)
                 {
                     value.GetComponent<IncoherenceController>().incoherenceMagnitude = GetComponent<IncoherenceController>().incoherenceMagnitude;
                 }
@@ -32,7 +32,7 @@ public class InteractionSettings : MonoBehaviour {
                 // Otherwise, if the NPC that picked me up has a higher incoherence, increase my incoherence to match theirs.
                 else
                 {
-                    GetComponent<IncoherenceController>().incoherenceMagnitude = value.GetComponent<IncoherenceController>().incoherenceMagnitude;
+                    if (GetComponent<IncoherenceController>() != null) GetComponent<IncoherenceController>().incoherenceMagnitude = value.GetComponent<IncoherenceController>().incoherenceMagnitude;
                 }
             }
 
