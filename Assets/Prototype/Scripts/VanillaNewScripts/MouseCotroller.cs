@@ -104,7 +104,7 @@ public class MouseCotroller : MonoBehaviour {
 				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 				if (isAbleToBeUse(interactionSettings)) {
 					GetComponent<Image> ().color = new Color(1,1,1,1);
-					
+
 					if(Input.GetMouseButtonDown(0)){
 						sfxScript.PlaySFX (0);
 						Debug.Log("use "+hit.collider.name+" inside visor");
@@ -114,6 +114,7 @@ public class MouseCotroller : MonoBehaviour {
 				else{
 					GetComponent<Image> ().color = new Color(1,1,1,0);
 				}
+				return;
 			}
 		}
 
