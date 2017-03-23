@@ -125,6 +125,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		l.OnCreated ();
 
         Services.IncoherenceManager.HandleObjects();
+		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
 
         SetGradient();
 		Level.xOrigin += width / Level.noiseScale;
