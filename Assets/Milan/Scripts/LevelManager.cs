@@ -121,8 +121,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		if (maps.Length > 0) {
 			l._bitmap = maps [Random.Range (0, maps.Length)];
 		}
-
-        Debug.Log("Length: "+NoiseRemapping.Length);
+			
 		l.OnCreated ();
 
         Services.IncoherenceManager.HandleObjects();

@@ -162,7 +162,7 @@ public class MouseCotroller : MonoBehaviour {
 				
 
 				if(!hit.collider.name.Equals("ground")){
-					Debug.Log("click "+hit.collider.name+" inside visor");
+					
 					PickUpObject(hit.collider.transform);
 				}
 				return;
@@ -174,7 +174,7 @@ public class MouseCotroller : MonoBehaviour {
 			if (Physics.Raycast (ray, out hit)) {
 
 				if(!hit.collider.name.Equals("ground")){
-					Debug.Log("click "+hit.collider.name+" outside visor");
+					
 					PickUpObject(hit.collider.transform);
 				}
 			}
@@ -198,7 +198,7 @@ public class MouseCotroller : MonoBehaviour {
 
 
 		bool check =  isAbleToBeCarried(intSet);
-		Debug.Log("Check if can be carried:"+check);
+		Debug.Log("Check "+pickedUpObject.name+" can be carried:"+check);
 		//check if click on something selectable
 		if(check){
 			
@@ -207,14 +207,37 @@ public class MouseCotroller : MonoBehaviour {
 			//prevent from vaild click repeatly in a second
 			clickGapCount = 0;
 
+			//calculate new scale
+			float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
+			float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
+			if(distance < 0){
+				Debug.Log("error");
+			}
+
+
+
 			if(pickedUpObject.parent != UpperCamera.transform.parent){
 				//change the parent of selected object
 				pickedUpObject.SetParent(UpperCamera.transform.parent);
+
+				//change scale
+				float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+				float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+				float scale = frustumHeightInside/frustumHeight;
+
+//				Debug.Log(pickedUpObject.position);
+//				Debug.Log(Camera.main.transform.position);
+//				Debug.Log((pickedUpObject.position -  Camera.main.transform.position).magnitude);
+//				Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance);
+//				Debug.Log("frustumHeightInside:"+frustumHeightInside+" "+"frustumHeight:"+frustumHeight);
+//				Debug.Log("scale: "+scale);
+				pickedUpObject.localScale *= scale;
 
 				//stop gravity simulation and free rotation
 				Debug.Log("pick up "+pickedUpObject.name+" outside visor");
 
 			}else{
+				
 				Debug.Log("pick up "+pickedUpObject.name+" inside visor");
 			}
 
@@ -229,20 +252,6 @@ public class MouseCotroller : MonoBehaviour {
 
 			//update the postion
 			UpdateDraggedObjectPosition(pickedUpObject);
-
-			//calculate new scale
-			float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
-			float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
-			if(distance < 0){
-				Debug.Log("error");
-			}
-			float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-			float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
-			float scale = frustumHeightInside/frustumHeight;
-			//Debug.Log(transform.forward);
-			//Debug.Log(pickedUpObject.position -  Camera.main.transform.position);
-			//Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
-			//pickedUpObject.localScale *= scale;
 
 			sfxScript.PlaySFX (0);
 
@@ -285,7 +294,7 @@ public class MouseCotroller : MonoBehaviour {
 					//set layer to default 
 					selectedObject.gameObject.layer = 0;
 				}else{
-					Debug.LogError("click "+selectedObject.name);
+					Debug.LogError("click "+selectedObject.name+" in "+hit.collider.name);
 				}
 			}else{
 				//set layer to default 
@@ -323,7 +332,7 @@ public class MouseCotroller : MonoBehaviour {
 
 		carriedObject.SetParent (carriedObject.GetComponentInChildren<InteractionSettings> ().originalParent,true);
 
-		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce, Camera.main.transform.position, 10f);
+		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce*5, Camera.main.transform.position, 10f);
 	}
 
 	//if this object can be interacted with, return true; else return false

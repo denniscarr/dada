@@ -8,6 +8,7 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject TEXTOBJECT;
 	public GameObject SPRITE;
 	public GameObject TILE;
+	public GameObject PARTICLESYSTEM;
 	public GameObject[] STATICPREFABS;
 	public GameObject[] NPCPREFABS;
     public GameObject[] FUNCTIONPREFABS;
