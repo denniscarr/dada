@@ -117,7 +117,7 @@ public class MouseCotroller : MonoBehaviour {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
 						Debug.Log("use "+hit.collider.name+" outside visor");
-						hit.collider.BroadcastMessage ("UsedByPlayer");
+						hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 					}
 				}
 
