@@ -242,8 +242,6 @@ public class NPC : MonoBehaviour {
         // SAYING HELLO TO NPC OR PLAYER
         else if (currentState == BehaviorState.SayingHello)
         {
-            Debug.Log("Saying Hello");
-
             // If this NPC uses an animator.
             if (npcAnimation != null)
             {
@@ -536,7 +534,6 @@ public class NPC : MonoBehaviour {
     // Gets a new base direction.
     void RandomizeBaseDirection()
     {
-        Debug.Log("Randomizing. Current state: "+currentState);
         Vector2 randomInCircle = Random.insideUnitCircle;
         baseDirection = new Vector3(randomInCircle.x, 0f, randomInCircle.y);
         baseDirection.Normalize();
