@@ -38,11 +38,13 @@ public class D_Equip : MonoBehaviour {
 
     void OnTriggerEnter(Collider collider)
     {
+        //if (collider.GetComponent<NPC>() == null && collider.name != "Player") return;
+
 		if (collider.gameObject.name == "Player") {
-			readyToEquip = true;
+            writer.WriteSpecifiedString("Press E to equip " + transform.parent.name + ".");
+            readyToEquip = true;
 		}
 
-        writer.WriteSpecifiedString("Press E to equip " + transform.parent.name + ".");
     }
 
     // Update is called once per frame

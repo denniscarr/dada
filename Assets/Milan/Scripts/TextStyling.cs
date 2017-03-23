@@ -36,7 +36,11 @@ public class TextStyling : MonoBehaviour {
 			if (fade) Text.color = new Color (Text.color.r, Text.color.g, Text.color.b, lerpVal); 
 		}
 			
-		if (lerpVal < 0 && delete) {
+		if (lerpVal < 0.01f && delete) {
+            if (transform.parent.name == "Text Container")
+            {
+                Destroy(transform.parent.gameObject);
+            }
 			Destroy (this.gameObject);
 		}
 	}

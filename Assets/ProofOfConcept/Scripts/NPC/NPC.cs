@@ -6,7 +6,7 @@ public class NPC : MonoBehaviour {
 
     // BEHAVIOR STATES
     enum BehaviorState {NormalMovement, MoveToObject, PickUpObject, ThrowObject, SayingHello};
-    BehaviorState currentState;
+    [SerializeField] BehaviorState currentState;
 
     // USED FOR MOVEMENT
     Vector3 baseDirection;  // The general direction that I want to wander in.
@@ -100,8 +100,10 @@ public class NPC : MonoBehaviour {
     {
         updateAnimation = false;
 
-        // SEE IF THE OBJECT I WAS CARRYING WAS STOLEN
-        if (carriedObject != null && carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent)
+        // SEE IF THE OBJECT I WAS CARRYING WAS STOLEN OR RAN AWAY
+        if (carriedObject != null &&
+            (carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent ||
+            Vector3.Distance(carriedObject.transform.position, transform.parent.position) >= 30f))
         {
             // Tell the object to stop ignoring collisions with me.
             Collider[] childColliders = carriedObject.GetComponents<Collider>();
@@ -126,16 +128,6 @@ public class NPC : MonoBehaviour {
             
 			carriedObject = null;
             EvaluateSurroundings();
-        }
-
-
-        // SEE IF I SHOULD USE MY HELD ITEM.
-        if (carriedObject != null)
-        {
-            if (Random.value <= useProbability)
-            {
-                carriedObject.BroadcastMessage("Use");
-            }
         }
 
 
@@ -250,8 +242,6 @@ public class NPC : MonoBehaviour {
         // SAYING HELLO TO NPC OR PLAYER
         else if (currentState == BehaviorState.SayingHello)
         {
-            Debug.Log("Saying Hello");
-
             // If this NPC uses an animator.
             if (npcAnimation != null)
             {
@@ -437,7 +427,11 @@ public class NPC : MonoBehaviour {
     // Check the surrounding area and see if there is anything that interests me.
     void EvaluateSurroundings()
     {
-        Debug.Log("Evaluating");
+        // Decide whether to use my carried object.
+        if (carriedObject != null && Random.value >= useProbability)
+        {
+            carriedObject.BroadcastMessage("Use");
+        }
 
         // Evaluate nearby objects.
         List<Transform> carriableObjects = new List<Transform>();
@@ -540,7 +534,6 @@ public class NPC : MonoBehaviour {
     // Gets a new base direction.
     void RandomizeBaseDirection()
     {
-        Debug.Log("Randomizing. Current state: "+currentState);
         Vector2 randomInCircle = Random.insideUnitCircle;
         baseDirection = new Vector3(randomInCircle.x, 0f, randomInCircle.y);
         baseDirection.Normalize();

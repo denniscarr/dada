@@ -105,7 +105,7 @@ public class MouseCotroller : MonoBehaviour {
 					if (isAbleToBeUse(interactionSettings)) {
 						sfxScript.PlaySFX (0);
 						Debug.Log("use "+hit.collider.name+" inside visor");
-						hit.collider.BroadcastMessage ("UsedByPlayer");
+						hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 					}
 				}
 			}
@@ -117,7 +117,7 @@ public class MouseCotroller : MonoBehaviour {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
 						Debug.Log("use "+hit.collider.name+" outside visor");
-						hit.collider.BroadcastMessage ("UsedByPlayer");
+						hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 					}
 				}
 

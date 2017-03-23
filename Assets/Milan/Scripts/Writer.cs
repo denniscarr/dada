@@ -22,6 +22,10 @@ public class Writer : MonoBehaviour {
 	int 		wordIndex, lineIndex;
 	int 		stringIndex;
 
+    // Used for cooldown.
+    float cooldownTime = 0.5f;
+    float timeSinceLastWrite = 0;
+
 	void Start () {
 		originalPos = transform.position;
 		wordIndex = 0;
@@ -31,6 +35,11 @@ public class Writer : MonoBehaviour {
 
         SetScript(sourceText.text);
 	}
+
+    private void Update()
+    {
+        timeSinceLastWrite += Time.deltaTime;
+    }
 
     void SetScript(string _text)
     {
@@ -89,6 +98,8 @@ public class Writer : MonoBehaviour {
 
     public void CreateTextBox(Vector3 basePosition)
     {
+        if (timeSinceLastWrite < cooldownTime) return;
+
         basePosition.y += 2f;
 
         spawnPosition = Vector3.zero;
@@ -117,7 +128,7 @@ public class Writer : MonoBehaviour {
 
             // Text styling stuff.
             textStyling.fade = fade;
-            textStyling.delete = delete;
+            textStyling.delete = true;
             textStyling.fadeIn = fade;
             textStyling.speed = fadeSpeed;
 
@@ -141,6 +152,8 @@ public class Writer : MonoBehaviour {
         // Set all values back to zero.
         wordIndex = 0;
         spawnPosition = Vector3.zero;
+
+        timeSinceLastWrite = 0f;
     }
 
 	public void CreateWord(Vector3 pos, Vector3 rotation = default(Vector3))
