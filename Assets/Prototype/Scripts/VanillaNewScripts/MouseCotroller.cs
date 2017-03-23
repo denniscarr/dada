@@ -128,7 +128,7 @@ public class MouseCotroller : MonoBehaviour {
 	void GrabHandler(){
 		
 		clickGapCount += Time.deltaTime;
-		if(clickGapCount > 0.1f){
+		if(clickGapCount > 0.2f){
 
 			switch(state){
 			case InterationState.NONE_SELECTED_STATE:DetectSelection();break;
@@ -169,7 +169,7 @@ public class MouseCotroller : MonoBehaviour {
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			//RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)) {
-				
+				Debug.Log("click "+hit.collider.name+" outside visor");
 				PickUpObject(hit.collider.transform);
 			}
 		}
@@ -190,20 +190,10 @@ public class MouseCotroller : MonoBehaviour {
             }
         }
 
-		float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
-		float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
-		if(distance < 0){
-			Debug.Log("error");
-		}
-		float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-		float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
-		float scale = frustumHeightInside/frustumHeight;
-		Debug.Log(transform.forward);
-		Debug.Log(pickedUpObject.position -  Camera.main.transform.position);
-		Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
-		//Debug.Log(distanceInside/distance);
+
 		//check if click on something selectable
 		if(isAbleToBeCarried(intSet)){
+			Debug.Log("Confirm that it can be carried");
 			selectedObject = pickedUpObject;
 			state = InterationState.DRAG_STATE;
 			//prevent from vaild click repeatly in a second
@@ -229,7 +219,21 @@ public class MouseCotroller : MonoBehaviour {
 
 			//update the postion
 			UpdateDraggedObjectPosition(pickedUpObject);
+
+			//calculate new scale
+			float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
+			float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
+			if(distance < 0){
+				Debug.Log("error");
+			}
+			float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+			float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+			float scale = frustumHeightInside/frustumHeight;
+			Debug.Log(transform.forward);
+			Debug.Log(pickedUpObject.position -  Camera.main.transform.position);
+			Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
 			pickedUpObject.localScale *= scale;
+
 			sfxScript.PlaySFX (0);
 
             intSet.carryingObject = GameObject.Find("Player").transform;
