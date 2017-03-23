@@ -65,7 +65,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level l = newLevel.AddComponent <Level> ();
 		currentLevel = l;
 
-		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 10);
+		newLevel.transform.position = Services.Player.transform.position;
 		newLevel.name = "Level " + ManagedObjects.Count;
 
 		if (maps.Length > 0) {
