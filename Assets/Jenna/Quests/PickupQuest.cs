@@ -3,23 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // LOCATION: QUEST MANAGER
-// LOCATION: QUEST-GIVING GAME OBJECT
+// LOCATION: QUEST GAMEOBJECT (description serves as "giving of quest")
 
 public class PickupQuest : Quest {
 
 	// finding object
-	public GameObject objectToPickUp;
 	public int timesPressed;
 	public GameObject parentObject;
 
 	// scripts
+	[HideInInspector]
 	public QuestFinderScript qfs;
+	[HideInInspector]
 	public QuestBuilderScript builder;
+	[HideInInspector]
 	public QuestManager manager;
 	public QuestObject objectScript;
 
+	// for text
 	public GameObject textSpawn;
 	public TextMesh text;
+
+	// for finishing quest
+	public int requiredPickups;
+	public int numberofPickups;
+	public bool pickedUp;
 
 	void Start () {
 
@@ -30,18 +38,40 @@ public class PickupQuest : Quest {
 
 	}
 
+	public void FixedUpdate(){
+//	 check to see if the thing has been picked up
+//	 if so YAY FINISH
+
+		if (parentObject != null && parentObject.GetComponent<InteractionSettings>() != null) {
+			Debug.Log (parentObject.name);
+			if (parentObject.GetComponent<InteractionSettings> ().carryingObject.name == "Player") {
+				if (parentObject.GetComponent<InteractionSettings> ().carryingObjectCarryingObject) {
+					pickedUp = true;
+					numberofPickups++;
+					pickedUp = false;
+					text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
+				}
+
+				if (numberofPickups >= requiredPickups) {
+					FinishQuest ();
+				}
+			}
+		}
+	}
+
 	public void makeTheQuest(Quest type){
 
 		parentObject = builder.objeto;
 		objectScript = parentObject.GetComponent<QuestObject> ();
+		requiredPickups = Random.Range (1, 10);
 
 		// store the transform for later text spawning
 		float positionX = parentObject.transform.position.x;
 		float positionY = parentObject.transform.position.y + 1;
 		float positionZ = parentObject.transform.position.z;
 
-		// set the title based on random strings from the Quest Builder Script
-		title = ("Pick up " + builder.nouns[builder.currentNoun]);
+		// create title to appear. THIS IS THE QUEST OBJECTIVE.
+		title = ("Pick up" + " " + parentObject.name); 
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
@@ -59,21 +89,17 @@ public class PickupQuest : Quest {
 
 		// give it a description eh
 		// can make this more interesting later during tweaking/juicing stages
-		description = title;
+		description = (title + " " + requiredPickups.ToString() + "x");
 
-		// once done, add to list
-		// once added to list, destroy...or maybe add something to the queue or something?
-		// HOW TO ADD THIS SCRIPT TO THE PARENTOBJECT?
-
+		// put it on the parent object
 		CopyComponent (this, parentObject);
 
-		//textSpawn Instantiate<textSpawn>(parentObject);
-
+		// put the text of the quest right over the object
 		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
 		textSpawn.transform.parent = parentObject.transform;
 		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
 		text = textSpawn.GetComponent<TextMesh> ();
-		text.text = (title);
+		text.text = (description);
 	}
 
 	// method to copy alla this shit on the pickupquest on the quest object generated
@@ -89,15 +115,18 @@ public class PickupQuest : Quest {
 		return copy;
 	}
 
-	// when this is uncommented, it fucks with the "progress" mechanism, so -- have to figure out a new way to determine
-	// if a thing has been completed or not
-//	void OnMouseDown(){
-//		timesPressed++;
-//		if (timesPressed > 3) {
-//			//progress = Quest.QuestProgress.COMPLETE;
-//			//manager.CheckCompletedQuests (this);
-//		}
-//	}
+	public void FinishQuest(){
+		
+		PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
+
+		text.text = ("donezo");
+		progress = Quest.QuestProgress.COMPLETE;
+
+		if (Input.GetMouseButton(0)){
+			Destroy (parentObject);
+			manager.currentQuestList.Remove (theCurrentQuest);
+		}
+	}
 
 	public override void CheckStatus() {
 		// check if done on active quests

@@ -166,7 +166,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		newObject.AddComponent<AudioSource> ().playOnAwake = false;
 		newObject.AddComponent<SphereCollider> ().isTrigger = true;
-		newObject.tag = "ToneTrigger";
+		//newObject.tag = "ToneTrigger";
 		newObject.GetComponent<AudioSource> ().clip = Services.AudioManager.tonesClipPool [Mathf.RoundToInt(x * (Services.AudioManager.tonesClipPool.Length - 1))];
 
 		if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {

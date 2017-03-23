@@ -24,6 +24,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public AudioClip radioStaticClip;
 
+	public GameObject tonePillowObject;
+
 	public float thisClipPosition;
 
 	public float objectDensity;
@@ -191,17 +193,20 @@ public class CS_AudioManager : MonoBehaviour {
 	*/
 
 	public void AltitudeMusic() {
-		float maxLevelHeight = ((float) Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float) Services.LevelGen.currentLevel.transform.position.y;
 
-		float minLevelHeight = (float) Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
+		if (Services.LevelGen.currentLevel != null) {	
+			float maxLevelHeight = ((float)Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float)Services.LevelGen.currentLevel.transform.position.y;
 
-		float normalizedHeights = (float) (Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
+			float minLevelHeight = (float)Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
 
-		float clampedNormHeights = Mathf.Clamp (Mathf.Log (normalizedHeights) + 1f, 0f, 1f);
+			float normalizedHeights = (float)(Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
 
-		float[] weights = new float[] {clampedNormHeights, 1.0f - clampedNormHeights};
+			float clampedNormHeights = Mathf.Clamp (Mathf.Log (normalizedHeights) + 1f, 0f, 1f);
 
-		dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
+			float[] weights = new float[] { clampedNormHeights, 1.0f - clampedNormHeights };
+
+			dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
+		}
 
 	}
 

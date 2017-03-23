@@ -32,7 +32,6 @@ public class D_Equip : MonoBehaviour {
 
     void OnTriggerExit(Collider collider)
     {
-		Debug.Log ("Trigger exit");
 		readyToEquip = false;
     }
 
@@ -40,8 +39,8 @@ public class D_Equip : MonoBehaviour {
     {
         //if (collider.GetComponent<NPC>() == null && collider.name != "Player") return;
 
-		if (collider.gameObject.name == "Player") {
-            writer.WriteSpecifiedString("Press E to equip " + transform.parent.name + ".");
+		if (collider.name == "Player") {
+            if (writer != null) writer.WriteSpecifiedString("Press E to equip " + transform.parent.name + ".");
             readyToEquip = true;
 		}
 

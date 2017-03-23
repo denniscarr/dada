@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : SimpleManager.Manager<Level> {
-
+	public static LevelManager levelManager;
 	public Level currentLevel;
+    public int levelNum = 0;
 	public int width, length, height;
 	public float tileScale = 1;
 	public float[] NoiseRemapping;
@@ -13,7 +15,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	private Texture2D[] maps;
 	private Gradient gradient;
 
-	void Start(){
+	void Awake()
+    {
+        if (levelManager == null) {
+			levelManager = this;
+		} else if (levelManager != this) {
+			Destroy (gameObject);
+		}
+	}
+
+	void Start()
+    {
 		maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
@@ -21,16 +33,49 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level.noiseScale = perlinFrequency;
 		gradient = new Gradient ();
 
-		Create ();
-	}
+        if (SceneManager.GetActiveScene().name == "ProofOfConcept")
+        {
+            levelNum = 1;
+        }
 
-	void Update(){
-		
-		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, gradient.Evaluate(((Services.Player.transform.position.y - currentLevel.transform.position.y)/((float)height * (float)tileScale))), Time.deltaTime * 2);
+        // If the current level is the apartment level.
+        if (levelNum % 2 == 0)
+        {
+
+        }
+
+        // If the current level is a procedural level.
+        else
+        {
+            Create();
+        }
+    }
+
+	void Update()
+    {
+		Services.Player = GameObject.Find ("Player");
+		if (currentLevel != null) {
+			Camera.main.backgroundColor = gradient.Evaluate (((Services.Player.transform.position.y - currentLevel.transform.position.y) / ((float)height * (float)tileScale)));
+		}
 		RenderSettings.fogColor = Camera.main.backgroundColor;
 
-		if (currentLevel.transform.position.y - Services.Player.transform.position.y > 0) {
-			currentLevel.enabled = false;
+		//Debug.Log(SceneManager.GetActiveScene().buildIndex);
+
+        // If the player has jumped off the level.
+		if (Services.Player.transform.position.y < -20)
+        {
+            //if office scene, load proc gen scene
+            if (levelNum % 2 == 0) {
+				SceneManager.LoadScene ("ProofOfConcept");
+				Services.Player = GameObject.Find ("Player");
+			} else {
+				SceneManager.LoadScene ("Audio Prototype");
+				Services.Player = GameObject.Find ("Player");
+			}
+
+            GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+
+			if (currentLevel != null) currentLevel.enabled = false;
 			Create ();
 		}
 	}
@@ -73,15 +118,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		}
 
 		l.OnCreated ();
-	
-		SetGradient ();
+
+        Services.IncoherenceManager.HandleObjects();
+
+        SetGradient();
 		Level.xOrigin += width / Level.noiseScale;
 		Level.yOrigin += height / Level.noiseScale;
 
 		xOffset += width;
 		yOffset += height;
 
-		ManagedObjects.Add (l);
+        ManagedObjects.Add (l);
 		return l;
 	}
 
