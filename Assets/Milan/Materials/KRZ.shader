@@ -20,7 +20,7 @@ Shader "KRZ" {
    	 	Tags {"IgnoreProjector"="True" "RenderType"="Transparent"}
     	LOD 300
  
-		//Cull Off
+		Cull Off
     
         
 		CGPROGRAM
