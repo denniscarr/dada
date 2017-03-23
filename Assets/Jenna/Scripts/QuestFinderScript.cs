@@ -9,15 +9,21 @@ public class QuestFinderScript : MonoBehaviour
 	GameObject[] objects;
 	// for seeing if they're interactable
 	private List<GameObject> interactables = new List<GameObject> ();
+	[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
+	// for seeing if they have QuestObject script
+	[HideInInspector]
+	public List<GameObject> hasObjectScript = new List<GameObject> ();
+	// for seeing if they can be picked up
+	public List<GameObject> pickups = new List<GameObject> ();
+
+	// ints bc ya never know
 	int interactablesSize;
 	int objectsSize;
 
-	// for seeing if they have QuestObject script
-	public List<GameObject> hasObjectScript = new List<GameObject> ();
+	// more things will go here as more quests are built
 
-	void Start ()
-	{
+	void Start (){
 
 		// find the items in the scene and add them to a list of questable items
 		interactables = new List<GameObject> ();
@@ -49,6 +55,14 @@ public class QuestFinderScript : MonoBehaviour
 								questItems.Add (go);
 							}
 
+							// can it be picked up? Add it to the list!
+							if (ranger >= 0.65f) { 
+								iset.ableToBeCarried = true; 
+								if (!pickups.Contains (go)) { 
+									pickups.Add (go); 
+								} 
+							} 
+
 							//add quest object script
 							QuestObject quo = go.GetComponent<QuestObject> ();
 							if (quo != null) {
@@ -64,7 +78,7 @@ public class QuestFinderScript : MonoBehaviour
 						}
 					}
 				}
-				}
 			}
 		}
 	}
+}

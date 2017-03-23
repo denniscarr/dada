@@ -18,6 +18,7 @@ public class PickupQuest : Quest {
 	public QuestManager manager;
 	public QuestObject objectScript;
 
+	// for text
 	public GameObject textSpawn;
 	public TextMesh text;
 
@@ -40,8 +41,8 @@ public class PickupQuest : Quest {
 		float positionY = parentObject.transform.position.y + 1;
 		float positionZ = parentObject.transform.position.z;
 
-		// set the title based on random strings from the Quest Builder Script
-		title = ("Pick up " + builder.nouns[builder.currentNoun]);
+		// create title to appear. THIS IS THE QUEST OBJECTIVE.
+		title = ("Pick up " + parentObject.name); 
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
@@ -61,14 +62,10 @@ public class PickupQuest : Quest {
 		// can make this more interesting later during tweaking/juicing stages
 		description = title;
 
-		// once done, add to list
-		// once added to list, destroy...or maybe add something to the queue or something?
-		// HOW TO ADD THIS SCRIPT TO THE PARENTOBJECT?
-
+		// put it on the parent object
 		CopyComponent (this, parentObject);
 
-		//textSpawn Instantiate<textSpawn>(parentObject);
-
+		// put the text of the quest right over the object
 		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
 		textSpawn.transform.parent = parentObject.transform;
 		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
@@ -89,15 +86,9 @@ public class PickupQuest : Quest {
 		return copy;
 	}
 
-	// when this is uncommented, it fucks with the "progress" mechanism, so -- have to figure out a new way to determine
-	// if a thing has been completed or not
-//	void OnMouseDown(){
-//		timesPressed++;
-//		if (timesPressed > 3) {
-//			//progress = Quest.QuestProgress.COMPLETE;
-//			//manager.CheckCompletedQuests (this);
-//		}
-//	}
+	public void FinishQuest(){
+		
+	}
 
 	public override void CheckStatus() {
 		// check if done on active quests
