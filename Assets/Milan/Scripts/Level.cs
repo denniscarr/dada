@@ -40,7 +40,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		s.box = new Vector3 (_width, _height, _length) * tileScale;
 		p = tempP;
 		p.gameObject.transform.parent = transform;
-		p.transform.localPosition = new Vector3 (_width / 2, _height / 2, _length / 2) * tileScale;
+		p.transform.localPosition = new Vector3 (_width / 2, _height, _length / 2) * tileScale;
 
 		ground = Instantiate (Services.Prefabs.TILE, Vector3.zero, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
@@ -122,6 +122,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				if ((perlinVal * _height) > 0f && (perlinVal * _height) < _height * 0.5f) {
 
 					GameObject newObject = Instantiate (Services.AudioManager.tonePillowObject, vertices[i], Quaternion.identity);
+					newObject.transform.parent = transform;
+					newObject.transform.localPosition = vertices [i];
 
 				}
 
@@ -206,7 +208,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.localPosition = pos;
 		newObject.transform.position += Vector3.up * newObject.GetComponentInChildren<Renderer>().bounds.extents.y;
 
-		//ADDING SPRITE
+//		ADDING SPRITE
 //		GameObject Sprite = Instantiate (Services.Prefabs.SPRITE, Vector3.zero, Quaternion.identity);
 //
 //		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!

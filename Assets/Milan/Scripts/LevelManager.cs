@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : SimpleManager.Manager<Level> {
+	public GameObject SceneText;
 	public static LevelManager levelManager;
 	public Level currentLevel;
     public int levelNum = 0;
@@ -25,7 +26,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	}
 
 	void Start()
-    {
+	{
+
         SceneManager.sceneLoaded += OnSceneChange;
 
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
@@ -123,6 +125,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		}
 			
 		l.OnCreated ();
+
+		GameObject t = (GameObject)Instantiate (SceneText, Vector3.zero, Quaternion.identity);
+		t.transform.parent = newLevel.transform;
+		t.transform.localPosition = new Vector3 (width / 2, height / 2, length / 2) * tileScale;
+		t.GetComponent<TextMesh> ().text = "Abandon all hope, \n\' ye who enter here";
 
         Services.IncoherenceManager.HandleObjects();
 		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
