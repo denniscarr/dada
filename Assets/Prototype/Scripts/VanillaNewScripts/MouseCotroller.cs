@@ -50,7 +50,7 @@ public class MouseCotroller : MonoBehaviour {
 		inPointForPlaneFromCube = cubeOnDraggedPlane.position;
 		draggedPlane.SetNormalAndPosition(
 			UpperCamera.transform.forward,
-			UpperCamera.transform.parent.TransformPoint(inPointForPlaneFromCube));
+			inPointForPlaneFromCube);
 		cubeOnDraggedPlane.gameObject.SetActive(false);
 
 		sfxScript = gameObject.GetComponent<CS_PlaySFX> ();
@@ -160,8 +160,11 @@ public class MouseCotroller : MonoBehaviour {
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit) && !hit.collider.name.Equals("PlayerVisor")){
 				
-				Debug.Log("click "+hit.collider.name+" inside visor");
-				PickUpObject(hit.collider.transform);
+
+				if(!hit.collider.name.Equals("ground")){
+					Debug.Log("click "+hit.collider.name+" inside visor");
+					PickUpObject(hit.collider.transform);
+				}
 				return;
 
 			}
@@ -169,8 +172,11 @@ public class MouseCotroller : MonoBehaviour {
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			//RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)) {
-				Debug.Log("click "+hit.collider.name+" outside visor");
-				PickUpObject(hit.collider.transform);
+
+				if(!hit.collider.name.Equals("ground")){
+					Debug.Log("click "+hit.collider.name+" outside visor");
+					PickUpObject(hit.collider.transform);
+				}
 			}
 		}
 
@@ -185,15 +191,17 @@ public class MouseCotroller : MonoBehaviour {
         {
             if (pickedUpObject.GetChild(i).parent == pickedUpObject && pickedUpObject.GetChild(i).GetComponent<InteractionSettings>() != null)
             {
-                print("donezo!");
+                //print("donezo!");
                 intSet = pickedUpObject.GetChild(i).GetComponent<InteractionSettings>();
             }
         }
 
 
+		bool check =  isAbleToBeCarried(intSet);
+		Debug.Log("Check if can be carried:"+check);
 		//check if click on something selectable
-		if(isAbleToBeCarried(intSet)){
-			Debug.Log("Confirm that it can be carried");
+		if(check){
+			
 			selectedObject = pickedUpObject;
 			state = InterationState.DRAG_STATE;
 			//prevent from vaild click repeatly in a second
@@ -204,10 +212,10 @@ public class MouseCotroller : MonoBehaviour {
 				pickedUpObject.SetParent(UpperCamera.transform.parent);
 
 				//stop gravity simulation and free rotation
-				Debug.Log("click "+pickedUpObject.name+" outside visor");
+				Debug.Log("pick up "+pickedUpObject.name+" outside visor");
 
 			}else{
-				Debug.Log("click "+pickedUpObject.name+" inside visor");
+				Debug.Log("pick up "+pickedUpObject.name+" inside visor");
 			}
 
 			//pickedUpObject.localScale = 
@@ -229,10 +237,10 @@ public class MouseCotroller : MonoBehaviour {
 			float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
 			float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
 			float scale = frustumHeightInside/frustumHeight;
-			Debug.Log(transform.forward);
-			Debug.Log(pickedUpObject.position -  Camera.main.transform.position);
-			Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
-			pickedUpObject.localScale *= scale;
+			//Debug.Log(transform.forward);
+			//Debug.Log(pickedUpObject.position -  Camera.main.transform.position);
+			//Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance+" "+"scale:"+scale);
+			//pickedUpObject.localScale *= scale;
 
 			sfxScript.PlaySFX (0);
 
@@ -252,7 +260,7 @@ public class MouseCotroller : MonoBehaviour {
 		//update plane
 		draggedPlane.SetNormalAndPosition(
 			UpperCamera.transform.forward,
-			UpperCamera.transform.parent.TransformPoint(inPointForPlaneFromCube));
+			inPointForPlaneFromCube);
 
 		//update dragged object position
 		if (draggedPlane.Raycast (ray, out rayDistance)) {
