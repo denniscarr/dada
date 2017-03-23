@@ -109,6 +109,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				vertices [i] = new Vector3 (x, (perlinVal * _height), y);
 				vertices [i] *= tileScale;
 
+				//Generate Tone Prefab between 0.25 _height and 0.5 _height
+				if ((perlinVal * _height) > 0f && (perlinVal * _height) < _height * 0.5f) {
+
+					GameObject newObject = Instantiate (Services.AudioManager.tonePillowObject, vertices[i], Quaternion.identity);
+
+				}
+
 				uvs [i] = new Vector2 ((float)x / _width, (float)y / _length);
 
 				//		Generate wall if at edge of map
