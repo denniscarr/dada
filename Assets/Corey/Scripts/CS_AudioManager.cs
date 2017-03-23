@@ -24,6 +24,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public AudioClip radioStaticClip;
 
+	public GameObject tonePillowObject;
+
 	public float thisClipPosition;
 
 	public float objectDensity;
