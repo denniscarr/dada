@@ -271,6 +271,7 @@ public class NPC : MonoBehaviour {
             else
             {
                 generalTimer += Time.deltaTime;
+                Debug.Log(generalTimer);
 
                 // Display text.
                 if (generalTimer >= helloLength*0.5f && !saidHello)
