@@ -5,7 +5,7 @@ using UnityEngine;
 public class D_GunFunction: D_Function
 {
 	public GameObject projectile;
-	public float muzzleVelocity = 10000f;
+	public float muzzleVelocity = 100f;
 
     new void Start()
     {
@@ -19,6 +19,6 @@ public class D_GunFunction: D_Function
         Debug.Log("Used Gun");
 
 		GameObject shoot = Instantiate (projectile, transform.position, Quaternion.identity) as GameObject;
-		shoot.GetComponent<Rigidbody> ().AddForce (transform.right * muzzleVelocity);
-	}
+        shoot.GetComponent<Rigidbody>().AddForce(Services.Player.transform.Find("Main Camera").transform.forward * muzzleVelocity);
+    }
 }

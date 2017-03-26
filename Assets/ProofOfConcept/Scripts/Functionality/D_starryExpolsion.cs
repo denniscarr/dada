@@ -20,7 +20,7 @@ public class D_starryExpolsion : D_Function {
 		base.Use();
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (null);
-            transform.parent.BroadcastMessage("abandonItem", SendMessageOptions.DontRequireReceiver);
+            Services.Player.BroadcastMessage("AbandonItem", SendMessageOptions.DontRequireReceiver);
 		}
 		GetComponentInParent<Rigidbody>().AddForce(transform.right * bathSinkSpeed);
 		Invoke("Explosion", fuseTime);
