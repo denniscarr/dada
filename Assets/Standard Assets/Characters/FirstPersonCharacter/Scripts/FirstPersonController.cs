@@ -118,7 +118,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             float speed;
             GetInput(out speed);
 
-
+			if(m_Input.magnitude == 0){
+				return;
+			}
 			//FOOTSTEP AUDIO METHODS AREN'T WORKING
 			float magnitude = m_isFPSMode? m_Input.magnitude:m_Input.y;
 
@@ -166,6 +168,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
             }
+
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
             ProgressStepCycle(speed);
