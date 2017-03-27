@@ -85,44 +85,57 @@ public class MouseCotroller : MonoBehaviour {
 	}
 		
 	void UseHandler(){
-		if(Input.GetMouseButtonDown(0)){
+		//if(Input.GetMouseButtonDown(0)){
 
-			//a switch used to save if use something in inventory
-			bool isCollidingSomethingInVisor = false;
-			//get the ray to check whether player points at visor from upper camera
-			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
+		//a switch used to save if use something in inventory
+		bool isCollidingSomethingInVisor = false;
+		//get the ray to check whether player points at visor from upper camera
+		Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 
-			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit)){
-				if(hit.collider.name.Equals("PlayerVisor")){
-					if(!playercontroller.isInRoomMode()){
-						playercontroller.SendMessage("ChangeToInRoomMode");
-					}
-				}else{
-					isCollidingSomethingInVisor = true;
+		RaycastHit hit;
+		if (Physics.Raycast (ray, out hit)){
+			if(hit.collider.name.Equals("PlayerVisor")){
+				if(!playercontroller.isInRoomMode()){
+					playercontroller.SendMessage("ChangeToInRoomMode");
+				}
+			}else{
+				isCollidingSomethingInVisor = true;
 
-					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
-					if (isAbleToBeUse(interactionSettings)) {
+				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+				if (isAbleToBeUse(interactionSettings)) {
+					GetComponent<Image> ().color = new Color(1,1,1,1);
+
+					if(Input.GetMouseButtonDown(0)){
 						sfxScript.PlaySFX (0);
 						Debug.Log("use "+hit.collider.name+" inside visor");
 						hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 					}
 				}
+				else{
+					GetComponent<Image> ().color = new Color(1,1,1,0);
+				}
+				return;
 			}
+		}
 
-			//if ray is colliding something in visor, then do not detect collision outside visor////may be want to change
-			if(isCollidingSomethingInVisor == false){
-				ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				if (Physics.Raycast (ray, out hit)){
-					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
-					if (isAbleToBeUse(interactionSettings)) {
+		//if ray is colliding something in visor, then do not detect collision outside visor////may be want to change
+		if(isCollidingSomethingInVisor == false){
+			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast (ray, out hit)){
+				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+				if (isAbleToBeUse(interactionSettings)) {
+					GetComponent<Image> ().color = new Color(1,1,1,1);
+					if(Input.GetMouseButtonDown(0)){
 						Debug.Log("use "+hit.collider.name+" outside visor");
 						hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 					}
+				}else{
+					GetComponent<Image> ().color = new Color(1,1,1,0);
 				}
-
 			}
+
 		}
+		//}
 	}
 
 	void GrabHandler(){

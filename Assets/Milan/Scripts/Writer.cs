@@ -95,6 +95,13 @@ public class Writer : MonoBehaviour {
         CreateTextBox (transform.position);
     }
 
+    public void WriteAtPoint(string _text, Vector3 position)
+    {
+        SetScript(_text);
+
+        CreateTextBox(position);
+    }
+
 
     public void CreateTextBox(Vector3 basePosition)
     {

@@ -28,7 +28,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Start()
 	{
 
-        SceneManager.sceneLoaded += OnSceneChange;
+        //SceneManager.sceneLoaded += OnSceneChange;
 
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
@@ -36,22 +36,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level.yOrigin = Random.Range (0, 10000);
 		Level.noiseScale = perlinFrequency;
 
-        if (SceneManager.GetActiveScene().name == "ProofOfConcept")
-        {
-            levelNum = 1;
-        }
+        Create();
 
-        // If the current level is the apartment level.
-        if (levelNum % 2 == 0)
-        {
-
-        }
-
-        // If the current level is a procedural level.
-        else
-        {
-            Create();
-        }
     }
 
 	void Update()
@@ -74,6 +60,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 			if (currentLevel != null) currentLevel.enabled = false;
 
+            Create();
         }
     }
 
@@ -126,12 +113,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
     void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneChange;
+        //SceneManager.sceneLoaded -= OnSceneChange;
     }
 
-    void OnSceneChange(Scene scene, LoadSceneMode mode)
-    {
-        GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
-        Create();
-    } 
+    //void OnSceneChange(Scene scene, LoadSceneMode mode)
+    //{
+    //    GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+    //    Create();
+    //} 
 }
