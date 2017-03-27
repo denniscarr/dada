@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInRoom : MonoBehaviour {
-	public GameObject player;
+	public GameObject underCamera;
 	public float timeForPlayerToGetOutToZoomOut = 0.5f;
 	float enterTimeCount;
 	Vector3 initPos;
@@ -15,7 +15,7 @@ public class PlayerInRoom : MonoBehaviour {
 	// Use this for initialization
 	void OnEnable () {
 		enterTimeCount = 0;
-		Debug.Log("Player in room enable");
+		//Debug.Log("Player in room enable");
 	}
 	
 	// Update is called once per frame
@@ -51,11 +51,8 @@ public class PlayerInRoom : MonoBehaviour {
 			if(enterTimeCount > timeForPlayerToGetOutToZoomOut){
 				enterTimeCount = 0;
 				Debug.Log("in room -> zoom out");
-				//gameObject.SetActive(false);
-				player.SetActive(true);
-				Debug.Log(player.activeInHierarchy);
 				transform.position = initPos;
-				player.SendMessage("InRoomChangeToZoomOut");
+				underCamera.transform.parent.SendMessage("InRoomChangeToZoomOut");
 
 			}
 		}

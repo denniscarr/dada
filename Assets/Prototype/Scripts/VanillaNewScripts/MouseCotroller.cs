@@ -39,6 +39,8 @@ public class MouseCotroller : MonoBehaviour {
 	//For Sound Effects
 	CS_PlaySFX sfxScript;
 
+	float CLICKGAPTIME = 0.3f;
+
 	// Use this for initialization
 	void Start () {
 		clickGapCount = 0;
@@ -71,13 +73,20 @@ public class MouseCotroller : MonoBehaviour {
 
 
 	void ChangeToGrabMode() {
+		Debug.Log("Change To Grab Mode");
+		clickGapCount = 0;
 		mode = InteractionMode.GRAB_MODE;
 		UpdateCursorImage (grabHand);
+		GetComponent<RectTransform> ().pivot = new Vector2(0.5f,0.5f);
 	}
 
 	void ChangeToUseMode() {
+		Debug.Log("Change To Use Mode");
+		clickGapCount = 0;
 		mode = InteractionMode.USE_MODE;
 		UpdateCursorImage (useHand);
+		GetComponent<RectTransform> ().pivot = new Vector2(0.6922021f,0.8386418f);
+
 	}
 
 	void UpdateCursorImage(Sprite newCursor) {
@@ -86,62 +95,72 @@ public class MouseCotroller : MonoBehaviour {
 		
 	void UseHandler(){
 		//if(Input.GetMouseButtonDown(0)){
-
-		//a switch used to save if use something in inventory
-		bool isCollidingSomethingInVisor = false;
-		//get the ray to check whether player points at visor from upper camera
-		Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
-
-		RaycastHit hit;
-		if (Physics.Raycast (ray, out hit)){
-			if(hit.collider.name.Equals("PlayerVisor")){
-				if(!playercontroller.isInRoomMode()){
-					playercontroller.SendMessage("ChangeToInRoomMode");
-				}
-			}else{
-				isCollidingSomethingInVisor = true;
-
-				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
-				if (isAbleToBeUse(interactionSettings)) {
-					GetComponent<Image> ().color = new Color(1,1,1,1);
-
-					if(Input.GetMouseButtonDown(0)){
-						sfxScript.PlaySFX (0);
-						Debug.Log("use "+hit.collider.name+" inside visor");
-						hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
-					}
-				}
-				else{
-					GetComponent<Image> ().color = new Color(1,1,1,0);
-				}
-				return;
-			}
-		}
-
-		//if ray is colliding something in visor, then do not detect collision outside visor////may be want to change
-		if(isCollidingSomethingInVisor == false){
-			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		clickGapCount += Time.deltaTime;
+		if(clickGapCount > CLICKGAPTIME){
+			//a switch used to save if use something in inventory
+			bool isCollidingSomethingInVisor = false;
+			//get the ray to check whether player points at visor from upper camera
+			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
+			//Debug.DrawRay(ray.origin,ray.direction);
+			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
-				InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
-				if (isAbleToBeUse(interactionSettings)) {
-					GetComponent<Image> ().color = new Color(1,1,1,1);
-					if(Input.GetMouseButtonDown(0)){
-						Debug.Log("use "+hit.collider.name+" outside visor");
-						hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
+				if(hit.collider.name.Equals("PlayerVisor")){
+					GetComponent<Image> ().color = new Color(1,0,1,1);
+					if(!playercontroller.isInRoomMode()&&Input.GetMouseButtonDown(0)){
+						Debug.Log("click on player visor");
+						playercontroller.SendMessage("ChangeToInRoomMode");
 					}
 				}else{
-					GetComponent<Image> ().color = new Color(1,1,1,0);
+					isCollidingSomethingInVisor = true;
+
+					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+					if (isAbleToBeUse(interactionSettings)) {
+						GetComponent<Image> ().color = new Color(1,1,1,1);
+
+						if(Input.GetMouseButtonDown(0)){
+							clickGapCount = 0;
+							sfxScript.PlaySFX (0);
+							Debug.Log("use "+hit.collider.name+" inside visor");
+							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
+						}
+					}
+					else{
+						GetComponent<Image> ().color = new Color(1,1,1,0);
+					}
+
 				}
 			}
 
+			//if ray is colliding something in visor, then do not detect collision outside visor////may be want to change
+			if(isCollidingSomethingInVisor == false){
+				ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast (ray, out hit)){
+					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
+					if (isAbleToBeUse(interactionSettings)) {
+						GetComponent<Image> ().color = new Color(1,1,1,1);
+						if(Input.GetMouseButtonDown(0)){
+							Debug.Log("use "+hit.collider.name+" outside visor");
+							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
+						}
+					}else{
+						GetComponent<Image> ().color = new Color(1,1,1,0);
+					}
+				}
+
+			}
+
+
 		}
+
+
+
 		//}
 	}
 
 	void GrabHandler(){
 		
 		clickGapCount += Time.deltaTime;
-		if(clickGapCount > 0.2f){
+		if(clickGapCount > CLICKGAPTIME){
 
 			switch(state){
 			case InterationState.NONE_SELECTED_STATE:DetectSelection();break;
@@ -165,111 +184,147 @@ public class MouseCotroller : MonoBehaviour {
 
 	//detect if mouse click on something, then switch and save the selected object
 	void DetectSelection(){
-		if(Input.GetMouseButtonDown(0)){
+	//if(Input.GetMouseButtonDown(0)){
 
-			//get the ray to check whether player points at visor from upper camera
-			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
+		//get the ray to check whether player points at visor from upper camera
+		Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
+		Debug.DrawRay(ray.origin,ray.direction);
+		RaycastHit hit;
+		if (Physics.Raycast (ray, out hit) && !hit.collider.name.Equals("PlayerVisor")){
+			
 
-			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit) && !hit.collider.name.Equals("PlayerVisor")){
-				
-
-				if(!hit.collider.name.Equals("ground")){
-					
-					PickUpObject(hit.collider.transform);
-				}
-				return;
-
+			if(!hit.collider.name.Equals("ground")){
+				CheckPickUp(hit.collider.transform);
+				//PickUpObject(hit.collider.transform);
 			}
-			//detect if click on things outside visor ray from main camera
-			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			//RaycastHit hit;
-			if (Physics.Raycast (ray, out hit)) {
+			return;
 
-				if(!hit.collider.name.Equals("ground")){
-					
-					PickUpObject(hit.collider.transform);
-				}
+		}
+		//detect if click on things outside visor ray from main camera
+		ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		//RaycastHit hit;
+		if (Physics.Raycast (ray, out hit)) {
+
+			if(!hit.collider.name.Equals("ground")){
+				CheckPickUp(hit.collider.transform);
+				//PickUpObject(hit.collider.transform);
 			}
 		}
+	//}
 
 
 	}
 
-	void PickUpObject(Transform pickedUpObject){
-
-        // Make sure we're reading from the correct interaction settings (rather than that of the object being carried by an NPC for instance)
-        InteractionSettings intSet = null;
-        for (int i = 0; i < pickedUpObject.childCount; i++)
-        {
-            if (pickedUpObject.GetChild(i).parent == pickedUpObject && pickedUpObject.GetChild(i).GetComponent<InteractionSettings>() != null)
-            {
-                //print("donezo!");
-                intSet = pickedUpObject.GetChild(i).GetComponent<InteractionSettings>();
-            }
-        }
+	//check first then pick up
+	void CheckPickUp(Transform pickedUpObject){
+		InteractionSettings intSet = null;
+		for (int i = 0; i < pickedUpObject.childCount; i++)
+		{
+			if (pickedUpObject.GetChild(i).parent == pickedUpObject && pickedUpObject.GetChild(i).GetComponent<InteractionSettings>() != null)
+			{
+				//print("donezo!");
+				intSet = pickedUpObject.GetChild(i).GetComponent<InteractionSettings>();
+			}
+		}
 
 
 		bool check =  isAbleToBeCarried(intSet);
-		Debug.Log("Check "+pickedUpObject.name+" can be carried:"+check);
+		//Debug.Log("Check "+pickedUpObject.name+" can be carried:"+check);
 		//check if click on something selectable
 		if(check){
-			
-			selectedObject = pickedUpObject;
-			state = InterationState.DRAG_STATE;
-			//prevent from vaild click repeatly in a second
-			clickGapCount = 0;
+			GetComponent<Image> ().color = new Color(1,1,1,1);
+			if(Input.GetMouseButtonDown(0)){
+				clickGapCount = 0;
+				selectedObject = pickedUpObject;
+				state = InterationState.DRAG_STATE;
+				PickUpObject(pickedUpObject);
+				intSet.carryingObject = transform;
+			}
+		}else{
+			GetComponent<Image> ().color = new Color(1,1,1,0);
+		}
+	}
 
-			//calculate new scale
+	//do the transfer actions about the object
+	void PickUpObject(Transform pickedUpObject){
+
+		if(pickedUpObject.parent != UpperCamera.transform.parent){
+			//change the parent of selected object
+			pickedUpObject.SetParent(UpperCamera.transform.parent);
+
+			//change scale
 			float distanceInside = Mathf.Abs(Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),UpperCamera.transform.forward));//Mathf.Abs(inPointForPlaneFromCube.z - UpperCamera.transform.position.z);
 			float distance = Mathf.Abs(Vector3.Dot((pickedUpObject.position - Camera.main.transform.position),Camera.main.transform.forward));
 			if(distance < 0){
 				Debug.Log("error");
 			}
+			float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+			float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+			float scale = frustumHeightInside/frustumHeight;
 
+			//				Debug.Log(pickedUpObject.position);
+			//				Debug.Log(Camera.main.transform.position);
+			//				Debug.Log((pickedUpObject.position -  Camera.main.transform.position).magnitude);
+			//				Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance);
+			//				Debug.Log("frustumHeightInside:"+frustumHeightInside+" "+"frustumHeight:"+frustumHeight);
+			//				Debug.Log("scale: "+scale);
+			pickedUpObject.localScale *= scale;
 
+			//stop gravity simulation and free rotation
+			Debug.Log("pick up "+pickedUpObject.name+" outside visor");
 
-			if(pickedUpObject.parent != UpperCamera.transform.parent){
-				//change the parent of selected object
-				pickedUpObject.SetParent(UpperCamera.transform.parent);
+		}else{
 
-				//change scale
-				float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-				float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
-				float scale = frustumHeightInside/frustumHeight;
-
-//				Debug.Log(pickedUpObject.position);
-//				Debug.Log(Camera.main.transform.position);
-//				Debug.Log((pickedUpObject.position -  Camera.main.transform.position).magnitude);
-//				Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance);
-//				Debug.Log("frustumHeightInside:"+frustumHeightInside+" "+"frustumHeight:"+frustumHeight);
-//				Debug.Log("scale: "+scale);
-				pickedUpObject.localScale *= scale;
-
-				//stop gravity simulation and free rotation
-				Debug.Log("pick up "+pickedUpObject.name+" outside visor");
-
-			}else{
-				
-				Debug.Log("pick up "+pickedUpObject.name+" inside visor");
-			}
-
-			//pickedUpObject.localScale = 
-			Rigidbody body = pickedUpObject.GetComponentInChildren<Rigidbody>();
-			if(body){
-				body.useGravity = false;
-				body.freezeRotation = true;
-			}
-			//set layer to ignoreraycast 
-			pickedUpObject.gameObject.layer = 2;
-
-			//update the postion
-			UpdateDraggedObjectPosition(pickedUpObject);
-
-			sfxScript.PlaySFX (0);
-
-            intSet.carryingObject = GameObject.Find("Player").transform;
+			Debug.Log("pick up "+pickedUpObject.name+" inside visor");
 		}
+
+		//pickedUpObject.localScale = 
+		Rigidbody body = pickedUpObject.GetComponentInChildren<Rigidbody>();
+		if(body){
+			body.useGravity = false;
+			body.freezeRotation = true;
+		}
+		//set layer to ignoreraycast 
+		pickedUpObject.gameObject.layer = 2;
+
+		//update the postion
+		UpdateDraggedObjectPosition(pickedUpObject);
+
+		sfxScript.PlaySFX (0);
+
+//        // Make sure we're reading from the correct interaction settings (rather than that of the object being carried by an NPC for instance)
+//        InteractionSettings intSet = null;
+//        for (int i = 0; i < pickedUpObject.childCount; i++)
+//        {
+//            if (pickedUpObject.GetChild(i).parent == pickedUpObject && pickedUpObject.GetChild(i).GetComponent<InteractionSettings>() != null)
+//            {
+//                //print("donezo!");
+//                intSet = pickedUpObject.GetChild(i).GetComponent<InteractionSettings>();
+//            }
+//        }
+//
+//
+//		bool check =  isAbleToBeCarried(intSet);
+//		Debug.Log("Check "+pickedUpObject.name+" can be carried:"+check);
+//		//check if click on something selectable
+//		if(check){
+//			//GetComponent<Image> ().color = new Color(1,1,1,1);
+//			if(Input.GetMouseButtonDown(0)){
+//				clickGapCount = 0;
+//			}
+//			//selectedObject = pickedUpObject;
+//			//state = InterationState.DRAG_STATE;
+//			//prevent from vaild click repeatly in a second
+//
+//
+//			//calculate new scale
+//
+//
+//
+//
+//		}else{
+//			GetComponent<Image> ().color = new Color(1,1,1,0);
+//		}
 			
 	}
 
