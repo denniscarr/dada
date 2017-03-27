@@ -28,7 +28,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Start()
 	{
 
-        SceneManager.sceneLoaded += OnSceneChange;
+        //SceneManager.sceneLoaded += OnSceneChange;
 
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
@@ -37,22 +37,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level.noiseScale = perlinFrequency;
 		gradient = new Gradient ();
 
-        if (SceneManager.GetActiveScene().name == "ProofOfConcept")
-        {
-            levelNum = 1;
-        }
+        Create();
 
-        // If the current level is the apartment level.
-        if (levelNum % 2 == 0)
-        {
-
-        }
-
-        // If the current level is a procedural level.
-        else
-        {
-            Create();
-        }
     }
 
 	void Update()
@@ -68,25 +54,20 @@ public class LevelManager : SimpleManager.Manager<Level> {
         // If the player has jumped off the level.
 		if (Services.Player.transform.position.y < -20)
         {
-            //if office scene, load proc gen scene
-            if (levelNum % 2 == 0) {
-                SceneManager.LoadScene("ProofOfConcept");
-            } else {
-				SceneManager.LoadScene ("Audio Prototype");
-				Services.Player = GameObject.Find ("Player");
-			}
+            Services.Player = GameObject.Find ("Player");
 
-            Services.Player.transform.position = Vector3.zero;
-            Services.Player.transform.rotation = Quaternion.identity;
+            //Services.Player.transform.position = Vector3.zero;
+            //Services.Player.transform.rotation = Quaternion.identity;
 
             levelNum++;
 
 			if (currentLevel != null) currentLevel.enabled = false;
 
+            Create();
         }
     }
 
-	void SetGradient(){
+	void SetGradient() {
 		GradientColorKey[] gck;
 		GradientAlphaKey[] gak;
 
@@ -152,12 +133,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
     void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneChange;
+        //SceneManager.sceneLoaded -= OnSceneChange;
     }
 
-    void OnSceneChange(Scene scene, LoadSceneMode mode)
-    {
-        GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
-        Create();
-    } 
+    //void OnSceneChange(Scene scene, LoadSceneMode mode)
+    //{
+    //    GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+    //    Create();
+    //} 
 }
