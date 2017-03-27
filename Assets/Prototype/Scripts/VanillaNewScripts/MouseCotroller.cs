@@ -38,11 +38,13 @@ public class MouseCotroller : MonoBehaviour {
 
 	//For Sound Effects
 	CS_PlaySFX sfxScript;
+	public Text txtInfo;
 
 	float CLICKGAPTIME = 0.3f;
 
 	// Use this for initialization
 	void Start () {
+		//txtInfo = transform.parent.FindChild("txtInfo").GetComponent<Text>();
 		clickGapCount = 0;
 		state = InterationState.NONE_SELECTED_STATE;
 		//UpperCamera = GameObject.Find("UpperCamera").GetComponent<Camera>();
@@ -106,6 +108,7 @@ public class MouseCotroller : MonoBehaviour {
 			if (Physics.Raycast (ray, out hit)){
 				if(hit.collider.name.Equals("PlayerVisor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
+					txtInfo.text = "Player visor";
 					if(!playercontroller.isInRoomMode()&&Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
@@ -116,16 +119,18 @@ public class MouseCotroller : MonoBehaviour {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
 						GetComponent<Image> ().color = new Color(1,1,1,1);
-
+						txtInfo.text = hit.collider.name;
 						if(Input.GetMouseButtonDown(0)){
 							clickGapCount = 0;
 							sfxScript.PlaySFX (0);
+
 							Debug.Log("use "+hit.collider.name+" inside visor");
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 						}
 					}
 					else{
 						GetComponent<Image> ().color = new Color(1,1,1,0);
+						txtInfo.text = hit.collider.name;
 					}
 
 				}
@@ -138,12 +143,14 @@ public class MouseCotroller : MonoBehaviour {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
 						GetComponent<Image> ().color = new Color(1,1,1,1);
+						txtInfo.text = hit.collider.name;
 						if(Input.GetMouseButtonDown(0)){
 							Debug.Log("use "+hit.collider.name+" outside visor");
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 						}
 					}else{
 						GetComponent<Image> ().color = new Color(1,1,1,0);
+						txtInfo.text = hit.collider.name;
 					}
 				}
 
@@ -194,6 +201,7 @@ public class MouseCotroller : MonoBehaviour {
 			
 
 			if(!hit.collider.name.Equals("ground")){
+				txtInfo.text = hit.collider.name;
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
@@ -206,6 +214,7 @@ public class MouseCotroller : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit)) {
 
 			if(!hit.collider.name.Equals("ground")){
+				txtInfo.text = hit.collider.name;
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
