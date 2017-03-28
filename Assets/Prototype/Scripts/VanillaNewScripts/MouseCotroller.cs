@@ -214,7 +214,9 @@ public class MouseCotroller : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit)) {
 
 			if(!hit.collider.name.Equals("ground")){
-				txtInfo.text = hit.collider.name;
+				if(txtInfo.gameObject.activeInHierarchy){
+					txtInfo.text = hit.collider.name;
+				}
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
