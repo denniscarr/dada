@@ -21,7 +21,8 @@ public class InteractionSettings : MonoBehaviour {
             if (value.name == "Player")
             {
 				if (transform.parent.GetComponentInChildren<IncoherenceController>() != null){
-					transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+					transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude
+                        += Services.IncoherenceManager.interactionIncrease;
 				}
             }
 

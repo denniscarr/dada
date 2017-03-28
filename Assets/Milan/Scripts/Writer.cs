@@ -23,7 +23,7 @@ public class Writer : MonoBehaviour {
 	int 		stringIndex;
 
     // Used for cooldown.
-    float cooldownTime = 0.5f;
+    public float cooldownTime = 0.5f;
     float timeSinceLastWrite = 0;
 
 	void Start () {
