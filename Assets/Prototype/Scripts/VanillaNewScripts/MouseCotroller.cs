@@ -131,7 +131,7 @@ public class MouseCotroller : MonoBehaviour {
 						}
 					}
 					else{
-						GetComponent<Image> ().color = new Color(1,1,1,0);
+						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
 						txtInfo.text = hit.collider.name;
 					}
 
@@ -151,7 +151,7 @@ public class MouseCotroller : MonoBehaviour {
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 						}
 					}else{
-						GetComponent<Image> ().color = new Color(1,1,1,0);
+						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
 						txtInfo.text = hit.collider.name;
 					}
 				}
@@ -255,7 +255,7 @@ public class MouseCotroller : MonoBehaviour {
 				intSet.carryingObject = transform;
 			}
 		}else{
-			GetComponent<Image> ().color = new Color(1,1,1,0);
+			GetComponent<Image> ().color = new Color(1,1,1,0.5f);
 		}
 	}
 
