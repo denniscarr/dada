@@ -63,6 +63,8 @@ public class MouseCotroller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		
+
 		//update the mouse position
 		transform.position = Input.mousePosition;
 //		Debug.Log(Camera.main.transform.forward);
