@@ -70,7 +70,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
 				return m_isFPSMode;
 			}
 			set{
-				m_isFPSMode = value;
+				if(m_isFPSMode != value){
+					if(m_isFPSMode == false){
+						//zoom out to zoom in
+						m_MouseLook.Init(transform, m_Camera.transform);
+					}
+
+					m_isFPSMode = value;
+				}
+
 			}
 		}
 
@@ -174,8 +182,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
-            ProgressStepCycle(speed);
-            UpdateCameraPosition(speed);
+           ProgressStepCycle(speed);
+           // UpdateCameraPosition(speed);
 
 			if(m_isFPSMode){
             	m_MouseLook.UpdateCursorLock();
@@ -286,13 +294,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-			if(m_isFPSMode){
+			if(m_isFPSMode){//zoom in
             	m_MouseLook.LookRotation (transform, m_Camera.transform);
-			}else{
+			}else{//zoom out
 				float rotation = m_Input.x * 100f;
 				rotation *= Time.deltaTime;
 				transform.Rotate(0, rotation, 0);
-				//m_CharacterController.
 
 			}
         }
