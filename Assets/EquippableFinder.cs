@@ -78,7 +78,7 @@ public class EquippableFinder : MonoBehaviour {
         // Show the equip prompt for the nearest object. (Just debug log for now.)
         if (nearestObject != null)
         {
-            writer.WriteAtPoint("Press E to equip " + nearestObject.name, nearestObject.transform.position);
+            writer.WriteAtPoint("Press E to equip " + nearestObject.name, transform.position + transform.forward*20f);
             equipTarget = nearestObject;
         }
 
@@ -114,8 +114,6 @@ public class EquippableFinder : MonoBehaviour {
 
     public void AbandonItem()
     {
-        Debug.Log("abandon");
-
         equippedObject.transform.SetParent(null);
 
         // Re-enable collision & stuff.
@@ -127,5 +125,4 @@ public class EquippableFinder : MonoBehaviour {
 
         equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
     }
-
 }

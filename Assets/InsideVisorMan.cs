@@ -1,0 +1,92 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityStandardAssets.Cameras;
+using UnityStandardAssets.Characters.FirstPerson;
+
+public class InsideVisorMan : MonoBehaviour {
+
+    [SerializeField] GameObject freeLookCam;
+    Camera freeLookCamCamera;
+    [SerializeField] GameObject controlledObject;
+    [SerializeField] Camera myCam;
+
+    [SerializeField] float carriedObjHeight = 0.5f;
+    [SerializeField] float carriedObjectMoveSpeed = 1f;
+
+    enum State {NormalMovement, ControllingObject};
+    State currentState = State.NormalMovement;
+
+
+    void Start()
+    {
+        freeLookCamCamera = freeLookCam.transform.FindChild("Pivot").GetComponentInChildren<Camera>();
+    }
+
+	
+	void Update ()
+    {
+		if (currentState == State.NormalMovement)
+        {
+            // See if I clicked on a thingy.
+            RaycastHit hit;
+            if (Input.GetMouseButtonDown(0) && Physics.Raycast(myCam.ScreenPointToRay(Input.mousePosition), out hit, 10f))
+            {
+                // See if the thingy was interactable.
+                if (hit.collider.gameObject.GetComponentInChildren<InteractionSettings>() != null)
+                {
+                    controlledObject = hit.collider.gameObject;
+                    controlledObject.GetComponent<Rigidbody>().isKinematic = true;
+                    freeLookCam.SetActive(true);
+                    freeLookCam.GetComponent<FreeLookCam>().SetTarget(hit.collider.gameObject.transform);
+                    GetComponent<RigidbodyFirstPersonController>().enabled = false;
+                    myCam.enabled = false;
+                    currentState = State.ControllingObject;
+                }
+            }
+        }
+
+        else if (currentState == State.ControllingObject)
+        {
+            // See if the controlled object has for some reason stopped existing or whatever.
+            if (controlledObject == null)
+            {
+                currentState = State.NormalMovement;
+                return;
+            }
+
+            Vector3 newPosition = controlledObject.transform.position;
+
+            // Control the object.
+            if (Input.GetAxisRaw("Vertical") == 1)
+            {
+                Vector3 modDirection = freeLookCamCamera.transform.forward;
+                modDirection.y = 0;
+                newPosition += modDirection * carriedObjectMoveSpeed * Time.deltaTime;
+            }
+
+            if (Input.GetAxisRaw("Vertical") == -1)
+            {
+                Vector3 modDirection = freeLookCamCamera.transform.forward * -1;
+                modDirection.y = 0;
+                newPosition += modDirection * carriedObjectMoveSpeed * Time.deltaTime;
+            }
+
+            if (Input.GetAxisRaw("Horizontal") == 1)
+            {
+                Vector3 modDirection = freeLookCamCamera.transform.right;
+                modDirection.y = 0;
+                newPosition += modDirection * carriedObjectMoveSpeed * Time.deltaTime;
+            }
+
+            if (Input.GetAxisRaw("Horizontal") == -1)
+            {
+                Vector3 modDirection = freeLookCamCamera.transform.right * -1;
+                modDirection.y = 0;
+                newPosition += modDirection * carriedObjectMoveSpeed * Time.deltaTime;
+            }
+
+            controlledObject.GetComponent<Rigidbody>().MovePosition(newPosition);
+        }
+    }
+}
