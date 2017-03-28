@@ -9,7 +9,14 @@ public class FaceCamera : MonoBehaviour {
 		InvokeRepeating ("lookAtPlayer", Random.Range(0.00f, 2.00f), 0.5f);
 	}
 
+	void Update(){
+		lookAtPlayer ();
+	}
+
 	void lookAtPlayer(){
-		transform.LookAt (Camera.main.transform.position);
+		Vector3 targetPosition = Services.Player.transform.position;
+		targetPosition.y = transform.position.y;
+		transform.LookAt(targetPosition);
+		transform.Rotate (0, 180, 0);
 	}
 }

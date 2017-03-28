@@ -62,14 +62,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
-		palette = new Color[12];
+		palette = new Color[25];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
 //			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 			palette [i] = new Color (rand, rand, rand);
-//			palette [i] = Random.ColorHSV(lower, upper, 0.75f * lower,0.75 * upper, lower, upper);
+//			palette [i] = Random.ColorHSV(lower, upper, 0.75f * lower, 0.75f * upper, lower, upper);
 		}
 			
 		SetGradient ();
@@ -114,9 +114,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		float NormalisedToHightestPoint = (Services.Player.transform.position.y - transform.position.y) / highestPoint;
 		ground.GetComponent<Renderer> ().material.color = gradient.Evaluate (NormalisedToHightestPoint);
 //		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, NormalisedToHightestPoint);
-		Camera.main.backgroundColor = gradient.Evaluate (playerHeightNormalized);
+		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, gradient.Evaluate (playerHeightNormalized), Time.deltaTime);
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-		RenderSettings.fogEndDistance = Mathf.Lerp (100, 200, NormalisedToHightestPoint);
+		RenderSettings.fogEndDistance = Mathf.Lerp (50, 100, NormalisedToHightestPoint);
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -213,7 +213,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //                    }
 //                }
 //
-				perlinVal = Mathf.Pow (perlinVal, 2f);
+				perlinVal = Mathf.Pow (perlinVal, 1f);
 
 				vertices [i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
 				vertices [i] += new Vector3 (x, 0, y) * tileScale;
@@ -225,7 +225,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
        
 
-				_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
+				_bitmap.SetPixel (x, y, gradient.Evaluate(Mathf.Pow(perlinVal, 2)));
 
 				if (Vector3.Distance (vertices [i], centre) > ((_width * tileScale) / 2)) {
 					float spillover = Vector3.Distance (centre, vertices [i]) - ((_width / 2) * tileScale);
@@ -256,6 +256,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		GameObject newObject = null;
 
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
+//		Color floorColor =  palette[Mathf.RoundToInt(x * (palette.Length-1))];
+//		Color floorColor = Color.black; 
 //		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
 
 		if (index.x == 0 || index.x == _width || index.y == 0 || index.y == _length) {
@@ -298,7 +300,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
 			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
 		}
-		newObject.transform.localScale *= tileScale;
+//		newObject.transform.localScale *= tileScale;
 //		newObject.transform.position += Vector3.up * newObject.GetComponentInChildren<Renderer>().bounds.extents.y;
 
 
@@ -381,7 +383,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		terrain.RecalculateNormals ();
 		ground.GetComponent<MeshFilter> ().mesh = terrain;
-		ground.GetComponent<Renderer> ().material.mainTexture = groundLerpedColour;
+		ground.GetComponent<Renderer> ().material.mainTexture = _bitmap;
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 
 
@@ -390,7 +392,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		clouds.triangles = groundTriangles;
 
 		sky.GetComponent<MeshFilter> ().mesh = clouds;
-		sky.transform.position += Vector3.up * (highestPoint + 25);
+		sky.transform.position += Vector3.up * (highestPoint + 100);
 		sky.transform.localScale *= 2;
 	}
 

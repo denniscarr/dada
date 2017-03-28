@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour {
 
         Instantiate(playerController, Vector3.zero, Quaternion.identity);
 		Init ();
-        DontDestroyOnLoad (gameObject);
         DontDestroyOnLoad(Services.Player);
 	}
 

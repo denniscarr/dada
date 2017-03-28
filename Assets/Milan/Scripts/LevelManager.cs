@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : SimpleManager.Manager<Level> {
 	public GameObject SceneText;
-	public static LevelManager levelManager;
 	public Level currentLevel;
     public int levelNum = 0;
 	public int width, length, height;
@@ -16,20 +15,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	private Texture2D[] maps;
 	private Gradient gradient;
 
-	void Awake()
-    {
-        if (levelManager == null) {
-			levelManager = this;
-		} else if (levelManager != this) {
-			Destroy (gameObject);
-		}
-	}
 
 	void Start()
 	{
 
         //SceneManager.sceneLoaded += OnSceneChange;
-
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
@@ -43,28 +33,20 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Update()
     {
         // If the player has jumped off the level.
-		if (Services.Player.transform.position.y < -100)
-        {
-            //if office scene, load proc gen scene
-            if (levelNum % 2 == 0) {
-                SceneManager.LoadScene("ProofOfConcept");
-            } else {
-				SceneManager.LoadScene ("Audio Prototype");
-				Services.Player = GameObject.Find ("Player");
-			}
+		if (Services.Player.transform.position.y - currentLevel.transform.position.y < -10){
+            
 			Services.Player = GameObject.Find ("Player");
-            Services.Player.transform.position = Vector3.zero;
-            Services.Player.transform.rotation = Quaternion.identity;
-
-            levelNum++;
-
-			if (currentLevel != null) currentLevel.enabled = false;
-
+//			if (currentLevel != null) currentLevel.enabled = false;
             Create();
         }
     }
 
 	public override Level Create(){
+
+		if (currentLevel != null) {
+			Destroy (currentLevel.gameObject);
+		}
+
 		NoiseRemapping = new float[15];
 
 		NoiseRemapping [0] = 0;
@@ -79,7 +61,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level l = newLevel.AddComponent <Level> ();
 		currentLevel = l;
 
-		newLevel.transform.position = Services.Player.transform.position;
+		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 100);
 		newLevel.name = "Level " + ManagedObjects.Count;
 
 		if (maps.Length > 0) {
@@ -116,9 +98,9 @@ public class LevelManager : SimpleManager.Manager<Level> {
         //SceneManager.sceneLoaded -= OnSceneChange;
     }
 
-    //void OnSceneChange(Scene scene, LoadSceneMode mode)
-    //{
-    //    GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
-    //    Create();
-    //} 
+    void OnSceneChange(Scene scene, LoadSceneMode mode)
+    {
+        GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+        Create();
+    } 
 }
