@@ -55,21 +55,21 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
 
-		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
-		sky.transform.parent = transform;
-		sky.transform.localPosition = Vector3.zero;
-		sky.name = "SKY";
+//		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
+//		sky.transform.parent = transform;
+//		sky.transform.localPosition = Vector3.zero;
+//		sky.name = "SKY";
 	
 		gradient = new Gradient ();
 
-		palette = new Color[20];
+		palette = new Color[25];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
 //			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
-//			palette [i] = new Color (rand, rand, rand);
-			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+			palette [i] = new Color (rand, rand, rand);
+//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
 		SetGradient ();
@@ -96,10 +96,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.GetComponent<Renderer> ().material.mainTexture = groundLerpedColour;
 		ground.AddComponent<MeshCollider> ();
 
-		sky.GetComponent<MeshFilter> ().mesh = clouds;
-		sky.GetComponent<Renderer> ().receiveShadows = false;
-		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
+//		sky.GetComponent<MeshFilter> ().mesh = clouds;
+//		sky.GetComponent<Renderer> ().receiveShadows = false;
+//		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+//		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
 
 		centre = Vector3.zero;
 
@@ -111,19 +111,19 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	void Update(){
 
-		float playerHeightNormalized = (Services.Player.transform.position.y - transform.position.y) / (_height * tileScale);
-		float NormalisedToHightestPoint = (Services.Player.transform.position.y - transform.position.y) / highestPoint;
+		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (_height * tileScale));
+		float NormalisedToHightestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
 //		ground.GetComponent<Renderer> ().material.color = gradient.Evaluate (NormalisedToHightestPoint);
-		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, NormalisedToHightestPoint);
-		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.black, Color.white, NormalisedToHightestPoint), Time.deltaTime);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, playerHeightNormalized);
+		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.black, Color.white, playerHeightNormalized), Time.deltaTime * 3);
 		RenderSettings.fogColor = Camera.main.backgroundColor;
 		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, NormalisedToHightestPoint);
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
 
-		Mesh mesh = sky.GetComponent<MeshFilter>().mesh;
-		Vector3[] verts = mesh.vertices;
+//		Mesh mesh = sky.GetComponent<MeshFilter>().mesh;
+//		Vector3[] verts = mesh.vertices;
 
 		for (int i = 0, y = 0; y <= _length; y++, yCoord++) {
 
@@ -132,21 +132,21 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			for (int x = 0; x <= _width; x++, i++, xCoord++) {
 				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
 				perlinVal = Mathf.Pow (perlinVal, 0.75f);
-				verts [i] = new Vector3 (x, perlinVal * _height, y) * tileScale;
-				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
+//				verts [i] = new Vector3 (x, perlinVal * _height, y) * tileScale;
+//				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
 
-				float skyCoefficient = Mathf.Pow(perlinVal, 1);
+				float skyCoefficient = Mathf.Pow(perlinVal, 3);
 				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(Color.black, gradient.Evaluate (playerHeightNormalized), NormalisedToHightestPoint), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, NormalisedToHightestPoint), 1-skyCoefficient));
 				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
 				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel (x, y) + Grayscale);
 	
-				verts [i] -= (Vector3.up * Vector3.Distance (verts [i], centre)) * Mathf.Pow(Vector3.Distance (verts [i], centre)/hypotenuse, 0.5f);
+//				verts [i] -= (Vector3.up * Vector3.Distance (verts [i], centre)) * Mathf.Pow(Vector3.Distance (verts [i], centre)/hypotenuse, 0.5f);
 			}
 		}
 
 		skyColor.Apply();
 		groundLerpedColour.Apply();
-		mesh.vertices = verts;
+//		mesh.vertices = verts;
 
 		xOrigin += Time.deltaTime * 5;
 		yOrigin += Time.deltaTime * 5;
@@ -196,23 +196,23 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
 				}
 //					
-//				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
-//				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
-//
-//
-//                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
-//
-//                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
-//                {
-//                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
-//                }
-//                else
-//                {
-//                    if (remapIndex > 0 && difference < 0)
-//                    {
-//                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
-//                    }
-//                }
+				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
+				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
+
+
+                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
+
+                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
+                {
+                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
+                }
+                else
+                {
+                    if (remapIndex > 0 && difference < 0)
+                    {
+                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
+                    }
+                }
 //
 				perlinVal = Mathf.Pow (perlinVal, 1f);
 
@@ -248,7 +248,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		OutputBitmap ();
 
-		transform.position -= vertices [highestPointIndex] + Vector3.up;
+		transform.position -= vertices [highestPointIndex];
 	}
 		
 	public GameObject LevelObjectFactory(float x, Vector3 pos, Vector2 index){
@@ -258,7 +258,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
 //		Color floorColor =  palette[Mathf.RoundToInt(x * (palette.Length-1))];
 //		Color floorColor = Color.black; 
-//		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
+		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
 
 		if (index.x == 0 || index.x == _width || index.y == 0 || index.y == _length) {
 
@@ -279,18 +279,34 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			return null;
 		}
 
-		if (!Services.Prefabs.STATICPREFABS [Mathf.RoundToInt (x * (Services.Prefabs.STATICPREFABS.Length-1))]) {
+		if (Services.LevelGen.ObjectTypes [Mathf.RoundToInt (x * (Services.LevelGen.ObjectTypes.Length-1))] != 0) {
 			return null;
 		}
 
-		newObject = Instantiate (Services.Prefabs.SPRITE, Vector3.zero, Quaternion.identity) as GameObject;
+//		switch(objectType){
+//		case choices.APPLE: 
+//			Debug.Log("APPLE");
+//			break;
+//		case choices.BANANA:
+//			Debug.Log("BANANA");
+//			break;
+//		case choices.CANAPLE:
+//			Debug.Log("CANAPLE");
+//			break;
+//		default:
+//			Debug.Log("NOTHING");
+//			break;
+//		}
+
+		newObject = Instantiate (Services.Prefabs.NPCPREFABS[Random.Range(0, Services.Prefabs.NPCPREFABS.Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
 //		foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
 //			r.material.shader = Services.Prefabs.FlatShading;
 //		}
 
 //		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
-		newObject.GetComponent<SpriteRenderer>().sprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
+//		newObject.GetComponent<SpriteRenderer>().sprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
+
 		newObject.transform.localScale *= Random.Range (0.50f, 1.50f);
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;
@@ -300,6 +316,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
 			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
 		}
+
+		newObject.transform.position += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
 //		newObject.transform.localScale *= tileScale;
 //		newObject.transform.position += Vector3.up * newObject.GetComponentInChildren<Renderer>().bounds.extents.y;
 
@@ -397,9 +415,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		clouds.uv = uvs;
 		clouds.triangles = groundTriangles;
 
-		sky.GetComponent<MeshFilter> ().mesh = clouds;
-		sky.transform.position += Vector3.up * (highestPoint + 100);
-		sky.transform.localScale *= 2;
+//		sky.GetComponent<MeshFilter> ().mesh = clouds;
+//		sky.transform.position += Vector3.up * (highestPoint + 100);
+//		sky.transform.localScale *= 2;
 	}
 
 	public void OnDestroyed(){
