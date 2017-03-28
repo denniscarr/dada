@@ -116,12 +116,12 @@ public class InsideVisorMan : MonoBehaviour {
                 }
 
                 // Up/Down arrow keys move controlled object on Y axis.
-                if (Input.GetKey(KeyCode.Q))
+                if (Input.GetKey(KeyCode.E))
                 {
                     newPosition += Vector3.up * controlledObjectCurrentMoveSpeed * Time.deltaTime;
                 }
 
-                else if (Input.GetKey(KeyCode.E))
+                else if (Input.GetKey(KeyCode.Q))
                 {
                     newPosition += Vector3.down * controlledObjectCurrentMoveSpeed * Time.deltaTime;
                 }
