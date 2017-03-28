@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : SimpleManager.Manager<Level> {
+	public string ObjectTypes;
 	public GameObject SceneText;
 	public Level currentLevel;
     public int levelNum = 0;

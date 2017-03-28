@@ -62,14 +62,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
-		palette = new Color[25];
+		palette = new Color[20];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
 //			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
-			palette [i] = new Color (rand, rand, rand);
-//			palette [i] = Random.ColorHSV(lower, upper, 0.75f * lower, 0.75f * upper, lower, upper);
+//			palette [i] = new Color (rand, rand, rand);
+			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
 		SetGradient ();
@@ -84,7 +84,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		skyColor = new Texture2D (_width + 1, _length + 1);
 		groundLerpedColour = new Texture2D (_width + 1, _length + 1);
-//		groundLerpedColour.filterMode = FilterMode.Point;
+
 		terrain = new Mesh ();
 		clouds = new Mesh ();
 
@@ -98,6 +98,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		sky.GetComponent<MeshFilter> ().mesh = clouds;
 		sky.GetComponent<Renderer> ().receiveShadows = false;
+		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
 
 		centre = Vector3.zero;
@@ -112,11 +113,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		float playerHeightNormalized = (Services.Player.transform.position.y - transform.position.y) / (_height * tileScale);
 		float NormalisedToHightestPoint = (Services.Player.transform.position.y - transform.position.y) / highestPoint;
-		ground.GetComponent<Renderer> ().material.color = gradient.Evaluate (NormalisedToHightestPoint);
-//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, NormalisedToHightestPoint);
-		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, gradient.Evaluate (playerHeightNormalized), Time.deltaTime);
+//		ground.GetComponent<Renderer> ().material.color = gradient.Evaluate (NormalisedToHightestPoint);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, NormalisedToHightestPoint);
+		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.black, Color.white, NormalisedToHightestPoint), Time.deltaTime);
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-		RenderSettings.fogEndDistance = Mathf.Lerp (50, 100, NormalisedToHightestPoint);
+		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, NormalisedToHightestPoint);
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -134,7 +135,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				verts [i] = new Vector3 (x, perlinVal * _height, y) * tileScale;
 				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
 
-				float skyCoefficient = Mathf.Pow(perlinVal, 2);
+				float skyCoefficient = Mathf.Pow(perlinVal, 1);
 				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(Color.black, gradient.Evaluate (playerHeightNormalized), NormalisedToHightestPoint), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, NormalisedToHightestPoint), 1-skyCoefficient));
 				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
 				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel (x, y) + Grayscale);
@@ -219,18 +220,18 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				vertices [i] += new Vector3 (x, 0, y) * tileScale;
 
 				//drag height to 0 around edge of circle
-				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 6));
+//				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 6));
 
 				vertices [i] += Vector3.up * _height * perlinVal * tileScale;
 
        
 
-				_bitmap.SetPixel (x, y, gradient.Evaluate(Mathf.Pow(perlinVal, 2)));
+				_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
 				if (Vector3.Distance (vertices [i], centre) > ((_width * tileScale) / 2)) {
-					float spillover = Vector3.Distance (centre, vertices [i]) - ((_width / 2) * tileScale);
-					vertices [i] = Vector3.Lerp (vertices [i], centre, spillover / hypotenuse);
-					vertices [i] -= (Vector3.up * spillover);
+//					float spillover = Vector3.Distance (centre, vertices [i]) - ((_width / 2) * tileScale);
+//					vertices [i] = Vector3.Lerp (vertices [i], centre, spillover / hypotenuse);
+//					vertices [i] -= (Vector3.up * spillover);
 				} else {
 					if (vertices [i].y > highestPoint) {
 						highestPoint = vertices [i].y;
@@ -244,7 +245,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			}
 		}
 			
-		_bitmap.Apply ();
 
 		OutputBitmap ();
 
@@ -289,7 +289,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //			r.material.shader = Services.Prefabs.FlatShading;
 //		}
 
-		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
+//		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
 		newObject.GetComponent<SpriteRenderer>().sprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
 		newObject.transform.localScale *= Random.Range (0.50f, 1.50f);
 		newObject.transform.parent = transform;
@@ -383,9 +383,15 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		terrain.RecalculateNormals ();
 		ground.GetComponent<MeshFilter> ().mesh = terrain;
-		ground.GetComponent<Renderer> ().material.mainTexture = _bitmap;
+		ground.GetComponent<Renderer> ().material.mainTexture = groundLerpedColour;
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 
+		_bitmap.Apply ();
+		_bitmap.filterMode = FilterMode.Point;
+		groundLerpedColour.filterMode = FilterMode.Point;
+
+		groundLerpedColour.SetPixels (_bitmap.GetPixels());
+		groundLerpedColour.Apply ();
 
 		clouds.vertices = vertices;
 		clouds.uv = uvs;
