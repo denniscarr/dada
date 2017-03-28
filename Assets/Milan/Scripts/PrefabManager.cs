@@ -13,12 +13,13 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject[] NPCPREFABS;
     public GameObject[] FUNCTIONPREFABS;
 	public AudioClip[] Tones;
-
+	public Shader FlatShading;
+	public Shader BillboardShader;
 	public Sprite[] _sprites;
 
 	void Awake(){
-		_sprites = Resources.LoadAll<Sprite> ("");
-		NPCPREFABS = Resources.LoadAll<GameObject> ("Object Prefabs");
+		_sprites = Resources.LoadAll<Sprite> ("inkSprites");
+//		NPCPREFABS = Resources.LoadAll<GameObject> ("Object Prefabs");
         FUNCTIONPREFABS = Resources.LoadAll<GameObject> ("Functions");
 		Tones = Resources.LoadAll<AudioClip> ("Tones");
 	}
