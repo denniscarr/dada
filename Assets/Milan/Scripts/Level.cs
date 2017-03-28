@@ -190,7 +190,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				float perlinVal = 0;
 
 				if (usePerlin) {
-					perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 5, 0.5f);
+					perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 1, 0.5f);
 				} else {	
 					Color c = _bitmap.GetPixel (x, y);
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));

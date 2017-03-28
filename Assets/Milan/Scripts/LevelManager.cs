@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class LevelManager : SimpleManager.Manager<Level> {
 
 	public int[] ObjectTypes;
-	public enum Lolol{Weapon,Weapon2,Health,Armor};
 
 	public GameObject SceneText;
 	public Level currentLevel;
