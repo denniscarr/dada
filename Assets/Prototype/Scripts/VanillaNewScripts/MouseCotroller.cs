@@ -63,6 +63,8 @@ public class MouseCotroller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		
+
 		//update the mouse position
 		transform.position = Input.mousePosition;
 //		Debug.Log(Camera.main.transform.forward);
@@ -201,6 +203,7 @@ public class MouseCotroller : MonoBehaviour {
 			
 
 			if(!hit.collider.name.Equals("ground")){
+				
 				txtInfo.text = hit.collider.name;
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
@@ -214,7 +217,9 @@ public class MouseCotroller : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit)) {
 
 			if(!hit.collider.name.Equals("ground")){
-				txtInfo.text = hit.collider.name;
+				//if(){
+					txtInfo.text = hit.collider.name;
+				//}
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}

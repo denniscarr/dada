@@ -127,6 +127,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update() {
+		//disable collider to fall down
+		if(Input.GetKeyDown(KeyCode.RightShift)){
+			GetComponent<CapsuleCollider>().enabled = ! GetComponent<CapsuleCollider>().enabled;
+			GetComponent<CharacterController>().enabled = ! GetComponent<CharacterController>().enabled;
+		}
 
 		//if press tab, mode change to another
 		pressGapCount += Time.deltaTime;
