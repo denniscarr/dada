@@ -176,7 +176,7 @@ public class PlayerController : MonoBehaviour {
 	void InRoomMove(){
 	}
 
-	public ControlMode getControlMode{
+	public ControlMode controlMode{
 		get
 		{
 			//Some other code
@@ -189,12 +189,6 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	public bool isInRoomMode(){
-		if(mode == ControlMode.IN_ROOM_MODE){
-			return true;
-		}
-		return false;
-	}
 
 	void ChangeToInRoomMode(){
 		myCamera.fieldOfView = ZoomOutMainCameraFoV;
@@ -202,6 +196,7 @@ public class PlayerController : MonoBehaviour {
 		Debug.Log("my camera fov:"+myCamera.fieldOfView);
 		Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
 		mode = ControlMode.IN_ROOM_MODE;
+		Debug.Log(mode);
 		inRoomNode.FindChild("CameraForScreen").position = Camera.main.transform.position;
 		inRoomNode.FindChild("CameraForScreen").rotation = Camera.main.transform.rotation;
 
@@ -217,6 +212,7 @@ public class PlayerController : MonoBehaviour {
 
 	void InRoomChangeToZoomOut(){
 		Debug.Log("in room -> zoom out");
+		mode = ControlMode.ZOOM_OUT_MODE;
 		uppercamera.enabled = true;
 		canvas.SetActive(true);
 		fpController.enabled = true;

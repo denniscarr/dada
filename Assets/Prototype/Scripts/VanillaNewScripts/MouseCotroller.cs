@@ -111,7 +111,7 @@ public class MouseCotroller : MonoBehaviour {
 				if(hit.collider.name.Equals("PlayerVisor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
 					txtInfo.text = "Player visor";
-					if(!playercontroller.isInRoomMode()&&Input.GetMouseButtonDown(0)){
+					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
 					}
