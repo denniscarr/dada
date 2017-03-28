@@ -111,7 +111,7 @@ public class MouseCotroller : MonoBehaviour {
 				if(hit.collider.name.Equals("PlayerVisor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
 					txtInfo.text = "Player visor";
-					if(!playercontroller.isInRoomMode()&&Input.GetMouseButtonDown(0)){
+					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
 					}
@@ -131,7 +131,7 @@ public class MouseCotroller : MonoBehaviour {
 						}
 					}
 					else{
-						GetComponent<Image> ().color = new Color(1,1,1,0);
+						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
 						txtInfo.text = hit.collider.name;
 					}
 
@@ -151,7 +151,7 @@ public class MouseCotroller : MonoBehaviour {
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 						}
 					}else{
-						GetComponent<Image> ().color = new Color(1,1,1,0);
+						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
 						txtInfo.text = hit.collider.name;
 					}
 				}
@@ -255,7 +255,7 @@ public class MouseCotroller : MonoBehaviour {
 				intSet.carryingObject = transform;
 			}
 		}else{
-			GetComponent<Image> ().color = new Color(1,1,1,0);
+			GetComponent<Image> ().color = new Color(1,1,1,0.5f);
 		}
 	}
 

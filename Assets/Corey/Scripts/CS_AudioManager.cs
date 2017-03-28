@@ -204,7 +204,7 @@ public class CS_AudioManager : MonoBehaviour {
 			float clampedNormHeights = Mathf.Clamp (normalizedHeights, 0f, 1f);
 
 			float[] weights = new float[] { clampedNormHeights, 1.0f - clampedNormHeights };
-			Debug.Log (clampedNormHeights);
+			//Debug.Log (clampedNormHeights);
 
 			dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
 		}

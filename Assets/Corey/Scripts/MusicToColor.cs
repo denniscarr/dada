@@ -30,11 +30,11 @@ public class MusicToColor : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-//		float newSpectrumPoint = thisAnalyzer.bandBuffer [2];
-//		emissionLevel += newSpectrumPoint;
-//		gameObject.GetComponent<Renderer> ().material.SetColor("_Color", new Color (emissionLevel*50f, emissionLevel * 100f, emissionLevel * 75f));
-//		//Debug.Log(thisMaterial.GetColor("_Color"));
-//		emissionLevel *= 0.9f;
+		float newSpectrumPoint = thisAnalyzer.bandBuffer [2];
+		emissionLevel += newSpectrumPoint;
+		gameObject.GetComponent<Renderer> ().material.SetColor("_Color", new Color (emissionLevel*50f, emissionLevel * 100f, emissionLevel * 75f));
+		//Debug.Log(thisMaterial.GetColor("_Color"));
+		emissionLevel *= 0.9f;
 //
 	}
 }
