@@ -63,6 +63,8 @@ public class MouseCotroller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		
+
 		//update the mouse position
 		transform.position = Input.mousePosition;
 //		Debug.Log(Camera.main.transform.forward);
@@ -109,7 +111,7 @@ public class MouseCotroller : MonoBehaviour {
 				if(hit.collider.name.Equals("PlayerVisor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
 					txtInfo.text = "Player visor";
-					if(!playercontroller.isInRoomMode()&&Input.GetMouseButtonDown(0)){
+					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
 					}
@@ -201,6 +203,7 @@ public class MouseCotroller : MonoBehaviour {
 			
 
 			if(!hit.collider.name.Equals("ground")){
+				
 				txtInfo.text = hit.collider.name;
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
@@ -214,9 +217,9 @@ public class MouseCotroller : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit)) {
 
 			if(!hit.collider.name.Equals("ground")){
-				if(txtInfo.gameObject.activeInHierarchy){
+				//if(){
 					txtInfo.text = hit.collider.name;
-				}
+				//}
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
