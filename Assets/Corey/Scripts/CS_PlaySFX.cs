@@ -18,9 +18,9 @@ public class CS_PlaySFX : MonoBehaviour {
 
     public void PlaySFX(int t_number) {
         if (playVolume == 0) {
-            //CS_AudioManager.Instance.PlaySFX (mySFX [t_number]);
+			Services.AudioManager.PlaySFX(mySFX [t_number]);
         } else { 
-			//CS_AudioManager.Instance.PlaySFX (mySFX [t_number], playVolume);
+			Services.AudioManager.PlaySFX(mySFX [t_number], playVolume);
             }
 	}
 
