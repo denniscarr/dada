@@ -70,7 +70,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
 				return m_isFPSMode;
 			}
 			set{
-				m_isFPSMode = value;
+				if(m_isFPSMode != value){
+					if(m_isFPSMode == false){
+						//zoom out to zoom in
+						m_MouseLook.Init(transform, m_Camera.transform);
+					}
+
+					m_isFPSMode = value;
+				}
+
 			}
 		}
 
@@ -118,9 +126,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             float speed;
             GetInput(out speed);
 
-			if(m_Input.magnitude == 0){
-				return;
-			}
+//			if(m_Input.magnitude == 0){
+//				return;
+//			}
 			//FOOTSTEP AUDIO METHODS AREN'T WORKING
 			float magnitude = m_isFPSMode? m_Input.magnitude:m_Input.y;
 
@@ -169,10 +177,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
             }
 
+//			Vector2 translation = m_MoveDir * Time.fixedDeltaTime;
+//			transform.Translate(translation.x, 0, translation.y);
+
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
-            ProgressStepCycle(speed);
-            UpdateCameraPosition(speed);
+           ProgressStepCycle(speed);
+           // UpdateCameraPosition(speed);
 
 			if(m_isFPSMode){
             	m_MouseLook.UpdateCursorLock();
@@ -283,13 +294,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-			if(m_isFPSMode){
+			if(m_isFPSMode){//zoom in
             	m_MouseLook.LookRotation (transform, m_Camera.transform);
-			}else{
+			}else{//zoom out
 				float rotation = m_Input.x * 100f;
 				rotation *= Time.deltaTime;
 				transform.Rotate(0, rotation, 0);
-				//m_CharacterController.
 
 			}
         }

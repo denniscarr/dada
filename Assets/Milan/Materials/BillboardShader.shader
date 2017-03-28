@@ -5,6 +5,7 @@
       _ScaleY ("Scale Y", Float) = 1.0
    }
    SubShader {
+
    cull off
 
       Pass {   
