@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : SimpleManager.Manager<Level> {
 
-	public int[] ObjectTypes;
+	public Services.TYPES[] props;
 
 	public GameObject SceneText;
 	public Level currentLevel;
+	public int maxNPCs, maxPickups, maxObjects;
     public int levelNum = 0;
 	public int width, length, height;
 	public float tileScale = 1;

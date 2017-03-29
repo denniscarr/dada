@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enum = System.Enum;
 
 public class Level : MonoBehaviour, SimpleManager.IManaged {
 
@@ -196,24 +197,24 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
 				}
 //					
-				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
-				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
-
-
-                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
-
-                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
-                {
-                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
-                }
-                else
-                {
-                    if (remapIndex > 0 && difference < 0)
-                    {
-                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
-                    }
-                }
+//				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
+//				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
 //
+//
+//                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
+//
+//                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
+//                {
+//                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
+//                }
+//                else
+//                {
+//                    if (remapIndex > 0 && difference < 0)
+//                    {
+//                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
+//                    }
+//                }
+
 				perlinVal = Mathf.Pow (perlinVal, 1f);
 
 				vertices [i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
@@ -258,7 +259,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
 //		Color floorColor =  palette[Mathf.RoundToInt(x * (palette.Length-1))];
 //		Color floorColor = Color.black; 
-		int objectType = Mathf.RoundToInt (x * (Services.Prefabs.NPCPREFABS.Length-1));
+		int objectType = Mathf.RoundToInt (x * (Services.LevelGen.props.Length-1));
 
 		if (index.x == 0 || index.x == _width || index.y == 0 || index.y == _length) {
 
@@ -279,26 +280,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			return null;
 		}
 
-		if (Services.LevelGen.ObjectTypes [Mathf.RoundToInt (x * (Services.LevelGen.ObjectTypes.Length-1))] != 0) {
+		if (Services.LevelGen.props [objectType] == 0) {
 			return null;
 		}
-
-//		switch(objectType){
-//		case choices.APPLE: 
-//			Debug.Log("APPLE");
-//			break;
-//		case choices.BANANA:
-//			Debug.Log("BANANA");
-//			break;
-//		case choices.CANAPLE:
-//			Debug.Log("CANAPLE");
-//			break;
-//		default:
-//			Debug.Log("NOTHING");
-//			break;
-//		}
-
-		newObject = Instantiate (Services.Prefabs.NPCPREFABS[Random.Range(0, Services.Prefabs.NPCPREFABS.Length)], Vector3.zero, Quaternion.identity) as GameObject;
+			
+		Debug.Log ("Load Object from " + Services.LevelGen.props [objectType].ToString() + " folder");
+		Debug.Log ("Load from index " + (int)Services.LevelGen.props [objectType] + " of PREFABS");
+		newObject = Instantiate (Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]][Random.Range(0, Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]].Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
 //		foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
 //			r.material.shader = Services.Prefabs.FlatShading;
@@ -318,9 +306,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 
 		newObject.transform.position += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
-//		newObject.transform.localScale *= tileScale;
-//		newObject.transform.position += Vector3.up * newObject.GetComponentInChildren<Renderer>().bounds.extents.y;
-
+		newObject.transform.localScale *= tileScale;
 
 		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
 		//		Texture2D newTexture = SpriteBlending(Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)].texture, floorColor);

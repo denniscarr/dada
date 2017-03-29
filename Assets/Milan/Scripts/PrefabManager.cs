@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Enum = System.Enum;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,22 +16,29 @@ public class PrefabManager : MonoBehaviour {
     public GameObject[] FUNCTIONPREFABS;
 	public AudioClip[] Tones;
 	public Shader FlatShading;
-	public Sprite[] _sprites;
+	public Sprite[][] SPRITES;
 
-	public enum PROPS{NPCs, Pickups, NonPickups, inkSprites, NumberOfTypes};
+//	public 
+//	public PROPS props;
 
 	void Awake(){
+		
+		PREFABS = new GameObject[Enum.GetValues(typeof(Services.TYPES)).Length][];
+		SPRITES = new Sprite[Enum.GetValues(typeof(Services.SPRITES)).Length][];
+		int i = 0;
 
-//		PREFABS = new GameObject[PROPS.NumberOfTypes][];
-//		int i = 0;
-//		foreach(PrefabManager.PROPS e in PROPS){
-//			Debug.Log ((string)((PROPS)i));
-//			PREFABS [i] = Resources.LoadAll<GameObject> ((string)((PROPS)i));
-//			i++;
-//		}
-		_sprites = Resources.LoadAll<Sprite> ("inkSprites");
-		NPCPREFABS = Resources.LoadAll<GameObject> ("Object Prefabs");
-        FUNCTIONPREFABS = Resources.LoadAll<GameObject> ("Functions");
-		Tones = Resources.LoadAll<AudioClip> ("Tones");
+		foreach (string name in Enum.GetNames(typeof(Services.TYPES))){
+			PREFABS [i] = Resources.LoadAll<GameObject> (name);
+			Debug.Log (PREFABS [i].Length + " " + name +" loaded");
+			i++;
+		}
+
+		i = 0;
+
+		foreach(string name in Enum.GetNames(typeof(Services.SPRITES))){
+			SPRITES [i] = Resources.LoadAll<Sprite> ("Sprites/" + name);
+			Debug.Log (SPRITES [i].Length + " " + name +" sprites loaded");
+			i++;
+		}
 	}
 }
