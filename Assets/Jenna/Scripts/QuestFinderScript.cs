@@ -11,11 +11,15 @@ public class QuestFinderScript : MonoBehaviour
 	private List<GameObject> interactables = new List<GameObject> ();
 	[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
+	private List<GameObject> questItemsToRemove = new List<GameObject>();
+	private List<GameObject> pickupsToRemove = new List<GameObject>();
+	private List<Quest> questsToRemove = new List<Quest>();
 	// for seeing if they have QuestObject script
 	[HideInInspector]
 	public List<GameObject> hasObjectScript = new List<GameObject> ();
 	// for seeing if they can be picked up
 	public List<GameObject> pickups = new List<GameObject> ();
+
 
 	// ints bc ya never know
 	int interactablesSize;
@@ -81,30 +85,45 @@ public class QuestFinderScript : MonoBehaviour
 	}
 
 	void Update(){
-		for (int i = 0; i < questItems.Count; i++) {
-			foreach (GameObject item in questItems) {
-				if (item == null) {
-					questItems.Remove (item);
-				}
+		foreach (GameObject item in questItems) {
+			if (item == null) {
+				questItemsToRemove.Add (item);
 			}
 		}
 
-		for (int i = 0; i < pickups.Count; i++) {
-			foreach (GameObject pickup in pickups) {
-				if (pickup == null) {
-					pickups.Remove (pickup);
-				}
+
+		foreach (GameObject pickup in pickups) {
+			if (pickup == null) {
+				pickupsToRemove.Add (pickup);
 			}
 		}
+			
 
-		QuestManager manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
-
-		for (int i = 0; i < manager.questList.Count; i++) {
-			foreach (Quest questy in manager.questList) {
-				if (questy == null) {
-					manager.questList.Remove (questy);
-				}
+		foreach (Quest questy in QuestManager.questManager.questList) {
+			if (questy == null) {
+				questsToRemove.Add(questy);
 			}
 		}
+			
+		ClearNullListItems ();
+	}
+
+	void ClearNullListItems(){
+		foreach (Quest q in questsToRemove) {
+			QuestManager.questManager.questList.Remove (q);
+		}
+
+		foreach (GameObject pickup in pickupsToRemove) {
+			pickups.Remove (pickup);
+		}
+
+		foreach (GameObject questItem in questItemsToRemove) {
+			questItems.Remove (questItem);
+		}
+
+		questsToRemove.Clear ();
+		pickupsToRemove.Clear ();
+		questItemsToRemove.Clear ();
+
 	}
 }
