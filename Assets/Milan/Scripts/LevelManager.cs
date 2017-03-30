@@ -51,12 +51,14 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			Destroy (currentLevel.gameObject);
 			GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject> ();
 			foreach (GameObject go in allObjects) {
-				if (go.GetComponent<InteractionSettings> () != null) {
-					if (go.transform.parent != go.transform) {
-						Destroy (go);
+				if (go.GetComponentInChildren<InteractionSettings> () != null) {
+					if (go.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player.transform) {
+						if (go.GetComponentInChildren<InteractionSettings> ().transform.parent == go.transform) {
+							Debug.Log (go.name);
+							Destroy (go);
+						}
 					}
 				}
-
 			}
 		}
 
