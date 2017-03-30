@@ -21,7 +21,7 @@ public class InsideVisorMan : MonoBehaviour {
 
     bool rotateMode = false;
 
-    enum State {NormalMovement, ControllingObject};
+    enum State {NormalMovement, ControllingObject, DroppingObject};
     State currentState = State.NormalMovement;
 
 
@@ -51,6 +51,12 @@ public class InsideVisorMan : MonoBehaviour {
                     freeLookCam.GetComponent<FreeLookCam>().SetTarget(hit.collider.gameObject.transform);
                     GetComponent<RigidbodyFirstPersonController>().enabled = false;
                     myCam.enabled = false;
+
+                    if (controlledObject.GetComponent<StickToNextObject>() != null)
+                    {
+                        Destroy(controlledObject.GetComponent<StickToNextObject>());
+                    }
+
                     currentState = State.ControllingObject;
                 }
             }
@@ -58,6 +64,22 @@ public class InsideVisorMan : MonoBehaviour {
 
         else if (currentState == State.ControllingObject)
         {
+            // Drop object and tell it to stick to stuff.
+            if (Input.GetMouseButtonDown(0))
+            {
+
+                if (controlledObject.GetComponent<StickToNextObject>() == null)
+                {
+                    controlledObject.AddComponent<StickToNextObject>();
+                }
+
+                controlledObject.GetComponent<StickToNextObject>().doIt = true;
+
+                controlledObject.GetComponent<Rigidbody>().useGravity = true;
+
+                currentState = State.DroppingObject;
+            }
+
             // See if the controlled object has for some reason stopped existing or whatever.
             if (controlledObject == null)
             {
@@ -70,6 +92,7 @@ public class InsideVisorMan : MonoBehaviour {
             controlledObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
             Vector3 newPosition = controlledObject.transform.position;
+            Vector3 newScale = controlledObject.transform.localScale;
             Quaternion newRotation = controlledObject.transform.rotation;
 
             if (Input.GetKey(KeyCode.LeftShift))
@@ -127,6 +150,7 @@ public class InsideVisorMan : MonoBehaviour {
                 }
             }
 
+            // Rotate the object.
             else
             {
                 if (Input.GetKey(KeyCode.W))
@@ -159,6 +183,7 @@ public class InsideVisorMan : MonoBehaviour {
                     newRotation *= CamRelativeRotate(0, 0, 1);
                 }
 
+
                 // Up/Down arrow keys move controlled object on Y axis.
                 //if (Input.GetKey(KeyCode.UpArrow))
                 //{
@@ -171,8 +196,39 @@ public class InsideVisorMan : MonoBehaviour {
                 //}
             }
 
+            // Scaling object.
+            if (Input.GetKey(KeyCode.Minus))
+            {
+                Debug.Log("shrinking");
+                newScale *= 0.8f;
+            }
+
+            else if (Input.GetKey(KeyCode.Equals))
+            {
+                Debug.Log("growing");
+                newScale *= 1.2f;
+            }
+
             controlledObject.GetComponent<Rigidbody>().MovePosition(newPosition);
             controlledObject.GetComponent<Rigidbody>().MoveRotation(newRotation);
+            controlledObject.transform.localScale = newScale;
+        }
+
+        else if (currentState == State.DroppingObject)
+        {
+            // See if the object I just dropped has stuck to something, if it has then switch back to normal movement.
+            if (controlledObject != null && controlledObject.GetComponent<StickToNextObject>() != null && controlledObject.GetComponent<StickToNextObject>().dropping == true)
+            {
+                if (controlledObject.GetComponent<StickToNextObject>().doIt == false)
+                {
+                    freeLookCam.SetActive(false);
+                    freeLookCam.GetComponent<FreeLookCam>().SetTarget(null);
+                    GetComponent<RigidbodyFirstPersonController>().enabled = true;
+                    myCam.enabled = true;
+                    controlledObject = null;
+                    currentState = State.NormalMovement;
+                }
+            }
         }
     }
 

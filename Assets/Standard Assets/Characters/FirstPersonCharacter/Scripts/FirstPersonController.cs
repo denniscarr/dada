@@ -301,9 +301,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			}
         }
 
-		//float time = 0;
+
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
+			
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
             if (m_CollisionFlags == CollisionFlags.Below)
