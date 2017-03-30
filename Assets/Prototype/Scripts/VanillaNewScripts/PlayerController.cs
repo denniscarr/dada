@@ -85,48 +85,7 @@ public class PlayerController : MonoBehaviour {
 		instructionText = canvas.transform.FindChild ("Instructions").GetComponent<Text> ();;
 
 	}
-
-//	void OnTriggerEnter(Collider other) {
-//		
-//		if(other.transform.parent.name.Equals("InteractableObjectManager")){
-//			Debug.Log(other.gameObject);
-//			//if(equipTips.Find())
-//			//if(equipTipNode.f)
-//			//txtEquipTip.text = "Press E to Equip "+other.gameObject.name;
-//
-//		}
-//	}
-
-//	void OnTriggerStay(Collider other) {
-//
-//		if(other.transform.parent.name.Equals("InteractableObjectManager")){
-//			//Debug.Log(other.gameObject);
-//			if(Input.GetKeyDown(KeyCode.E)){
-//				MoveToCamera(other.transform);
-//				//send message
-//			}
-//		}
-//	}
-//
-//	void OnTriggerExit(Collider other) {
-//		if(other.transform.parent.name.Equals("InteractableObjectManager")){
-//			//Debug.Log(other.transform);
-//
-//		}
-//	}
-//
-//	void MoveToCamera (Transform hitObject)
-//	{
-//		//Transform t_gun = transform.FindChild(0).FindChild(0);
-//		hitObject.position = t_gun.position;
-//		hitObject.rotation = t_gun.rotation;
-//		hitObject.SetParent(t_gun.parent,true);
-//		hitObject.GetComponent<Collider>().enabled = false;
-//		hitObject.GetComponent<Rigidbody>().useGravity = false;
-//		//equippable.transform.GetChild (2).gameObject.GetComponent<Collider>().enabled = false;
-//	}
-
-
+		
 	void OnEnable(){
 		Debug.Log("player enable");
 		//Start();
@@ -135,7 +94,6 @@ public class PlayerController : MonoBehaviour {
 	void Update() {
 		//disable collider to fall down
 		if(Input.GetKeyDown(KeyCode.RightShift)){
-			GetComponent<CapsuleCollider>().enabled = ! GetComponent<CapsuleCollider>().enabled;
 			GetComponent<CharacterController>().enabled = ! GetComponent<CharacterController>().enabled;
 		}
 
