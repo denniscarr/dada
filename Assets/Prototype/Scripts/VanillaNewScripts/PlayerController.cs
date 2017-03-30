@@ -37,6 +37,10 @@ public class PlayerController : MonoBehaviour {
 	//count the time enter the front pic
 	//float enterTimeCount;
 
+
+	//INSTRUCTIONS TEXT
+	Text instructionText;
+
 	// Use this for initialization
 	void Start () {
 		//equipTips = 
@@ -59,16 +63,16 @@ public class PlayerController : MonoBehaviour {
 		if(mode == ControlMode.ZOOM_IN_MODE){
 			canvas.SetActive(false);
 
-			Debug.Log("my camera fov:"+myCamera.fieldOfView);
-			Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
+			//Debug.Log("my camera fov:"+myCamera.fieldOfView);
+			//Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
 			myCamera.fieldOfView = ZoomInMainCameraFoV;
 			uppercamera.fieldOfView = ZoomInUpperCameraFoV;
 			inRoomNode.gameObject.SetActive(false);
 		}else if(mode == ControlMode.ZOOM_OUT_MODE){
 			fpController.isFPSMode = false;
 			inRoomNode.gameObject.SetActive(false);
-			Debug.Log("my camera fov:"+myCamera.fieldOfView);
-			Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
+			//Debug.Log("my camera fov:"+myCamera.fieldOfView);
+			//Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
 			myCamera.fieldOfView = ZoomOutMainCameraFoV;
 			uppercamera.fieldOfView = ZoomOutUpperCameraFoV;
 		}else if(mode == ControlMode.IN_ROOM_MODE){
@@ -77,6 +81,8 @@ public class PlayerController : MonoBehaviour {
 		}
 			
 		playSFXScript = this.GetComponent<CS_PlaySFX> ();
+
+		instructionText = canvas.transform.FindChild ("Instructions").GetComponent<Text> ();;
 
 	}
 
@@ -170,6 +176,11 @@ public class PlayerController : MonoBehaviour {
 		case ControlMode.ZOOM_OUT_MODE:ZoomOutMove();break;
 		case ControlMode.IN_ROOM_MODE:InRoomMove();break;
 		}
+
+		if (Input.GetKeyDown (KeyCode.C)) {
+			ToggleInstructions ();
+		}
+
 		//Debug.Log(transform.position);
 	}
 
@@ -226,12 +237,12 @@ public class PlayerController : MonoBehaviour {
 		//using W & S to go forward and backward, A & D to rotate left and right
 		if(uppercamera.fieldOfView < ZoomOutUpperCameraFoV){
 			uppercamera.fieldOfView ++;
-			Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
+			//Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
 
 		}
 		if(Camera.main.fieldOfView < ZoomOutMainCameraFoV){
 			Camera.main.fieldOfView ++;
-			Debug.Log("my camera fov:"+myCamera.fieldOfView);
+			//Debug.Log("my camera fov:"+myCamera.fieldOfView);
 		}
 
 
@@ -268,18 +279,24 @@ public class PlayerController : MonoBehaviour {
 
 		//follow mouse
 		if(uppercamera.fieldOfView > ZoomInUpperCameraFoV){
-			Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
+			//Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
 			//Debug.Log(uppercamera.fieldOfView);
 			uppercamera.fieldOfView --;
 		}
 
 		if(Camera.main.fieldOfView > ZoomInMainCameraFoV){
 			Camera.main.fieldOfView --;
-			Debug.Log("my camera fov:"+myCamera.fieldOfView);
+			//Debug.Log("my camera fov:"+myCamera.fieldOfView);
 		}
 
 
 		//updateUpper();
+	}
+
+	void ToggleInstructions() {
+
+		instructionText.enabled = !instructionText.enabled;
+
 	}
 
 }

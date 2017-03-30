@@ -17,6 +17,10 @@ public class InteractionSettings : MonoBehaviour {
         {
 			if (value == null){ _carryingObject = null;return;}
 
+//			if (value.name == "Mouse") {
+//				value = Services.Player;
+//			}
+
             // If the thing that picked me up was the player, increase my incoherence.
             if (value.name == "Player")
             {
