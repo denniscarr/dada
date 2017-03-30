@@ -63,13 +63,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
-		palette = new Color[25];
+		palette = new Color[15];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
-//			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
-			palette [i] = new Color (rand, rand, rand);
+			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
+//			palette [i] = new Color (rand, rand, rand);
 //			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
@@ -255,12 +255,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public GameObject LevelObjectFactory(float x, Vector3 pos, Vector2 index){
 
 		GameObject newObject = null;
-
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
-//		Color floorColor =  palette[Mathf.RoundToInt(x * (palette.Length-1))];
-//		Color floorColor = Color.black; 
 		int objectType = Mathf.RoundToInt (x * (Services.LevelGen.props.Length-1));
-
+		int spriteType = Mathf.RoundToInt (x * (Services.Prefabs.SPRITES.Length-1));
 		if (index.x == 0 || index.x == _width || index.y == 0 || index.y == _length) {
 
 		//newObject = Instantiate(Services.Prefabs.TILE, Vector3.zero, Quaternion.identity) as GameObject;
@@ -268,7 +265,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		//newObject.name = "wall";
 		//newObject.transform.parent = transform;
 		//newObject.transform.localPosition = pos;
-
 		//if (index.x == 0 || index.x == _width) {
 		//	newObject.transform.localScale += (transform.forward * tileScale) - transform.forward;
 		//} 
@@ -277,6 +273,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		//}
 		//newObject.GetComponent<Renderer> ().material.color = floorColor;
 		//return newObject;
+
 			return null;
 		}
 
@@ -288,12 +285,17 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		Debug.Log ("Load from index " + (int)Services.LevelGen.props [objectType] + " of PREFABS");
 		newObject = Instantiate (Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]][Random.Range(0, Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]].Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
-//		foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
-//			r.material.shader = Services.Prefabs.FlatShading;
-//		}
+		newObject = Instantiate (Services.Prefabs.PREFABS [(int)Services.LevelGen.props [objectType]] [Random.Range (0, Services.Prefabs.PREFABS [(int)Services.LevelGen.props [objectType]].Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
-//		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
-//		newObject.GetComponent<SpriteRenderer>().sprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
+		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
+			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteType] [Random.Range (0, Services.Prefabs.SPRITES [spriteType].Length)];
+		} else {
+			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
+				r.material.shader = Services.Prefabs.FlatShading;
+			}
+		}
+
+		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
 
 		newObject.transform.localScale *= Random.Range (0.50f, 1.50f);
 		newObject.transform.parent = transform;
@@ -306,7 +308,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 
 		newObject.transform.position += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
-		newObject.transform.localScale *= tileScale;
+//		newObject.transform.localScale *= tileScale;
 
 		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
 		//		Texture2D newTexture = SpriteBlending(Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)].texture, floorColor);
