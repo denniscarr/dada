@@ -72,6 +72,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			set{
 				if(m_isFPSMode != value){
 					if(m_isFPSMode == false){
+						Debug.Log("init");
 						//zoom out to zoom in
 						m_MouseLook.Init(transform, m_Camera.transform);
 					}
@@ -82,11 +83,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			}
 		}
 
-		void OnEnable(){
-			//Debug.Log("enable fps");
-			Start();
 
-		}
         // Update is called once per frame
         private void Update()
         {
@@ -304,6 +301,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
+			
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
             if (m_CollisionFlags == CollisionFlags.Below)
@@ -315,6 +313,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 return;
             }
+	
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
         }
     }
