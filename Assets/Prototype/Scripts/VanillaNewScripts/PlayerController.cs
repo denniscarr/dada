@@ -37,6 +37,10 @@ public class PlayerController : MonoBehaviour {
 	//count the time enter the front pic
 	//float enterTimeCount;
 
+
+	//INSTRUCTIONS TEXT
+	Text instructionText;
+
 	// Use this for initialization
 	void Start () {
 		//equipTips = 
@@ -77,6 +81,8 @@ public class PlayerController : MonoBehaviour {
 		}
 			
 		playSFXScript = this.GetComponent<CS_PlaySFX> ();
+
+		instructionText = canvas.transform.FindChild ("Instructions").GetComponent<Text> ();;
 
 	}
 
@@ -170,6 +176,11 @@ public class PlayerController : MonoBehaviour {
 		case ControlMode.ZOOM_OUT_MODE:ZoomOutMove();break;
 		case ControlMode.IN_ROOM_MODE:InRoomMove();break;
 		}
+
+		if (Input.GetKeyDown (KeyCode.C)) {
+			ToggleInstructions ();
+		}
+
 		//Debug.Log(transform.position);
 	}
 
@@ -280,6 +291,12 @@ public class PlayerController : MonoBehaviour {
 
 
 		//updateUpper();
+	}
+
+	void ToggleInstructions() {
+
+		instructionText.enabled = !instructionText.enabled;
+
 	}
 
 }
