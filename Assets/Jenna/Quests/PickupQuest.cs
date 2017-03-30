@@ -101,7 +101,7 @@ public class PickupQuest : Quest {
 
 		// give it a description eh
 		// can make this more interesting later during tweaking/juicing stages
-		description = (title + " " + requiredPickups.ToString() + "x");
+		description = (title + " " + requiredPickups.ToString() + "times and put it down again");
 
 		// put it on the parent object
 		CopyComponent (this, parentObject);
@@ -132,7 +132,7 @@ public class PickupQuest : Quest {
 		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
 		questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
-		questText.text = title;
+		questText.text = description;
 	}
 
 	public void questTextSpawn(){
@@ -156,6 +156,8 @@ public class PickupQuest : Quest {
 			Destroy (parentObject);
 			manager.currentQuestList.Remove (theCurrentQuest);
 		}
+
+		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
 	}
 
 	public override void CheckStatus() {

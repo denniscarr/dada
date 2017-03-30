@@ -26,7 +26,7 @@ public class D_starryExpolsion : D_Function {
 		Invoke("Explosion", fuseTime);
 	}
 
-	void Explosion()
+	public void Explosion()
 	{
 
 		//Instantiate particle system and add force
