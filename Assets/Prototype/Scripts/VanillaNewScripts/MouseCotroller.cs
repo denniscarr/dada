@@ -252,7 +252,8 @@ public class MouseCotroller : MonoBehaviour {
 				selectedObject = pickedUpObject;
 				state = InterationState.DRAG_STATE;
 				PickUpObject(pickedUpObject);
-				intSet.carryingObject = transform;
+				intSet.carryingObject = Services.Player.transform;
+				Debug.Log (intSet.carryingObject);
 			}
 		}else{
 			GetComponent<Image> ().color = new Color(1,1,1,0.5f);
@@ -437,4 +438,14 @@ public class MouseCotroller : MonoBehaviour {
 		return false;
 	}
 
+	public void StopHoldingItemInMouse()
+	{
+		Debug.Log ("hi");
+
+		selectedObject.gameObject.layer = 0;
+		selectedObject = null;
+		//change state back
+		state = InterationState.NONE_SELECTED_STATE;
+
+	}
 }
