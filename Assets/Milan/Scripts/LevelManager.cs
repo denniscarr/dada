@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : SimpleManager.Manager<Level> {
+
+	public Services.TYPES[] props;
+
 	public GameObject SceneText;
-	public static LevelManager levelManager;
 	public Level currentLevel;
+	public int maxNPCs, maxPickups, maxObjects;
     public int levelNum = 0;
 	public int width, length, height;
 	public float tileScale = 1;
@@ -16,26 +19,16 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	private Texture2D[] maps;
 	private Gradient gradient;
 
-	void Awake()
-    {
-        if (levelManager == null) {
-			levelManager = this;
-		} else if (levelManager != this) {
-			Destroy (gameObject);
-		}
-	}
 
 	void Start()
 	{
 
         //SceneManager.sceneLoaded += OnSceneChange;
-
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
 		Level.noiseScale = perlinFrequency;
-		gradient = new Gradient ();
 
         Create();
 
@@ -43,62 +36,36 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	void Update()
     {
-		Services.Player = GameObject.Find ("Player");
-		if (currentLevel != null) {
-			Camera.main.backgroundColor = gradient.Evaluate (((Services.Player.transform.position.y - currentLevel.transform.position.y) / ((float)height * (float)tileScale)));
-		}
-		RenderSettings.fogColor = Camera.main.backgroundColor;
-
-		//Debug.Log(SceneManager.GetActiveScene().buildIndex);
-
         // If the player has jumped off the level.
-		if (Services.Player.transform.position.y < -20)
-        {
-            Services.Player = GameObject.Find ("Player");
-
-            //Services.Player.transform.position = Vector3.zero;
-            //Services.Player.transform.rotation = Quaternion.identity;
-
-            levelNum++;
-
-			if (currentLevel != null) currentLevel.enabled = false;
-
+		if (Services.Player.transform.position.y - currentLevel.transform.position.y < -10){
+            
+			Services.Player = GameObject.Find ("Player");
+//			if (currentLevel != null) currentLevel.enabled = false;
             Create();
         }
     }
 
-	void SetGradient() {
-		GradientColorKey[] gck;
-		GradientAlphaKey[] gak;
-
-		gck = new GradientColorKey[8];
-		gak = new GradientAlphaKey[2];
-		gak[0].alpha = 1.0F;
-		gak[0].time = 0.0F;
-		gak[1].alpha = 1.0F;
-		gak[1].time = 1.0F;
-
-		for (int j = 0; j < gck.Length; j++) {
-			gck [j].color = currentLevel.palette [Mathf.RoundToInt(((j)/(float)gck.Length) * (float)currentLevel.palette.Length)];
-			gck [j].time = (j)/(float)gck.Length;
-		}
-		gradient.SetKeys(gck, gak);
-
-		Camera.main.clearFlags = CameraClearFlags.Color;
-	}
-
 	public override Level Create(){
-		NoiseRemapping = new float[Random.Range (8, 15)];
 
-		for(int i = 0; i < NoiseRemapping.Length; i++){
-			NoiseRemapping[i] = Random.Range(0.00f, 1.00f);
+		if (currentLevel != null) {
+			Destroy (currentLevel.gameObject);
+		}
+
+		NoiseRemapping = new float[20];
+
+		NoiseRemapping [0] = 0;
+		for(int i = 1; i < NoiseRemapping.Length; i++){
+			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+			while (Mathf.Abs (NoiseRemapping [i] - NoiseRemapping [i - 1]) > 0.25f) {
+				NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+			}
 		}
 
 		GameObject newLevel = new GameObject();
 		Level l = newLevel.AddComponent <Level> ();
 		currentLevel = l;
 
-		newLevel.transform.position = Services.Player.transform.position;
+		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 100);
 		newLevel.name = "Level " + ManagedObjects.Count;
 
 		if (maps.Length > 0) {
@@ -109,13 +76,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		GameObject t = (GameObject)Instantiate (SceneText, Vector3.zero, Quaternion.identity);
 		t.transform.parent = newLevel.transform;
-		t.transform.localPosition = new Vector3 (width / 2, height / 2, length / 2) * tileScale;
+		t.transform.localPosition = new Vector3 (width / 2, height, length / 2) * tileScale;
 		t.GetComponent<TextMesh> ().text = "Abandon all hope, \n\' ye who enter here";
 
         Services.IncoherenceManager.HandleObjects();
 		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
 
-        SetGradient();
 		Level.xOrigin += width / Level.noiseScale;
 		Level.yOrigin += height / Level.noiseScale;
 
@@ -136,9 +102,9 @@ public class LevelManager : SimpleManager.Manager<Level> {
         //SceneManager.sceneLoaded -= OnSceneChange;
     }
 
-    //void OnSceneChange(Scene scene, LoadSceneMode mode)
-    //{
-    //    GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
-    //    Create();
-    //} 
+    void OnSceneChange(Scene scene, LoadSceneMode mode)
+    {
+        GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
+        Create();
+    } 
 }

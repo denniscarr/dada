@@ -17,11 +17,16 @@ public class InteractionSettings : MonoBehaviour {
         {
 			if (value == null){ _carryingObject = null;return;}
 
+//			if (value.name == "Mouse") {
+//				value = Services.Player;
+//			}
+
             // If the thing that picked me up was the player, increase my incoherence.
             if (value.name == "Player")
             {
 				if (transform.parent.GetComponentInChildren<IncoherenceController>() != null){
-					transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+					transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude
+                        += Services.IncoherenceManager.interactionIncrease;
 				}
             }
 

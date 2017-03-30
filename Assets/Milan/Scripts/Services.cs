@@ -10,4 +10,6 @@ public static class Services
     public static QuestManager Quests { get; set; }
     public static CS_AudioManager AudioManager { get; set; }
     public static IncoherenceManager IncoherenceManager { get; set; }
+	public enum TYPES{Emptiness = 0, NPCs = 1 , Pickups = 2, NonPickups = 3, Sprite = 4};
+	public enum SPRITES{image = 0, tall = 1 , plinth = 2, gate = 3, foliage = 4, tv = 5, small = 6, squiggle = 7, fat = 8};
 }

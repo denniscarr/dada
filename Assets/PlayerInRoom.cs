@@ -9,7 +9,7 @@ public class PlayerInRoom : MonoBehaviour {
 	Vector3 initPos;
 	void Start(){
 		initPos = transform.position;
-		Debug.Log("init pos:"+ initPos);
+		//Debug.Log("init pos:"+ initPos);
 	}
 
 	// Use this for initialization

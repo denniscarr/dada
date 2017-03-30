@@ -38,11 +38,13 @@ public class MouseCotroller : MonoBehaviour {
 
 	//For Sound Effects
 	CS_PlaySFX sfxScript;
+	public Text txtInfo;
 
 	float CLICKGAPTIME = 0.3f;
 
 	// Use this for initialization
 	void Start () {
+		//txtInfo = transform.parent.FindChild("txtInfo").GetComponent<Text>();
 		clickGapCount = 0;
 		state = InterationState.NONE_SELECTED_STATE;
 		//UpperCamera = GameObject.Find("UpperCamera").GetComponent<Camera>();
@@ -61,6 +63,8 @@ public class MouseCotroller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		
+
 		//update the mouse position
 		transform.position = Input.mousePosition;
 //		Debug.Log(Camera.main.transform.forward);
@@ -106,7 +110,8 @@ public class MouseCotroller : MonoBehaviour {
 			if (Physics.Raycast (ray, out hit)){
 				if(hit.collider.name.Equals("PlayerVisor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
-					if(!playercontroller.isInRoomMode()&&Input.GetMouseButtonDown(0)){
+					txtInfo.text = "Player visor";
+					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
 					}
@@ -116,16 +121,18 @@ public class MouseCotroller : MonoBehaviour {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
 						GetComponent<Image> ().color = new Color(1,1,1,1);
-
+						txtInfo.text = hit.collider.name;
 						if(Input.GetMouseButtonDown(0)){
 							clickGapCount = 0;
 							sfxScript.PlaySFX (0);
+
 							Debug.Log("use "+hit.collider.name+" inside visor");
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 						}
 					}
 					else{
-						GetComponent<Image> ().color = new Color(1,1,1,0);
+						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
+						txtInfo.text = hit.collider.name;
 					}
 
 				}
@@ -138,12 +145,14 @@ public class MouseCotroller : MonoBehaviour {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
 						GetComponent<Image> ().color = new Color(1,1,1,1);
+						txtInfo.text = hit.collider.name;
 						if(Input.GetMouseButtonDown(0)){
 							Debug.Log("use "+hit.collider.name+" outside visor");
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 						}
 					}else{
-						GetComponent<Image> ().color = new Color(1,1,1,0);
+						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
+						txtInfo.text = hit.collider.name;
 					}
 				}
 
@@ -194,6 +203,8 @@ public class MouseCotroller : MonoBehaviour {
 			
 
 			if(!hit.collider.name.Equals("ground")){
+				
+				txtInfo.text = hit.collider.name;
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
@@ -206,6 +217,9 @@ public class MouseCotroller : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit)) {
 
 			if(!hit.collider.name.Equals("ground")){
+				//if(){
+					txtInfo.text = hit.collider.name;
+				//}
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
@@ -238,10 +252,11 @@ public class MouseCotroller : MonoBehaviour {
 				selectedObject = pickedUpObject;
 				state = InterationState.DRAG_STATE;
 				PickUpObject(pickedUpObject);
-				intSet.carryingObject = transform;
+				intSet.carryingObject = Services.Player.transform;
+				Debug.Log (intSet.carryingObject);
 			}
 		}else{
-			GetComponent<Image> ().color = new Color(1,1,1,0);
+			GetComponent<Image> ().color = new Color(1,1,1,0.5f);
 		}
 	}
 
@@ -423,4 +438,14 @@ public class MouseCotroller : MonoBehaviour {
 		return false;
 	}
 
+	public void StopHoldingItemInMouse()
+	{
+		Debug.Log ("hi");
+
+		selectedObject.gameObject.layer = 0;
+		selectedObject = null;
+		//change state back
+		state = InterationState.NONE_SELECTED_STATE;
+
+	}
 }

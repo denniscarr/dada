@@ -3,7 +3,7 @@ Shader "KRZ" {
 		_Color ("Main Color", Color) = (1.0, 1.0, 1.0, 1.0)
 		_MainTex ("Color (RGBA)", 2D) = "white" {}
 		_LightCutoff ("Light Cutoff", Range(0.0, 1.0)) = 0.2
-		_Cutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.0
+		_Cutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 1
 		_AlphaMap ("Culling Mask", 2D) = "white" {}
 		
 		_GradientStrength ("Gradient Strength", Float) = 1

@@ -197,13 +197,14 @@ public class CS_AudioManager : MonoBehaviour {
 		if (Services.LevelGen.currentLevel != null) {	
 			float maxLevelHeight = ((float)Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float)Services.LevelGen.currentLevel.transform.position.y;
 
-			float minLevelHeight = (float)Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale;
+			float minLevelHeight = ((float)Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale) + ((float)Services.LevelGen.height * 0.9f);
 
 			float normalizedHeights = (float)(Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
 
-			float clampedNormHeights = Mathf.Clamp (Mathf.Log (normalizedHeights) + 1f, 0f, 1f);
+			float clampedNormHeights = Mathf.Clamp (normalizedHeights, 0f, 1f);
 
 			float[] weights = new float[] { clampedNormHeights, 1.0f - clampedNormHeights };
+			//Debug.Log (clampedNormHeights);
 
 			dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
 		}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class D_Function : MonoBehaviour {
 
-    [HideInInspector] public InteractionSettings intSet;
+    public InteractionSettings intSet;
     public KeyCode useKey = KeyCode.Mouse0;
 
     public void Start()
@@ -12,10 +12,15 @@ public class D_Function : MonoBehaviour {
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
     }
 
-    void Update()
+    public void Update()
     {
+		if (intSet.carryingObject == Services.Player.transform)
+		{
+			Debug.Log ("Held by player");
+		}
+
         // If we're being carried by the player and the player presses the use key then get used.
-        if (intSet.carryingObject != null && intSet.carryingObject.name == "Player" && Input.GetKey(useKey))
+		if (intSet.carryingObject == Services.Player.transform && Input.GetKey(useKey))
         {
             Use();
         }

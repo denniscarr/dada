@@ -25,16 +25,16 @@ public class MusicToColor : MonoBehaviour {
 		parentTransform = gameObject.transform.parent;
 		//Debug.Log (parentTransform.name);
 		thisAnalyzer = gameObject.GetComponent<SpectrumAnalysis> ();
-		thisMaterial = gameObject.GetComponent<MeshRenderer> ().material;
+		thisMaterial = gameObject.GetComponent<Renderer> ().material;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		float newSpectrumPoint = thisAnalyzer.bandBuffer [2];
 		emissionLevel += newSpectrumPoint;
-		gameObject.GetComponent<MeshRenderer> ().material.SetColor("_Color", new Color (emissionLevel*50f, emissionLevel * 100f, emissionLevel * 75f));
+		gameObject.GetComponent<Renderer> ().material.SetColor("_Color", new Color (emissionLevel*50f, emissionLevel * 100f, emissionLevel * 75f));
 		//Debug.Log(thisMaterial.GetColor("_Color"));
 		emissionLevel *= 0.9f;
-
+//
 	}
 }
