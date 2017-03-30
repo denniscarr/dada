@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // LOCATION: QUEST MANAGER
 // LOCATION: QUEST GAMEOBJECT (description serves as "giving of quest")
@@ -23,10 +24,18 @@ public class PickupQuest : Quest {
 	public GameObject textSpawn;
 	public TextMesh text;
 
+	// for the questit note
+	public GameObject questItNote;
+	Transform visorNode;
+
 	// for finishing quest
 	public int requiredPickups;
 	public int numberofPickups;
 	public bool pickedUp;
+
+	float positionX;
+	float positionY;
+	float positionZ;
 
 	void Start () {
 
@@ -50,6 +59,7 @@ public class PickupQuest : Quest {
 				text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
 
 				if (numberofPickups >= requiredPickups) {
+					text.text = ("Click to remove me!!");
 					FinishQuest ();
 				}
 
@@ -68,9 +78,9 @@ public class PickupQuest : Quest {
 		requiredPickups = Random.Range (1, 5);
 
 		// store the transform for later text spawning
-		float positionX = parentObject.transform.position.x;
-		float positionY = parentObject.transform.position.y + 1;
-		float positionZ = parentObject.transform.position.z;
+		positionX = parentObject.transform.position.x;
+		positionY = parentObject.transform.position.y + 1;
+		positionZ = parentObject.transform.position.z;
 
 		// create title to appear. THIS IS THE QUEST OBJECTIVE.
 		title = ("Pick up" + " " + parentObject.name); 
@@ -96,12 +106,7 @@ public class PickupQuest : Quest {
 		// put it on the parent object
 		CopyComponent (this, parentObject);
 
-		// put the text of the quest right over the object
-		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
-		textSpawn.transform.parent = parentObject.transform;
-		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
-		text = textSpawn.GetComponent<TextMesh> ();
-		text.text = (description);
+		spawnNote ();
 	}
 
 	// method to copy alla this shit on the pickupquest on the quest object generated
@@ -115,6 +120,29 @@ public class PickupQuest : Quest {
 			field.SetValue (copy, field.GetValue(original));
 		}
 		return copy;
+	}
+
+	public void spawnNote(){
+		// make the questit note
+		visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
+		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
+		questItNote.transform.position = visorNode.transform.position;
+
+		// make the actual text appear
+		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
+		questCanvas.transform.parent = questItNote.gameObject.transform;
+		Text questText = questCanvas.GetComponentInChildren<Text> ();
+		questText.text = title;
+	}
+
+	public void questTextSpawn(){
+		// put the text of the quest right over the object
+		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
+		textSpawn.transform.parent = parentObject.transform;
+		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
+		text = textSpawn.GetComponent<TextMesh> ();
+		text.text = (description);
+		
 	}
 
 	public void FinishQuest(){
