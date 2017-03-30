@@ -17,7 +17,7 @@ public class D_chairFunction : D_Function {
 	public override void Use () {
 		base.Use ();
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
-			transform.parent.SetParent (null);
+			transform.parent.SetParent (transform.root);
 			transform.parent.GetComponentInChildren<D_Equip> ().abandonItem ();
 		}
 
