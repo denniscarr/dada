@@ -37,7 +37,6 @@ public class PrefabManager : MonoBehaviour {
 
 		foreach(string name in Enum.GetNames(typeof(Services.SPRITES))){
 			SPRITES [i] = Resources.LoadAll<Sprite> ("Sprites/" + name);
-			Debug.Log (SPRITES [i].Length + " " + name +" sprites loaded");
 			i++;
 		}
 	}

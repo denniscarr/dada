@@ -72,6 +72,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			set{
 				if(m_isFPSMode != value){
 					if(m_isFPSMode == false){
+						Debug.Log("init");
 						//zoom out to zoom in
 						m_MouseLook.Init(transform, m_Camera.transform);
 					}
@@ -82,11 +83,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			}
 		}
 
-		void OnEnable(){
-			//Debug.Log("enable fps");
-			Start();
 
-		}
         // Update is called once per frame
         private void Update()
         {
