@@ -49,6 +49,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		if (currentLevel != null) {
 			Destroy (currentLevel.gameObject);
+			GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject> ();
+			foreach (GameObject go in allObjects) {
+				if (go.GetComponentInChildren<InteractionSettings> () != null) {
+					if (go.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player.transform) {
+						if (go.GetComponentInChildren<InteractionSettings> ().transform.parent == go.transform) {
+							Debug.Log (go.name);
+							Destroy (go);
+						}
+					}
+				}
+			}
 		}
 
 		NoiseRemapping = new float[20];
