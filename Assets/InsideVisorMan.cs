@@ -199,13 +199,11 @@ public class InsideVisorMan : MonoBehaviour {
             // Scaling object.
             if (Input.GetKey(KeyCode.Minus))
             {
-                Debug.Log("shrinking");
                 newScale *= 0.8f;
             }
 
             else if (Input.GetKey(KeyCode.Equals))
             {
-                Debug.Log("growing");
                 newScale *= 1.2f;
             }
 

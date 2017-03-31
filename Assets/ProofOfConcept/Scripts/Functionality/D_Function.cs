@@ -6,6 +6,8 @@ public class D_Function : MonoBehaviour {
 
     public InteractionSettings intSet;
     public KeyCode useKey = KeyCode.Mouse0;
+    float cooldownTimer = 0.5f;
+    float currentCooldown = 0.0f;
 
     public void Start()
     {
@@ -14,15 +16,26 @@ public class D_Function : MonoBehaviour {
 
     public void Update()
     {
-		if (intSet.carryingObject == Services.Player.transform)
-		{
-			Debug.Log ("Held by player");
-		}
-
-        // If we're being carried by the player and the player presses the use key then get used.
-		if (intSet.carryingObject == Services.Player.transform && Input.GetKey(useKey))
+        if (currentCooldown > 0)
         {
-            Use();
+            currentCooldown -= Time.deltaTime;
+        }
+
+        if (currentCooldown < 0)
+        {
+
+            if (intSet.carryingObject == Services.Player.transform)
+            {
+                Debug.Log("Held by player");
+            }
+
+            // If we're being carried by the player and the player presses the use key then get used.
+            if (intSet.carryingObject == Services.Player.transform && Input.GetKey(useKey))
+            {
+                Use();
+            }
+
+            currentCooldown = cooldownTimer;
         }
     }
 
