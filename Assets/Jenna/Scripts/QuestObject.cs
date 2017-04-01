@@ -56,25 +56,34 @@ public class QuestObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	public void Update () {
-		
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-		RaycastHit hit;
 
-		if (Physics.Raycast (ray, out hit)) {
-			if (hit.collider.name.Contains ("Blue")) {
-				inTrigger = true;
-			} else {
-				inTrigger = false;
-			}
-		}
+        if (Camera.main != null)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
 
-		if (inTrigger == true) {
-			if (Input.GetMouseButton(0)) {
-				//quest user interface manager to check shit
-				Debug.Log ("it's seeing you have a quest");
-				QuestManager.questManager.QuestRequest (this);
-			}
-		}
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.name.Contains("Blue"))
+                {
+                    inTrigger = true;
+                }
+                else
+                {
+                    inTrigger = false;
+                }
+            }
+
+            if (inTrigger == true)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    //quest user interface manager to check shit
+                    Debug.Log("it's seeing you have a quest");
+                    QuestManager.questManager.QuestRequest(this);
+                }
+            }
+        }
 
 	}
 
