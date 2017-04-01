@@ -63,7 +63,6 @@ public class MouseCotroller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		
 
 		//update the mouse position
 		transform.position = Input.mousePosition;
@@ -71,6 +70,12 @@ public class MouseCotroller : MonoBehaviour {
 		switch(mode){
 		case InteractionMode.GRAB_MODE:GrabHandler();;break;
 		case InteractionMode.USE_MODE:UseHandler();;break;
+		}
+
+		//Debug.Log(playercontroller.controlMode)
+		if(Input.GetKeyDown(KeyCode.E) && playercontroller.controlMode == ControlMode.ZOOM_OUT_MODE){
+			txtInfo.text = "To equip, please press TAB.";
+			Debug.Log("press");
 		}
 			
 	}
@@ -110,18 +115,20 @@ public class MouseCotroller : MonoBehaviour {
 			if (Physics.Raycast (ray, out hit)){
 				if(hit.collider.tag.Equals("Visor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
-					txtInfo.text = "Player visor";
+					txtInfo.text = "This is your room.";
 					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
 					}
 				}else{
+					txtInfo.text = "This thing can't be picked up.";
 					isCollidingSomethingInVisor = true;
 
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
+						
 						GetComponent<Image> ().color = new Color(1,1,1,1);
-						txtInfo.text = hit.collider.name;
+						txtInfo.text = hit.collider.name + " is useful.";
 						if(Input.GetMouseButtonDown(0)){
 							clickGapCount = 0;
 							sfxScript.PlaySFX (0);
@@ -131,8 +138,9 @@ public class MouseCotroller : MonoBehaviour {
 						}
 					}
 					else{
-						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
-						txtInfo.text = hit.collider.name;
+						//txtInfo.text = "This thing can't be picked up.";
+						GetComponent<Image> ().color = new Color(1,0,0,0.5f);
+						txtInfo.text = hit.collider.name+" is useless.";
 					}
 
 				}
@@ -145,14 +153,14 @@ public class MouseCotroller : MonoBehaviour {
 					InteractionSettings interactionSettings = hit.transform.GetComponentInChildren<InteractionSettings> ();
 					if (isAbleToBeUse(interactionSettings)) {
 						GetComponent<Image> ().color = new Color(1,1,1,1);
-						txtInfo.text = hit.collider.name;
+						txtInfo.text = hit.collider.name + " is useful.";
 						if(Input.GetMouseButtonDown(0)){
 							Debug.Log("use "+hit.collider.name+" outside visor");
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
 						}
 					}else{
-						GetComponent<Image> ().color = new Color(1,1,1,0.5f);
-						txtInfo.text = hit.collider.name;
+						GetComponent<Image> ().color = new Color(1,0,0,0.5f);
+						txtInfo.text = hit.collider.name+" is useless.";
 					}
 				}
 
@@ -204,7 +212,7 @@ public class MouseCotroller : MonoBehaviour {
 
 			if(!hit.collider.name.Equals("ground")){
 				
-				txtInfo.text = hit.collider.name;
+				//txtInfo.text = "YOu ";
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
@@ -218,7 +226,7 @@ public class MouseCotroller : MonoBehaviour {
 
 			if(!hit.collider.name.Equals("ground")){
 				//if(){
-					txtInfo.text = hit.collider.name;
+					//txtInfo.text = hit.collider.name;
 				//}
 				CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
@@ -247,6 +255,7 @@ public class MouseCotroller : MonoBehaviour {
 		//check if click on something selectable
 		if(check){
 			GetComponent<Image> ().color = new Color(1,1,1,1);
+			txtInfo.text = pickedUpObject.name+" waits to be picked up.";
 			if(Input.GetMouseButtonDown(0)){
 				clickGapCount = 0;
 				selectedObject = pickedUpObject;
@@ -256,7 +265,8 @@ public class MouseCotroller : MonoBehaviour {
 				Debug.Log (intSet.carryingObject);
 			}
 		}else{
-			GetComponent<Image> ().color = new Color(1,1,1,0.5f);
+			GetComponent<Image> ().color = new Color(1,0,0,0.5f);
+			txtInfo.text = pickedUpObject.name+" refuses to be picked up.";
 		}
 	}
 
