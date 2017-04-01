@@ -51,10 +51,10 @@ public class PlayerInRoom : MonoBehaviour {
 //		}
 //	}
 
-	private void OnControllerColliderHit(ControllerColliderHit hit)
+	private void OnCollisionStay(Collision hit)
 	{
-
 		if(gameObject.name.Equals("PlayerInRoom") && hit.collider.name.Equals("WallFoward")){
+            Debug.Log("doin it");
 			enterTimeCount += Time.deltaTime;
 			if(enterTimeCount > 0.5f){
 				enterTimeCount = 0;

@@ -108,7 +108,7 @@ public class MouseCotroller : MonoBehaviour {
 			//Debug.DrawRay(ray.origin,ray.direction);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
-				if(hit.collider.name.Equals("PlayerVisor")){
+				if(hit.collider.tag.Equals("Visor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
 					txtInfo.text = "Player visor";
 					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
@@ -199,7 +199,7 @@ public class MouseCotroller : MonoBehaviour {
 		Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 		Debug.DrawRay(ray.origin,ray.direction);
 		RaycastHit hit;
-		if (Physics.Raycast (ray, out hit) && !hit.collider.name.Equals("PlayerVisor")){
+		if (Physics.Raycast (ray, out hit) && !hit.collider.tag.Equals("Visor")){
 			
 
 			if(!hit.collider.name.Equals("ground")){
@@ -372,7 +372,7 @@ public class MouseCotroller : MonoBehaviour {
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
-				if(hit.collider.name.Equals("PlayerVisor")){
+				if(hit.collider.tag.Equals("Visor")){
 					Debug.Log("place in visor");
 					//set layer to default 
 					selectedObject.gameObject.layer = 0;

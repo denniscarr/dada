@@ -10,6 +10,7 @@ public class InsideVisorMan : MonoBehaviour {
     [SerializeField] Camera freeLookCamCamera;
     [SerializeField] GameObject controlledObject;
     [SerializeField] Camera myCam;
+    [SerializeField] GameObject spotlight;
 
     [SerializeField] float controlledObjectHeight = 0.5f;
     [SerializeField] float controlledObjectMoveSpeedSlow = 1f;
@@ -51,6 +52,7 @@ public class InsideVisorMan : MonoBehaviour {
                     freeLookCam.GetComponent<FreeLookCam>().SetTarget(hit.collider.gameObject.transform);
                     GetComponent<RigidbodyFirstPersonController>().enabled = false;
                     myCam.enabled = false;
+                    spotlight.SetActive(true);   
 
                     if (controlledObject.GetComponent<StickToNextObject>() != null)
                     {
@@ -64,6 +66,9 @@ public class InsideVisorMan : MonoBehaviour {
 
         else if (currentState == State.ControllingObject)
         {
+            // Move spotlight to highlight controlled object.
+            spotlight.transform.position = new Vector3(controlledObject.transform.position.x, spotlight.transform.position.y, controlledObject.transform.position.z);
+
             // Drop object and tell it to stick to stuff.
             if (Input.GetMouseButtonDown(0))
             {
@@ -224,6 +229,7 @@ public class InsideVisorMan : MonoBehaviour {
                     GetComponent<RigidbodyFirstPersonController>().enabled = true;
                     myCam.enabled = true;
                     controlledObject = null;
+                    spotlight.SetActive(false);
                     currentState = State.NormalMovement;
                 }
             }
