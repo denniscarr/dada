@@ -204,24 +204,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 
-//		float translation = Input.GetAxis("Vertical") * speed;
-//		float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
-//		translation *= Time.deltaTime;
-//		rotation *= Time.deltaTime;
-//		transform.Translate(0, 0, translation);
-		//update uppercamera simultaneously
-//		transform.Rotate(0, rotation, 0);
-//		uppernode.Rotate(0, rotation, 0);
-//
-//		RaycastHit hit;
-//		Ray ray = new Ray(transform.position, Vector3.down);
-//		if (Physics.Raycast(ray,out hit)) {
-//			Vector3 slope = hit.normal;
-//			transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-//
-//			//Adjust character based on normal
-//		}
-
+			
 		updateUpper();
 
 
