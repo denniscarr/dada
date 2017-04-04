@@ -114,8 +114,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (_height * tileScale));
 		float NormalisedToHightestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
-		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, playerHeightNormalized);
-		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.black, Color.white, playerHeightNormalized), Time.deltaTime * 3);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized/2);
+		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.white, Color.black, playerHeightNormalized/2), Time.deltaTime * 3);
 		RenderSettings.fogColor = Camera.main.backgroundColor;
 		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, NormalisedToHightestPoint);
 
@@ -286,6 +286,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		} else {
 			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
 				r.material.shader = Services.Prefabs.FlatShading;
+				r.material.SetColor ("_Color", floorColor);
 			}
 
 			if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
@@ -295,8 +296,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			}
 			newObject.transform.localScale *= Random.Range (0.5f, tileScale);
 		}
-
-//		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
 
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;

@@ -18,11 +18,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	private float xOffset, yOffset;
 	private Texture2D[] maps;
 	private Gradient gradient;
-
-
+	GameObject text;
 	void Start()
 	{
-
+		text = (GameObject)Instantiate (SceneText, Vector3.zero, Quaternion.identity);
+		text.transform.parent = Camera.main.transform;
+		text.transform.localPosition = new Vector3 (0, 0, 10);
         //SceneManager.sceneLoaded += OnSceneChange;
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
@@ -85,10 +86,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			
 		l.OnCreated ();
 
-		GameObject t = (GameObject)Instantiate (SceneText, Vector3.zero, Quaternion.identity);
-		t.transform.parent = newLevel.transform;
-		t.transform.localPosition = new Vector3 (width / 2, height, length / 2) * tileScale;
-		t.GetComponent<TextMesh> ().text = "Abandon all hope, \n\' ye who enter here";
+		text.GetComponent<TextMesh> ().text = "Circle " + levelNum;
 
         Services.IncoherenceManager.HandleObjects();
 		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
@@ -99,6 +97,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		xOffset += width;
 		yOffset += height;
 
+		levelNum--;
         ManagedObjects.Add (l);
 		return l;
 	}
