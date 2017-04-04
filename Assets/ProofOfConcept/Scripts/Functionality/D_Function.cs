@@ -21,9 +21,8 @@ public class D_Function : MonoBehaviour {
             currentCooldown -= Time.deltaTime;
         }
 
-        if (currentCooldown < 0)
+        if (currentCooldown <= 0)
         {
-
             if (intSet.carryingObject == Services.Player.transform)
             {
                 Debug.Log("Held by player");
