@@ -48,6 +48,7 @@ public class InsideVisorMan : MonoBehaviour {
                 {
                     controlledObject = hit.collider.gameObject;
                     controlledObject.GetComponent<Rigidbody>().useGravity = false;
+                    controlledObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
                     freeLookCam.SetActive(true);
                     freeLookCam.GetComponent<FreeLookCam>().SetTarget(hit.collider.gameObject.transform);
                     GetComponent<RigidbodyFirstPersonController>().enabled = false;
@@ -220,14 +221,11 @@ public class InsideVisorMan : MonoBehaviour {
             // See if the object I just dropped has stuck to something, if it has then switch back to normal movement.
             if (controlledObject != null && controlledObject.GetComponent<StickToNextObject>() != null)
             {
-                Debug.Log("mac droppo");
-
                 if (controlledObject.GetComponent<StickToNextObject>().doIt == false)
                 {
                     freeLookCam.SetActive(false);
                     freeLookCam.GetComponent<FreeLookCam>().SetTarget(null);
                     GetComponent<RigidbodyFirstPersonController>().enabled = true;
-                    Destroy(controlledObject.GetComponent<StickToNextObject>());
                     myCam.enabled = true;
                     controlledObject = null;
                     spotlight.SetActive(false);

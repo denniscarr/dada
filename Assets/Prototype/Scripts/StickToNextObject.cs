@@ -6,12 +6,18 @@ public class StickToNextObject : MonoBehaviour {
 
     public bool doIt = true;  // Whether I should stick to the next object I touch.
 
-
-    void OnCollisionStay(Collision collision)
+    private void Update()
     {
+        // Flicker collision on and off to make sure it calls OnCollisionEnter (I tried OnCollisionStay but it was not working correctly.)
+        GetComponent<Rigidbody>().detectCollisions = !GetComponent<Rigidbody>().detectCollisions;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("colliso" + doIt);
+
         if (doIt)
         {
-            Debug.Log("Colliso");
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             doIt = false;
         }
