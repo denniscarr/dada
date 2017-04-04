@@ -23,7 +23,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	{
 		text = (GameObject)Instantiate (SceneText, Vector3.zero, Quaternion.identity);
 		text.transform.parent = Camera.main.transform;
-		text.transform.localPosition = new Vector3 (0, 0, 10);
+		text.transform.localPosition = new Vector3 (4f, -2.5f, 10);
+		text.transform.localScale *= 0.25f;
         //SceneManager.sceneLoaded += OnSceneChange;
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
@@ -77,7 +78,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level l = newLevel.AddComponent <Level> ();
 		currentLevel = l;
 
-		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 100);
+		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 200);
 		newLevel.name = "Level " + ManagedObjects.Count;
 
 		if (maps.Length > 0) {

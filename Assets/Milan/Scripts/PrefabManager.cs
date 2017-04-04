@@ -11,9 +11,6 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject TILE;
 	public GameObject PARTICLESYSTEM;
 	public GameObject[][] PREFABS;
-	public GameObject[] STATICPREFABS;
-	public GameObject[] NPCPREFABS;
-    public GameObject[] FUNCTIONPREFABS;
 	public AudioClip[] Tones;
 	public Shader FlatShading;
 	public Sprite[][] SPRITES;
