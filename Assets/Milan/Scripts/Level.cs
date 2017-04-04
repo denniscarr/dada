@@ -56,10 +56,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
 
-//		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
-//		sky.transform.parent = transform;
-//		sky.transform.localPosition = Vector3.zero;
-//		sky.name = "SKY";
+		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
+		sky.transform.parent = transform;
+		sky.transform.localPosition = Vector3.zero;
+		sky.name = "SKY";
 	
 		gradient = new Gradient ();
 
@@ -97,10 +97,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.GetComponent<Renderer> ().material.mainTexture = groundLerpedColour;
 		ground.AddComponent<MeshCollider> ();
 
-//		sky.GetComponent<MeshFilter> ().mesh = clouds;
-//		sky.GetComponent<Renderer> ().receiveShadows = false;
-//		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-//		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
+		sky.GetComponent<MeshFilter> ().mesh = clouds;
+		sky.GetComponent<Renderer> ().receiveShadows = false;
+		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
 
 		centre = Vector3.zero;
 
@@ -114,42 +114,43 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (_height * tileScale));
 		float NormalisedToHightestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
-		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, playerHeightNormalized);
-		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.black, Color.white, playerHeightNormalized), Time.deltaTime * 3);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized/2);
+		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.white, Color.black, playerHeightNormalized/2), Time.deltaTime * 3);
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, NormalisedToHightestPoint);
+		RenderSettings.fogEndDistance = Mathf.Lerp (500, 200, NormalisedToHightestPoint);
 
-//		float xCoord = xOrigin;
-//		float yCoord = yOrigin;
-//
-////		Mesh mesh = sky.GetComponent<MeshFilter>().mesh;
-////		Vector3[] verts = mesh.vertices;
-//
-//		for (int i = 0, y = 0; y <= _length; y++, yCoord++) {
-//
-//			xCoord = xOrigin;
-//
-//			for (int x = 0; x <= _width; x++, i++, xCoord++) {
-//				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
-//				perlinVal = Mathf.Pow (perlinVal, 0.75f);
-////				verts [i] = new Vector3 (x, perlinVal * _height, y) * tileScale;
-////				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
-//
-//				float skyCoefficient = Mathf.Pow(perlinVal, 3);
-//				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(Color.black, gradient.Evaluate (playerHeightNormalized), NormalisedToHightestPoint), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, NormalisedToHightestPoint), 1-skyCoefficient));
-//				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
-//				groundLerpedColour.SetPixel (x, y, Color.black + Grayscale);
-//	
-////				verts [i] -= (Vector3.up * Vector3.Distance (verts [i], centre)) * Mathf.Pow(Vector3.Distance (verts [i], centre)/hypotenuse, 0.5f);
-//			}
-//		}
-//
-//		skyColor.Apply();
-//		groundLerpedColour.Apply();
-////		mesh.vertices = verts;
-//
-//		xOrigin += Time.deltaTime * 5;
-//		yOrigin += Time.deltaTime * 5;
+		float xCoord = xOrigin;
+		float yCoord = yOrigin;
+
+		Mesh mesh = sky.GetComponent<MeshFilter>().mesh;
+		Vector3[] verts = mesh.vertices;
+
+		for (int i = 0, y = 0; y <= _length; y++, yCoord++) {
+
+			xCoord = xOrigin;
+
+			for (int x = 0; x <= _width; x++, i++, xCoord++) {
+				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
+				perlinVal = Mathf.Pow (perlinVal, 0.75f);
+				verts [i] = new Vector3 (x, perlinVal * _height, y) * tileScale;
+				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
+
+				float skyCoefficient = Mathf.Pow(perlinVal, 3);
+				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, NormalisedToHightestPoint), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, NormalisedToHightestPoint), skyCoefficient));
+//				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
+				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
+				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x,y) + Grayscale);
+	
+				verts [i] -= (Vector3.up * Vector3.Distance (verts [i], centre)) * Mathf.Pow(Vector3.Distance (verts [i], centre)/hypotenuse, 0.5f);
+			}
+		}
+
+		skyColor.Apply();
+		groundLerpedColour.Apply();
+		mesh.vertices = verts;
+
+		xOrigin += Time.deltaTime * 5;
+		yOrigin += Time.deltaTime * 5;
 
 	}
 
@@ -220,7 +221,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				vertices [i] += new Vector3 (x, 0, y) * tileScale;
 
 				//drag height to 0 around edge of circle
-				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 6));
+				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 8));
 
 				vertices [i] += Vector3.up * _height * perlinVal * tileScale;
 			
@@ -283,25 +284,30 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteType] [Random.Range (0, Services.Prefabs.SPRITES [spriteType].Length)];
+			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
+
 		} else {
-			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
-				r.material.shader = Services.Prefabs.FlatShading;
-			}
+//			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
+//				r.material.shader = Services.Prefabs.FlatShading;
+//				r.material.SetColor ("_Color", floorColor);
+//			}
 
 			if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
 				newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
 			} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
 				newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
 			}
-			newObject.transform.localScale *= Random.Range (0.5f, tileScale);
-		}
+			newObject.transform.localScale *= Random.Range (1f, tileScale/2);
 
-//		newObject.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
+		}
 
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;
-		newObject.transform.position += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
-
+		if (newObject.GetComponentInChildren<SpriteRenderer> () == null) {
+			newObject.transform.localPosition += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
+		} else {
+			newObject.transform.localPosition -= Vector3.up;
+		}
 		Vector3 targetPosition = transform.position;
 		targetPosition.y = newObject.transform.position.y;
 		newObject.transform.LookAt(targetPosition);
@@ -388,8 +394,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 
 		_bitmap.Apply ();
-		_bitmap.filterMode = FilterMode.Point;
-		groundLerpedColour.filterMode = FilterMode.Point;
 
 		groundLerpedColour.SetPixels (_bitmap.GetPixels());
 		groundLerpedColour.Apply ();
@@ -398,9 +402,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		clouds.uv = uvs;
 		clouds.triangles = groundTriangles;
 
-//		sky.GetComponent<MeshFilter> ().mesh = clouds;
-//		sky.transform.position += Vector3.up * (highestPoint + 100);
-//		sky.transform.localScale *= 2;
+		sky.GetComponent<MeshFilter> ().mesh = clouds;
+		sky.transform.position += Vector3.up * (highestPoint + 100);
+		sky.transform.localScale *= 2;
 	}
 
 	public void OnDestroyed(){

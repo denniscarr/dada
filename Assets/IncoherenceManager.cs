@@ -96,7 +96,7 @@ public class IncoherenceManager : MonoBehaviour {
     {
         // Create a new object.
         GameObject newObject = (GameObject) Instantiate(
-            Services.Prefabs.NPCPREFABS[Random.Range(0, Services.Prefabs.NPCPREFABS.Length)],
+			Services.Prefabs.PREFABS[(int)Services.TYPES.NPCs][Random.Range(0, Services.Prefabs.PREFABS[(int)Services.TYPES.NPCs].Length)],
             target.transform.position,
             target.transform.rotation);
 
