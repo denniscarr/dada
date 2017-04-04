@@ -6,7 +6,7 @@ using UnityEngine.UI;
 // LOCATION: QUEST MANAGER
 // LOCATION: QUEST GAMEOBJECT (description serves as "giving of quest")
 
-public class StealQuest : Quest {
+public class EquipQuest : Quest {
 
 	// find the object
 	public GameObject parentObject;
@@ -41,6 +41,7 @@ public class StealQuest : Quest {
 	// finishing the quest
 	public bool equipped = false;
 	Transform equippedItem;
+	public D_starryExpolsion stars;
 
 	// or perhaps chain quest -- number of items to steal
 	// this, then this, then this, etc
@@ -147,7 +148,7 @@ public class StealQuest : Quest {
 	// change these interactions to make them more interesting and meaningful
 	public void EndQuest(){
 		//PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
-		StealQuest theCurrentQuest = parentObject.GetComponent<StealQuest>();
+		EquipQuest theCurrentQuest = parentObject.GetComponent<EquipQuest>();
 
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
@@ -157,7 +158,8 @@ public class StealQuest : Quest {
 			manager.currentQuestList.Remove (theCurrentQuest);
 		}
 
-		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
+		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
+		stars.Explosion ();
 	}
 
 // public void to finish quest {

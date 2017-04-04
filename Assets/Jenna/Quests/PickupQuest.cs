@@ -32,6 +32,7 @@ public class PickupQuest : Quest {
 	public int requiredPickups;
 	public int numberofPickups;
 	public bool pickedUp;
+	public D_starryExpolsion stars;
 
 	float positionX;
 	float positionY;
@@ -157,7 +158,8 @@ public class PickupQuest : Quest {
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
-		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
+		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
+		stars.Explosion ();
 
 		if (Input.GetMouseButton(0)){
 			Destroy (parentObject);
