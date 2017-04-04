@@ -139,9 +139,11 @@ public class PickupQuest : Quest {
 		questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
-	}
 
-	public void questTextSpawn(){
+        questItNote.transform.parent = visorNode.transform;
+    }
+
+    public void questTextSpawn(){
 		// put the text of the quest right over the object
 		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
 		textSpawn.transform.parent = parentObject.transform;
