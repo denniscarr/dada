@@ -59,7 +59,6 @@ public class PickupQuest : Quest {
 				text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
 
 				if (numberofPickups >= requiredPickups) {
-					text.text = ("Click to remove me!!");
 					FinishQuest ();
 				}
 
@@ -103,6 +102,8 @@ public class PickupQuest : Quest {
 		// can make this more interesting later during tweaking/juicing stages
 		description = (title + " " + requiredPickups.ToString() + "times and put it down again");
 
+		questTextSpawn ();
+
 		// put it on the parent object
 		CopyComponent (this, parentObject);
 
@@ -124,9 +125,13 @@ public class PickupQuest : Quest {
 
 	public void spawnNote(){
 		// make the questit note
-		visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
+		//visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
+		visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-		questItNote.transform.position = visorNode.transform.position;
+		//questItNote.transform.position = visorNode.transform.position;
+		questItNote.transform.position = new Vector3(visorNode.transform.position.x,
+										visorNode.transform.position.y + 5,
+										visorNode.transform.position.z);
 
 		// make the actual text appear
 		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
@@ -152,12 +157,14 @@ public class PickupQuest : Quest {
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
+		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
+
 		if (Input.GetMouseButton(0)){
 			Destroy (parentObject);
 			manager.currentQuestList.Remove (theCurrentQuest);
 		}
 
-		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
+//		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
 	}
 
 	public override void CheckStatus() {
