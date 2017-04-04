@@ -11,14 +11,22 @@ public class QuestFinderScript : MonoBehaviour
 	private List<GameObject> interactables = new List<GameObject> ();
 	[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
+
+	// removal from lists
 	private List<GameObject> questItemsToRemove = new List<GameObject>();
 	private List<GameObject> pickupsToRemove = new List<GameObject>();
+	private List<GameObject> equipsToRemove = new List<GameObject>();
 	private List<Quest> questsToRemove = new List<Quest>();
+
 	// for seeing if they have QuestObject script
 	[HideInInspector]
 	public List<GameObject> hasObjectScript = new List<GameObject> ();
+
 	// for seeing if they can be picked up
 	public List<GameObject> pickups = new List<GameObject> ();
+
+	// for seeing if they can be equipped
+	public List<GameObject> equippables = new List<GameObject>();
 
 
 	// ints bc ya never know
@@ -63,7 +71,13 @@ public class QuestFinderScript : MonoBehaviour
 								if (!pickups.Contains (go)) { 
 									pickups.Add (go); 
 								} 
-							} 
+							}
+
+							if (ranger >= 0.75f) {
+								if (!equippables.Contains (go)) {
+									equippables.Add (go);
+								}
+							}
 
 							//add quest object script
 							QuestObject quo = go.GetComponent<QuestObject> ();
@@ -97,6 +111,12 @@ public class QuestFinderScript : MonoBehaviour
 				pickupsToRemove.Add (pickup);
 			}
 		}
+
+		foreach (GameObject equippable in equippables) {
+			if (equippable == null) {
+				equipsToRemove.Add (equippable);
+			}
+		}
 			
 
 		foreach (Quest questy in QuestManager.questManager.questList) {
@@ -117,12 +137,17 @@ public class QuestFinderScript : MonoBehaviour
 			pickups.Remove (pickup);
 		}
 
+		foreach (GameObject equippable in equipsToRemove) {
+			equippables.Remove (equippable);
+		}
+
 		foreach (GameObject questItem in questItemsToRemove) {
 			questItems.Remove (questItem);
 		}
 
 		questsToRemove.Clear ();
 		pickupsToRemove.Clear ();
+		equipsToRemove.Clear ();
 		questItemsToRemove.Clear ();
 
 	}

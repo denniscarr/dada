@@ -10,7 +10,7 @@ public class EquippableFinder : MonoBehaviour {
     public float equipSize = 1f;    // The radius of the capsule used to find objects the player is looking at.
 
     Transform equipTarget;  // The object that can currently be equipped.
-    Transform equippedObject;
+    public Transform equippedObject;
 
     Writer writer;
 
@@ -108,7 +108,7 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.transform.rotation = equipReference.rotation;
         equippedObject.transform.SetParent(equipReference, true);
 
-        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = GameObject.Find("Player").transform;
+        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
 
 

@@ -6,21 +6,26 @@ using UnityEngine.UI;
 // LOCATION: QUEST MANAGER
 // LOCATION: QUEST GAMEOBJECT (description serves as "giving of quest")
 
-public class PickupQuest : Quest {
+public class EquipQuest : Quest {
 
-	// finding object
+	// find the object
 	public GameObject parentObject;
+	Transform equippedObject;
 
 	// scripts
 	[HideInInspector]
-	public QuestFinderScript qfs;
+	QuestFinderScript finder;
 	[HideInInspector]
-	public QuestBuilderScript builder;
+	QuestBuilderScript builder;
+	[HideInInspector]
+	public EquippableFinder equipFind;
 	[HideInInspector]
 	public QuestManager manager;
-	public QuestObject objectScript;
+	[HideInInspector]
+	public QuestObject questobjectscript;
 
-	// for text
+	// text
+	PickupQuest pickup;	//using this to spawn quest text
 	public GameObject textSpawn;
 	public TextMesh text;
 
@@ -28,54 +33,50 @@ public class PickupQuest : Quest {
 	public GameObject questItNote;
 	Transform visorNode;
 
-	// for finishing quest
-	public int requiredPickups;
-	public int numberofPickups;
-	public bool pickedUp;
-	public D_starryExpolsion stars;
-
+	// for text spawning
 	float positionX;
 	float positionY;
 	float positionZ;
 
-	void Start () {
+	// finishing the quest
+	public bool equipped = false;
+	Transform equippedItem;
+	public D_starryExpolsion stars;
 
-		// find referenced materials
-		builder = gameObject.GetComponent<QuestBuilderScript> ();
-		qfs = gameObject.GetComponent<QuestFinderScript> ();
-		manager = gameObject.GetComponent<QuestManager> ();
+	// or perhaps chain quest -- number of items to steal
+	// this, then this, then this, etc
+	// or maybe you have to equip it and use it
+
+	void Start (){
+
+		finder = GameObject.Find ("QuestManager").GetComponent<QuestFinderScript> ();
+		builder = GameObject.Find ("QuestManager").GetComponent<QuestBuilderScript> ();
+		equipFind = Camera.main.GetComponent<EquippableFinder> ();
+		manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
 
 	}
 
-	public void FixedUpdate(){
-//	 check to see if the thing has been picked up
-//	 if so YAY FINISH
+	void FixedUpdate () {
+		equippedItem = equipFind.equippedObject;
 
-		if (parentObject != null && parentObject.GetComponentInChildren<InteractionSettings>() != null)
-		{
-			if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
-			    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
-			    !pickedUp) {
-				numberofPickups++;
-				text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
-
-				if (numberofPickups >= requiredPickups) {
-					FinishQuest ();
-				}
-
-				pickedUp = true;
-			
-			} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
-				pickedUp = false;
-			}
+		if (this.transform == equippedItem.transform && !equipped) {
+			// add some text differences here
+			equipped = true;
+		} else if (equippedItem.transform == null && equipped) {
+			equipped = false;
 		}
+
+		if (equipped && equippedItem.transform != null) {
+			//EndQuest();
+		}
+			
 	}
 
-	public void makeTheQuest(Quest type){
+	void MakeStealQuest(Quest type){
 
 		parentObject = builder.objeto;
-		objectScript = parentObject.GetComponent<QuestObject> ();
-		requiredPickups = Random.Range (1, 5);
+		questobjectscript = parentObject.GetComponent<QuestObject> ();
+		// insert paramaters for completion here
 
 		// store the transform for later text spawning
 		positionX = parentObject.transform.position.x;
@@ -83,36 +84,33 @@ public class PickupQuest : Quest {
 		positionZ = parentObject.transform.position.z;
 
 		// create title to appear. THIS IS THE QUEST OBJECTIVE.
-		title = ("Pick up" + " " + parentObject.name); 
+		title = ("Equip" + " " + parentObject.name); 
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
 		id = (QuestManager.questManager.questList.Count);
 
 		// add to the list of available quests on the parent object
-		objectScript.receivableQuestIDs.Add(id);
+		questobjectscript.receivableQuestIDs.Add(id);
 
 		// check if the parent gameobject has quest slots available
-		manager.CheckAvailableQuests (objectScript);
+		manager.CheckAvailableQuests (questobjectscript);
 
 		// check if THIS quest is available, and if so, make it available
 		manager.RequestAvailableQuest (id);										
 		progress = Quest.QuestProgress.AVAILABLE;
 
 		// give it a description eh
-		// can make this more interesting later during tweaking/juicing stages
-		description = (title + " " + requiredPickups.ToString() + "times and put it down again");
-
-		questTextSpawn ();
+		// can make this more interesting later
+		description = title;
 
 		// put it on the parent object
 		CopyComponent (this, parentObject);
 
 		spawnNote ();
+
 	}
 
-	// method to copy alla this shit on the pickupquest on the quest object generated
-	// in questbuilderscript
 	Component CopyComponent (Component original, GameObject destination){
 		System.Type type = original.GetType ();
 		Component copy = destination.AddComponent(type);
@@ -126,53 +124,48 @@ public class PickupQuest : Quest {
 
 	public void spawnNote(){
 		// make the questit note
-		//visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
-		visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
+		visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-		//questItNote.transform.position = visorNode.transform.position;
-		questItNote.transform.position = new Vector3(visorNode.transform.position.x,
-										visorNode.transform.position.y + 5,
-										visorNode.transform.position.z);
+		questItNote.transform.position = visorNode.transform.position;
 
 		// make the actual text appear
 		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
 		questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
+	}
 
-        questItNote.transform.parent = visorNode.transform;
-    }
-
-    public void questTextSpawn(){
+	public void questTextSpawn(){
 		// put the text of the quest right over the object
 		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
 		textSpawn.transform.parent = parentObject.transform;
 		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
 		text = textSpawn.GetComponent<TextMesh> ();
 		text.text = (description);
-		
+
 	}
 
-	public void FinishQuest(){
-		
-		PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
+	// change these interactions to make them more interesting and meaningful
+	public void EndQuest(){
+		//PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
+		EquipQuest theCurrentQuest = parentObject.GetComponent<EquipQuest>();
 
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
-
-		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
-		stars.Explosion ();
 
 		if (Input.GetMouseButton(0)){
 			Destroy (parentObject);
 			manager.currentQuestList.Remove (theCurrentQuest);
 		}
 
-//		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
+		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
+		stars.Explosion ();
 	}
 
-	public override void CheckStatus() {
-		// check if done on active quests
-
-	}
+// public void to finish quest {
+//reference the current quest on the object
+//change the text
+//change the progress
+//destroy at some point
+//}
 }
