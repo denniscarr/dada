@@ -113,9 +113,9 @@ public class MouseCotroller : MonoBehaviour {
 			//Debug.DrawRay(ray.origin,ray.direction);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
-				if(hit.collider.tag.Equals("Visor")){
+				if(hit.collider.name.Contains("Visor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
-					txtInfo.text = "This is your room.";
+					txtInfo.text = "Want to enter your room?";
 					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
