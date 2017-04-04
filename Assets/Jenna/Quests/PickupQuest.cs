@@ -32,7 +32,7 @@ public class PickupQuest : Quest {
 	public int requiredPickups;
 	public int numberofPickups;
 	public bool pickedUp;
-	public D_starryExpolsion stars;
+	//D_starryExpolsion stars;
 
 	float positionX;
 	float positionY;
@@ -127,12 +127,13 @@ public class PickupQuest : Quest {
 	public void spawnNote(){
 		// make the questit note
 		//visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
-		visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
+		//visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
+		visorNode = GameObject.Find("UpperCamera").GetComponent<Transform>();
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 		//questItNote.transform.position = visorNode.transform.position;
 		questItNote.transform.position = new Vector3(visorNode.transform.position.x,
-										visorNode.transform.position.y + 5,
-										visorNode.transform.position.z);
+										visorNode.transform.position.y,
+										visorNode.transform.position.z + 10);
 
 		// make the actual text appear
 		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
@@ -160,13 +161,19 @@ public class PickupQuest : Quest {
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
-		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
-		stars.Explosion ();
+		//manager.currentQuestList.Remove (theCurrentQuest);
 
-		if (Input.GetMouseButton(0)){
-			Destroy (parentObject);
-			manager.currentQuestList.Remove (theCurrentQuest);
-		}
+		// fix this later
+		//stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
+		//stars = parentObject.gameObject.AddComponent<D_starryExpolsion>();
+		//stars.Use ();
+
+//		if (Input.GetMouseButton(0)){
+//			Destroy (parentObject);
+//			manager.currentQuestList.Remove (theCurrentQuest);
+//		}
+
+		manager.currentQuestList.Remove (theCurrentQuest);
 
 //		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
 	}

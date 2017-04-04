@@ -41,7 +41,7 @@ public class EquipQuest : Quest {
 	// finishing the quest
 	public bool equipped = false;
 	Transform equippedItem;
-	public D_starryExpolsion stars;
+	//public D_starryExpolsion stars;
 
 	// or perhaps chain quest -- number of items to steal
 	// this, then this, then this, etc
@@ -124,15 +124,22 @@ public class EquipQuest : Quest {
 
 	public void spawnNote(){
 		// make the questit note
-		visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
+		//visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
+		//visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
+		visorNode = GameObject.Find("UpperCamera").GetComponent<Transform>();
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-		questItNote.transform.position = visorNode.transform.position;
+		//questItNote.transform.position = visorNode.transform.position;
+		questItNote.transform.position = new Vector3(visorNode.transform.position.x,
+			visorNode.transform.position.y,
+			visorNode.transform.position.z + 10);
 
 		// make the actual text appear
 		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
 		questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
+
+		questItNote.transform.parent = visorNode.transform;
 	}
 
 	public void questTextSpawn(){
@@ -153,13 +160,15 @@ public class EquipQuest : Quest {
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
-		if (Input.GetMouseButton(0)){
-			Destroy (parentObject);
-			manager.currentQuestList.Remove (theCurrentQuest);
-		}
+		manager.currentQuestList.Remove (theCurrentQuest);
 
-		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
-		stars.Explosion ();
+//		if (Input.GetMouseButton(0)){
+//			Destroy (parentObject);
+//			manager.currentQuestList.Remove (theCurrentQuest);
+//		}
+//
+//		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
+//		stars.Explosion ();
 	}
 
 // public void to finish quest {
