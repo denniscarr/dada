@@ -108,7 +108,7 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.transform.rotation = equipReference.rotation;
         equippedObject.transform.SetParent(equipReference, true);
 
-        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = GameObject.Find("Player").transform;
+        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
 
 
