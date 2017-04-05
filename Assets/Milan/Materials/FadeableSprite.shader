@@ -1,4 +1,4 @@
-Shader "FadeAbleSprite" {
+Shader "Sprites/FadeableSprites" {
 	Properties {
 		_Color ("Main Color", Color) = (1.0, 1.0, 1.0, 1.0)
 		_MainTex ("Color (RGB) Alpha (A)", 2D) = "white" {}

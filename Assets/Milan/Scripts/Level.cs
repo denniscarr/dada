@@ -19,7 +19,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	bool usePerlin = false;
 
 	GameObject[,] children;
-	ParticleSystem p;
 
 	GameObject ground, sky;
 	Vector3[] vertices;
@@ -43,13 +42,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		tileScale = Services.LevelGen.tileScale;
 
 		children = new GameObject[_width, _height];
-		p = Instantiate (Services.Prefabs.PARTICLESYSTEM, Vector3.zero, Quaternion.identity).GetComponent<ParticleSystem>();
-		ParticleSystem tempP = p;
-		ParticleSystem.ShapeModule s = tempP.shape;
-		s.box = new Vector3 (_width, _height, _length) * tileScale;
-		p = tempP;
-		p.gameObject.transform.parent = transform;
-		p.transform.localPosition = Vector3.zero + (Vector3.up * _height * tileScale);
 
 		ground = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
