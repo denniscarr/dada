@@ -85,11 +85,13 @@ public class CS_AudioManager : MonoBehaviour {
 		DestroyObject(t_SFX, g_SFX.length);
 	}
 
-	public void Play3DSFX(AudioClip g_SFX, Vector3 g_position) {
+	public void Play3DSFX(AudioClip g_SFX, Vector3 g_position, float g_volume = 1.0f, float g_pitch = 1.0f) {
 		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
 		t_SFX.name = "SFX_" + g_SFX.name;
 		t_SFX.transform.position = g_position;
 		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
+		t_SFX.GetComponent<AudioSource> ().volume = g_volume;
+		t_SFX.GetComponent<AudioSource> ().pitch = g_pitch;
 		t_SFX.GetComponent<AudioSource> ().outputAudioMixerGroup = SFXGroup;
 		t_SFX.GetComponent<AudioSource> ().Play ();
 		DestroyObject(t_SFX, g_SFX.length);
@@ -102,11 +104,11 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	void Start() {
-		//ReassignMusic ();
+
 	}
 
 	void Update() {
-		AltitudeMusic ();
+		//AltitudeMusic ();
 	}
 
 
@@ -192,24 +194,24 @@ public class CS_AudioManager : MonoBehaviour {
 	}
 	*/
 
-	public void AltitudeMusic() {
-
-		if (Services.LevelGen.currentLevel != null) {	
-			float maxLevelHeight = ((float)Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float)Services.LevelGen.currentLevel.transform.position.y;
-
-			float minLevelHeight = ((float)Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale) + ((float)Services.LevelGen.height * 0.9f);
-
-			float normalizedHeights = (float)(Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
-
-			float clampedNormHeights = Mathf.Clamp (normalizedHeights, 0f, 1f);
-
-			float[] weights = new float[] { clampedNormHeights, 1.0f - clampedNormHeights };
-			//Debug.Log (clampedNormHeights);
-
-			dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
-		}
-
-	}
+//	public void AltitudeMusic() {
+//
+//		if (Services.LevelGen.currentLevel != null) {	
+//			float maxLevelHeight = ((float)Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float)Services.LevelGen.currentLevel.transform.position.y;
+//
+//			float minLevelHeight = ((float)Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale) + ((float)Services.LevelGen.height * 0.9f);
+//
+//			float normalizedHeights = (float)(Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
+//
+//			float clampedNormHeights = Mathf.Clamp (normalizedHeights, 0f, 1f);
+//
+//			float[] weights = new float[] { clampedNormHeights, 1.0f - clampedNormHeights };
+//			//Debug.Log (clampedNormHeights);
+//
+//			dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
+//		}
+//
+//	}
 
 
 	//================================================================================

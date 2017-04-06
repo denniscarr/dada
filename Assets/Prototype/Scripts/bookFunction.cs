@@ -8,11 +8,12 @@ public class bookFunction : D_Function {
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
+		base.useSFX = poems;
 	}
 	
 	// Update is called once per frame
 	public override void Use () {
 		base.Use ();
-		bookSource.PlayOneShot (poems [Random.Range (0, 4)]);
+		//bookSource.PlayOneShot (poems [Random.Range (0, 4)]);
 	}
 }
