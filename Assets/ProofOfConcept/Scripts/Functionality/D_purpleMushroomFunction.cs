@@ -5,14 +5,21 @@ using UnityStandardAssets.ImageEffects;
 
 public class D_purpleMushroomFunction : D_Function {
 
-	// Use this for initialization
-	new void Start () {
-		base.Start ();
-	}
-	
-	// Update is called once per frame
-	public override void Use () {
-		base.Use ();
-		transform.parent.parent.parent.GetComponent <Grayscale>().enabled = !transform.parent.parent.parent.GetComponent <Grayscale>().enabled;
-	}
+    GameObject playerCamera;
+
+    // Use this for initialization
+    new void Start()
+    {
+        base.Start();
+
+    }
+
+    // Update is called once per frame
+    public override void Use()
+    {
+        base.Use();
+        {
+            playerCamera.GetComponent<Grayscale>().enabled = !playerCamera.GetComponent<Grayscale>().enabled;
+        }
+    }
 }

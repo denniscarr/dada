@@ -5,13 +5,23 @@ using UnityStandardAssets.ImageEffects;
 
 public class D_brownMushroomFunction : D_Function {
 
-	// Use this for initialization
-	new void Start () {
-		base.Start ();
-	}
-	
-	// Update is called once per frame
-	public override void Use () {
-		transform.parent.parent.parent.GetComponent <DepthOfField>().enabled = !transform.parent.parent.parent.GetComponent <DepthOfField>().enabled;
-	}
+    GameObject playerCamera;
+
+    // Use this for initialization
+    new void Start()
+    {
+        base.Start();
+
+        playerCamera = Services.Player.GetComponentInChildren<Camera>().gameObject;
+    }
+
+    // Update is called once per frame
+    public override void Use()
+    {
+        base.Use();
+        if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
+        {
+            playerCamera.GetComponent<DepthOfField>().enabled = !playerCamera.GetComponent<DepthOfField>().enabled;
+        }
+    }
 }
