@@ -11,11 +11,13 @@ public class D_blueMushroomFunction : D_Function {
 	new void Start () {
 		base.Start ();
 
+        playerCamera = Services.Player.GetComponentInChildren<Camera>().gameObject;
 	}
 
     // Update is called once per frame
     public override void Use() {
         base.Use();
+        if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform) { 
             playerCamera.GetComponent<ColorCorrectionCurves>().enabled = !playerCamera.GetComponent<ColorCorrectionCurves>().enabled;
         }
 	}

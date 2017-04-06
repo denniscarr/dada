@@ -12,12 +12,14 @@ public class D_purpleMushroomFunction : D_Function {
     {
         base.Start();
 
+        playerCamera = Services.Player.GetComponentInChildren<Camera>().gameObject;
     }
 
     // Update is called once per frame
     public override void Use()
     {
         base.Use();
+        if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
         {
             playerCamera.GetComponent<Grayscale>().enabled = !playerCamera.GetComponent<Grayscale>().enabled;
         }
