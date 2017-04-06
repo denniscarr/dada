@@ -26,7 +26,7 @@ public class PrefabManager : MonoBehaviour {
 
 		foreach (string name in Enum.GetNames(typeof(Services.TYPES))){
 			PREFABS [i] = Resources.LoadAll<GameObject> (name);
-			Debug.Log (PREFABS [i].Length + " " + name +" loaded");
+//			Debug.Log (PREFABS [i].Length + " " + name +" loaded");
 			i++;
 		}
 

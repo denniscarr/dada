@@ -14,9 +14,15 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public Texture2D _bitmap;
 	float colorRange = 0.1f;
 	public float highestPoint = 1;
+	public float mapHeight;
 
 	bool playerPlaced;
 	bool usePerlin = false;
+
+	int[] highestPoints;
+	int highestPointIndex;
+	int NPCs, Pickups, NonPickups, Sprites;
+	int spriteType;
 
 	GameObject[,] children;
 
@@ -33,6 +39,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	Gradient gradient;
 	float hypotenuse;
 	float distanceOutsideCircle;
+	float normalizedPerlinHeight;
 
 	public void OnCreated(){
 
@@ -99,17 +106,42 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		hypotenuse = Vector3.Distance(centre, (new Vector3(_width/2, 0, _length/2) * tileScale));
 		distanceOutsideCircle = hypotenuse - ((_width/2) * tileScale);
 
+		mapHeight = _height * tileScale;
+		spriteType = Random.Range(0, Services.Prefabs.SPRITES.Length);
+
+		NPCs = 0;
+		Pickups = 0;
+		NonPickups = 0;
+		Sprites = 0;
+
+		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
+			if (c.name != "UpperCamera") {
+				c.clearFlags = CameraClearFlags.Color;
+			}
+		}
+
 		GenerateChunk();
 	}
 
 	void Update(){
 
-		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (_height * tileScale));
-		float NormalisedToHightestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
-		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized/2);
-		Camera.main.backgroundColor = Color.Lerp(Camera.main.backgroundColor, Color.Lerp(Color.white, Color.black, playerHeightNormalized/2), Time.deltaTime * 3);
+		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (highestPoint * 2.5f));
+		float NormalisedToHightestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint * 2.5f);
+		if (playerHeightNormalized < 0) {
+			playerHeightNormalized = 1 - playerHeightNormalized;
+		}
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
+			if(c.name != "UpperCamera"){
+				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
+			}
+		}
+
+
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-		RenderSettings.fogEndDistance = Mathf.Lerp (500, 200, NormalisedToHightestPoint);
+		RenderSettings.fogEndDistance = Mathf.Lerp (50, 250, playerHeightNormalized);
+		Services.LevelGen.cookieLight.cookieSize = (Mathf.Sin (Time.time) * 100) + 200;
+		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -128,14 +160,15 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
 
 				float skyCoefficient = Mathf.Pow(perlinVal, 3);
-				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, NormalisedToHightestPoint), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, NormalisedToHightestPoint), skyCoefficient));
+				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
 //				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
 				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
-				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x,y) + Grayscale);
+				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x, y) + Grayscale);
 	
 				verts [i] -= (Vector3.up * Vector3.Distance (verts [i], centre)) * Mathf.Pow(Vector3.Distance (verts [i], centre)/hypotenuse, 0.5f);
 			}
 		}
+
 
 		skyColor.Apply();
 		groundLerpedColour.Apply();
@@ -163,13 +196,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 		gradient.SetKeys(gck, gak);
 
-		Camera.main.clearFlags = CameraClearFlags.Color;
 	}
 
 	void GenerateChunk(){
 		 
-		int highestPointIndex = 0;
 		highestPoint = -Mathf.Infinity;
+		highestPointIndex = 0;
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -188,7 +220,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					Color c = _bitmap.GetPixel (x, y);
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
 				}
-//					
+					
 //				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
 //				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
 //
@@ -216,8 +248,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 8));
 
 				vertices [i] += Vector3.up * _height * perlinVal * tileScale;
-			
-				_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
 				if (Vector3.Distance (vertices [i], centre) > ((_width * tileScale) / 2)) {
 					float spillover = Vector3.Distance (centre, vertices [i]) - ((_width / 2) * tileScale);
@@ -228,18 +258,34 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 						highestPoint = vertices [i].y;
 						highestPointIndex = i;
 					}
-					LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
 				}
 
 				uvs [i] = new Vector2 ((float)x / _width, (float)y / _length);
 
 			}
 		}
-			
-
+		normalizedPerlinHeight = mapHeight / highestPoint;
 		OutputBitmap ();
-
+		PopulateMap ();
 		transform.position -= vertices [highestPointIndex];
+	}
+
+	void PopulateMap(){
+		for (int i = 0, y = 0; y <= _length; y++) {
+
+
+			for (int x = 0; x <= _width; x++, i++){
+				
+				float perlinVal = (vertices [i].y / _height)/tileScale;
+				perlinVal = Mathf.Clamp01(perlinVal * normalizedPerlinHeight);
+
+				_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
+
+				if (Vector3.Distance (vertices [i], centre) < ((_width * tileScale) / 2)) {
+					LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
+				}
+			}
+		}
 	}
 		
 	public GameObject LevelObjectFactory(float x, Vector3 pos, Vector2 index){
@@ -247,8 +293,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		GameObject newObject = null;
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
 
-		int objectType = Mathf.RoundToInt (x * (Services.LevelGen.props.Length-1));
-		int spriteType = Mathf.RoundToInt (x * (Services.Prefabs.SPRITES.Length-1));
+		int propIndex = Mathf.RoundToInt (x * (Services.LevelGen.props.Length-1));
+		int objectType = (int)Services.LevelGen.props [propIndex];
 		if (index.x == 0 || index.x == _width || index.y == 0 || index.y == _length) {
 
 		//newObject = Instantiate(Services.Prefabs.TILE, Vector3.zero, Quaternion.identity) as GameObject;
@@ -267,15 +313,72 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 			return null;
 		}
+			
+		int spriteIndex;
 
-		if (Services.LevelGen.props [objectType] == 0) {
-			return null;
+		switch (propIndex) {
+		case 0:
+			spriteIndex = (int)Services.SPRITES.image;
+			break;
+
+		case 1:
+			spriteIndex = (int)Services.SPRITES.tall;
+			break;
+
+		case 2:
+			spriteIndex = (int)Services.SPRITES.foliage;
+			break;
+
+		default:
+			spriteIndex = spriteType;
+			break;
 		}
 
-		newObject = Instantiate (Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]][Random.Range(0, Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]].Length)], Vector3.zero, Quaternion.identity) as GameObject;
+
+		switch (objectType) {
+			
+		case (int)Services.TYPES.Emptiness:
+			return null;
+			break;
+
+		case (int)Services.TYPES.NPCs:
+			if (NPCs >= Services.LevelGen.maxNPCs) {
+				objectType =  (int)Services.TYPES.Sprite;
+			} else {
+				NPCs++;
+			}
+			break;
+
+		case (int)Services.TYPES.Sprite:
+
+			break;
+
+		case (int)Services.TYPES.Pickups:
+			if (Pickups >= Services.LevelGen.maxPickups) {
+				objectType = (int)Services.TYPES.Sprite;
+			} else {
+				Pickups++;
+			}
+			break;
+
+		case (int)Services.TYPES.NonPickups:
+			if (NonPickups >= Services.LevelGen.maxObjects) {
+				objectType = (int)Services.TYPES.Sprite;
+			} else {
+				NonPickups++;
+			}
+			break;
+
+		default:
+			return null;
+			break;
+		}
+
+//		Debug.Log ("Object: " + Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]][Random.Range(0, Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]].Length)]);
+		newObject = Instantiate (Services.Prefabs.PREFABS[objectType][Random.Range(0, Services.Prefabs.PREFABS[objectType].Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
-			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteType] [Random.Range (0, Services.Prefabs.SPRITES [spriteType].Length)];
+			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 
 		} else {
@@ -283,37 +386,26 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //				r.material.shader = Services.Prefabs.FlatShading;
 //				r.material.SetColor ("_Color", floorColor);
 //			}
-
-			if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
-				newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
-			} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
-				newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
-			}
-			newObject.transform.localScale *= Random.Range (1f, tileScale/2);
-
 		}
+
+//		if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
+//			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
+//		} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
+//			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
+//		}
 
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;
 		if (newObject.GetComponentInChildren<SpriteRenderer> () == null) {
 			newObject.transform.localPosition += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
 		} else {
-			newObject.transform.localPosition -= Vector3.up;
+			newObject.transform.localScale *= Random.Range (1f, tileScale/2);
+			newObject.transform.localPosition -= Vector3.up * (newObject.GetComponent<SpriteRenderer>().bounds.extents.y/4);
 		}
 		Vector3 targetPosition = transform.position;
 		targetPosition.y = newObject.transform.position.y;
 		newObject.transform.LookAt(targetPosition);
 		newObject.transform.Rotate (0, 180, 0);
-		//FADING IN GROUND TEXTURE WITH BOTTOM OF THE SPRITE TOO INTENSE FOR THE PROCESSOR!!!!!
-		//		Texture2D newTexture = SpriteBlending(Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)].texture, floorColor);
-
-		//		ADDING SPRITE
-//		GameObject Sprite = Instantiate (Services.AudioManager.tonePillowObject, Vector3.zero, Quaternion.identity) as GameObject;
-//		Sprite newSprite = Services.Prefabs._sprites [Random.Range (0, Services.Prefabs._sprites.Length)];
-//		Sprite.transform.localScale /= Sprite.GetComponentInChildren<Renderer> ().bounds.size.x;
-//		Sprite.GetComponentInChildren<Renderer> ().material.SetColor ("_Color", floorColor);
-//		Sprite.transform.parent = transform;
-//		Sprite.transform.localPosition = pos + (Vector3.up * newObject.GetComponentInChildren<Renderer> ().bounds.extents.y);
 
 		return newObject;
 	}
