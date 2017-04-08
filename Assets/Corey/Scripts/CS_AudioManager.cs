@@ -21,6 +21,8 @@ public class CS_AudioManager : MonoBehaviour {
 	private List<int> voiceClipPlaylist = new List<int> ();
 	int lastVoiceSamplePlayed = int.MaxValue;
 
+	public AudioClip enterRoomClip, exitRoomClip;
+
 	public AudioClip[] tonesClipPool;
 	public List<AudioClip> instClipPool;
 
