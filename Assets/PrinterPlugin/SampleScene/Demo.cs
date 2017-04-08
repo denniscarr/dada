@@ -17,12 +17,12 @@ public class Demo : MonoBehaviour {
 		
 		// Make the first button.
 		if(GUI.Button(new Rect(20,40,200,25), "Print with printer dialog")) {
-			PrinterPlugin.print(texture,true,PrinterPlugin.PrintScaleMode.FILL_PAGE);
+			PrinterPlugin.print(texture,true,PrinterPlugin.PrintScaleMode.NO_SCALE);
 		}
 		
 		// Make the second button.
 		if(GUI.Button(new Rect(20,70,200,25), "Print without printer dialog")) {
-			PrinterPlugin.print(texture,false,PrinterPlugin.PrintScaleMode.FILL_PAGE);
+			PrinterPlugin.print(texture,false,PrinterPlugin.PrintScaleMode.NO_SCALE);
 		}
 	}
 
