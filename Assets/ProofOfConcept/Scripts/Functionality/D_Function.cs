@@ -31,11 +31,10 @@ public class D_Function : MonoBehaviour {
             //}
 
             // If we're being carried by the player and the player presses the use key then get used.
-			if (intSet != null) {
-				if (intSet.carryingObject == Services.Player.transform && Input.GetKey (useKey)) {
-					Use ();
-				}
-			}
+            if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform && Input.GetKey(useKey))
+            {
+                Use();
+            }
 
             currentCooldown = cooldownTimer;
         }

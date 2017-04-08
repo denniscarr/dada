@@ -126,7 +126,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	void Update(){
 
 		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (highestPoint * 2.5f));
-		float NormalisedToHightestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint * 2.5f);
+		float NormalisedToHighestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = 1 - playerHeightNormalized;
 		}
@@ -142,6 +142,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		RenderSettings.fogEndDistance = Mathf.Lerp (50, 250, playerHeightNormalized);
 		Services.LevelGen.cookieLight.cookieSize = (Mathf.Sin (Time.time) * 100) + 200;
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
+		Services.LevelGen.sun.color = Color.Lerp (Color.black, Color.white, Mathf.Sin(Time.time)/2 + 0.5f);
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -386,17 +387,18 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //				r.material.shader = Services.Prefabs.FlatShading;
 //				r.material.SetColor ("_Color", floorColor);
 //			}
-		}
 
-//		if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
-//			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
-//		} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
-//			newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
-//		}
+			if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
+				newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
+			} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
+				newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.z;
+			}
+		}
 
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;
 		if (newObject.GetComponentInChildren<SpriteRenderer> () == null) {
+			newObject.transform.localScale *= Random.Range (1f, tileScale);
 			newObject.transform.localPosition += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
 		} else {
 			newObject.transform.localScale *= Random.Range (1f, tileScale/2);
@@ -481,6 +483,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		groundLerpedColour.SetPixels (_bitmap.GetPixels());
 		groundLerpedColour.Apply ();
+//		groundLerpedColour.filterMode = FilterMode.Point;
 
 		clouds.vertices = vertices;
 		clouds.uv = uvs;
