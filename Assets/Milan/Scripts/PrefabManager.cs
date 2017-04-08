@@ -7,12 +7,9 @@ public class PrefabManager : MonoBehaviour {
 
 	public GameObject PLAYERPREFAB;
 	public GameObject TEXTOBJECT;
-	public GameObject SPRITE;
 	public GameObject TILE;
 	public GameObject PARTICLESYSTEM;
 	public GameObject[][] PREFABS;
-	public AudioClip[] Tones;
-	public Shader FlatShading;
 	public Sprite[][] SPRITES;
 
 //	public 
@@ -26,7 +23,7 @@ public class PrefabManager : MonoBehaviour {
 
 		foreach (string name in Enum.GetNames(typeof(Services.TYPES))){
 			PREFABS [i] = Resources.LoadAll<GameObject> (name);
-			Debug.Log (PREFABS [i].Length + " " + name +" loaded");
+//			Debug.Log (PREFABS [i].Length + " " + name +" loaded");
 			i++;
 		}
 

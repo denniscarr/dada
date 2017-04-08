@@ -9,6 +9,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public GameObject SceneText;
 	public Level currentLevel;
+	public Light cookieLight;
+	public Light sun;
 	public int maxNPCs, maxPickups, maxObjects;
     public int levelNum = 0;
 	public int width, length, height;
@@ -21,6 +23,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	GameObject text;
 	void Start()
 	{
+
 		text = (GameObject)Instantiate (SceneText, Vector3.zero, Quaternion.identity);
 		text.transform.parent = Camera.main.transform;
 		text.transform.localPosition = new Vector3 (4f, -2.5f, 10);
@@ -39,7 +42,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Update()
     {
         // If the player has jumped off the level.
-		if (Services.Player.transform.position.y - currentLevel.transform.position.y < -10){
+		if (Services.Player.transform.position.y - currentLevel.transform.position.y < -currentLevel.mapHeight * 2){
             
 			Services.Player = GameObject.Find ("Player");
 //			if (currentLevel != null) currentLevel.enabled = false;
@@ -115,7 +118,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
     void OnSceneChange(Scene scene, LoadSceneMode mode)
     {
-        GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
         Create();
     } 
 }

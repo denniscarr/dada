@@ -5,6 +5,7 @@ using UnityEngine;
 public class D_starryExpolsion : D_Function {
 	public GameObject bathSink;
 	public GameObject explosionParticle;
+	public AudioClip explosionSound;
 	public float radius = 5.0F;
 	public float power = 50.0F;
 	public float fuseTime = 5f;
@@ -31,6 +32,7 @@ public class D_starryExpolsion : D_Function {
 
 		//Instantiate particle system and add force
 		Instantiate (explosionParticle, transform.position, Quaternion.identity);
+		Services.AudioManager.Play3DSFX (explosionSound, transform.position, 1f, 1f);
 		Vector3 explosionPos = transform.position;
 		Collider[] colliders = Physics.OverlapSphere (explosionPos, radius);
 		foreach (Collider hit in colliders) {

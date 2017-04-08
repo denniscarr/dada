@@ -14,12 +14,12 @@ public class GameManager : MonoBehaviour {
         Services.IncoherenceManager = gameObject.GetComponent<IncoherenceManager>();
         Instantiate(Services.Prefabs.PLAYERPREFAB, Vector3.zero, Quaternion.identity);
 		Services.Player = GameObject.Find ("Player");
+        Debug.Log(Services.Player.name);
 	}
 		
 	void Awake () {
 
 		Init ();
-        DontDestroyOnLoad(Services.Player.transform.root);
 	}
 
 	

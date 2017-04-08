@@ -37,7 +37,11 @@ public class MouseCotroller : MonoBehaviour {
 	float clickGapCount;
 
 	//For Sound Effects
-	CS_PlaySFX sfxScript;
+	//CS_PlaySFX sfxScript;
+	public AudioClip pickupClip;
+	public AudioClip throwClip;
+	public float sfxVolume = 0.1f;
+
 	public Text txtInfo;
 
 	float CLICKGAPTIME = 0.3f;
@@ -57,7 +61,7 @@ public class MouseCotroller : MonoBehaviour {
 			inPointForPlaneFromCube);
 		cubeOnDraggedPlane.gameObject.SetActive(false);
 
-		sfxScript = gameObject.GetComponent<CS_PlaySFX> ();
+
 
 	}
 	
@@ -131,7 +135,7 @@ public class MouseCotroller : MonoBehaviour {
 						txtInfo.text = hit.collider.name + " is useful.";
 						if(Input.GetMouseButtonDown(0)){
 							clickGapCount = 0;
-							sfxScript.PlaySFX (0);
+							Services.AudioManager.PlaySFX (pickupClip, sfxVolume);
 
 							Debug.Log("use "+hit.collider.name+" inside visor");
 							hit.collider.BroadcastMessage ("Use", SendMessageOptions.DontRequireReceiver);
@@ -315,7 +319,7 @@ public class MouseCotroller : MonoBehaviour {
 		//update the postion
 		UpdateDraggedObjectPosition(pickedUpObject);
 
-		sfxScript.PlaySFX (0);
+		Services.AudioManager.PlaySFX (pickupClip, sfxVolume);
 
 //        // Make sure we're reading from the correct interaction settings (rather than that of the object being carried by an NPC for instance)
 //        InteractionSettings intSet = null;
@@ -416,14 +420,14 @@ public class MouseCotroller : MonoBehaviour {
 	}
 
 	void ThrowObject() {
-		sfxScript.PlaySFX (1);
+		Services.AudioManager.PlaySFX (throwClip, sfxVolume);
 
 		Transform carriedObject = selectedObject;
 
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		carriedObject.position = Camera.main.transform.position + ray.direction*5f;
 
-		carriedObject.SetParent (carriedObject.GetComponentInChildren<InteractionSettings> ().originalParent,true);
+        carriedObject.SetParent(carriedObject.GetComponentInChildren<InteractionSettings>().originalParent, true);
 
 		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce*5, Camera.main.transform.position, 10f);
 	}

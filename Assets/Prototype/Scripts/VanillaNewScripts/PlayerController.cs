@@ -4,41 +4,35 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
 
-public enum ControlMode{
-	ZOOM_IN_MODE = -1,
-	ZOOM_OUT_MODE = 1,//can see inventory
-	IN_ROOM_MODE = 0,
-}
 
 public class PlayerController : MonoBehaviour {
 	private float speed = 1.0F;
 	private float rotationSpeed = 100.0F;
 
-	public float ZoomInUpperCameraFoV = 10f;
-	public float ZoomOutUpperCameraFoV = 16f;
-	public float ZoomInMainCameraFoV = 33f;
-	public float ZoomOutMainCameraFoV = 45f;
+	public float ZoomInUpperCameraFoV = 17f;
+	public float ZoomOutUpperCameraFoV = 33f;
+	public float ZoomInMainCameraFoV = 60f;
+	public float ZoomOutMainCameraFoV = 80f;
 
-	private List<GameObject> equipTips;
+	//private List<GameObject> equipTips;
 	ControlMode mode;
 	private Transform uppernode;
 	Camera uppercamera;
 	GameObject canvas;
+
 	FirstPersonController fpController;
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
 	float pressGapCount;
 
-	CS_PlaySFX playSFXScript;
+	public AudioClip toggleViewSFX;
 
 	Transform inRoomNode;
-	Transform t_gun;
+	//Transform t_gun;
 
 	Camera myCamera;
-	//count the time enter the front pic
-	//float enterTimeCount;
 
 
-	//INSTRUCTIONS TEXT
+	//INSTRUCTIONS TEXT do not need any more
 	Text instructionText;
 
 	// Use this for initialization
@@ -80,7 +74,7 @@ public class PlayerController : MonoBehaviour {
 			ChangeToInRoomMode();
 		}
 			
-		playSFXScript = this.GetComponent<CS_PlaySFX> ();
+
 
 		instructionText = canvas.transform.FindChild ("Instructions").GetComponent<Text> ();;
 
@@ -106,7 +100,7 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log("mode change to:"+ mode);
 			//Debug.Log(transform.position);
 			//play sound effect for mode switch
-			playSFXScript.PlaySFX (1);
+			Services.AudioManager.PlaySFX(toggleViewSFX, 0.1f);
 
 
 			if(canvas.activeInHierarchy == true){
@@ -177,6 +171,8 @@ public class PlayerController : MonoBehaviour {
 		myCamera.gameObject.SetActive(false);
 		inRoomNode.gameObject.SetActive(true);//player in room enable
 
+		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 0.5f);
+
 	}
 
 	void InRoomChangeToZoomOut(){
@@ -187,6 +183,7 @@ public class PlayerController : MonoBehaviour {
 		fpController.enabled = true;
 		myCamera.gameObject.SetActive(true);
 		inRoomNode.gameObject.SetActive(false);
+		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.5f);
 	}
 
 	void ZoomOutMove(){
