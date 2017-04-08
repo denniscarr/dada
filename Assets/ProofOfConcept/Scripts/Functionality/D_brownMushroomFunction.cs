@@ -21,6 +21,7 @@ public class D_brownMushroomFunction : D_Function {
         base.Use();
         if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
         {
+            Debug.Log("Stuff");
             playerCamera.GetComponent<DepthOfField>().enabled = !playerCamera.GetComponent<DepthOfField>().enabled;
         }
     }

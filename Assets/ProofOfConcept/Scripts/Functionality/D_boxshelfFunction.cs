@@ -7,12 +7,15 @@ public class D_boxshelfFunction : D_Function {
 	public AudioSource boxshelfAudio; 
 	// Use this for initialization
 	new void Start () {
+
+		//sfx are now called from base
+		base.useSFX = greeters;
 		base.Start ();
 	}
 	
 	// Update is called once per frame
 	public override void Use () {
 		base.Use ();
-		boxshelfAudio.PlayOneShot(greeters[Random.Range(0, 2)]);
+
 	}
 }

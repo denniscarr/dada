@@ -17,6 +17,7 @@ public class D_blueMushroomFunction : D_Function {
     // Update is called once per frame
     public override void Use() {
         base.Use();
+		print ("Blue mushroom function triggered");
         if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform) { 
             playerCamera.GetComponent<ColorCorrectionCurves>().enabled = !playerCamera.GetComponent<ColorCorrectionCurves>().enabled;
         }
