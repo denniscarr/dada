@@ -102,11 +102,29 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.GetComponent<Collider>().enabled = false;
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
-        // Set position & parentage.
         originalScale = equippedObject.transform.localScale;
-        equippedObject.transform.position = equipReference.position;
-        equippedObject.transform.rotation = equipReference.rotation;
         equippedObject.transform.SetParent(equipReference, true);
+
+        if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
+        {
+            equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
+        }
+
+        else
+        {
+            equippedObject.transform.rotation = equipReference.rotation;
+        }
+
+        // Set position & parentage.
+        if (equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
+        {
+            equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
+        }
+
+        else
+        {
+            equippedObject.transform.position = equipReference.position;
+        }
 
         equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
