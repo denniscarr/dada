@@ -10,8 +10,10 @@ public class D_Equip : MonoBehaviour {
 
     Writer writer;
 
-    public KeyCode equipKey = KeyCode.E;
-    public KeyCode abandonKey = KeyCode.G;
+	//no long use during preproduction stage
+//	public KeyCode equipKey = KeyCode.Mouse0;
+//	public KeyCode abandonKey = KeyCode.Mouse0;
+
 	private bool readyToEquip = false;
     Transform equipReference;
 
@@ -53,16 +55,17 @@ public class D_Equip : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        if (readyToEquip == true && Input.GetKeyDown(equipKey))
+		if (intSet.carryingObject == Services.Player.transform && Input.GetMouseButtonDown(0))
+		{
+			abandonItem ();
+			intSet.carryingObject = null;
+		}
+		else if (readyToEquip == true && Input.GetMouseButtonDown(0))
         {
             MoveToCamera();
 			intSet.carryingObject = GameObject.Find("Player").transform;
         }
-
-		if (Input.GetKeyDown (abandonKey)) {
-			abandonItem ();
-            intSet.carryingObject = null;
-		}
+			
     }
 
     void MoveToCamera ()
