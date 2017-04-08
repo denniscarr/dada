@@ -7,12 +7,9 @@ public class PrefabManager : MonoBehaviour {
 
 	public GameObject PLAYERPREFAB;
 	public GameObject TEXTOBJECT;
-	public GameObject SPRITE;
 	public GameObject TILE;
 	public GameObject PARTICLESYSTEM;
 	public GameObject[][] PREFABS;
-	public AudioClip[] Tones;
-	public Shader FlatShading;
 	public Sprite[][] SPRITES;
 
 //	public 
