@@ -177,6 +177,8 @@ public class PlayerController : MonoBehaviour {
 		myCamera.gameObject.SetActive(false);
 		inRoomNode.gameObject.SetActive(true);//player in room enable
 
+		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 0.5f);
+
 	}
 
 	void InRoomChangeToZoomOut(){
@@ -187,6 +189,7 @@ public class PlayerController : MonoBehaviour {
 		fpController.enabled = true;
 		myCamera.gameObject.SetActive(true);
 		inRoomNode.gameObject.SetActive(false);
+		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.5f);
 	}
 
 	void ZoomOutMove(){
