@@ -19,6 +19,7 @@ public class D_greenMushroomFunction : D_Function {
     public override void Use()
     {
         base.Use();
+		print ("Green mushroom function triggered");
         if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
         {
             playerCamera.GetComponent<VignetteAndChromaticAberration>().enabled = !playerCamera.GetComponent<VignetteAndChromaticAberration>().enabled;
