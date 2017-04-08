@@ -64,6 +64,9 @@ public class InteractionSettings : MonoBehaviour {
         }
     }   // Whether this object is currently in the player's visor.
 
+    public Vector3 equipPosition;
+    public Vector3 equipRotation;
+
     [HideInInspector] public Vector3 savedScale;
 
 	[HideInInspector] public Transform originalParent;
