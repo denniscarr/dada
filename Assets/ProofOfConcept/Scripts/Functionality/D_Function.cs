@@ -5,11 +5,11 @@ using UnityEngine;
 public class D_Function : MonoBehaviour {
 
     public InteractionSettings intSet;
-    public KeyCode useKey = KeyCode.Mouse0;
+    KeyCode useKey = KeyCode.Mouse1;
 	public AudioClip[] useSFX;
 	public float audioJitter = 0f;
-    float cooldownTimer = 0.5f;
-    float currentCooldown = 0.0f;
+    float cooldownTimer = 0.2f;
+    float currentCooldown = 0.2f;
 
     public void Start()
     {
@@ -25,10 +25,10 @@ public class D_Function : MonoBehaviour {
 
         if (currentCooldown <= 0)
         {
-            if (intSet.carryingObject == Services.Player.transform)
-            {
-                Debug.Log("Held by player");
-            }
+            //if (intSet.carryingObject == Services.Player.transform)
+            //{
+            //    Debug.Log("Held by player");
+            //}
 
             // If we're being carried by the player and the player presses the use key then get used.
             if (intSet.carryingObject == Services.Player.transform && Input.GetKey(useKey))
@@ -42,7 +42,27 @@ public class D_Function : MonoBehaviour {
 
     public virtual void Use()
     {
-//		float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
-//		Services.AudioManager.Play3DSFX(useSFX[Random.Range(0,useSFX.Length-1)], transform.position, 1f, pitchJitter);
+		float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
+		//Services.AudioManager.Play3DSFX(useSFX[Random.Range(0,useSFX.Length)], transform.position, 1f, pitchJitter);
+    }
+
+    protected void GetDropped()
+    {
+        if (intSet.carryingObject == Services.Player.transform) Services.Player.BroadcastMessage("AbandonItem");
+
+        else if (transform.parent.parent.name == "UpperNode")
+        {
+            Services.Player.transform.parent.BroadcastMessage("StopHoldingItemInMouse");
+        }
+
+        //else
+        //{
+        transform.parent.SetParent(null);
+
+            // Re-enable collision & stuff.
+            transform.parent.GetComponent<Collider>().enabled = true;
+            if (transform.parent.GetComponent<Rigidbody>() != null) transform.parent.GetComponent<Rigidbody>().isKinematic = false;
+            intSet.carryingObject = null;
+        //}
     }
 }

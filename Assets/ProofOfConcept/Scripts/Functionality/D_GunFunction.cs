@@ -19,6 +19,6 @@ public class D_GunFunction: D_Function
         Debug.Log("Used Gun");
 
 		GameObject shoot = Instantiate (projectile, transform.position, Quaternion.identity) as GameObject;
-        shoot.GetComponent<Rigidbody>().AddForce(Services.Player.transform.Find("Main Camera").transform.forward * muzzleVelocity);
+        shoot.GetComponent<Rigidbody>().AddForce(Services.Player.GetComponentInChildren<Camera>().transform.forward * muzzleVelocity);
     }
 }

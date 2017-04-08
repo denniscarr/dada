@@ -6,8 +6,8 @@ public class InteractionSettings : MonoBehaviour {
 
 	public bool ableToBeCarried;	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
-	public bool canBeUsedAsSoundSource;
-	public bool canBeUsedForQuests;
+	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.
+	public bool canBeUsedForQuests; // Whether this object can be used for quests.
 	public bool carryingObjectCarryingObject;	// If carrying object is holding me
     public Transform _carryingObject;
 	public Transform carryingObject // If I am being held, this is the object that is holding me.
@@ -47,17 +47,38 @@ public class InteractionSettings : MonoBehaviour {
 
             _carryingObject = value;
         }
-    }    
+    }
+    public bool IsInVisor
+    {
+        get
+        {
+            if (transform.parent.parent != null && transform.parent.parent.name == "UpperNode")
+            {
+                return true;
+            }
 
-	[HideInInspector]
-	public Vector3 savedScale;
+            else
+            {
+                return false;
+            }
+        }
+    }   // Whether this object is currently in the player's visor.
 
-	[HideInInspector]
-	public Transform originalParent;
+    [HideInInspector] public Vector3 savedScale;
+
+	[HideInInspector] public Transform originalParent;
+
 
 	void Start()
     {
-		savedScale = transform.parent.localScale;
+        savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
-	}
+
+        if (IsInVisor)
+        {
+            originalParent = null;
+            Transform saved = transform.parent.parent;
+            savedScale = new Vector3(1, 1, 1);
+        }
+    }
 }
