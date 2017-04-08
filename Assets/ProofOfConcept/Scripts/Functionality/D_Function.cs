@@ -43,7 +43,7 @@ public class D_Function : MonoBehaviour {
     public virtual void Use()
     {
 		float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
-		//Services.AudioManager.Play3DSFX(useSFX[Random.Range(0,useSFX.Length)], transform.position, 1f, pitchJitter);
+		Services.AudioManager.Play3DSFX(useSFX[Random.Range(0,useSFX.Length)], transform.position, 1f, pitchJitter);
     }
 
     protected void GetDropped()

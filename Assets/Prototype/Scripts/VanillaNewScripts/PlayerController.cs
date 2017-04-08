@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour {
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
 	float pressGapCount;
 
-	CS_PlaySFX playSFXScript;
+	public AudioClip toggleViewSFX;
 
 	Transform inRoomNode;
 	Transform t_gun;
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour {
 			ChangeToInRoomMode();
 		}
 			
-		playSFXScript = this.GetComponent<CS_PlaySFX> ();
+
 
 		instructionText = canvas.transform.FindChild ("Instructions").GetComponent<Text> ();;
 
@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log("mode change to:"+ mode);
 			//Debug.Log(transform.position);
 			//play sound effect for mode switch
-			playSFXScript.PlaySFX (1);
+			Services.AudioManager.PlaySFX(toggleViewSFX, 0.1f);
 
 
 			if(canvas.activeInHierarchy == true){
