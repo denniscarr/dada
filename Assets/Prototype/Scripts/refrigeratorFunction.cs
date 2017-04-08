@@ -40,7 +40,7 @@ public class refrigeratorFunction: D_Function
 
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (null);
-			transform.parent.GetComponentInChildren<D_Equip> ().abandonItem ();
+            GetDropped();
 		}
 
 		GetComponentInParent<Rigidbody>().AddForce(transform.right * refrigeratorSpeed);
