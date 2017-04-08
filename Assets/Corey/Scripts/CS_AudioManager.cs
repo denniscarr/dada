@@ -14,15 +14,16 @@ using UnityEngine.Audio;
 public class CS_AudioManager : MonoBehaviour {
 
 	//public List<GameObject> soundableObjects;
-	public List<AudioSource> soundSources;
+
 
 	//POPULATE THIS
-	public List<AudioClip> audioClipPool;
 	public AudioClip[] voiceClipPool;
+	private List<int> voiceClipPlaylist = new List<int> ();
+	int lastVoiceSamplePlayed = int.MaxValue;
+
 	public AudioClip[] tonesClipPool;
 	public List<AudioClip> instClipPool;
 
-	public AudioClip radioStaticClip;
 
 	public GameObject tonePillowObject;
 
@@ -57,6 +58,8 @@ public class CS_AudioManager : MonoBehaviour {
 		
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
+
+		//PopulateRandomList (voiceClipPool, ClipsPlayList);
 		//DontDestroyOnLoad(this.gameObject);
 	}
 	//========================================================================
@@ -75,12 +78,14 @@ public class CS_AudioManager : MonoBehaviour {
 		DestroyObject(t_SFX, g_SFX.length);
 	}
 
-	public void PlaySFX (AudioClip g_SFX, float g_Pitch) {
+	public void PlaySFX (AudioClip g_SFX, float g_volume = 1.0f, float g_Pitch = 1.0f) {
 		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
 		t_SFX.name = "SFX_" + g_SFX.name;
 		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
 		t_SFX.GetComponent<AudioSource> ().pitch = g_Pitch;
+		t_SFX.GetComponent<AudioSource> ().spatialBlend = 0.0f;
 		t_SFX.GetComponent<AudioSource> ().outputAudioMixerGroup = SFXGroup;
+		t_SFX.GetComponent<AudioSource> ().volume = g_volume;
 		t_SFX.GetComponent<AudioSource> ().Play ();
 		DestroyObject(t_SFX, g_SFX.length);
 	}
@@ -112,71 +117,76 @@ public class CS_AudioManager : MonoBehaviour {
 	}
 
 
-	/*
-	public void ReassignMusic () {
-
-		soundSources.Clear ();
-
-		//This will find every object that has canBeUsedAsSoundSource == true and assign it a random clip from the pool
-		foreach (InteractionSettings intSettings in GameObject.FindObjectsOfType<InteractionSettings> ())  {
-			// first find every game object with the component CS_MusicRotate
-			// TODO - include all music sources
-
-			// STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) 
-			float rand = Random.Range (0f, 1f);
-			if (rand < 0.1f) {
-				
-			} else {
-
-				if (intSettings.canBeUsedAsSoundSource) {
-					
-
-					Transform rootTransform = intSettings.transform.parent;
-					AudioSource clipSource = rootTransform.gameObject.AddComponent<AudioSource> ();
-					AudioSource staticSource = rootTransform.gameObject.AddComponent<AudioSource> ();
-					staticSource.clip = radioStaticClip;
-
-					soundSources.Add (clipSource);
-					rootTransform.gameObject.AddComponent<MusicToColor> ();
-					intSettings.usable = true;
-
-					// MORE DENNIS PROTOTYPE STUFF:
-					clipSource.spatialBlend = 1f;
-					clipSource.maxDistance = 50f;
-					clipSource.loop = true;
-			
-					rootTransform.gameObject.AddComponent<SoundCrossfade> ();
-				}
-				for (int i = 0; i < soundSources.Count; i++) {
-					//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
-					soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
-					soundSources [i].Play ();
-				}
-			}
-		}
-	}
-	*/
 
 
-	public IEnumerator NextClip(int sourceNumber, int clipIndex) {
-
-		//audio.Play();
-		AudioSource thisSource = soundSources[sourceNumber];
 
 
-		//TODO - CROSSFADE last clip and next one
-		if (thisSource.clip != null) {
-			yield return new WaitForSeconds ((thisSource.clip.length - thisSource.time) / 16f);
-			thisSource.clip = audioClipPool [clipIndex];
-		}
-		thisSource.Play();
+
+	public void Speak() {
 
 	}
 
-	public IEnumerator WaitForStaticEnd() {
-		yield return new WaitForSeconds(radioStaticClip.length/2);
+	void RandWithoutRepeat() {
 
 	}
+
+//	public AudioClip[] Clips;
+//	private List<int> ClipsPlayList = new List<int>();
+//	private int lastSamplePlayed = System.Int16.MaxValue;
+//	private bool freshList = false;
+//
+//	private AudioSource mySource;
+//
+//	void Start()
+//	{
+//		; //populate the list of ints
+//		mySource = GetComponent<AudioSource>(); //get our audio source
+//	}
+//
+//	private void PlayClip() //plays a random clip
+//	{
+//		mySource.clip = PickClip(Clips, ClipsPlayList);
+//		mySource.Play();
+//	}
+//
+//
+//	void PopulateRandomList(AudioClip[] clips, List<int> playList) //shuffles the list
+//	{
+//		int i = 0;
+//		foreach (AudioClip clip in clips)
+//		{
+//			playList.Insert(Random.Range(0, i + 1), i);
+//			i++;
+//		}
+//		freshList = true;
+//	}
+//
+//	int noRepeatClipIndex(List<int> playList) //grab a new clip index & ensure we don't play the same clip twice 
+//	{
+//		int index = Random.Range(0, playList.Count - 1);
+//		int clipIndex = playList[index];
+//		if (freshList) //we only risk repetition when we have a new list
+//		{
+//			if (clipIndex == lastSamplePlayed) //if we got to the same list
+//			{
+//				return noRepeatClipIndex(playList); //just keep searching
+//			}
+//		}
+//		freshList = false; //no longer a fresh list
+//		playList.RemoveAt(index); //remove the int from the list
+//		lastSamplePlayed = clipIndex; //store the last sample played
+//		return clipIndex;
+//	}
+//
+//	AudioClip PickClip(AudioClip[] clips, List<int> playList) //pick a clip
+//	{
+//		if (playList.Count <= 0) //if we're out of ints in our list
+//		{
+//			PopulateRandomList(clips, playList); //make a new list
+//		}
+//		int clipIndex = noRepeatClipIndex(playList); //grab a new index
+//		return clips[clipIndex]; //return the clip at that index
+//	}
 
 	/*
 
@@ -258,5 +268,70 @@ public class CS_AudioManager : MonoBehaviour {
 	}
 	*/
 
+	/*
+	public void ReassignMusic () {
 
+		soundSources.Clear ();
+
+		//This will find every object that has canBeUsedAsSoundSource == true and assign it a random clip from the pool
+		foreach (InteractionSettings intSettings in GameObject.FindObjectsOfType<InteractionSettings> ())  {
+			// first find every game object with the component CS_MusicRotate
+			// TODO - include all music sources
+
+			// STUPID HACKY THING FOR PROTOTYPE!!!! (FEEL FREE TO DELETE IT LATER) 
+			float rand = Random.Range (0f, 1f);
+			if (rand < 0.1f) {
+
+			} else {
+
+				if (intSettings.canBeUsedAsSoundSource) {
+
+
+					Transform rootTransform = intSettings.transform.parent;
+					AudioSource clipSource = rootTransform.gameObject.AddComponent<AudioSource> ();
+					AudioSource staticSource = rootTransform.gameObject.AddComponent<AudioSource> ();
+					staticSource.clip = radioStaticClip;
+
+					soundSources.Add (clipSource);
+					rootTransform.gameObject.AddComponent<MusicToColor> ();
+					intSettings.usable = true;
+
+					// MORE DENNIS PROTOTYPE STUFF:
+					clipSource.spatialBlend = 1f;
+					clipSource.maxDistance = 50f;
+					clipSource.loop = true;
+
+					rootTransform.gameObject.AddComponent<SoundCrossfade> ();
+				}
+				for (int i = 0; i < soundSources.Count; i++) {
+					//StartCoroutine (NextClip (i, Random.Range (0, audioClipPool.Count)));
+					soundSources [i].clip = audioClipPool [Random.Range (0, audioClipPool.Count)];
+					soundSources [i].Play ();
+				}
+			}
+		}
+	}
+
+
+
+	//	public IEnumerator NextClip(int sourceNumber, int clipIndex) {
+	//
+	//		//audio.Play();
+	//		AudioSource thisSource = soundSources[sourceNumber];
+	//
+	//
+	//		//TODO - CROSSFADE last clip and next one
+	//		if (thisSource.clip != null) {
+	//			yield return new WaitForSeconds ((thisSource.clip.length - thisSource.time) / 16f);
+	//			thisSource.clip = audioClipPool [clipIndex];
+	//		}
+	//		thisSource.Play();
+	//
+	//	}
+	//
+	//	public IEnumerator WaitForStaticEnd() {
+	//		yield return new WaitForSeconds(radioStaticClip.length/2);
+	//
+	//	}
+	*/
 }
