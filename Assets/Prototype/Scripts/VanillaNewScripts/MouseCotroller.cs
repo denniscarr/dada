@@ -423,7 +423,7 @@ public class MouseCotroller : MonoBehaviour {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		carriedObject.position = Camera.main.transform.position + ray.direction*5f;
 
-        carriedObject.SetParent(carriedObject.GetComponentInChildren<InteractionSettings>().originalParent, true);
+		carriedObject.SetParent (carriedObject.GetComponentInChildren<InteractionSettings> ().originalParent,true);
 
 		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce*5, Camera.main.transform.position, 10f);
 	}

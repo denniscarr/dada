@@ -18,7 +18,7 @@ public class D_chairFunction : D_Function {
 		base.Use ();
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (transform.root);
-            GetDropped();
+			transform.parent.GetComponentInChildren<D_Equip> ().abandonItem ();
 		}
 
 		rb.AddForce(transform.right * chairSpeed);

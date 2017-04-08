@@ -574,8 +574,6 @@ public class NPC : MonoBehaviour {
 
     void SeeIfTargetObjectWasPickedUp()
     {
-        if (targetObject == null) return;
-
         if (targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != null && targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent)
         {
             writer.WriteSpecifiedString(
