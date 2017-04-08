@@ -125,10 +125,10 @@ public class PickupQuest : Quest {
 	}
 
 	public void spawnNote(){
-		// make the questit note
-		//visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();
-		visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
-		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
+        // make the questit note
+        visorNode = GameObject.Find("UpperNode").GetComponent<Transform>();
+        //visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
+        questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 		//questItNote.transform.position = visorNode.transform.position;
 		questItNote.transform.position = new Vector3(visorNode.transform.position.x,
 										visorNode.transform.position.y + 5,
