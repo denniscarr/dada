@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour {
 	void Awake () {
 
 		Init ();
-        DontDestroyOnLoad(Services.Player.transform.root);
 	}
 
 	

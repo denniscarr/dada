@@ -118,7 +118,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
     void OnSceneChange(Scene scene, LoadSceneMode mode)
     {
-        GameObject.Find("Bootstrapper").GetComponent<GameManager>().Init();
         Create();
     } 
 }
