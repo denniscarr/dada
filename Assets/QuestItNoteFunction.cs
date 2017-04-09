@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class QuestItNoteFunction : D_Function {
 
+	public int questID;
+
 	// Use this for initialization
 	new void Start () {
 		base.Start();
