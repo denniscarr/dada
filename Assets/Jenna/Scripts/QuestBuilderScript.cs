@@ -38,13 +38,12 @@ public class QuestBuilderScript : MonoBehaviour {
 		ranger = Random.Range (0, finder.questItems.Count);
 		length = finder.questItems.Count;
 
+		// set specific parameters depending on level # here soon
 		if (Input.GetKeyDown(KeyCode.Tab)) {
 			Generate ();
 		}
 	}
 
-	// generate quest when "q" is pressed
-	// maybe create a new parameter, like when w is pressed, or an object is taken, or the mouse is clicked
 	public void Generate() {
 		// pick an object for it
 		questThing = ranger % length;
