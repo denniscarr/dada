@@ -32,7 +32,7 @@ public class InsideVisorMan : MonoBehaviour
 
     bool rotateMode = false;
 
-    enum State { NormalMovement, FurnitureView, ControllingObject, DroppingObject };
+    enum State { FirstPerson, FurnitureView, ControllingObject, DroppingObject };
     State currentState = State.FurnitureView;
 
 
@@ -45,7 +45,7 @@ public class InsideVisorMan : MonoBehaviour
 
     void Update()
     {
-        if (currentState == State.NormalMovement)
+        if (currentState == State.FirstPerson)
         {
             // Switch to furniture view.
             if (Input.GetKeyDown(KeyCode.Tab))
@@ -70,7 +70,7 @@ public class InsideVisorMan : MonoBehaviour
                 myCam.enabled = true;
                 controlledObject = null;
                 spotlight.SetActive(false);
-                currentState = State.NormalMovement;
+                currentState = State.FirstPerson;
             }
 
             // See if I clicked on a thingy.
