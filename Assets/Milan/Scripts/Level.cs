@@ -142,7 +142,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		RenderSettings.fogEndDistance = Mathf.Lerp (50, 250, playerHeightNormalized);
 		Services.LevelGen.cookieLight.cookieSize = (Mathf.Sin (Time.time) * 100) + 200;
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
-		Services.LevelGen.sun.color = Color.Lerp (Color.black, Color.white, Mathf.Sin(Time.time)/2 + 0.5f);
+		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
+		Services.LevelGen.cookieLight.intensity = Mathf.Lerp (1, 0, Mathf.Sin(Time.time)/2 + 0.5f); 
+
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;

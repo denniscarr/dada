@@ -82,6 +82,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		currentLevel = l;
 
 		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 200);
+		cookieLight.transform.position = newLevel.transform.position;
+		sun.transform.position = newLevel.transform.position;
 		newLevel.name = "Level " + ManagedObjects.Count;
 
 		if (maps.Length > 0) {
