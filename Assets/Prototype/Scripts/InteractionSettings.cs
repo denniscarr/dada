@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class InteractionSettings : MonoBehaviour {
 
-    bool _ableToBeCarried;
+    bool _ableToBeCarried = false;
 	public bool ableToBeCarried
     {
         get
         {
-            if (IsNPC || transform.parent.GetComponent<Collider>().bounds.extents.magnitude > 5f)
+            if ((!IsNPC && transform.parent.GetComponent<Collider>().bounds.extents.magnitude < 1.5f) || Random.value > 0.95f)
             {
-                return false;
+                return true;
             }
 
             else
@@ -23,7 +23,7 @@ public class InteractionSettings : MonoBehaviour {
         set
         {
             _ableToBeCarried = value;
-        }
+        }	
     }	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.

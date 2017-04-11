@@ -67,7 +67,7 @@ public class NPC : MonoBehaviour {
         rb = transform.parent.GetComponent<Rigidbody>();
 		speakSource = GetComponent<AudioSource> ();
         // See if I have an animator before I try to use NPCAnimation.
-        if (transform.parent.GetComponentInChildren<Animator>() != null)
+        if (transform.parent.GetComponentInChildren<Animator>().isHuman)
         {
             npcAnimation = GetComponent<NPCAnimation>();
         }
@@ -259,7 +259,6 @@ public class NPC : MonoBehaviour {
                 // Finish waving.
                 else if (saidHello && asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f)
                 {
-                    Debug.Log("Finito");
                     npcAnimation.WaveHelloFinished();
                     saidHello = false;
                     EvaluateSurroundings();
@@ -269,6 +268,8 @@ public class NPC : MonoBehaviour {
             // If this NPC does not use an animator.
             else
             {
+                Debug.Log("yo");
+
                 helloTimer += Time.deltaTime;
                 Debug.Log(helloTimer);
 
@@ -286,8 +287,8 @@ public class NPC : MonoBehaviour {
                 else if (saidHello && helloTimer >= helloLength)
                 {
                     saidHello = false;
-                    helloTimer = 0f;
                     EvaluateSurroundings();
+                    helloTimer = 0f;
                 }
             }
         }
