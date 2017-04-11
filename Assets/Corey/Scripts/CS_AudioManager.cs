@@ -93,6 +93,7 @@ public class CS_AudioManager : MonoBehaviour {
 	}
 
 	public void Play3DSFX(AudioClip g_SFX, Vector3 g_position, float g_volume = 1.0f, float g_pitch = 1.0f) {
+        if (g_SFX == null) return;
 		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
 		t_SFX.name = "SFX_" + g_SFX.name;
 		t_SFX.transform.position = g_position;
