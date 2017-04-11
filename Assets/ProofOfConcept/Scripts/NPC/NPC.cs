@@ -97,6 +97,11 @@ public class NPC : MonoBehaviour {
     {
         updateAnimation = false;
 
+        if (lookForwardRange < transform.parent.GetComponent<Collider>().bounds.extents.z)
+        {
+            lookForwardRange = transform.parent.GetComponent<Collider>().bounds.extents.z * 2;
+        }
+
         // SEE IF THE OBJECT I WAS CARRYING WAS STOLEN OR RAN AWAY
         if (carriedObject != null &&
             (carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject != transform.parent ||
