@@ -22,7 +22,6 @@ public class QuestItNoteFunction : D_Function {
             // Unparent from whatever object I was parented to before.
             if (transform.parent.parent != null && transform.parent.parent.name != "Equip Reference" && !intSet.IsInVisor)
             {
-                Debug.Log("Frozen");
                 transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 transform.parent.parent = null;
             }

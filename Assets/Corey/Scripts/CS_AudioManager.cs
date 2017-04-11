@@ -81,6 +81,7 @@ public class CS_AudioManager : MonoBehaviour {
 	}
 
 	public void PlaySFX (AudioClip g_SFX, float g_volume = 1.0f, float g_Pitch = 1.0f) {
+        if (g_SFX == null) return;
 		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
 		t_SFX.name = "SFX_" + g_SFX.name;
 		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
