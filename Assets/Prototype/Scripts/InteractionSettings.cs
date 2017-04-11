@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class InteractionSettings : MonoBehaviour {
 
+	bool _ableToBeCarried;
 	public bool ableToBeCarried
     {
         get
@@ -15,9 +16,15 @@ public class InteractionSettings : MonoBehaviour {
 
             else
             {
-                return true;
+				return _ableToBeCarried;
             }
         }
+
+		set
+		{
+			_ableToBeCarried = value;
+		}
+			
     }	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.
