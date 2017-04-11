@@ -271,7 +271,6 @@ public class NPC : MonoBehaviour {
                 Debug.Log("yo");
 
                 helloTimer += Time.deltaTime;
-                Debug.Log(helloTimer);
 
                 // Display text.
                 if (!saidHello && helloTimer >= helloLength*0.5f)
@@ -286,6 +285,7 @@ public class NPC : MonoBehaviour {
                 // Finish waving.
                 else if (saidHello && helloTimer >= helloLength)
                 {
+                    Debug.Log("doneoe");
                     saidHello = false;
                     EvaluateSurroundings();
                     helloTimer = 0f;
