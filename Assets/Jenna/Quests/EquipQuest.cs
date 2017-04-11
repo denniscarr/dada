@@ -41,7 +41,6 @@ public class EquipQuest : Quest {
 	// finishing the quest
 	public bool equipped = false;
 	Transform equippedItem;
-	public D_starryExpolsion stars;
 
 	// or perhaps chain quest -- number of items to steal
 	// this, then this, then this, etc
@@ -72,7 +71,7 @@ public class EquipQuest : Quest {
 			
 	}
 
-	void MakeStealQuest(Quest type){
+	void MakeEquipQuest(Quest type){
 
 		parentObject = builder.objeto;
 		questobjectscript = parentObject.GetComponent<QuestObject> ();
@@ -97,8 +96,8 @@ public class EquipQuest : Quest {
 		manager.CheckAvailableQuests (questobjectscript);
 
 		// check if THIS quest is available, and if so, make it available
-		manager.RequestAvailableQuest (id);										
-		progress = Quest.QuestProgress.AVAILABLE;
+		//manager.RequestAvailableQuest (id);										
+		//progress = Quest.QuestProgress.AVAILABLE;
 
 		// give it a description eh
 		// can make this more interesting later
@@ -108,6 +107,13 @@ public class EquipQuest : Quest {
 		CopyComponent (this, parentObject);
 
 		spawnNote ();
+
+		for (int i = 0; i < 20; i++) {
+			GameObject noteSpawn = Instantiate (Resources.Load ("NoteSpawner", typeof(GameObject))) as GameObject;
+			NoteSpawnerScript spawn = noteSpawn.GetComponent<NoteSpawnerScript> ();
+			spawn.MakeItRain ();
+			spawn.AssignID (2);
+		}
 
 	}
 
@@ -133,6 +139,9 @@ public class EquipQuest : Quest {
 		questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
+
+
+		questItNote.transform.parent = visorNode.transform;
 	}
 
 	public void questTextSpawn(){
@@ -158,8 +167,8 @@ public class EquipQuest : Quest {
 			manager.currentQuestList.Remove (theCurrentQuest);
 		}
 
-		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
-		stars.Explosion ();
+		//stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
+		//stars.Explosion ();
 	}
 
 // public void to finish quest {

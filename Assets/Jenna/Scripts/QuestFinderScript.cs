@@ -12,6 +12,9 @@ public class QuestFinderScript : MonoBehaviour
 	[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
 
+	// for grail quest
+	public Quest grailQuest;
+
 	// removal from lists
 	private List<GameObject> questItemsToRemove = new List<GameObject>();
 	private List<GameObject> pickupsToRemove = new List<GameObject>();
@@ -28,12 +31,25 @@ public class QuestFinderScript : MonoBehaviour
 	// for seeing if they can be equipped
 	public List<GameObject> equippables = new List<GameObject>();
 
-
 	// ints bc ya never know
 	int interactablesSize;
 	int objectsSize;
+//	public int currentQuests;
+//	public int levelNum;
+//	[HideInInspector]
+//	public LevelManager levelman;
+//	[HideInInspector]
+//	public QuestManager questman;
 
 	public void FindQuests (){
+
+		// find the levelmanager + questmanager
+//		levelman = GameObject.Find("Bootstrapper").GetComponent<LevelManager>();
+//		questman = this.gameObject.GetComponent<QuestManager> ();
+//		levelNum = levelman.levelNum;
+
+		// change the size based on what level number we're in
+		//questman.currentQuestList.Capacity 
 
 		// find the items in the scene and add them to a list of questable items
 		interactables = new List<GameObject> ();
@@ -69,7 +85,7 @@ public class QuestFinderScript : MonoBehaviour
 							if (ranger >= 0.65f) { 
 								iset.ableToBeCarried = true; 
 								if (!pickups.Contains (go)) { 
-									pickups.Add (go); 
+									pickups.Add (go);
 								} 
 							}
 
