@@ -4,7 +4,21 @@ using UnityEngine;
 
 public class InteractionSettings : MonoBehaviour {
 
-	public bool ableToBeCarried;	// Whether the object is able to be carried.
+	public bool ableToBeCarried
+    {
+        get
+        {
+            if (IsNPC || transform.parent.GetComponent<Collider>().bounds.extents.magnitude > 5f)
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+        }
+    }	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.
 	public bool canBeUsedForQuests; // Whether this object can be used for quests.
@@ -63,6 +77,21 @@ public class InteractionSettings : MonoBehaviour {
             }
         }
     }   // Whether this object is currently in the player's visor.
+    public bool IsNPC
+    {
+        get
+        {
+            if (transform.parent.GetComponentInChildren<NPC>() != null)
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+    }
 
     public Vector3 equipPosition;
     public Vector3 equipRotation;
