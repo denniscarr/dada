@@ -109,6 +109,13 @@ public class PickupQuest : Quest {
 		CopyComponent (this, parentObject);
 
 		spawnNote ();
+
+		for (int i = 0; i < 20; i++) {
+			GameObject noteSpawn = Instantiate (Resources.Load ("NoteSpawner", typeof(GameObject))) as GameObject;
+			NoteSpawnerScript spawn = noteSpawn.GetComponent<NoteSpawnerScript> ();
+			spawn.MakeItRain ();
+			spawn.AssignID (1);
+		}
 	}
 
 	// method to copy alla this shit on the pickupquest on the quest object generated

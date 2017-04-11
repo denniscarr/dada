@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class QuestItNoteFunction : D_Function {
 
+	public int questID;
+
 	// Use this for initialization
 	new void Start () {
 		base.Start();
@@ -20,7 +22,6 @@ public class QuestItNoteFunction : D_Function {
             // Unparent from whatever object I was parented to before.
             if (transform.parent.parent != null && transform.parent.parent.name != "Equip Reference" && !intSet.IsInVisor)
             {
-                Debug.Log("Frozen");
                 transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 transform.parent.parent = null;
             }

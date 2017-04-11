@@ -82,6 +82,11 @@ public class EquippableFinder : MonoBehaviour {
             equipTarget = nearestObject;
         }
 
+        else
+        {
+            writer.DeleteTextBox();
+        }
+
 
         // PLAYER INPUT
         if (equipTarget != null && Input.GetKeyDown(equipKey))

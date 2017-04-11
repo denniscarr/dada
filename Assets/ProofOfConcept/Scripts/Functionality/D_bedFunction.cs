@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class D_bedFunction : D_Function {
-	public GameObject dweller; 
+
+    public GameObject dweller; 
+
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
