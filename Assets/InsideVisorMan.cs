@@ -32,22 +32,47 @@ public class InsideVisorMan : MonoBehaviour
 
     bool rotateMode = false;
 
-    enum State { NormalMovement, ControllingObject, DroppingObject };
-    State currentState = State.NormalMovement;
+    enum State { FirstPerson, FurnitureView, ControllingObject, DroppingObject };
+    State currentState = State.FurnitureView;
 
 
     void Start()
     {
         controlledObjectCurrentMoveSpeed = controlledObjectMoveSpeedSlow;
-
         objectCamera = objectCamGameObject.transform.FindChild("Pivot").GetComponentInChildren<Camera>();
     }
 
 
     void Update()
     {
-        if (currentState == State.NormalMovement)
+        if (currentState == State.FirstPerson)
         {
+            // Switch to furniture view.
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                objectCamGameObject.SetActive(true);
+                objectCamGameObject.GetComponent<FreeLookCam>().SetTarget(transform);
+                GetComponent<RigidbodyFirstPersonController>().enabled = false;
+                myCam.enabled = false;
+                Cursor.lockState = CursorLockMode.None;
+                currentState = State.FurnitureView;
+            }
+        }
+
+        else if (currentState == State.FurnitureView)
+        {
+            // Switch to first person view.
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                objectCamGameObject.SetActive(false);
+                objectCamGameObject.GetComponent<FreeLookCam>().SetTarget(null);
+                GetComponent<RigidbodyFirstPersonController>().enabled = true;
+                myCam.enabled = true;
+                controlledObject = null;
+                spotlight.SetActive(false);
+                currentState = State.FirstPerson;
+            }
+
             // See if I clicked on a thingy.
             RaycastHit hit;
             if (Input.GetMouseButtonDown(0) && Physics.Raycast(myCam.ScreenPointToRay(Input.mousePosition), out hit, 10f))
@@ -58,10 +83,7 @@ public class InsideVisorMan : MonoBehaviour
                     controlledObject = hit.collider.gameObject;
                     controlledObject.GetComponent<Rigidbody>().useGravity = false;
                     controlledObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
-                    objectCamGameObject.SetActive(true);
                     objectCamGameObject.GetComponent<FreeLookCam>().SetTarget(hit.collider.gameObject.transform);
-                    GetComponent<RigidbodyFirstPersonController>().enabled = false;
-                    myCam.enabled = false;
                     spotlight.SetActive(true);
 
                     if (controlledObject.GetComponent<StickToNextObject>() != null)
@@ -99,7 +121,7 @@ public class InsideVisorMan : MonoBehaviour
             // See if the controlled object has for some reason stopped existing or whatever.
             if (controlledObject == null)
             {
-                currentState = State.NormalMovement;
+                currentState = State.FurnitureView;
                 return;
             }
 
@@ -183,48 +205,9 @@ public class InsideVisorMan : MonoBehaviour
             {
                 // Make sure camera does not move.
                 objectCamGameObject.GetComponent<FreeLookCam>().m_TurnSpeed = 0f;
-                newRotation *= CamRelativeRotate(-Input.GetAxis("Mouse X"), -Input.mouseScrollDelta.y, -Input.GetAxis("Mouse Y"));
 
-                //if (Input.GetKey(KeyCode.W))
-                //{
-                //    newRotation *= CamRelativeRotate(0, -1, 0);
-                //}
-
-                //else if (Input.GetKey(KeyCode.S))
-                //{
-                //    newRotation *= CamRelativeRotate(0, 1, 0);
-                //}
-
-                //if (Input.GetKey(KeyCode.D))
-                //{
-                //    newRotation *= CamRelativeRotate(-1, 0, 0);
-                //}
-
-                //else if (Input.GetKey(KeyCode.A))
-                //{
-                //    newRotation *= CamRelativeRotate(1, 0, 0);
-                //}
-
-                //if (Input.GetKey(KeyCode.Q))
-                //{
-                //    newRotation *= CamRelativeRotate(0, 0, -1);
-                //}
-
-                //else if (Input.GetKey(KeyCode.E))
-                //{
-                //    newRotation *= CamRelativeRotate(0, 0, 1);
-                //}
-
-                // Up/Down arrow keys move controlled object on Y axis.
-                //if (Input.GetKey(KeyCode.UpArrow))
-                //{
-                //    newPosition += Vector3.up * carriedObjectMoveSpeed * Time.deltaTime;
-                //}
-
-                //else if (Input.GetKey(KeyCode.DownArrow))
-                //{
-                //    newPosition += Vector3.down * carriedObjectMoveSpeed * Time.deltaTime;
-                //}
+                // Rotate it according to mouse.
+                newRotation *= CamRelativeRotate(-Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"), -Input.mouseScrollDelta.y);
             }
 
             controlledObject.GetComponent<Rigidbody>().MovePosition(newPosition);
@@ -239,13 +222,10 @@ public class InsideVisorMan : MonoBehaviour
             {
                 if (controlledObject.GetComponent<StickToNextObject>().doIt == false)
                 {
-                    objectCamGameObject.SetActive(false);
                     objectCamGameObject.GetComponent<FreeLookCam>().SetTarget(null);
-                    GetComponent<RigidbodyFirstPersonController>().enabled = true;
-                    myCam.enabled = true;
                     controlledObject = null;
                     spotlight.SetActive(false);
-                    currentState = State.NormalMovement;
+                    currentState = State.FurnitureView;
                 }
             }
         }
