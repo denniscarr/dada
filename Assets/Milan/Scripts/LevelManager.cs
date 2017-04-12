@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : SimpleManager.Manager<Level> {
 
 	public Services.TYPES[] props;
-
+	public bool showSky = false;
 	public GameObject SceneText;
 	public Level currentLevel;
 	public Light cookieLight;
@@ -34,6 +34,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
 		Level.noiseScale = perlinFrequency;
+
+		RenderSettings.fogEndDistance = 100;
 
         Create();
 
