@@ -37,11 +37,16 @@ public class NPC : MonoBehaviour {
     float helloLength = 2f; // How long this NPC pauses to say hello. (Only applies if this NPC does not have an animator, if they do then we'll just wait until the waving animation ends.
     string helloName;   // The name of the object that we're going to say hello to
     bool saidHello; // Whether we already displayed out hello text during the current wave.
+    float helloTimer = 0.0f;
 
     // USED FOR THROWING OBJECTS
     public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
     float throwForce = 20f;     
     Transform throwTarget;  // The object I will throw my carried object at.
+
+    // USED FOR HATE
+    [SerializeField] float hateProbability = 0.04f; // The probability that I will hate an object if I see it.
+    string[] hatedObjects;  // The name of objects that I hate.
 
     // GENERAL USE
     float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
@@ -66,14 +71,12 @@ public class NPC : MonoBehaviour {
         rb = transform.parent.GetComponent<Rigidbody>();
 		speakSource = GetComponent<AudioSource> ();
         // See if I have an animator before I try to use NPCAnimation.
-        if (transform.parent.GetComponentInChildren<Animator>() != null)
+        if (transform.parent.GetComponentInChildren<Animator>().isHuman)
         {
             npcAnimation = GetComponent<NPCAnimation>();
         }
 
         writer = GetComponent<Writer>();
-
-
 
         // If I have no hand position assigned, create one.
         if (handTransform == null)
@@ -86,6 +89,16 @@ public class NPC : MonoBehaviour {
             handObject.transform.rotation = Quaternion.identity;
             handObject.transform.Translate(new Vector3(0f, 1f, 0f));
             handTransform = handObject.transform;
+        }
+
+        // Decide which objects I should hate.
+        int numberOfHatedObjects = Random.Range(0, 5);
+        InteractionSettings[] allGameObjects = GameObject.FindObjectsOfType<InteractionSettings>();
+        hatedObjects = new string[numberOfHatedObjects];
+        for (int i = 0; i < numberOfHatedObjects; i++)
+        {
+            hatedObjects[i] = allGameObjects[Random.Range(0, allGameObjects.Length)].transform.parent.name;
+            Debug.Log(hatedObjects[i]);
         }
 
         EvaluateSurroundings();
@@ -189,6 +202,16 @@ public class NPC : MonoBehaviour {
 
             if (Physics.Raycast(rayOrigin, rayDirection, out hit, lookForwardRange))
             {
+                // See if I hate the object I'm looking at.
+                foreach (string name in hatedObjects)
+                {
+                    if (name == hit.collider.gameObject.name)
+                    {
+                        writer.WriteSpecifiedString("Oh no! I hate " + name + "s! I'm out of here!");
+                        baseDirection *= -1;
+                    }
+                }
+
                 // See if the object we're looking at is a player or another NPC. (For waving hello.)
                 if (hit.collider.GetComponentInChildren<NPC>() != null ||
                      hit.collider.name == "Player")
@@ -246,7 +269,7 @@ public class NPC : MonoBehaviour {
                 AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
                 
                 // Display text.
-                if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.4f && !saidHello)
+                if (!saidHello && asi.IsName("WavingHello") && asi.normalizedTime >= 0.4f)
                 {
                     writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
@@ -256,7 +279,7 @@ public class NPC : MonoBehaviour {
                 }
 
                 // Finish waving.
-                else if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f && saidHello)
+                else if (saidHello && asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f)
                 {
                     npcAnimation.WaveHelloFinished();
                     saidHello = false;
@@ -267,11 +290,12 @@ public class NPC : MonoBehaviour {
             // If this NPC does not use an animator.
             else
             {
-                generalTimer += Time.deltaTime;
-                Debug.Log(generalTimer);
+                Debug.Log("yo");
+
+                helloTimer += Time.deltaTime;
 
                 // Display text.
-                if (generalTimer >= helloLength*0.5f && !saidHello)
+                if (!saidHello && helloTimer >= helloLength*0.5f)
                 {
                     writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
@@ -281,10 +305,12 @@ public class NPC : MonoBehaviour {
                 }
 
                 // Finish waving.
-                else if (generalTimer >= helloLength && saidHello)
+                else if (saidHello && helloTimer >= helloLength)
                 {
+                    Debug.Log("doneoe");
                     saidHello = false;
                     EvaluateSurroundings();
+                    helloTimer = 0f;
                 }
             }
         }
@@ -496,7 +522,7 @@ public class NPC : MonoBehaviour {
             evaluateSurroundingsFreqCurrent = Random.Range(evaluateSurroundingsFreqMin, evaluateSurroundingsFreqMax);
             timeSinceLastEvaluation = 0.0f;
 
-            //currentState = BehaviorState.NormalMovement;
+            currentState = BehaviorState.NormalMovement;
         }
     }
 

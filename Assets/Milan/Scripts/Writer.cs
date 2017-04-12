@@ -166,7 +166,7 @@ public class Writer : MonoBehaviour {
         }
 
         // Rotate the text containter towards the player.
-        textContainer.transform.LookAt(Camera.main.transform);
+        textContainer.transform.LookAt(Services.Player.transform);
         textContainer.transform.Rotate(0f, 180f, 0f);
 
         // Set all values back to zero.

@@ -19,7 +19,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	bool playerPlaced;
 	bool usePerlin = false;
 
-	int[] highestPoints;
+	List<int> highestPointIndices;
 	int highestPointIndex;
 	int NPCs, Pickups, NonPickups, Sprites;
 	int spriteType;
@@ -28,6 +28,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	GameObject ground, sky;
 	Vector3[] vertices;
+	Vector3[] normals;
 	Mesh terrain, clouds;
 	Vector2[] uvs;
 	Vector3 centre;
@@ -100,6 +101,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		sky.GetComponent<Renderer> ().receiveShadows = false;
 		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
+		if (!Services.LevelGen.showSky) {
+			sky.GetComponent<Renderer> ().enabled = false;
+		}
 
 		centre = Vector3.zero;
 
@@ -114,8 +118,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		NonPickups = 0;
 		Sprites = 0;
 
+		highestPointIndices = new List<int> ();
+
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if (c.name != "UpperCamera") {
+				c.backgroundColor = Color.black;
 				c.clearFlags = CameraClearFlags.Color;
 			}
 		}
@@ -130,19 +137,19 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = 1 - playerHeightNormalized;
 		}
-		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if(c.name != "UpperCamera"){
-				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
+				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime);
 			}
 		}
 
 
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-		RenderSettings.fogEndDistance = Mathf.Lerp (50, 250, playerHeightNormalized);
-		Services.LevelGen.cookieLight.cookieSize = (Mathf.Sin (Time.time) * 100) + 200;
+//		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
-		Services.LevelGen.sun.color = Color.Lerp (Color.black, Color.white, Mathf.Sin(Time.time)/2 + 0.5f);
+//		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
+
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
@@ -161,8 +168,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
 
 				float skyCoefficient = Mathf.Pow(perlinVal, 3);
-				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
-//				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
+//				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
+				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
 				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
 				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x, y) + Grayscale);
 	
@@ -201,11 +208,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	void GenerateChunk(){
 		 
+
 		highestPoint = -Mathf.Infinity;
 		highestPointIndex = 0;
 
 		float xCoord = xOrigin;
 		float yCoord = yOrigin;
+
 
 		for (int i = 0, y = 0; y <= _length; y++, yCoord++) {
 
@@ -216,7 +225,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				float perlinVal = 0;
 
 				if (usePerlin) {
-					perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 1, 0.5f);
+					perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
 				} else {	
 					Color c = _bitmap.GetPixel (x, y);
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
@@ -244,7 +253,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 				vertices [i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
 				vertices [i] += new Vector3 (x, 0, y) * tileScale;
-
 				//drag height to 0 around edge of circle
 				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 8));
 
@@ -253,7 +261,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				if (Vector3.Distance (vertices [i], centre) > ((_width * tileScale) / 2)) {
 					float spillover = Vector3.Distance (centre, vertices [i]) - ((_width / 2) * tileScale);
 					vertices [i] = Vector3.Lerp (vertices [i], centre, spillover / hypotenuse);
-					vertices [i] -= (Vector3.up * spillover);
+					vertices [i] -= (Vector3.up * spillover)/10;
 				} else {
 					if (vertices [i].y > highestPoint) {
 						highestPoint = vertices [i].y;
@@ -272,6 +280,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	}
 
 	void PopulateMap(){
+		float localMaximum = float.NegativeInfinity;
+		int localMaxIndex = 0;
+
 		for (int i = 0, y = 0; y <= _length; y++) {
 
 
@@ -280,14 +291,58 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				float perlinVal = (vertices [i].y / _height)/tileScale;
 				perlinVal = Mathf.Clamp01(perlinVal * normalizedPerlinHeight);
 
+					
 				_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
-				if (Vector3.Distance (vertices [i], centre) < ((_width * tileScale) / 2)) {
-					LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
+				LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
+
+
+				if (Vector3.Distance (vertices [i], vertices [localMaxIndex]) < 25) {
+					if (perlinVal > localMaximum) {
+						localMaximum = perlinVal;
+						localMaxIndex = i;
+					}
+				} else {
+					if (localMaximum > 0.9f) {
+
+						bool nearExistingMax = false;
+
+						foreach (int indice in highestPointIndices) {
+							if (Vector3.Distance (vertices [indice], vertices [localMaxIndex]) < 50) {
+								nearExistingMax = true;
+							}
+						}
+						if (!nearExistingMax){
+							highestPointIndices.Add (i);
+						}
+					}
+
+					localMaximum = float.NegativeInfinity;
+					localMaxIndex = i;
 				}
+
 			}
 		}
+
+		int length = Random.Range (10, 32);
+		foreach (int indice in highestPointIndices) {
+			for (int j = 0; j < length; j++) {
+				GameObject newObject = Instantiate (Services.Prefabs.PREFABS [(int)Services.TYPES.Sprite] [0], Vector3.zero, Quaternion.identity) as GameObject;
+				newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [(int)Services.SPRITES.image] [Random.Range (0, Services.Prefabs.SPRITES [(int)Services.SPRITES.image].Length)];
+				newObject.GetComponent<ChangeSprite> ().SpriteIndex = (int)Services.SPRITES.image;
+				newObject.transform.localScale /= newObject.GetComponent<SpriteRenderer> ().bounds.size.y;
+				newObject.transform.localScale *= 5;
+				newObject.AddComponent<BoxCollider> ().isTrigger = true;
+
+				newObject.transform.parent = transform;
+				newObject.transform.localPosition = vertices[indice] + (Vector3.up * j * 2) - (Vector3.up * 2);
+
+				newObject.transform.Rotate (0, Random.Range(0, 360), 0);
+			}
+		}
+		_bitmap.Apply ();
 	}
+		
 		
 	public GameObject LevelObjectFactory(float x, Vector3 pos, Vector2 index){
 
@@ -327,11 +382,15 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		case 2:
-			spriteIndex = (int)Services.SPRITES.foliage;
+			spriteIndex = (int)Services.SPRITES.tall;
+			break;
+
+		case 3:
+			spriteIndex = (int)Services.SPRITES.gate;
 			break;
 
 		default:
-			spriteIndex = spriteType;
+			spriteIndex = Random.Range(0, Services.Prefabs.SPRITES.Length);
 			break;
 		}
 
@@ -375,19 +434,20 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 		}
 
-//		Debug.Log ("Object: " + Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]][Random.Range(0, Services.Prefabs.PREFABS[(int)Services.LevelGen.props[objectType]].Length)]);
+
 		newObject = Instantiate (Services.Prefabs.PREFABS[objectType][Random.Range(0, Services.Prefabs.PREFABS[objectType].Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
+			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
 //				r.material.shader = Services.Prefabs.FlatShading;
 //				r.material.SetColor ("_Color", floorColor);
 //			}
-
+//
 			if (newObject.GetComponentInChildren<Renderer> ().bounds.size.x > newObject.GetComponentInChildren<Renderer> ().bounds.size.z && newObject.GetComponentInChildren<Renderer> ().bounds.size.x > 1) {
 				newObject.transform.localScale /= newObject.GetComponentInChildren<Renderer> ().bounds.size.x;
 			} else if(newObject.GetComponentInChildren<Renderer> ().bounds.size.z > 1){
@@ -397,14 +457,17 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;
+
 		if (newObject.GetComponentInChildren<SpriteRenderer> () == null) {
-			newObject.transform.localScale *= Random.Range (1f, tileScale);
+			newObject.transform.localScale *= Random.Range (3.0f, 5.0f);
 			newObject.transform.localPosition += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
 		} else {
-			newObject.transform.localScale *= Random.Range (1f, tileScale/2);
-			newObject.transform.localPosition -= Vector3.up * (newObject.GetComponent<SpriteRenderer>().bounds.extents.y/4);
+//			newObject.transform.localScale *= Random.Range (1.0f, 2.0f);
+			newObject.transform.localPosition -= Vector3.up * (newObject.GetComponent<SpriteRenderer> ().bounds.extents.y / 4);
+			newObject.AddComponent<BoxCollider> ().isTrigger = true;
 		}
-		Vector3 targetPosition = transform.position;
+			
+		Vector3 targetPosition = normals [(int)index.x * (int)index.y];
 		targetPosition.y = newObject.transform.position.y;
 		newObject.transform.LookAt(targetPosition);
 		newObject.transform.Rotate (0, 180, 0);
@@ -476,8 +539,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		terrain.uv = uvs;
 
 		terrain.RecalculateNormals ();
+		normals = terrain.normals;
 		ground.GetComponent<MeshFilter> ().mesh = terrain;
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
+//		ground.GetComponent<Renderer> ().enabled = false;
 
 		_bitmap.Apply ();
 
@@ -492,6 +557,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		sky.GetComponent<MeshFilter> ().mesh = clouds;
 		sky.transform.position += Vector3.up * (highestPoint + 100);
 		sky.transform.localScale *= 2;
+
+		Services.LevelGen.cookieLight.cookie = _bitmap;
 	}
 
 	public void OnDestroyed(){
