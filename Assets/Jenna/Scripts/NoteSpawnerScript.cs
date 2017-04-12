@@ -38,8 +38,8 @@ public class NoteSpawnerScript : MonoBehaviour {
 		visorNode = GameObject.Find ("UpperNode").GetComponent<Transform>();  
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject; 
 		questItNote.transform.position = new Vector3(visorNode.transform.position.x + ranger, 
-			visorNode.transform.position.y + 30, 
-			visorNode.transform.position.z + ranger);
+			visorNode.transform.position.y + 20 + ranger, 
+			visorNode.transform.position.z + ranger + 30);
 
 
 		// make the actual text appear 

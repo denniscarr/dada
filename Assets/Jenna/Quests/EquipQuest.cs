@@ -18,19 +18,19 @@ public class EquipQuest : Quest {
 	[HideInInspector]
 	QuestBuilderScript builder;
 	[HideInInspector]
-	public EquippableFinder equipFind;
+	EquippableFinder equipFind;
 	[HideInInspector]
-	public QuestManager manager;
+	QuestManager manager;
 	[HideInInspector]
-	public QuestObject questobjectscript;
+	QuestObject questobjectscript;
 
 	// text
 	PickupQuest pickup;	//using this to spawn quest text
-	public GameObject textSpawn;
-	public TextMesh text;
+	GameObject textSpawn;
+	TextMesh text;
 
 	// for the questit note
-	public GameObject questItNote;
+	GameObject questItNote;
 	Transform visorNode;
 
 	// for text spawning
@@ -156,25 +156,11 @@ public class EquipQuest : Quest {
 
 	// change these interactions to make them more interesting and meaningful
 	public void EndQuest(){
-		//PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
 		EquipQuest theCurrentQuest = parentObject.GetComponent<EquipQuest>();
 
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
 		if (Input.GetMouseButton(0)){
-			Destroy (parentObject);
-			manager.currentQuestList.Remove (theCurrentQuest);
-		}
-
-		//stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
-		//stars.Explosion ();
 	}
-
-// public void to finish quest {
-//reference the current quest on the object
-//change the text
-//change the progress
-//destroy at some point
-//}
 }
