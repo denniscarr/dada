@@ -98,7 +98,7 @@ public class NPC : MonoBehaviour {
         for (int i = 0; i < numberOfHatedObjects; i++)
         {
             hatedObjects[i] = allGameObjects[Random.Range(0, allGameObjects.Length)].transform.parent.name;
-            Debug.Log(hatedObjects[i]);
+            //Debug.Log(hatedObjects[i]);
         }
 
         EvaluateSurroundings();
@@ -290,8 +290,6 @@ public class NPC : MonoBehaviour {
             // If this NPC does not use an animator.
             else
             {
-                Debug.Log("yo");
-
                 helloTimer += Time.deltaTime;
 
                 // Display text.

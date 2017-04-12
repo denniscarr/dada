@@ -136,18 +136,27 @@ public class PickupQuest : Quest {
         visorNode = GameObject.Find("UpperNode").GetComponent<Transform>();
         //visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
         questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-		//questItNote.transform.position = visorNode.transform.position;
-		questItNote.transform.position = new Vector3(visorNode.transform.position.x,
-										visorNode.transform.position.y + 5,
-										visorNode.transform.position.z);
+        questItNote.transform.parent = visorNode.transform;
+        //questItNote.transform.position = visorNode.transform.position;
+        questItNote.transform.localPosition = new Vector3(
+            Random.Range(-2.3f, 5.1f),
+			Random.Range(1f, 4.1f),
+			1.8f);
 
-		// make the actual text appear
-		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
-		questCanvas.transform.parent = questItNote.gameObject.transform;
+        questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
+            0f,
+            0f,
+            0f));
+
+        // make the actual text appear
+        Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
+		//questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
 
-        questItNote.transform.parent = visorNode.transform;
+        // Stick em to the wall.
+        questItNote.GetComponentInChildren<QuestItNoteFunction>().useOnStart = true;
+
     }
 
     public void questTextSpawn(){

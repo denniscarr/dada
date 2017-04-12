@@ -5,10 +5,16 @@ using UnityEngine;
 public class QuestItNoteFunction : D_Function {
 
 	public int questID;
+    public bool useOnStart = false; // Whether I should stick to something as soon as I spawn.
 
 	// Use this for initialization
 	new void Start () {
 		base.Start();
+
+        if (useOnStart)
+        {
+            Use();
+        }
 	}
 	
 	// Update is called once per frame
@@ -47,34 +53,29 @@ public class QuestItNoteFunction : D_Function {
 	{
 		base.Use ();
 
-        Debug.Log("usin is choosin!");
-
         // Raycast from my butt to the next surface.
         RaycastHit hit;
         Debug.DrawRay(transform.parent.position, transform.parent.forward * 5f, Color.red, 1f);
         if (Physics.Raycast(transform.parent.position, transform.parent.forward, out hit, 30f))
         {
-            GetDropped();
+            if (!useOnStart) GetDropped();
             transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 
             // Move my position to the point of ray hit
             transform.parent.position = hit.point;
 
-            // Rotate me to the normal of the hit so it looks like I'm sticking to the thingy I hit.
-            transform.parent.rotation = Quaternion.FromToRotation(transform.parent.forward, hit.normal);
             transform.parent.SetParent(hit.collider.gameObject.transform);
+
+            // Rotate me to the normal of the hit so it looks like I'm sticking to the thingy I hit.
+            if (hit.collider.name == "UpperNode" || hit.collider.name.Contains("QuestItNote"))
+            {
+                transform.parent.localRotation = Quaternion.identity;
+            }
+
+            else
+            {
+                transform.parent.rotation = Quaternion.FromToRotation(transform.parent.forward, hit.normal);
+            }  
         }
-
-		//if (transform.parent.parent.name == "UpperNode")
-  //      {
-		//	Services.Player.transform.parent.BroadcastMessage ("StopHoldingItemInMouse");
-		//}
-
-  //      else
-  //      {
-		//	transform.parent.parent = null;
-		//}
-
-        //GetComponentInParent<Rigidbody> ().isKinematic = !GetComponentInParent<Rigidbody> ().isKinematic;
-	}
+    }
 }

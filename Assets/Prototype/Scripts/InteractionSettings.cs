@@ -112,6 +112,8 @@ public class InteractionSettings : MonoBehaviour {
         savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
 
+        _carryingObject = null;
+
         if (IsInVisor)
         {
             originalParent = null;
