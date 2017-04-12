@@ -44,6 +44,10 @@ public class NPC : MonoBehaviour {
     float throwForce = 20f;     
     Transform throwTarget;  // The object I will throw my carried object at.
 
+    // USED FOR HATE
+    [SerializeField] float hateProbability = 0.04f; // The probability that I will hate an object if I see it.
+    string[] hatedObjects;  // The name of objects that I hate.
+
     // GENERAL USE
     float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
 
@@ -74,8 +78,6 @@ public class NPC : MonoBehaviour {
 
         writer = GetComponent<Writer>();
 
-
-
         // If I have no hand position assigned, create one.
         if (handTransform == null)
         {
@@ -87,6 +89,16 @@ public class NPC : MonoBehaviour {
             handObject.transform.rotation = Quaternion.identity;
             handObject.transform.Translate(new Vector3(0f, 1f, 0f));
             handTransform = handObject.transform;
+        }
+
+        // Decide which objects I should hate.
+        int numberOfHatedObjects = Random.Range(0, 5);
+        InteractionSettings[] allGameObjects = GameObject.FindObjectsOfType<InteractionSettings>();
+        hatedObjects = new string[numberOfHatedObjects];
+        for (int i = 0; i < numberOfHatedObjects; i++)
+        {
+            hatedObjects[i] = allGameObjects[Random.Range(0, allGameObjects.Length)].transform.parent.name;
+            Debug.Log(hatedObjects[i]);
         }
 
         EvaluateSurroundings();
@@ -190,6 +202,16 @@ public class NPC : MonoBehaviour {
 
             if (Physics.Raycast(rayOrigin, rayDirection, out hit, lookForwardRange))
             {
+                // See if I hate the object I'm looking at.
+                foreach (string name in hatedObjects)
+                {
+                    if (name == hit.collider.gameObject.name)
+                    {
+                        writer.WriteSpecifiedString("Oh no! I hate " + name + "s! I'm out of here!");
+                        baseDirection *= -1;
+                    }
+                }
+
                 // See if the object we're looking at is a player or another NPC. (For waving hello.)
                 if (hit.collider.GetComponentInChildren<NPC>() != null ||
                      hit.collider.name == "Player")
