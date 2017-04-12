@@ -37,6 +37,7 @@ public class NPC : MonoBehaviour {
     float helloLength = 2f; // How long this NPC pauses to say hello. (Only applies if this NPC does not have an animator, if they do then we'll just wait until the waving animation ends.
     string helloName;   // The name of the object that we're going to say hello to
     bool saidHello; // Whether we already displayed out hello text during the current wave.
+    float helloTimer = 0.0f;
 
     // USED FOR THROWING OBJECTS
     public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
@@ -66,7 +67,7 @@ public class NPC : MonoBehaviour {
         rb = transform.parent.GetComponent<Rigidbody>();
 		speakSource = GetComponent<AudioSource> ();
         // See if I have an animator before I try to use NPCAnimation.
-        if (transform.parent.GetComponentInChildren<Animator>() != null)
+        if (transform.parent.GetComponentInChildren<Animator>().isHuman)
         {
             npcAnimation = GetComponent<NPCAnimation>();
         }
@@ -246,7 +247,7 @@ public class NPC : MonoBehaviour {
                 AnimatorStateInfo asi = npcAnimation.animator.GetCurrentAnimatorStateInfo(0);
                 
                 // Display text.
-                if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.4f && !saidHello)
+                if (!saidHello && asi.IsName("WavingHello") && asi.normalizedTime >= 0.4f)
                 {
                     writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
@@ -256,7 +257,7 @@ public class NPC : MonoBehaviour {
                 }
 
                 // Finish waving.
-                else if (asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f && saidHello)
+                else if (saidHello && asi.IsName("WavingHello") && asi.normalizedTime >= 0.95f)
                 {
                     npcAnimation.WaveHelloFinished();
                     saidHello = false;
@@ -267,11 +268,12 @@ public class NPC : MonoBehaviour {
             // If this NPC does not use an animator.
             else
             {
-                generalTimer += Time.deltaTime;
-                Debug.Log(generalTimer);
+                Debug.Log("yo");
+
+                helloTimer += Time.deltaTime;
 
                 // Display text.
-                if (generalTimer >= helloLength*0.5f && !saidHello)
+                if (!saidHello && helloTimer >= helloLength*0.5f)
                 {
                     writer.WriteSpecifiedString("Hello, " + helloName + ". It's me, " + transform.parent.name + ".");
                     saidHello = true;
@@ -281,10 +283,12 @@ public class NPC : MonoBehaviour {
                 }
 
                 // Finish waving.
-                else if (generalTimer >= helloLength && saidHello)
+                else if (saidHello && helloTimer >= helloLength)
                 {
+                    Debug.Log("doneoe");
                     saidHello = false;
                     EvaluateSurroundings();
+                    helloTimer = 0f;
                 }
             }
         }
@@ -496,7 +500,7 @@ public class NPC : MonoBehaviour {
             evaluateSurroundingsFreqCurrent = Random.Range(evaluateSurroundingsFreqMin, evaluateSurroundingsFreqMax);
             timeSinceLastEvaluation = 0.0f;
 
-            //currentState = BehaviorState.NormalMovement;
+            currentState = BehaviorState.NormalMovement;
         }
     }
 
