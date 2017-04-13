@@ -35,9 +35,9 @@ public class Writer : MonoBehaviour {
 		spawnPosition = Vector3.zero;
 		originalPos = Vector3.zero;
 
-		if (sourceText != null) {
-			SetScript (sourceText.text);
-		}
+//		if (sourceText != null) {
+//			SetScript (sourceText.text);
+//		}
 	}
 
     private void Update()
