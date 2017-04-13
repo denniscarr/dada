@@ -9,7 +9,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public static float xOrigin, yOrigin;
 
 	float tileScale;
-	int _width, _length, _height;
+	public int _width, _length, _height;
 	string directory; 
 	public Texture2D _bitmap;
 	float colorRange = 0.1f;
@@ -128,6 +128,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			}
 		}
 
+		_width = Random.Range (10, 25);
+		_length = Random.Range (10, 25);
+		_height = Random.Range (1, 5);
 		GenerateChunk();
 	}
 
