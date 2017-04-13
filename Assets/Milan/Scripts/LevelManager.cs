@@ -97,7 +97,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		text.GetComponent<TextMesh> ().text = "Circle " + levelNum;
 
         Services.IncoherenceManager.HandleObjects();
-		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
 
 		Level.xOrigin += width / Level.noiseScale;
 		Level.yOrigin += height / Level.noiseScale;
@@ -107,7 +106,10 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		levelNum--;
         ManagedObjects.Add (l);
-		return l;
+
+        GameObject.Find("QuestManager").SendMessage("FindQuests");
+
+        return l;
 	}
 
 	public override void Destroy(Level l){
