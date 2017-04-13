@@ -137,18 +137,18 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = 1 - playerHeightNormalized;
 		}
-//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if(c.name != "UpperCamera"){
-				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime);
+				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 2.5f);
 			}
 		}
 
 
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-//		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
+		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
-//		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
+		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
 
 
 		float xCoord = xOrigin;
@@ -394,6 +394,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 		}
 
+		string tag = "Untagged";
 
 		switch (objectType) {
 			
@@ -410,7 +411,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		case (int)Services.TYPES.Sprite:
-
+			if (spriteIndex == (int)Services.SPRITES.image) {
+				tag = "ImageSprite";
+			} else {
+				tag = "InkSprite";
+			}
 			break;
 
 		case (int)Services.TYPES.Pickups:
@@ -441,6 +446,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
+			newObject.tag = tag;
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {

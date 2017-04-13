@@ -6,7 +6,7 @@ public class Writer : MonoBehaviour {
 	public Color textColor = Color.white;
 	float lineLength = 3f;
     float lineSpacing = 1f;
-    float textSize = 0.1f;
+    public float textSize = 0.1f;
 	public float tracking = 0.1f;
 	public float leading = 1;
 	public Font[] fonts;
@@ -15,11 +15,11 @@ public class Writer : MonoBehaviour {
 	public float delay; 
 	public float fadeSpeed;
 	public TextAsset sourceText;
-	Vector3 originalPos;
+	public Vector3 originalPos;
 
     public Transform permaText;
 
-	Vector3 	spawnPosition;
+	public Vector3 	spawnPosition;
 	string[][]	_script;
 	int 		wordIndex, lineIndex;
 	int 		stringIndex;
@@ -29,13 +29,15 @@ public class Writer : MonoBehaviour {
     float timeSinceLastWrite = 0;
 
 	void Start () {
-		originalPos = transform.position;
 		wordIndex = 0;
 		lineIndex = 0;
 		stringIndex = 0;
-		spawnPosition = transform.position;
+		spawnPosition = Vector3.zero;
+		originalPos = Vector3.zero;
 
-        SetScript(sourceText.text);
+		if (sourceText != null) {
+			SetScript (sourceText.text);
+		}
 	}
 
     private void Update()
@@ -43,7 +45,7 @@ public class Writer : MonoBehaviour {
         timeSinceLastWrite += Time.deltaTime;
     }
 
-    void SetScript(string _text)
+    public void SetScript(string _text)
     {
         string[] tempText = _text.Split(new char[] { '\n' });
 
@@ -72,19 +74,18 @@ public class Writer : MonoBehaviour {
 
 		string line = "";
 
-		foreach (string s in _script [stringIndex]) {
-			line += s;
+		foreach (string[] s in _script) {
+			foreach (string w in s) {
+				CreateWord (spawnPosition);
+				yield return new WaitForSeconds (delay);
+			}
 		}
-
-		foreach (string s in _script [stringIndex]) {
-			CreateWord (spawnPosition);
-			yield return new WaitForSeconds (delay);
-		}
+			
 	}
 
 	void UsedByPlayer() {
 		if (WordbyWord) {
-			CreateWord (spawnPosition);
+//			CreateWord (spawnPosition);
 		} else {
 			StartCoroutine (WriteText ());
 		}
@@ -178,8 +179,8 @@ public class Writer : MonoBehaviour {
 
 	public void CreateWord(Vector3 pos, Vector3 rotation = default(Vector3))
     {
-		GameObject newWord = (GameObject)Instantiate (textPrefab, pos, Quaternion.identity);
-        newWord.transform.parent = transform.parent;
+		GameObject newWord = (GameObject)Instantiate (textPrefab, Vector3.zero, Quaternion.identity);
+        newWord.transform.parent = transform;
 
 		TextStyling t = newWord.GetComponent<TextStyling> ();
 		t.setText (_script [stringIndex][wordIndex]);
@@ -188,8 +189,10 @@ public class Writer : MonoBehaviour {
 		newWord.GetComponent<TextMesh> ().color = textColor;
 		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
 		newWord.AddComponent<BoxCollider2D> ();
+		newWord.transform.localPosition = pos;
+		newWord.transform.localScale = new Vector3 (textSize, textSize, textSize);
 		spawnPosition.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
-
+	
 		t.fade = fade;
 		if (!noRotation) {
 			t.transform.rotation = Quaternion.Euler (rotation); 
@@ -202,7 +205,7 @@ public class Writer : MonoBehaviour {
 		if (wordIndex > _script [stringIndex].Length -1) {
 			wordIndex = 0;
 			spawnPosition.x = originalPos.x;
-			spawnPosition.y -= leading;
+			spawnPosition.y -= newWord.GetComponent<BoxCollider2D> ().bounds.size.y;
 			stringIndex++;
 			if (stringIndex > _script.Length -1) {
 				stringIndex = 0;

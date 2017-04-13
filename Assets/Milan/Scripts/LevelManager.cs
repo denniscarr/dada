@@ -20,15 +20,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	private float xOffset, yOffset;
 	private Texture2D[] maps;
 	private Gradient gradient;
-	GameObject text;
+	Writer writer;
 	void Start()
 	{
 
-		text = (GameObject)Instantiate (SceneText, Vector3.zero, Quaternion.identity);
-		text.transform.parent = Camera.main.transform;
-		text.transform.localPosition = new Vector3 (4f, -2.5f, 10);
-		text.transform.localScale *= 0.25f;
         //SceneManager.sceneLoaded += OnSceneChange;
+		writer = Services.Player.GetComponentInChildren<Writer>();
+		writer.spawnPosition += Vector3.forward * 2;
+		writer.spawnPosition += Vector3.right * 5;
+		writer.originalPos = writer.spawnPosition;
+
+
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
@@ -69,15 +71,15 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			}
 		}
 
-		NoiseRemapping = new float[20];
-
-		NoiseRemapping [0] = 0;
-		for(int i = 1; i < NoiseRemapping.Length; i++){
-			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
-			while (Mathf.Abs (NoiseRemapping [i] - NoiseRemapping [i - 1]) > 0.25f) {
-				NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
-			}
-		}
+//		NoiseRemapping = new float[20];
+//
+//		NoiseRemapping [0] = 0;
+//		for(int i = 1; i < NoiseRemapping.Length; i++){
+//			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+//			while (Mathf.Abs (NoiseRemapping [i] - NoiseRemapping [i - 1]) > 0.25f) {
+//				NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+//			}
+//		}
 
 		GameObject newLevel = new GameObject();
 		Level l = newLevel.AddComponent <Level> ();
@@ -94,7 +96,9 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			
 		l.OnCreated ();
 
-		text.GetComponent<TextMesh> ().text = "Circle " + levelNum;
+		writer.textSize = 1;
+		writer.SetScript (SetLevelText ());
+		StartCoroutine (writer.WriteText ());
 
         Services.IncoherenceManager.HandleObjects();
 		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
@@ -104,6 +108,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		xOffset += width;
 		yOffset += height;
+
+		SetLevelText ();
 
 		levelNum--;
         ManagedObjects.Add (l);
@@ -115,7 +121,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Destroy (l);
 	}
 
-    void OnDisable()
+	string SetLevelText(){
+		return "Act " + ManagedObjects.Count + ": A Forest \n" + width + " metres by " + height + " metres\n";
+	}
+    
+	void OnDisable()
     {
         //SceneManager.sceneLoaded -= OnSceneChange;
     }
