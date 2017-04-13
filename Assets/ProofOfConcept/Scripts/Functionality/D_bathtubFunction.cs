@@ -15,7 +15,7 @@ public class D_bathtubFunction : D_Function {
 		base.Use();
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (null);
-			transform.parent.GetComponentInChildren<D_Equip> ().abandonItem ();
+            GetDropped();
 		}
 		GetComponentInParent<Rigidbody>().AddForce(transform.right * bathtubSpeed);
 		Invoke ("vibrate", 3f);
