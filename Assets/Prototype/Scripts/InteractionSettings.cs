@@ -16,14 +16,9 @@ public class InteractionSettings : MonoBehaviour {
 
             else
             {
-				return _ableToBeCarried;
+				return false;
             }
         }
-
-		set 
-		{
-			_ableToBeCarried = value;
-		}
     }	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.
