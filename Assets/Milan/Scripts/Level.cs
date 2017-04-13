@@ -441,6 +441,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
+			newObject.layer = 2;
+
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {

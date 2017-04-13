@@ -70,10 +70,15 @@ public class MouseControllerNew : MonoBehaviour {
 			GetComponent<RectTransform>().localPosition = Vector3.zero;
 		}
 
-		clickGapCount += Time.fixedDeltaTime;
-		if(clickGapCount > CLICKGAPTIME){
-			DetectSelection();
+		if(playercontroller.Mode == ControlMode.IN_ROOM_MODE){
+			txtInfo.text = "";
+		}else if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
+			clickGapCount += Time.fixedDeltaTime;
+			if(clickGapCount > CLICKGAPTIME){
+				DetectSelection();
+			}
 		}
+
 			
 	}
 
@@ -81,7 +86,7 @@ public class MouseControllerNew : MonoBehaviour {
 	void DetectSelection(){
 		//get the ray to check whether player points at visor from upper camera
 		if(selectedObject){
-			Debug.Log("select "+selectedObject.name);
+			//Debug.Log("select "+selectedObject.name);
 			UpdateDraggedObjectPosition(selectedObject);
 			DetectPlacing(selectedObject);
 		}else{

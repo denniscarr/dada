@@ -73,10 +73,12 @@ public class PlayerControllerNew : MonoBehaviour {
 	public Transform cubeOnDraggedPlane;
 	private Vector3 inPointForPlaneFromCube;
 
+
 	// Use this for initialization
 	void Start () {
 		initPos = transform.position;
 		initRotation = transform.rotation;
+		Debug.Log("init");
 		initCameraRotation = UpperCamera.transform.rotation;
 		inPointForPlaneFromCube = cubeOnDraggedPlane.position;
 
@@ -111,6 +113,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	void InitZoomInMode(){
+		Debug.Log("reset");
 		transform.position = initPos;
 		transform.rotation = initRotation;
 
