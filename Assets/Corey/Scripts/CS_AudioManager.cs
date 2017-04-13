@@ -367,17 +367,17 @@ public class CS_AudioManager : MonoBehaviour {
 	public void EqualizeStems (float n_ink, float n_image, float n_npc, float n_nonPickup, float totalObjects) {
 
 
-		float newImageSpriteVol = remapRange (n_image, 0.0f, 20f, -40f, 0f);
-		float newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -40f, 0f);
-		float newNPCStemVol = remapRange (n_npc, 0.0f, 20f, -40f, 0f);
-		float newNonPickupVol = remapRange (n_nonPickup, 0.0f, 20f, -40f, 0f);
+		float newImageSpriteVol = remapRange (n_image, 0.0f, totalObjects, -40f, 0f);
+		float newInkSpriteVol = remapRange (n_ink, 0.0f, totalObjects, -40f, 0f);
+		float newNPCStemVol = remapRange (n_npc, 0.0f, totalObjects, -40f, 0f);
+		float newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -40f, 0f);
 
 		
 
 		dadaMixer.DOSetFloat("ImageSpriteVol", newImageSpriteVol, 1.0f);
-		dadaMixer.DOSetFloat("InkSpriteVol", newInkSpriteVol, 1.0f);
-		dadaMixer.DOSetFloat("NPCStemVol", newInkSpriteVol, 1.0f);
-		dadaMixer.DOSetFloat("NonPickupVol", newNonPickupVol, 1.0f);
+		dadaMixer.SetFloat("InkSpriteVol", newInkSpriteVol);
+		dadaMixer.DOSetFloat("NPCStemVol", newNPCStemVol, 1.0f);
+		dadaMixer.SetFloat("NonPickupVol", newNonPickupVol);
 
 
 
