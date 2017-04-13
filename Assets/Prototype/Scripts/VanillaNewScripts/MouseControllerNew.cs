@@ -86,7 +86,7 @@ public class MouseControllerNew : MonoBehaviour {
 			DetectPlacing(selectedObject);
 		}else{
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
-			Debug.DrawRay(ray.origin,ray.direction);
+			//Debug.DrawRay(ray.origin,ray.direction);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
 				CheckPointedObject(hit.transform);
@@ -94,6 +94,7 @@ public class MouseControllerNew : MonoBehaviour {
 			}
 			//detect if click on things outside visor ray from main camera
 			ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
+			Debug.DrawRay(ray.origin,ray.direction);
 			if (Physics.Raycast (ray, out hit)) {
 				CheckPointedObject(hit.transform);
 			}
@@ -113,7 +114,7 @@ public class MouseControllerNew : MonoBehaviour {
 				}else{
 					//in visor man.cs
 				}
-			}else{
+			}else if(!pointedObject.name.Equals("GROUND")){
 				txtInfo.text = pointedObject.name + "refuses to be picked up.";
 				GetComponent<Image> ().color = new Color(1,0,0,0.5f);
 				//give cannot feedback
@@ -128,13 +129,16 @@ public class MouseControllerNew : MonoBehaviour {
 				//UseHandler();
 			}else{
 				//give cannot feedback
-				txtInfo.text = pointedObject.name + "refuses to be used.";
+				txtInfo.text = pointedObject.name + " refuses to be used.";
 				GetComponent<Image> ().color = new Color(1,0,0,0.5f);
 			}
 
 		}else{
 			GetComponent<Image> ().color = new Color(1,1,1,1);
-			//txtInfo.text = "Your mouse is over "+pointedObject.name;
+			//if(!pointedObject.name.Equals("GROUND")){
+				//txtInfo.text = "Your mouse is over "+pointedObject.name;	
+			//}
+
 		}
 	}
 
