@@ -127,8 +127,11 @@ public class NPC : MonoBehaviour {
                 Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), false);
             }
 
-            npcAnimation.ObjectPickedUp();
-            npcAnimation.ObjectThrown();
+            if (npcAnimation != null) 
+			{
+				npcAnimation.ObjectPickedUp();
+            	npcAnimation.ObjectThrown();
+			}
 
             writer.WriteSpecifiedString(
                 "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
