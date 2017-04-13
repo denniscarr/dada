@@ -8,6 +8,7 @@ public class QuestFinderScript : MonoBehaviour
 {
 	GameObject[] objects;
 	// for seeing if they're interactable
+	[HideInInspector]
 	private List<GameObject> interactables = new List<GameObject> ();
 	[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
