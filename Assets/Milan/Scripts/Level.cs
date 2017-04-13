@@ -21,7 +21,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	List<int> highestPointIndices;
 	int highestPointIndex;
-	int NPCs, Pickups, NonPickups, Sprites;
+	public int NPCs, Pickups, NonPickups, Sprites;
 	int spriteType;
 
 	GameObject[,] children;
@@ -55,6 +55,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.parent = transform;
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
+		ground.isStatic = true;
 
 		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		sky.transform.parent = transform;
@@ -137,18 +138,18 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = 1 - playerHeightNormalized;
 		}
-//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if(c.name != "UpperCamera"){
-				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime);
+				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 2.5f);
 			}
 		}
 
 
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-//		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
+		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
-//		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
+		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
 
 
 		float xCoord = xOrigin;
@@ -277,6 +278,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		OutputBitmap ();
 		PopulateMap ();
 		transform.position -= vertices [highestPointIndex];
+
+		GameObject killzone = (GameObject)Instantiate(Services.LevelGen.KillZone, Vector3.zero, Quaternion.identity);
+		killzone.transform.localScale += Vector3.right * _width * tileScale * 2;
+		killzone.transform.localScale += Vector3.forward * _length * tileScale * 2;
+		killzone.transform.localScale += Vector3.up * _height * tileScale * 2;
+		killzone.transform.position = transform.position - (Vector3.up * 30);
+		killzone.transform.parent = transform;
 	}
 
 	void PopulateMap(){
@@ -394,6 +402,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 		}
 
+		string tag = "Untagged";
 
 		switch (objectType) {
 			
@@ -410,7 +419,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		case (int)Services.TYPES.Sprite:
-
+			if (spriteIndex == (int)Services.SPRITES.image) {
+				tag = "ImageSprite";
+			} else {
+				tag = "InkSprite";
+			}
 			break;
 
 		case (int)Services.TYPES.Pickups:
@@ -441,6 +454,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
+			newObject.tag = tag;
+			newObject.layer = 2;
+			newObject.isStatic = true;
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
