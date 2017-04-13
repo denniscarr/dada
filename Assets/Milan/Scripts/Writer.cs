@@ -16,7 +16,7 @@ public class Writer : MonoBehaviour {
 	public float fadeSpeed;
 	public TextAsset sourceText;
 	public Vector3 originalPos;
-
+	Transform pivot;
     public Transform permaText;
 
 	public Vector3 	spawnPosition;
@@ -29,12 +29,15 @@ public class Writer : MonoBehaviour {
     public float cooldownTime = 0.5f;
     float timeSinceLastWrite = 0;
 
-	void Start () {
+	void Awake () {
 		wordIndex = 0;
 		lineIndex = 0;
 		stringIndex = 0;
 		originalPos = new Vector3(xOffset, yOffset, zOffset);
-		spawnPosition = originalPos;
+		pivot = new GameObject().transform;
+		pivot.transform.parent = transform;
+		pivot.transform.localPosition = originalPos;
+		spawnPosition = Vector3.zero;
 //		if (sourceText != null) {
 //			SetScript (sourceText.text);
 //		}
@@ -43,6 +46,7 @@ public class Writer : MonoBehaviour {
     private void Update()
     {
         timeSinceLastWrite += Time.deltaTime;
+		originalPos = pivot.transform.localPosition;
     }
 
     public void SetScript(string _text)
@@ -54,6 +58,9 @@ public class Writer : MonoBehaviour {
         for (int i = 0; i < tempText.Length; i++) {
             _script [i] = tempText [i].Split (new char[] { ' ' });
         }
+		stringIndex = 0;
+		lineIndex = 0;
+		wordIndex = 0;
     }
 
 	public string[]GetCurrentString(){
@@ -80,7 +87,8 @@ public class Writer : MonoBehaviour {
 				yield return new WaitForSeconds (delay);
 			}
 		}
-			
+		spawnPosition = Vector3.zero;
+
 	}
 
 	void UsedByPlayer() {
@@ -180,7 +188,7 @@ public class Writer : MonoBehaviour {
 	public void CreateWord(Vector3 pos, Vector3 rotation = default(Vector3))
     {
 		GameObject newWord = (GameObject)Instantiate (textPrefab, Vector3.zero, Quaternion.identity);
-        newWord.transform.parent = transform;
+        newWord.transform.parent = pivot;
 
 		TextStyling t = newWord.GetComponent<TextStyling> ();
 		t.setText (_script [stringIndex][wordIndex]);
@@ -190,26 +198,31 @@ public class Writer : MonoBehaviour {
 		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
 		newWord.AddComponent<BoxCollider2D> ();
 		newWord.transform.localPosition = pos;
+		newWord.transform.localRotation = Quaternion.Euler (Vector3.zero);
+//		newWord.transform.LookAt(Services.Player.transform.position);
+//		newWord.transform.Rotate (0, 180, 0);
 		newWord.transform.localScale = new Vector3 (textSize, textSize, textSize);
 		spawnPosition.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
 	
 		t.fade = fade;
-		if (!noRotation) {
-			t.transform.rotation = Quaternion.Euler (rotation); 
-		}
+
+//		if (!noRotation) {
+//			t.transform.rotation = Quaternion.Euler (rotation); 
+//		}
+
 		t.delete = delete;
 		t.fadeIn = fade;
 		t.speed = fadeSpeed;
 		wordIndex++;
 
-		if (wordIndex > _script [stringIndex].Length -1) {
+		if (wordIndex > _script [stringIndex].Length -1){
 			wordIndex = 0;
-			spawnPosition.x = originalPos.x;
+			spawnPosition.x = 0;
 			spawnPosition.y -= leading;
 			stringIndex++;
 			if (stringIndex > _script.Length -1) {
 				stringIndex = 0;
-				spawnPosition.y = originalPos.y;
+//				spawnPosition.y = originalPos.y;
 			}
 		}
 	}

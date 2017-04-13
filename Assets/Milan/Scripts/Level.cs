@@ -64,14 +64,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
-		palette = new Color[15];
+		palette = new Color[5];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
-//			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
+			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
-			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
 		SetGradient ();
@@ -149,7 +149,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		RenderSettings.fogColor = Camera.main.backgroundColor;
 		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
-		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
+		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, 1- playerHeightNormalized);
 
 
 		float xCoord = xOrigin;
@@ -183,8 +183,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		groundLerpedColour.Apply();
 		mesh.vertices = verts;
 
-		xOrigin += Time.deltaTime * 5;
-		yOrigin += Time.deltaTime * 5;
+		xOrigin += Time.deltaTime;
+		yOrigin += Time.deltaTime;
 
 	}
 
@@ -451,6 +451,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject = Instantiate (Services.Prefabs.PREFABS[objectType][Random.Range(0, Services.Prefabs.PREFABS[objectType].Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
+			
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
@@ -564,7 +565,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		groundLerpedColour.SetPixels (_bitmap.GetPixels());
 		groundLerpedColour.Apply ();
-//		groundLerpedColour.filterMode = FilterMode.Point;
+		groundLerpedColour.filterMode = FilterMode.Point;
 
 		clouds.vertices = vertices;
 		clouds.uv = uvs;
