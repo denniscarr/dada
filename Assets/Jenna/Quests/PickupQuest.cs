@@ -90,13 +90,8 @@ public class PickupQuest : Quest {
 		id = (QuestManager.questManager.questList.Count);
 
 		// add to the list of available quests on the parent object
-		objectScript.receivableQuestIDs.Add(id);
-
-		// check if the parent gameobject has quest slots available
+		objectScript.receivableQuestIDs.Add (id);
 		manager.CheckAvailableQuests (objectScript);
-
-		// check if THIS quest is available, and if so, make it available
-		manager.RequestAvailableQuest (id);										
 		progress = Quest.QuestProgress.AVAILABLE;
 
 		// give it a description eh
@@ -105,16 +100,17 @@ public class PickupQuest : Quest {
 
 		questTextSpawn ();
 
+		spawnNote ();
+
 		// put it on the parent object
 		CopyComponent (this, parentObject);
 
-		spawnNote ();
-
 		for (int i = 0; i < 20; i++) {
-			GameObject noteSpawn = Instantiate (Resources.Load ("NoteSpawner", typeof(GameObject))) as GameObject;
-			NoteSpawnerScript spawn = noteSpawn.GetComponent<NoteSpawnerScript> ();
-			spawn.MakeItRain ();
-			spawn.AssignID (1);
+//			GameObject noteSpawn = Instantiate (Resources.Load ("NoteSpawner", typeof(GameObject))) as GameObject;
+//			NoteSpawnerScript spawn = noteSpawn.GetComponent<NoteSpawnerScript> ();
+			NoteSpawnerScript noteSpawn = GameObject.Find("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript>();
+			noteSpawn.MakeItRain ();
+			noteSpawn.AssignID (1);
 		}
 	}
 
@@ -136,18 +132,26 @@ public class PickupQuest : Quest {
         visorNode = GameObject.Find("UpperNode").GetComponent<Transform>();
         //visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
         questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-		//questItNote.transform.position = visorNode.transform.position;
-		questItNote.transform.position = new Vector3(visorNode.transform.position.x,
-										visorNode.transform.position.y + 5,
-										visorNode.transform.position.z);
+        questItNote.transform.parent = visorNode.transform;
+        //questItNote.transform.position = visorNode.transform.position;
+        questItNote.transform.localPosition = new Vector3(
+            Random.Range(-2.3f, 5.1f),
+			Random.Range(1f, 4.1f),
+			2.5f);
 
-		// make the actual text appear
-		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
-		questCanvas.transform.parent = questItNote.gameObject.transform;
+        questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
+            0f,
+            0f,
+            Random.Range(-1f, 1f)));
+
+        // make the actual text appear
+        Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
+		//questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
 
-        questItNote.transform.parent = visorNode.transform;
+        // Stick em to the wall.
+        questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
     }
 
     public void questTextSpawn(){
@@ -167,19 +171,14 @@ public class PickupQuest : Quest {
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
-		stars = GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion> ();
-		stars.Explosion ();
+		GameObject stars = Instantiate (Resources.Load ("explosion", typeof(GameObject))) as GameObject; 
+		stars.transform.position = parentObject.transform.position; 
 
-		if (Input.GetMouseButton(0)){
-			Destroy (parentObject);
-			manager.currentQuestList.Remove (theCurrentQuest);
-		}
-
-//		GameObject.Find ("Bathroom Sink").GetComponentInChildren<D_starryExpolsion>().Explosion();
+		Destroy (parentObject);
 	}
 
-	public override void CheckStatus() {
-		// check if done on active quests
-
-	}
+//	public override void CheckStatus() {
+//		// check if done on active quests
+//
+//	}
 }

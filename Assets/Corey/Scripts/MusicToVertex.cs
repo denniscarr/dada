@@ -31,7 +31,7 @@ public class MusicToVertex : MonoBehaviour {
 
 		foreach (Renderer renderer in listOfMeshRenderers) {
 			renderer.material = audioReactiveMaterial;
-			Debug.Log (renderer.gameObject.name);
+			//Debug.Log (renderer.gameObject.name);
 		}
 		parentTransform = gameObject.transform.parent;
 		//Debug.Log (parentTransform.name);
