@@ -9,7 +9,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public static float xOrigin, yOrigin;
 
 	float tileScale;
-	int _width, _length, _height;
+	public int _width, _length, _height;
 	string directory; 
 	public Texture2D _bitmap;
 	float colorRange = 0.1f;
@@ -21,7 +21,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	List<int> highestPointIndices;
 	int highestPointIndex;
-	int NPCs, Pickups, NonPickups, Sprites;
+	public int NPCs, Pickups, NonPickups, Sprites;
 	int spriteType;
 
 	GameObject[,] children;
@@ -55,6 +55,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.parent = transform;
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
+		ground.isStatic = true;
 
 		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		sky.transform.parent = transform;
@@ -63,14 +64,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
-		palette = new Color[15];
+		palette = new Color[5];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
-//			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
+			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
-			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
 		SetGradient ();
@@ -127,6 +128,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			}
 		}
 
+		_width = Random.Range (10, 25);
+		_length = Random.Range (10, 25);
+		_height = Random.Range (1, 5);
 		GenerateChunk();
 	}
 
@@ -137,7 +141,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = 1 - playerHeightNormalized;
 		}
-//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if(c.name != "UpperCamera" && c){
 				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
@@ -146,9 +150,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 
 		RenderSettings.fogColor = Camera.main.backgroundColor;
-//		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
+		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
-//		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, Mathf.Sin(Time.time)/2 + 0.5f);
+		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, 1- playerHeightNormalized);
 
 
 		float xCoord = xOrigin;
@@ -182,8 +186,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		groundLerpedColour.Apply();
 		mesh.vertices = verts;
 
-		xOrigin += Time.deltaTime * 5;
-		yOrigin += Time.deltaTime * 5;
+		xOrigin += Time.deltaTime;
+		yOrigin += Time.deltaTime;
 
 	}
 
@@ -277,6 +281,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		OutputBitmap ();
 		PopulateMap ();
 		transform.position -= vertices [highestPointIndex];
+
+		GameObject killzone = (GameObject)Instantiate(Services.LevelGen.KillZone, Vector3.zero, Quaternion.identity);
+		killzone.transform.localScale += Vector3.right * _width * tileScale * 2;
+		killzone.transform.localScale += Vector3.forward * _length * tileScale * 2;
+		killzone.transform.localScale += Vector3.up * _height * tileScale * 2;
+		killzone.transform.position = transform.position - (Vector3.up * 30);
+		killzone.transform.parent = transform;
 	}
 
 	void PopulateMap(){
@@ -394,6 +405,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 		}
 
+		string tag = "Untagged";
 
 		switch (objectType) {
 			
@@ -410,7 +422,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		case (int)Services.TYPES.Sprite:
-
+			if (spriteIndex == (int)Services.SPRITES.image) {
+				tag = "ImageSprite";
+			} else {
+				tag = "InkSprite";
+			}
 			break;
 
 		case (int)Services.TYPES.Pickups:
@@ -438,10 +454,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject = Instantiate (Services.Prefabs.PREFABS[objectType][Random.Range(0, Services.Prefabs.PREFABS[objectType].Length)], Vector3.zero, Quaternion.identity) as GameObject;
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
+			
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
-			newObject.layer = 2;
 
 
 		} else {
@@ -550,7 +566,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		groundLerpedColour.SetPixels (_bitmap.GetPixels());
 		groundLerpedColour.Apply ();
-//		groundLerpedColour.filterMode = FilterMode.Point;
+		groundLerpedColour.filterMode = FilterMode.Point;
 
 		clouds.vertices = vertices;
 		clouds.uv = uvs;

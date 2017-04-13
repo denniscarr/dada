@@ -53,14 +53,16 @@ public class QuestBuilderScript : MonoBehaviour {
 		// AND CERTAIN NUMBERS TURN OUT TO BE GENERATING CERTAIN QUEST TYPES
 
 		if (Input.GetKeyDown(KeyCode.Tab)){
-			if (manager.questList.Count <= (Mathf.Abs(levelman.levelNum + 1))) {
-				if (manager.questList.Count >= 0) {
-					GeneratePickup ();
-				}
-			} else if (manager.questList.Count >= (Mathf.Abs(levelman.levelNum + 1))){
-				for (int i = 0; i < Random.Range (0, 30); i++) {
-					NoteSpawnerScript rain = spawner.GetComponent<NoteSpawnerScript> ();
-					rain.MakeItRain ();
+			if (finder.pickups.Count > 0) {
+				if (manager.questList.Count <= (Mathf.Abs (levelman.levelNum + 1))) {
+					if (manager.questList.Count >= 0) {
+						GeneratePickup ();
+					}
+				} else if (manager.questList.Count >= (Mathf.Abs (levelman.levelNum + 1))) {
+					for (int i = 0; i < Random.Range (0, 30); i++) {
+						NoteSpawnerScript rain = spawner.GetComponent<NoteSpawnerScript> ();
+						rain.MakeItRain ();
+					}
 				}
 			}
 		}
