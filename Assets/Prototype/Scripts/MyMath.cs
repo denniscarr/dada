@@ -19,9 +19,9 @@ public class MyMath {
 
         for (int i = 0; i < coordinates.Length; i++)
         {
-            if (coordinates[i] > largest)
+            if (Mathf.Abs(coordinates[i]) > largest)
             {
-                largest = coordinates[i];
+                largest = Mathf.Abs(coordinates[i]);
             }
         }
 
