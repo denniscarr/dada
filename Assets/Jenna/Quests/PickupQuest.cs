@@ -83,7 +83,7 @@ public class PickupQuest : Quest {
 		positionZ = parentObject.transform.position.z;
 
 		// create title to appear. THIS IS THE QUEST OBJECTIVE.
-		title = ("Pick up" + " " + parentObject.name); 
+		title = ("Drag" + " " + parentObject.name); 
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
@@ -182,15 +182,17 @@ public class PickupQuest : Quest {
 
 		// find the notes and destroy them
 		NoteSpawnerScript notes = GameObject.Find ("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript> ();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < notes.id1.Count; i++) {
 			stars = Instantiate (Resources.Load("explosion", typeof (GameObject))) as GameObject;
-			stars.transform.parent.position = notes.id1 [i].transform.position;
+			stars.transform.position = new Vector3 (Random.Range(0, 500),
+				Random.Range(0, 100),
+				Random.Range(0, 500));
 			Destroy (notes.id1[i]);
 		}
 
-		for (int i = 10; i < notes.id1.Count; i++) {
-			Destroy (notes.id1[i]);
-		}
+//		for (int i = 10; i < notes.id1.Count; i++) {
+//			Destroy (notes.id1[i]);
+//		}
 
 		notes.id1.Clear ();
 		//foreach(GameObject note in notes.id1){
