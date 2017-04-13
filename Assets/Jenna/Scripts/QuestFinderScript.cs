@@ -83,7 +83,7 @@ public class QuestFinderScript : MonoBehaviour
 
 							// can it be picked up? Add it to the list!
 							if (ranger >= 0.65f) { 
-								iset.ableToBeCarried = true; 
+//								iset.ableToBeCarried = true; 
 								if (!pickups.Contains (go)) { 
 									pickups.Add (go);
 								} 

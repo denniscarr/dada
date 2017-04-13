@@ -21,7 +21,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	List<int> highestPointIndices;
 	int highestPointIndex;
-	int NPCs, Pickups, NonPickups, Sprites;
+	public int NPCs, Pickups, NonPickups, Sprites;
 	int spriteType;
 
 	GameObject[,] children;
@@ -55,6 +55,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.parent = transform;
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
+		ground.isStatic = true;
 
 		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		sky.transform.parent = transform;
@@ -277,6 +278,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		OutputBitmap ();
 		PopulateMap ();
 		transform.position -= vertices [highestPointIndex];
+
+		GameObject killzone = (GameObject)Instantiate(Services.LevelGen.KillZone, Vector3.zero, Quaternion.identity);
+		killzone.transform.localScale += Vector3.right * _width * tileScale * 2;
+		killzone.transform.localScale += Vector3.forward * _length * tileScale * 2;
+		killzone.transform.localScale += Vector3.up * _height * tileScale * 2;
+		killzone.transform.position = transform.position - (Vector3.up * 30);
+		killzone.transform.parent = transform;
 	}
 
 	void PopulateMap(){
@@ -447,6 +455,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
 			newObject.tag = tag;
+			newObject.layer = 2;
+			newObject.isStatic = true;
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {

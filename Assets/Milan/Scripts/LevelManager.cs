@@ -7,7 +7,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public Services.TYPES[] props;
 	public bool showSky = false;
-	public GameObject SceneText;
+	public GameObject KillZone;
 	public Level currentLevel;
 	public Light cookieLight;
 	public Light sun;
@@ -26,9 +26,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
-		writer.spawnPosition += Vector3.forward * 2;
-		writer.spawnPosition += Vector3.right * 5;
-		writer.originalPos = writer.spawnPosition;
 
 
         maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
@@ -96,26 +93,23 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			
 		l.OnCreated ();
 
-		writer.textSize = 1;
+		writer.textSize = 0.25f;
 		writer.SetScript (SetLevelText ());
 		StartCoroutine (writer.WriteText ());
 
         Services.IncoherenceManager.HandleObjects();
+		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
 
 		Level.xOrigin += width / Level.noiseScale;
 		Level.yOrigin += height / Level.noiseScale;
 
+
 		xOffset += width;
 		yOffset += height;
-
-		SetLevelText ();
-
+	
 		levelNum--;
         ManagedObjects.Add (l);
-
-        GameObject.Find("QuestManager").SendMessage("FindQuests");
-
-        return l;
+		return l;
 	}
 
 	public override void Destroy(Level l){
@@ -124,7 +118,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	}
 
 	string SetLevelText(){
-		return "Act " + ManagedObjects.Count + ": A Forest \n" + width + " metres by " + height + " metres\n";
+		string line = "";
+		line += "Act " + ManagedObjects.Count + ": A Forest \n \n";
+		line += width + " metres by " + length + " metres\n";
+		line += currentLevel.NPCs + " NPCs lounge in the glade\n";
+
+		return line;
 	}
     
 	void OnDisable()

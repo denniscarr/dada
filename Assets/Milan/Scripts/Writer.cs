@@ -23,6 +23,7 @@ public class Writer : MonoBehaviour {
 	string[][]	_script;
 	int 		wordIndex, lineIndex;
 	int 		stringIndex;
+	public float xOffset, yOffset, zOffset;
 
     // Used for cooldown.
     public float cooldownTime = 0.5f;
@@ -32,9 +33,8 @@ public class Writer : MonoBehaviour {
 		wordIndex = 0;
 		lineIndex = 0;
 		stringIndex = 0;
-		spawnPosition = Vector3.zero;
-		originalPos = Vector3.zero;
-
+		originalPos = new Vector3(xOffset, yOffset, zOffset);
+		spawnPosition = originalPos;
 //		if (sourceText != null) {
 //			SetScript (sourceText.text);
 //		}
@@ -122,7 +122,7 @@ public class Writer : MonoBehaviour {
 
         basePosition.y += 2f;
 
-        spawnPosition = Vector3.zero;
+		spawnPosition = Vector3.zero;
 
         GameObject textContainer = new GameObject("Text Container");
         permaText = textContainer.transform;
@@ -172,7 +172,7 @@ public class Writer : MonoBehaviour {
 
         // Set all values back to zero.
         wordIndex = 0;
-        spawnPosition = Vector3.zero;
+		spawnPosition = Vector3.zero;
 
         timeSinceLastWrite = 0f;
     }
@@ -205,7 +205,7 @@ public class Writer : MonoBehaviour {
 		if (wordIndex > _script [stringIndex].Length -1) {
 			wordIndex = 0;
 			spawnPosition.x = originalPos.x;
-			spawnPosition.y -= newWord.GetComponent<BoxCollider2D> ().bounds.size.y;
+			spawnPosition.y -= leading;
 			stringIndex++;
 			if (stringIndex > _script.Length -1) {
 				stringIndex = 0;
