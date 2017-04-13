@@ -19,6 +19,12 @@ public class MusicTrigger: MonoBehaviour {
 
 	public float baseProbability = 0.001f;
 
+	public int totalObjects = 0;
+	public int nonPickups = 0;
+	public int inkSprites = 0;
+	public int imageSprites = 0;
+	public int npcs = 0;
+
 	// Use this for initialization
 	void Start () {
 
@@ -32,14 +38,53 @@ public class MusicTrigger: MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+		
+
 		numberPlaying = 0;
 		Collider[] collidedObjects = Physics.OverlapSphere (transform.position, overlapRadius);
 		objectSources = new List<AudioSource> ();
+
+		totalObjects = 0;
+		nonPickups = 0;
+		inkSprites = 0;
+		imageSprites = 0;
+		npcs = 0;
+
 		foreach (Collider collider in collidedObjects) {
+
+			if (collider.gameObject.tag == "ImageSprite") {
+				imageSprites++;
+			} else if (collider.gameObject.tag == "InkSprite") {
+				inkSprites++;
+			} else if (collider.gameObject.GetComponentInChildren<InteractionSettings> () != null &&
+			           collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried) {
+				Debug.Log ("nonpickup object");
+				nonPickups++;
+			} else if (collider.gameObject.GetComponentInChildren<NPC> () != null) {
+				npcs ++;
+			}
+
+
 			if (collider.gameObject.tag == "ToneTrigger") {
 				objectSources.Add (collider.gameObject.GetComponent<AudioSource>());
 			}
 		}
+
+		totalObjects = imageSprites + inkSprites + nonPickups + npcs;
+
+		//Debug.Log (nonPickups);
+
+		Mathf.Clamp (imageSprites, 0f, 20f);
+		Mathf.Clamp (inkSprites, 0f, 20f);
+		Mathf.Clamp (nonPickups, 0f, 20f);
+		Mathf.Clamp (npcs, 0f, 20f);
+		Mathf.Clamp (totalObjects, 0f, 20f);
+
+		Debug.Log (inkSprites);
+
+
+		Services.AudioManager.EqualizeStems (inkSprites, imageSprites, npcs, nonPickups, totalObjects);
+
 
 
 		//find all toneSources, find out if they're playing

@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Audio;
+using DG.Tweening;
 
 /// <summary>
 /// This is mostly by Hang Ruan, using it also to assign music clips randomly
@@ -18,8 +19,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	//POPULATE THIS
 	public AudioClip[] voiceClipPool;
-	private List<int> voiceClipPlaylist = new List<int> ();
-	int lastVoiceSamplePlayed = int.MaxValue;
+	//private List<int> voiceClipPlaylist = new List<int> ();
+	//int lastVoiceSamplePlayed = int.MaxValue;
 
 	public AudioClip enterRoomClip, exitRoomClip;
 
@@ -40,12 +41,20 @@ public class CS_AudioManager : MonoBehaviour {
 
 	[SerializeField] AudioSource myAudioSource;
 
+	#region Mixer Variables
+
 	[SerializeField] AudioMixer dadaMixer;
 
 	[SerializeField] AudioMixerGroup SFXGroup;
 
-	[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshot;
-	AudioMixerSnapshot[] altitudeBlend;
+	//[SerializeField] AudioMixerSnapshot loLandsSnapshot, hiLandsSnapshot;
+	//AudioMixerSnapshot[] altitudeBlend;
+
+	public float npcStemVol, inkStemVol, imageStemVol, nonPickupVol;
+
+
+
+	#endregion
 
 
 
@@ -56,10 +65,15 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Awake () {
 
-		altitudeBlend = new AudioMixerSnapshot[] {hiLandsSnapshot, loLandsSnapshot};
+		//altitudeBlend = new AudioMixerSnapshot[] {hiLandsSnapshot, loLandsSnapshot};
 		
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
+
+		dadaMixer.SetFloat("ImageSpriteVol", -50f);
+		dadaMixer.SetFloat("InkSpriteVol", -50f);
+		dadaMixer.SetFloat("NPCStemVol", -50f);
+		dadaMixer.SetFloat("NonPickupVol", -50f);
 
 		//PopulateRandomList (voiceClipPool, ClipsPlayList);
 		//DontDestroyOnLoad(this.gameObject);
@@ -118,6 +132,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Update() {
 		//AltitudeMusic ();
+
+
 	}
 
 
@@ -338,4 +354,44 @@ public class CS_AudioManager : MonoBehaviour {
 	//
 	//	}
 	*/
+
+	float remapRange(float oldValue, float oldMin, float oldMax, float newMin, float newMax )
+	{
+		float newValue = 0;
+		float oldRange = (oldMax - oldMin);
+		float newRange = (newMax - newMin);
+		newValue = (((oldValue - oldMin) * newRange) / oldRange) + newMin;
+		return newValue;
+	}
+
+	public void EqualizeStems (float n_ink, float n_image, float n_npc, float n_nonPickup, float totalObjects) {
+
+
+		float newImageSpriteVol = remapRange (n_image, 0.0f, 20f, -40f, 0f);
+		float newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -40f, 0f);
+		float newNPCStemVol = remapRange (n_npc, 0.0f, 20f, -40f, 0f);
+		float newNonPickupVol = remapRange (n_nonPickup, 0.0f, 20f, -40f, 0f);
+
+		
+
+		dadaMixer.DOSetFloat("ImageSpriteVol", newImageSpriteVol, 1.0f);
+		dadaMixer.DOSetFloat("InkSpriteVol", newInkSpriteVol, 1.0f);
+		dadaMixer.DOSetFloat("NPCStemVol", newInkSpriteVol, 1.0f);
+		dadaMixer.DOSetFloat("NonPickupVol", newNonPickupVol, 1.0f);
+
+
+
+	}
+
+	public float GetGroupLevel(string mixerGroup){
+		float value;
+		bool result =  dadaMixer.GetFloat(mixerGroup, out value);
+		if(result){
+			return value;
+		}else{
+			return 0f;
+		}
+	}
+
+
 }
