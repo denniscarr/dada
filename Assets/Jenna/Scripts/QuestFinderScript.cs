@@ -8,6 +8,7 @@ public class QuestFinderScript : MonoBehaviour
 {
 	GameObject[] objects;
 	// for seeing if they're interactable
+	[HideInInspector]
 	private List<GameObject> interactables = new List<GameObject> ();
 	[HideInInspector]
 	public List<GameObject> questItems = new List<GameObject> ();
@@ -82,14 +83,19 @@ public class QuestFinderScript : MonoBehaviour
 							}
 
 							// can it be picked up? Add it to the list!
-							if (ranger >= 0.65f) { 
-//								iset.ableToBeCarried = true; 
-								if (!pickups.Contains (go)) { 
+							if (iset.ableToBeCarried == true){
+								if (!pickups.Contains (go)) {
 									pickups.Add (go);
-								} 
+								}
 							}
+//							if (ranger >= 0.65f) { 
+//								iset.ableToBeCarried = true; 
+//								if (!pickups.Contains (go)) { 
+//									pickups.Add (go);
+//								} 
+//							}
 
-							if (ranger >= 0.75f) {
+							if (ranger >= 0.5f) {
 								if (!equippables.Contains (go)) {
 									equippables.Add (go);
 								}
