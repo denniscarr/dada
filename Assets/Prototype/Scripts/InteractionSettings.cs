@@ -9,21 +9,21 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if ((!IsNPC && transform.parent.GetComponent<Collider>().bounds.extents.magnitude < 1.5f) || Random.value > 0.95f)
+            if ((!IsNPC && MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 0.4f) || Random.value > 0.9999f)
             {
                 return true;
             }
 
             else
             {
-                return _ableToBeCarried;
+				return _ableToBeCarried;
             }
         }
 
-        set
-        {
-            _ableToBeCarried = value;
-        }	
+		set 
+		{
+			_ableToBeCarried = value;
+		}
     }	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.
@@ -111,6 +111,8 @@ public class InteractionSettings : MonoBehaviour {
     {
         savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
+
+        _carryingObject = null;
 
         if (IsInVisor)
         {
