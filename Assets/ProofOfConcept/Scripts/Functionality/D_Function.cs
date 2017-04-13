@@ -31,7 +31,11 @@ public class D_Function : MonoBehaviour {
             //}
 
             // If we're being carried by the player and the player presses the use key then get used.
-			if (intSet && intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform && Input.GetKey(useKey))
+            if (intSet.
+                carryingObject != null 
+                && intSet.carryingObject == 
+                Services.Player.transform && 
+                Input.GetKey(useKey))
             {
                 Use();
             }
@@ -51,11 +55,12 @@ public class D_Function : MonoBehaviour {
 
     protected void GetDropped()
     {
-        if (intSet.carryingObject == Services.Player.transform) Services.Player.BroadcastMessage("AbandonItem");
+        if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
+            Services.Player.BroadcastMessage("AbandonItem");
 
         else if (transform.parent.parent.name == "UpperNode")
         {
-            Services.Player.transform.parent.BroadcastMessage("StopHoldingItemInMouse");
+            Services.Player.transform.parent.BroadcastMessage("StopHoldingItemInMouse", SendMessageOptions.DontRequireReceiver);
         }
 
         //else

@@ -75,7 +75,7 @@ public class FirstPersonController : MonoBehaviour
 			set{
 				if(m_isFPSMode != value){
 					if(m_isFPSMode == false){
-						Debug.Log("init");
+						//Debug.Log("init");
 						//zoom out to zoom in
 						m_MouseLook.Init(transform, m_Camera.transform);
 					}

@@ -4,7 +4,27 @@ using UnityEngine;
 
 public class InteractionSettings : MonoBehaviour {
 
-	public bool ableToBeCarried;	// Whether the object is able to be carried.
+    bool _ableToBeCarried = false;
+	public bool ableToBeCarried
+    {
+        get
+        {
+            if ((!IsNPC && MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 0.4f) || Random.value > 0.9999f)
+            {
+                return true;
+            }
+
+            else
+            {
+				return _ableToBeCarried;
+            }
+        }
+
+		set 
+		{
+			_ableToBeCarried = value;
+		}
+    }	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.
 	public bool canBeUsedForQuests; // Whether this object can be used for quests.
@@ -63,6 +83,21 @@ public class InteractionSettings : MonoBehaviour {
             }
         }
     }   // Whether this object is currently in the player's visor.
+    public bool IsNPC
+    {
+        get
+        {
+            if (transform.parent.GetComponentInChildren<NPC>() != null)
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+    }
 
     public Vector3 equipPosition;
     public Vector3 equipRotation;
@@ -76,6 +111,8 @@ public class InteractionSettings : MonoBehaviour {
     {
         savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
+
+        _carryingObject = null;
 
         if (IsInVisor)
         {

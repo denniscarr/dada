@@ -73,15 +73,13 @@ public class PlayerController : MonoBehaviour {
 			
 			ChangeToInRoomMode();
 		}
-			
-
 
 		instructionText = canvas.transform.FindChild ("Instructions").GetComponent<Text> ();;
 
 	}
 		
 	void OnEnable(){
-		Debug.Log("player enable");
+		//Debug.Log("player enable");
 		//Start();
 	}
 
@@ -97,7 +95,7 @@ public class PlayerController : MonoBehaviour {
 		if(pressGapCount > 0.1f && Input.GetKeyDown(KeyCode.Tab)){
 			
 			mode = mode == ControlMode.ZOOM_IN_MODE? ControlMode.ZOOM_OUT_MODE:ControlMode.ZOOM_IN_MODE;
-			Debug.Log("mode change to:"+ mode);
+			//Debug.Log("mode change to:"+ mode);
 			//Debug.Log(transform.position);
 			//play sound effect for mode switch
 			Services.AudioManager.PlaySFX(toggleViewSFX, 0.1f);

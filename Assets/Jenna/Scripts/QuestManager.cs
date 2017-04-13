@@ -12,7 +12,11 @@ public class QuestManager : MonoBehaviour {
 	// KEEPS TRACK OF CURRENT QUEST
 	public List<Quest> currentQuestList = new List<Quest>();
 
-	// I AM ONLY MAKING THIS PUBLIC BECAUSE I MAY CHANGE THE NAME WRT RANDOM LATER
+	// FINDS THE GRAIL QUEST
+	public List<Quest> unattainableQuestItems = new List<Quest>();
+
+//	// I AM ONLY MAKING THIS PUBLIC BECAUSE I MAY CHANGE THE NAME WRT RANDOM LATER
+	[HideInInspector]
 	public int tempID;
 
 	//private variables for QuestObject for later

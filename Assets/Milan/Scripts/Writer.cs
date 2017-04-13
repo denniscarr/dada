@@ -17,6 +17,8 @@ public class Writer : MonoBehaviour {
 	public TextAsset sourceText;
 	Vector3 originalPos;
 
+    public Transform permaText;
+
 	Vector3 	spawnPosition;
 	string[][]	_script;
 	int 		wordIndex, lineIndex;
@@ -103,6 +105,16 @@ public class Writer : MonoBehaviour {
     }
 
 
+    public void DeleteTextBox()
+    {
+        if (permaText != null)
+        {
+            Destroy(permaText.gameObject);
+            timeSinceLastWrite = cooldownTime;
+        }
+    }
+
+
     public void CreateTextBox(Vector3 basePosition)
     {
         if (timeSinceLastWrite < cooldownTime) return;
@@ -112,6 +124,7 @@ public class Writer : MonoBehaviour {
         spawnPosition = Vector3.zero;
 
         GameObject textContainer = new GameObject("Text Container");
+        permaText = textContainer.transform;
         textContainer.transform.position = basePosition;
 
         while (wordIndex < _script [stringIndex].Length)
@@ -135,7 +148,7 @@ public class Writer : MonoBehaviour {
 
             // Text styling stuff.
             textStyling.fade = fade;
-            textStyling.delete = true;
+            textStyling.delete = delete;
             textStyling.fadeIn = fade;
             textStyling.speed = fadeSpeed;
 
@@ -153,7 +166,7 @@ public class Writer : MonoBehaviour {
         }
 
         // Rotate the text containter towards the player.
-        textContainer.transform.LookAt(Camera.main.transform);
+        textContainer.transform.LookAt(Services.Player.transform);
         textContainer.transform.Rotate(0f, 180f, 0f);
 
         // Set all values back to zero.
