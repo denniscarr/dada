@@ -11,12 +11,17 @@ public class NoteSpawnerScript : MonoBehaviour {
 
 	// for storing which notes go where
 	public List<GameObject> id1 = new List<GameObject>();
+	//public GameObject[] id1;
 	//public list for id2
 	// etc etc
 
 	float ranger;
 
-	public void LateUpdate(){
+	public void Start(){
+		GameObject QuestItNote = Resources.Load ("QuestItNote") as GameObject;
+	}
+
+	public void Update(){
 		// find all notes in scene and add them to categories based on which type of note they are
 		notes = GameObject.FindGameObjectsWithTag("QuestItNote");
 
