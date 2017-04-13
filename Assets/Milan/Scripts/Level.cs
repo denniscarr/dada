@@ -132,7 +132,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
-			if(c.name != "UpperCamera"){
+			if(c.name != "UpperCamera" && c){
 				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
 			}
 		}

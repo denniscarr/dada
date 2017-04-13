@@ -3,24 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum InterationState{
-	NONE_SELECTED_STATE = 0,//no thing select mode
-	DRAG_STATE = 1,
-	// = 2,//
-}
-
-public enum InteractionMode{
-	GRAB_MODE = 0,
-	USE_MODE = 1,
-//	INROOM_MODE = 2,
-}
-
 public class MouseCotroller : MonoBehaviour {
 	public Sprite grabHand;
 	public Sprite useHand;
 
 	public float throwForce = 100f;
-	public Camera UpperCamera;
+	private Camera UpperCamera;
 
 	InterationState state;
 	InteractionMode mode;
@@ -30,7 +18,7 @@ public class MouseCotroller : MonoBehaviour {
 	//inpoint get from the reference cube for dragging plane, which is visible at the scene but hide later
 	Plane draggedPlane;
 	public Transform cubeOnDraggedPlane;
-	public PlayerController playercontroller;
+	public PlayerControllerNew playercontroller;
 	Vector3 inPointForPlaneFromCube;
 
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
@@ -48,6 +36,7 @@ public class MouseCotroller : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		UpperCamera = playercontroller.UpperCamera;
 		//txtInfo = transform.parent.FindChild("txtInfo").GetComponent<Text>();
 		clickGapCount = 0;
 		state = InterationState.NONE_SELECTED_STATE;
@@ -71,16 +60,18 @@ public class MouseCotroller : MonoBehaviour {
 		//update the mouse position
 		transform.position = Input.mousePosition;
 //		Debug.Log(Camera.main.transform.forward);
-		switch(mode){
-		case InteractionMode.GRAB_MODE:GrabHandler();;break;
-		case InteractionMode.USE_MODE:UseHandler();;break;
-		}
+//		switch(mode){
+//		case InteractionMode.GRAB_MODE:GrabHandler();break;
+//		case InteractionMode.USE_MODE:UseHandler();break;
+//		}
+//
+//		//Debug.Log(playercontroller.controlMode)
+//		if(Input.GetKeyDown(KeyCode.E) && playercontroller.controlMode == ControlMode.ZOOM_OUT_MODE){
+//			txtInfo.text = "To equip, please press TAB.";
+//			Debug.Log("press");
+//		}
 
-		//Debug.Log(playercontroller.controlMode)
-		if(Input.GetKeyDown(KeyCode.E) && playercontroller.controlMode == ControlMode.ZOOM_OUT_MODE){
-			txtInfo.text = "To equip, please press TAB.";
-			Debug.Log("press");
-		}
+		DetectSelection();
 			
 	}
 
@@ -107,7 +98,6 @@ public class MouseCotroller : MonoBehaviour {
 	}
 		
 	void UseHandler(){
-		//if(Input.GetMouseButtonDown(0)){
 		clickGapCount += Time.deltaTime;
 		if(clickGapCount > CLICKGAPTIME){
 			//a switch used to save if use something in inventory
@@ -120,7 +110,7 @@ public class MouseCotroller : MonoBehaviour {
 				if(hit.collider.name.Contains("Visor")){
 					GetComponent<Image> ().color = new Color(1,0,1,1);
 					txtInfo.text = "Want to enter your room?";
-					if(playercontroller.controlMode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
+					if(playercontroller.Mode != ControlMode.IN_ROOM_MODE && Input.GetMouseButtonDown(0)){
 						Debug.Log("click on player visor");
 						playercontroller.SendMessage("ChangeToInRoomMode");
 					}
@@ -172,10 +162,6 @@ public class MouseCotroller : MonoBehaviour {
 
 
 		}
-
-
-
-		//}
 	}
 
 	void GrabHandler(){
@@ -205,19 +191,16 @@ public class MouseCotroller : MonoBehaviour {
 
 	//detect if mouse click on something, then switch and save the selected object
 	void DetectSelection(){
-	//if(Input.GetMouseButtonDown(0)){
-
 		//get the ray to check whether player points at visor from upper camera
 		Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 		Debug.DrawRay(ray.origin,ray.direction);
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit) && !hit.collider.tag.Equals("Visor")){
 			
-
 			if(!hit.collider.name.Equals("ground")){
-				
+				selectedObject = hit.collider.transform;
 				//txtInfo.text = "YOu ";
-				CheckPickUp(hit.collider.transform);
+				//CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
 			return;
@@ -225,19 +208,17 @@ public class MouseCotroller : MonoBehaviour {
 		}
 		//detect if click on things outside visor ray from main camera
 		ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		//RaycastHit hit;
 		if (Physics.Raycast (ray, out hit)) {
 
 			if(!hit.collider.name.Equals("ground")){
+				selectedObject = hit.collider.transform;
 				//if(){
 					//txtInfo.text = hit.collider.name;
 				//}
-				CheckPickUp(hit.collider.transform);
+				//CheckPickUp(hit.collider.transform);
 				//PickUpObject(hit.collider.transform);
 			}
 		}
-	//}
-
 
 	}
 
@@ -290,13 +271,6 @@ public class MouseCotroller : MonoBehaviour {
 			float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
 			float frustumHeight = distance * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
 			float scale = frustumHeightInside/frustumHeight;
-
-			//				Debug.Log(pickedUpObject.position);
-			//				Debug.Log(Camera.main.transform.position);
-			//				Debug.Log((pickedUpObject.position -  Camera.main.transform.position).magnitude);
-			//				Debug.Log("distanceInside:"+distanceInside+" "+"distance:"+distance);
-			//				Debug.Log("frustumHeightInside:"+frustumHeightInside+" "+"frustumHeight:"+frustumHeight);
-			//				Debug.Log("scale: "+scale);
 			pickedUpObject.localScale *= scale;
 
 			//stop gravity simulation and free rotation
@@ -321,39 +295,6 @@ public class MouseCotroller : MonoBehaviour {
 
 		Services.AudioManager.PlaySFX (pickupClip, sfxVolume);
 
-//        // Make sure we're reading from the correct interaction settings (rather than that of the object being carried by an NPC for instance)
-//        InteractionSettings intSet = null;
-//        for (int i = 0; i < pickedUpObject.childCount; i++)
-//        {
-//            if (pickedUpObject.GetChild(i).parent == pickedUpObject && pickedUpObject.GetChild(i).GetComponent<InteractionSettings>() != null)
-//            {
-//                //print("donezo!");
-//                intSet = pickedUpObject.GetChild(i).GetComponent<InteractionSettings>();
-//            }
-//        }
-//
-//
-//		bool check =  isAbleToBeCarried(intSet);
-//		Debug.Log("Check "+pickedUpObject.name+" can be carried:"+check);
-//		//check if click on something selectable
-//		if(check){
-//			//GetComponent<Image> ().color = new Color(1,1,1,1);
-//			if(Input.GetMouseButtonDown(0)){
-//				clickGapCount = 0;
-//			}
-//			//selectedObject = pickedUpObject;
-//			//state = InterationState.DRAG_STATE;
-//			//prevent from vaild click repeatly in a second
-//
-//
-//			//calculate new scale
-//
-//
-//
-//
-//		}else{
-//			GetComponent<Image> ().color = new Color(1,1,1,0);
-//		}
 			
 	}
 
