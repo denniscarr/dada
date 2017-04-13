@@ -9,7 +9,7 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if (!IsNPC && MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 5f)
+            if (!IsNPC && MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 4f)
             { 
                 return true;
             }
