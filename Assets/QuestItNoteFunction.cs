@@ -49,7 +49,18 @@ public class QuestItNoteFunction : D_Function {
         }
     }
 
-	public override void Use ()
+    public void StickToScreen()
+    {
+        transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+
+        //// Move my position to the preordained position.
+        //transform.parent.localPosition = new Vector3(transform.parent.position.x, transform.parent.position.y, 2.5f);
+
+        //// Move my rotation the the Good rotation.
+        //transform.parent.localRotation = Quaternion.Euler(new Vector3(0f, 0f, transform.parent.localRotation.z));
+    }
+
+    public override void Use ()
 	{
 		base.Use ();
 
