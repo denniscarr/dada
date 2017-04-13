@@ -61,7 +61,7 @@ public class QuestFinderScript : MonoBehaviour
 		for (int i = 0; i < objectsSize; i++) {
 			InteractionSettings iset = objects [i].GetComponentInChildren<InteractionSettings> ();
 			if (iset != null) {
-				GameObject iset1 = iset.gameObject.transform.parent.gameObject;
+				GameObject iset1 = iset.transform.parent.gameObject;
 				if (!interactables.Contains (iset1)) {
 					interactables.Add (iset1);
 				}
@@ -83,7 +83,7 @@ public class QuestFinderScript : MonoBehaviour
 							}
 
 							// can it be picked up? Add it to the list!
-							if (iset.ableToBeCarried == true){
+							if (go.GetComponentInChildren<InteractionSettings>() != null && go.GetComponentInChildren<InteractionSettings>().ableToBeCarried == true){
 								if (!pickups.Contains (go)) {
 									pickups.Add (go);
 								}
