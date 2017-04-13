@@ -152,6 +152,7 @@ public class PickupQuest : Quest {
 
         // Stick em to the wall.
         questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+		questItNote.GetComponentInChildren<QuestItNoteFunction> ().questID = 1;
     }
 
     public void questTextSpawn(){
@@ -165,16 +166,38 @@ public class PickupQuest : Quest {
 	}
 
 	public void FinishQuest(){
-		
+
+		// find the quest
 		PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
 
+		// mark it done
 		text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
+		// explode it
 		GameObject stars = Instantiate (Resources.Load ("explosion", typeof(GameObject))) as GameObject; 
 		stars.transform.position = parentObject.transform.position; 
 
 		Destroy (parentObject);
+
+		// find the notes and destroy them
+		NoteSpawnerScript notes = GameObject.Find ("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript> ();
+		for (int i = 0; i < 10; i++) {
+			stars = Instantiate (Resources.Load("explosion", typeof (GameObject))) as GameObject;
+			stars.transform.parent.position = notes.id1 [i].transform.position;
+			Destroy (notes.id1[i]);
+		}
+
+		for (int i = 10; i < notes.id1.Count; i++) {
+			Destroy (notes.id1[i]);
+		}
+
+		notes.id1.Clear ();
+		//foreach(GameObject note in notes.id1){
+//			stars = Instantiate (Resources.Load ("explosion", typeof(GameObject))) as GameObject;
+//			stars.transform.position = note.transform.position;
+//			Destroy (note);
+//		}
 	}
 
 //	public override void CheckStatus() {

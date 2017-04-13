@@ -58,7 +58,7 @@ public class D_Function : MonoBehaviour {
         if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
             Services.Player.BroadcastMessage("AbandonItem");
 
-        else if (transform.parent.parent.name == "UpperNode")
+        else if (transform.parent.parent != null && transform.parent.parent.name == "UpperNode")
         {
             Services.Player.transform.parent.BroadcastMessage("StopHoldingItemInMouse", SendMessageOptions.DontRequireReceiver);
         }

@@ -4,26 +4,25 @@ using UnityEngine;
 
 public class InteractionSettings : MonoBehaviour {
 
-    bool _ableToBeCarried = false;
 	public bool ableToBeCarried
     {
         get
         {
-            if ((!IsNPC && MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 0.4f) || Random.value > 0.9999f)
+            if (IsNPC)
             {
+                return false;
+            }
+
+            else if (MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 4f)
+            { 
                 return true;
             }
 
             else
             {
-				return _ableToBeCarried;
+				return false;
             }
         }
-
-		set 
-		{
-			_ableToBeCarried = value;
-		}
     }	// Whether the object is able to be carried.
 	public bool usable;	// Whether the object is usable.
 	public bool canBeUsedAsSoundSource; // Whether the object can be used as a sound source.
@@ -83,21 +82,8 @@ public class InteractionSettings : MonoBehaviour {
             }
         }
     }   // Whether this object is currently in the player's visor.
-    public bool IsNPC
-    {
-        get
-        {
-            if (transform.parent.GetComponentInChildren<NPC>() != null)
-            {
-                return true;
-            }
 
-            else
-            {
-                return false;
-            }
-        }
-    }
+    bool IsNPC = true;
 
     public Vector3 equipPosition;
     public Vector3 equipRotation;
@@ -107,18 +93,42 @@ public class InteractionSettings : MonoBehaviour {
 	[HideInInspector] public Transform originalParent;
 
 
-	void Start()
+	void Awake()
     {
         savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
 
         _carryingObject = null;
 
+        if (transform.parent.GetComponentInChildren<NPC>() == null)
+        {
+            IsNPC = false;
+        }
+
+        else
+        {
+            IsNPC = true;
+        }
+
         if (IsInVisor)
         {
             originalParent = null;
             Transform saved = transform.parent.parent;
             savedScale = new Vector3(1, 1, 1);
+        }
+    }
+
+
+    private void Update()
+    {
+        if (transform.parent.GetComponentInChildren<NPC>() == null)
+        {
+            IsNPC = false;
+        }
+
+        else
+        {
+            IsNPC = true;
         }
     }
 }
