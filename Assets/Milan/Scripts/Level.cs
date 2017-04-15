@@ -136,20 +136,21 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (highestPoint * 2.5f));
 		float NormalisedToHighestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
 		if (playerHeightNormalized < 0) {
-			playerHeightNormalized = 1 - playerHeightNormalized;
+			playerHeightNormalized = Mathf.Abs(playerHeightNormalized);
 		}
+
 //		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if(c.name != "UpperCamera" && c){
-				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
+				c.backgroundColor = Color.Lerp (c.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
 			}
 		}
 
 
-		RenderSettings.fogColor = Camera.main.backgroundColor;
-		RenderSettings.fogEndDistance = Mathf.Lerp (100, 250, 1- playerHeightNormalized);
+		RenderSettings.fogColor = Services.Player.GetComponentInChildren<Camera> ().backgroundColor;
+		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, 1- playerHeightNormalized);
 		Services.LevelGen.sun.transform.eulerAngles += Vector3.up;
-		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, 1- playerHeightNormalized);
+//		Services.LevelGen.sun.intensity = Mathf.Lerp (0, 1, 1- playerHeightNormalized);
 
 
 		float xCoord = xOrigin;

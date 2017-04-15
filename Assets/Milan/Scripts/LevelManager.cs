@@ -48,7 +48,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Update()
     {
         // If the player has jumped off the level.
-		if (Services.Player.transform.position.y - currentLevel.transform.position.y < -currentLevel.mapHeight * 2){
+		if (Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
 //			if (currentLevel != null) currentLevel.enabled = false;
