@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class prompt : MonoBehaviour {
     public GameObject equipPrompt;
-    public KeyCode equipKey = KeyCode.E;
+	public KeyCode equipKey = KeyCode.Mouse0;
     public bool activatePrompt = false;
     // Use this for initialization
     void Start () {
@@ -19,7 +19,7 @@ public class prompt : MonoBehaviour {
     void OnTriggerEnter()
     {
         equipPrompt.SetActive(true);
-        if (Input.GetKeyDown(KeyCode.E))
+		if (Input.GetKeyDown(equipKey))
         {
             activatePrompt = true;
         }

@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour {
 			uppercamera.fieldOfView = ZoomInUpperCameraFoV;
 			inRoomNode.gameObject.SetActive(false);
 		}else if(mode == ControlMode.ZOOM_OUT_MODE){
-			fpController.isFPSMode = false;
+			//fpController.isFPSMode = false;
 			inRoomNode.gameObject.SetActive(false);
 			//Debug.Log("my camera fov:"+myCamera.fieldOfView);
 			//Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
@@ -105,12 +105,12 @@ public class PlayerController : MonoBehaviour {
 				//zoom out -> zoom in
 				//conceal canvas and change to fps control
 				canvas.SetActive(false);
-				fpController.isFPSMode = true;
+				//fpController.isFPSMode = true;
 					
 			}else{
 				//zoom in mood -> zoom out
 				canvas.SetActive(true);
-				fpController.isFPSMode = false;
+				//fpController.isFPSMode = false;
 				Cursor.lockState = CursorLockMode.None;
 
 				//reset the main camera to be parallel to the plane

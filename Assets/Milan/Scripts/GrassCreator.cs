@@ -82,13 +82,8 @@ public class GrassCreator : ScriptableWizard  {
 
 	}
 
-	void OnWizardUpdate ()
-	{
+	void OnWizardUpdate (){
 		helpString = "Ready";
-
-
-
-
 	}
 
 }
