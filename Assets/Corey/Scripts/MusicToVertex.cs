@@ -21,6 +21,9 @@ public class MusicToVertex : MonoBehaviour {
 
 	public float displacementStrength = 20f;
 	public float returnSmoothing = 0.01f;
+	public Color originalLowColor;
+	float originalLacunarity;
+	//float originalDisplacement;
 
 	// Use this for initialization
 	void Start () {
@@ -28,9 +31,12 @@ public class MusicToVertex : MonoBehaviour {
 		listOfMeshRenderers = new List<Renderer> ();
 
 		GetAllMeshRenderersInChildren (transform.parent.gameObject);
+		 
 
 		foreach (Renderer renderer in listOfMeshRenderers) {
 			renderer.material = audioReactiveMaterial;
+			originalLacunarity = audioReactiveMaterial.GetFloat ("_Lacunarity");
+			originalLowColor = audioReactiveMaterial.GetColor ("_LowColor");
 			//Debug.Log (renderer.gameObject.name);
 		}
 		parentTransform = gameObject.transform.parent;
@@ -46,14 +52,17 @@ public class MusicToVertex : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		float newSpectrumPoint = thisAnalyzer.bandBuffer [2];
-		float otherSpectrumPoint = thisAnalyzer.bandBuffer [3];
+		float spectrumPointOne = thisAnalyzer.bandBuffer [2];
+		float spectrumPointTwo = thisAnalyzer.bandBuffer [3];
+		float spectrumPointThree = thisAnalyzer.bandBuffer [4];
 
 		foreach (Renderer thisRenderer in listOfMeshRenderers) {
-			thisRenderer.material.SetFloat ("_Lacunarity", newSpectrumPoint * displacementStrength);
-			thisRenderer.material.SetColor ("_Offset", new Color (newSpectrumPoint * displacementStrength * 0.25f, newSpectrumPoint * displacementStrength * 0.25f, 
-				otherSpectrumPoint * displacementStrength * 0.5f, 0f));
-			thisRenderer.material.SetFloat ("_Displacement", otherSpectrumPoint * displacementStrength * 0.1f);
+			thisRenderer.material.SetFloat ("_Lacunarity", originalLacunarity + spectrumPointOne * displacementStrength);
+			thisRenderer.material.SetColor ("_Offset", new Color (spectrumPointOne * displacementStrength * 0.25f, spectrumPointOne * displacementStrength * 0.25f, 
+				spectrumPointTwo * displacementStrength * 0.5f, 0f));
+			thisRenderer.material.SetColor ("_LowColor", new Color(originalLowColor.r + spectrumPointOne, originalLowColor.g + spectrumPointTwo,
+				originalLowColor.b + spectrumPointThree, 1.0f));
+			thisRenderer.material.SetFloat ("_Displacement", spectrumPointTwo * displacementStrength * 0.1f);
 		}
 
 	}
