@@ -113,6 +113,7 @@ public class NPC : MonoBehaviour {
         if (lookForwardRange < transform.parent.GetComponent<Collider>().bounds.extents.z)
         {
             lookForwardRange = transform.parent.GetComponent<Collider>().bounds.extents.z * 2;
+            objectPickupRange = lookForwardRange;
         }
 
         // SEE IF THE OBJECT I WAS CARRYING WAS STOLEN OR RAN AWAY
