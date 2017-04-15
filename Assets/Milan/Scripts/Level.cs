@@ -140,8 +140,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 //		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
-			if(c.name != "UpperCamera"){
-				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 2.5f);
+			if(c.name != "UpperCamera" && c){
+				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
 			}
 		}
 
@@ -467,9 +467,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
-			newObject.tag = tag;
-			newObject.layer = 2;
-			newObject.isStatic = true;
+
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
@@ -500,6 +498,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		targetPosition.y = newObject.transform.position.y;
 		newObject.transform.LookAt(targetPosition);
 		newObject.transform.Rotate (0, 180, 0);
+
+        if (newObject.name.Contains("(Clone)"))
+        {
+            newObject.name = newObject.name.Remove(newObject.name.Length - 7, 7);
+        }
 
 		return newObject;
 	}
