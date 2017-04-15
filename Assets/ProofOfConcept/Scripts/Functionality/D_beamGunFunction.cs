@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class D_beamGunFunction : D_Function {
 	LineRenderer line;
+	public GameObject spark;
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
@@ -21,6 +22,7 @@ public class D_beamGunFunction : D_Function {
 		if (Physics.Raycast(beamRay, out Hit, 100))
 			line.SetPosition(1, Hit.point);
 		else line.SetPosition (1, beamRay.GetPoint (100));
+		Instantiate (spark, Hit.point, Quaternion.identity);
 
 		Invoke ("BeamOff", 0.1f);
 	}
