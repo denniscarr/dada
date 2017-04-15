@@ -120,7 +120,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	string SetLevelText(){
 		string line = "";
 		line += "Act " + ManagedObjects.Count + ": A Forest \n \n";
-		line += width + " metres by " + length + " metres\n";
+		line += currentLevel._width + " metres by " + currentLevel._length + " metres\n";
 		line += currentLevel.NPCs + " NPCs lounge in the glade\n";
 
 		return line;
