@@ -11,7 +11,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	public Level currentLevel;
 	public Light cookieLight;
 	public Light sun;
-	public int maxNPCs, maxPickups, maxObjects;
+	public int maxNPCs, maxObjects, maxSprites;
     public int levelNum = 0;
 	public int width, length, height;
 	public float tileScale = 1;
@@ -24,6 +24,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Start()
 	{
 
+		NoiseRemapping = new float[15];
+
+		for(int i = 0; i < NoiseRemapping.Length; i++) {
+			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+		}
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
 

@@ -47,8 +47,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public void OnCreated(){
 
 		_width = Random.Range (10, 25);
-		_length = Random.Range (10, 25);
-		_height = Random.Range (1, 6);
+		_length = _width;
+		_height = Random.Range (1, 4);
 
 		tileScale = Services.LevelGen.tileScale;
 
@@ -67,7 +67,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
-		palette = new Color[5];
+		palette = new Color[10];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
@@ -138,7 +138,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = 1 - playerHeightNormalized;
 		}
-		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if(c.name != "UpperCamera"){
 				c.backgroundColor = Color.Lerp (Camera.main.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 2.5f);
@@ -232,30 +232,30 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
 				}
 					
-//				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
-//				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
-//
-//
-//                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
-//
-//                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
-//                {
-//                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
-//                }
-//                else
-//                {
-//                    if (remapIndex > 0 && difference < 0)
-//                    {
-//                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
-//                    }
-//                }
+				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
+				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
+
+
+                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
+
+                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
+                {
+                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
+                }
+                else
+                {
+                    if (remapIndex > 0 && difference < 0)
+                    {
+                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
+                    }
+                }
 
 				perlinVal = Mathf.Pow (perlinVal, 1f);
 
 				vertices [i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
-				vertices [i] += new Vector3 (x, 0, y) * tileScale;
+				vertices [i] += (new Vector3 (x, 0, y) * tileScale) + new Vector3(Random.Range(0, tileScale), 0, Random.Range(0, tileScale));
 				//drag height to 0 around edge of circle
-				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 8));
+				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 4));
 
 				vertices [i] += Vector3.up * _height * perlinVal * tileScale;
 
@@ -281,11 +281,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		transform.position -= vertices [highestPointIndex];
 
 		GameObject killzone = (GameObject)Instantiate(Services.LevelGen.KillZone, Vector3.zero, Quaternion.identity);
+		killzone.transform.parent = transform;
 		killzone.transform.localScale += Vector3.right * _width * tileScale * 2;
 		killzone.transform.localScale += Vector3.forward * _length * tileScale * 2;
-		killzone.transform.localScale += Vector3.up * _height * tileScale * 2;
-		killzone.transform.position = transform.position - (Vector3.up * 30);
-		killzone.transform.parent = transform;
+		killzone.transform.localScale += Vector3.up * _height;
+		killzone.transform.localPosition = Vector3.zero;
 	}
 
 	void PopulateMap(){
@@ -383,7 +383,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		switch (propIndex) {
 		case 0:
-			spriteIndex = (int)Services.SPRITES.image;
+			spriteIndex = (int)Services.SPRITES.tall;
 			break;
 
 		case 1:
@@ -395,11 +395,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		case 3:
-			spriteIndex = (int)Services.SPRITES.gate;
+			spriteIndex = (int)Services.SPRITES.foliage;
 			break;
 
 		default:
-			spriteIndex = Random.Range(0, Services.Prefabs.SPRITES.Length);
+			spriteIndex = Random.Range(1, Services.Prefabs.SPRITES.Length);
 			break;
 		}
 
@@ -413,23 +413,33 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		case (int)Services.TYPES.NPCs:
 			if (NPCs >= Services.LevelGen.maxNPCs) {
-				objectType =  (int)Services.TYPES.Sprite;
+				return null;
+				break;
 			} else {
 				NPCs++;
 			}
 			break;
 
 		case (int)Services.TYPES.Sprite:
+			if (Sprites >= Services.LevelGen.maxSprites) {
+				return null;
+				break;
+			} else {
+				Sprites++;
+			}
+
 			if (spriteIndex == (int)Services.SPRITES.image) {
 				tag = "ImageSprite";
 			} else {
 				tag = "InkSprite";
 			}
+
 			break;
 
 		case (int)Services.TYPES.Pickups:
-			if (Pickups >= Services.LevelGen.maxPickups) {
-				objectType = (int)Services.TYPES.Sprite;
+			if (Pickups >= Services.LevelGen.maxObjects) {
+				return null;
+				break;
 			} else {
 				Pickups++;
 			}
@@ -437,7 +447,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		case (int)Services.TYPES.NonPickups:
 			if (NonPickups >= Services.LevelGen.maxObjects) {
-				objectType = (int)Services.TYPES.Sprite;
+				return null;
+				break;
 			} else {
 				NonPickups++;
 			}
@@ -566,7 +577,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		groundLerpedColour.SetPixels (_bitmap.GetPixels());
 		groundLerpedColour.Apply ();
-		groundLerpedColour.filterMode = FilterMode.Point;
+//		groundLerpedColour.filterMode = FilterMode.Point;
 
 		clouds.vertices = vertices;
 		clouds.uv = uvs;
