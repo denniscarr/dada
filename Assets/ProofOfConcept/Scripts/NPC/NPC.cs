@@ -113,6 +113,7 @@ public class NPC : MonoBehaviour {
         if (lookForwardRange < transform.parent.GetComponent<Collider>().bounds.extents.z)
         {
             lookForwardRange = transform.parent.GetComponent<Collider>().bounds.extents.z * 2;
+            objectPickupRange = lookForwardRange;
         }
 
         // SEE IF THE OBJECT I WAS CARRYING WAS STOLEN OR RAN AWAY
@@ -127,8 +128,11 @@ public class NPC : MonoBehaviour {
                 Physics.IgnoreCollision(collider, GetComponentInParent<Collider>(), false);
             }
 
-            npcAnimation.ObjectPickedUp();
-            npcAnimation.ObjectThrown();
+            if (npcAnimation != null) 
+			{
+				npcAnimation.ObjectPickedUp();
+            	npcAnimation.ObjectThrown();
+			}
 
             writer.WriteSpecifiedString(
                 "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"

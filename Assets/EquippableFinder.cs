@@ -14,8 +14,8 @@ public class EquippableFinder : MonoBehaviour {
 
     Writer writer;
 
-    public KeyCode equipKey = KeyCode.E;
-    public KeyCode abandonKey = KeyCode.G;
+    KeyCode equipKey = KeyCode.Mouse0;
+    KeyCode abandonKey = KeyCode.G;
     private bool readyToEquip = false;
     Transform equipReference;
 
