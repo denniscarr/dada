@@ -15,11 +15,11 @@ public class Writer : MonoBehaviour {
 	public float delay; 
 	public float fadeSpeed;
 	public TextAsset sourceText;
-	public Vector3 originalPos;
+	Vector3 originalPos;
 	Transform pivot;
     public Transform permaText;
 
-	public Vector3 	spawnPosition;
+	Vector3 	spawnPosition;
 	string[][]	_script;
 	int 		wordIndex, lineIndex;
 	int 		stringIndex;
@@ -36,6 +36,7 @@ public class Writer : MonoBehaviour {
 		originalPos = new Vector3(xOffset, yOffset, zOffset);
 		pivot = new GameObject().transform;
 		pivot.transform.parent = transform;
+		pivot.transform.localRotation = Quaternion.Euler (Vector3.zero);
 		pivot.transform.localPosition = originalPos;
 		spawnPosition = Vector3.zero;
 //		if (sourceText != null) {
