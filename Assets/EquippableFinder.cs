@@ -108,7 +108,9 @@ public class EquippableFinder : MonoBehaviour {
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
         originalScale = equippedObject.transform.localScale;
+
 		equippedObject.transform.SetParent(equipReference.parent, true);
+
 
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
         {
@@ -128,6 +130,7 @@ public class EquippableFinder : MonoBehaviour {
 
         else
         {
+			equippedObject.transform.localScale = equipReference.localScale;
             equippedObject.transform.position = equipReference.position;
         }
 
