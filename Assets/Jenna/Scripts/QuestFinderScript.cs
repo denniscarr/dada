@@ -85,6 +85,7 @@ public class QuestFinderScript : MonoBehaviour
 							// can it be picked up? Add it to the list!
 							if (go.GetComponentInChildren<InteractionSettings>() != null && go.GetComponentInChildren<InteractionSettings>().ableToBeCarried == true){
 								if (!pickups.Contains (go)) {
+                                    Debug.Log(go.name);
 									pickups.Add (go);
 								}
 							}
