@@ -126,7 +126,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 		void OnEnable(){
-			Start();
+			Debug.Log("r_fps enable");
+			mouseLook.Init (transform, cam.transform);
 		}
 
         private void Update()
