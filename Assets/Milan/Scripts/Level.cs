@@ -492,6 +492,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.LookAt(targetPosition);
 		newObject.transform.Rotate (0, 180, 0);
 
+        if (newObject.name.Contains("(Clone)"))
+        {
+            newObject.name = newObject.name.Remove(newObject.name.Length - 7, 7);
+        }
+
 		return newObject;
 	}
 
