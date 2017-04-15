@@ -14,8 +14,8 @@ public class EquippableFinder : MonoBehaviour {
 
     Writer writer;
 
-	public KeyCode equipKey = KeyCode.Mouse0;
-    public KeyCode abandonKey = KeyCode.G;
+    KeyCode equipKey = KeyCode.Mouse0;
+    KeyCode abandonKey = KeyCode.G;
     private bool readyToEquip = false;
     Transform equipReference;
 
@@ -32,7 +32,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Get references to my buddies.
         writer = GetComponent<Writer>();
-        equipReference = GameObject.Find("New Equip Reference").transform;
+        equipReference = GameObject.Find("Equip Reference").transform;
     }
 
 
@@ -104,7 +104,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Disable collision & gravity.
         equippedObject = equipTarget;
-        //equippedObject.GetComponent<Collider>().enabled = false;
+        equippedObject.GetComponent<Collider>().enabled = false;
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
         originalScale = equippedObject.transform.localScale;

@@ -58,6 +58,7 @@ public class Writer : MonoBehaviour {
         for (int i = 0; i < tempText.Length; i++) {
             _script [i] = tempText [i].Split (new char[] { ' ' });
         }
+
 		stringIndex = 0;
 		lineIndex = 0;
 		wordIndex = 0;

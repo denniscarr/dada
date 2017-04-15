@@ -80,7 +80,7 @@ public class MusicTrigger: MonoBehaviour {
 		Mathf.Clamp (npcs, 0f, 20f);
 		Mathf.Clamp (totalObjects, 0f, 20f);
 
-		Debug.Log (inkSprites);
+		//Debug.Log (inkSprites);
 
 
 		Services.AudioManager.EqualizeStems (inkSprites, imageSprites, npcs, nonPickups, totalObjects);
