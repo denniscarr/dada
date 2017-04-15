@@ -8,6 +8,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public static float noiseScale;
 	public static float xOrigin, yOrigin;
 
+	Terrain levelMesh;
+
 	float tileScale;
 	public int _width, _length, _height;
 	string directory; 
@@ -44,9 +46,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	public void OnCreated(){
 
-		_width = Services.LevelGen.width;
-		_height = Services.LevelGen.height;
-		_length = Services.LevelGen.length;
+		_width = Random.Range (10, 25);
+		_length = Random.Range (10, 25);
+		_height = Random.Range (1, 6);
+
 		tileScale = Services.LevelGen.tileScale;
 
 		children = new GameObject[_width, _height];
@@ -76,13 +79,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			
 		SetGradient ();
 
-		if (_bitmap == null) {
-			usePerlin = true;
-			_bitmap = new Texture2D (_width + 1, _length + 1);
-		} else {
-			_width = _bitmap.width;
-			_length = _bitmap.height;
-		}
+		usePerlin = true;
+		_bitmap = new Texture2D (33, 33);
 
 		skyColor = new Texture2D (_width + 1, _length + 1);
 		groundLerpedColour = new Texture2D (_width + 1, _length + 1);
@@ -128,9 +126,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			}
 		}
 
-		_width = Random.Range (10, 25);
-		_length = Random.Range (10, 25);
-		_height = Random.Range (1, 5);
+//		levelMesh = Instantiate (Resources.Load<Terrain> ("Terrain"), Vector3.zero, Quaternion.identity).GetComponent<Terrain>();
+
 		GenerateChunk();
 	}
 
@@ -280,6 +277,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		normalizedPerlinHeight = mapHeight / highestPoint;
 		OutputBitmap ();
 		PopulateMap ();
+//		ConvertTexToHeight (_bitmap);
 		transform.position -= vertices [highestPointIndex];
 
 		GameObject killzone = (GameObject)Instantiate(Services.LevelGen.KillZone, Vector3.zero, Quaternion.identity);
@@ -579,73 +577,107 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		Services.LevelGen.cookieLight.cookie = _bitmap;
 	}
 
-	public void OnDestroyed(){
+	public TerrainData ConvertTexToHeight(Texture2D tex)
+	{
+		Texture2D heightmap = tex;
+
+		TerrainData terrain = levelMesh.terrainData;
+		terrain.size = new Vector3 (_width, _height, _length) * tileScale;
+		terrain.heightmapResolution = 32;
+
+		float w = heightmap.width;
+		float h = heightmap.height;
+		int w2 = terrain.heightmapWidth;
+		float[,] heightmapData = terrain.GetHeights(0, 0, w2, w2);
+		Color[] mapColors = heightmap.GetPixels();
+		Color[] map = new Color[w2 * w2];
+
+		if (w2 != w || h != w)
+		{
+			// Resize using nearest-neighbor scaling if texture has no filtering
+			if (heightmap.filterMode == FilterMode.Point)
+			{
+				float dx = (float)w / w2;
+				float dy = (float)h / w2;
+
+				for (int y = 0; y < w2; y++)
+				{
+					//if (y % 20 == 0)
+					//{
+					// EditorUtility.DisplayProgressBar("Resize", "Calculating texture", Mathf.InverseLerp(0.0f, (float)w2, y));
+					//}
+
+					int thisY = (int)((dy * y) * w);
+					int yw = y * w2;
+
+					for (int x = 0; x < w2; x++)
+					{
+						map[yw + x] = mapColors[thisY + (int)dx * x];
+					}
+				}
+			}
+
+			// Otherwise resize using bilinear filtering
+			else
+			{
+				float ratioX = (float)(1.0 / (w2) / (w - 1));
+				float ratioY = (float)(1.0 / (w2) / (h - 1));
+
+				for (int y = 0; y < w2; y++)
+				{
+					//if (y % 20 == 0)
+					//{
+					// EditorUtility.DisplayProgressBar("Resize", "Calculating texture", Mathf.InverseLerp(0.0f, w2, y));
+					//}
+
+					float yy = Mathf.Floor(y * ratioY);
+					float y1 = yy * w;
+					float y2 = (yy + 1) * w;
+					float yw = y * w2;
+
+					for (int x = 0; x < w2; x++)
+					{
+						float xx = Mathf.Floor(x * ratioX);
+						Color bl = mapColors[(int)y1 + (int)xx];
+						Color br = mapColors[(int)y1 + (int)xx + 1];
+						Color tl = mapColors[(int)y2 + (int)xx];
+						Color tr = mapColors[(int)y2 + (int)xx + 1];
+
+						float xLerp = x * ratioX - xx;
+						map[(int)yw + x] = Color.Lerp(Color.Lerp(bl, br, xLerp), Color.Lerp(tl, tr, xLerp), y * ratioY - yy);
+					}
+				}
+			}
+			//EditorUtility.ClearProgressBar();
+		}
+		else
+		{
+			// Use original if no resize is needed
+			map = mapColors;
+		}
+
+		//Assign texture data to heightmap
+		for (int y = 0; y < w2; y++)
+		{
+			for (int x = 0; x < w2; x++)
+			{
+				heightmapData[y, x] = map[y * w2 + x].grayscale;
+			}
+		}
+		terrain.SetHeights(0, 0, heightmapData);
+		levelMesh.terrainData = terrain;
+		levelMesh.Flush ();
+
+//		levelMesh.terrainData.SetDetailLayer
+
+
+		return terrain;
 
 	}
 
-//	public void GeneratePieceWise(){
-//
-//		Vector3 playerPos = Services.Player.transform.position;
-//
-//		int yIndex = Mathf.RoundToInt ((playerPos.z / tileScale));
-//		int xIndex = Mathf.RoundToInt ((playerPos.x / tileScale));
-//
-//		for (int y = -1, ti = -6, vi = -1; y < 2; y++, vi++) {
-//
-//			int yPos = yIndex + y;
-//
-//			for (int x = -1; x < 2; x++, ti += 6, vi++) {
-//
-//				int xPos = xIndex + x;
-//				int vertIndex = xPos * yPos;
-//				float perlinVal = 0;
-//				int t = ti + vertIndex;
-//				int v = vi + vertIndex;
-//
-//				if(xPos >= 0 && xPos < _width && yPos > 0 && yPos < _length){
-//
-//					if (usePerlin) {
-//						perlinVal = OctavePerlin (((xOrigin + xPos) * noiseScale), ((yOrigin + yPos) * noiseScale), 5, 0.5f);
-//					} else {
-//						Color c = _bitmap.GetPixel (xPos, yPos);
-//						perlinVal = ((0.21f * (float)c.r) + (0.72f * (float)c.g) + (0.07f * (float)c.b));
-//					}
-//
-//
-//					int remapIndex = Mathf.RoundToInt (perlinVal * Services.LevelGen.NoiseRemapping.Length);
-//					float difference = (perlinVal * Services.LevelGen.NoiseRemapping.Length) - (float)remapIndex;
-//					perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
-//
-//					if (remapIndex < Services.LevelGen.NoiseRemapping.Length-1 && difference > 0) {
-//						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
-//					} else {
-//						if (remapIndex > 0 && difference < 0) {
-//							perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs(difference));
-//						}
-//					}
-//					_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
-//
-//					vertices [vertIndex] = new Vector3 (xPos, (perlinVal * _height), yPos);
-//					vertices [vertIndex] *= tileScale;
-//
-//					uvs [vertIndex] = new Vector2 ((float)xPos / _width, (float)yPos / _length);
-//
-//					LevelObjectFactory (perlinVal, vertices [vertIndex], new Vector2 (x, y));
-//
-//					groundTriangles[t] = v;
-//					groundTriangles[t + 3] = groundTriangles[t + 2] = v + 1;
-//					groundTriangles[t + 4] = groundTriangles[t + 1] = v + _width + 1;
-//					groundTriangles[t + 5] = v + _width + 2;
-//				}
-//			}
-//		}
-//
-//		terrain.vertices = vertices;
-//		terrain.uv = uvs;
-//
-//		ground.GetComponent<MeshFilter> ().mesh = terrain;
-//		ground.GetComponent<Renderer> ().material.mainTexture = _bitmap;
-//		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
-//	}
+
+	public void OnDestroyed(){
+
+	}
 }
 
