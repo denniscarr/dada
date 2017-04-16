@@ -24,5 +24,7 @@ public class D_peacockFunction : D_Function {
                 collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 100f, ForceMode.Impulse);
             }
         }
-	}
+
+        GetComponent<Rigidbody>().AddForce(Vector3.up * 100f, ForceMode.Impulse);
+    }
 }

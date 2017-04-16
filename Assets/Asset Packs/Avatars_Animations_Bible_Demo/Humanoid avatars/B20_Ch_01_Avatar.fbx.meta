@@ -87,7 +87,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
@@ -104,7 +104,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 300
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -126,6 +126,7 @@ ModelImporter:
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human:
     - boneName: Root_Jnt
       humanName: Hips
@@ -353,185 +354,185 @@ ModelImporter:
         modified: 0
     skeleton:
     - name: B20_Ch_01_Avatar(Clone)
+      parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Batch_20
-      position: {x: 0, y: 0.0033874875, z: 0.0006720973}
+      parentName: 
+      position: {x: 0, y: 1.0162463, z: 0.2016292}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Batch_20_Ch_01_Avatar
-      position: {x: -0, y: -0.0033874875, z: -0.0006720973}
+      parentName: 
+      position: {x: -0, y: -1.0162463, z: -0.2016292}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Root_Jnt
-      position: {x: 0.00000006477945, y: 0.004862784, z: -0.000051576746}
+      parentName: 
+      position: {x: 0.000019433835, y: 1.4588351, z: -0.015473024}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Spine_01_J
-      position: {x: -0.00000006253668, y: 0.0005990913, z: 0.000053115193}
+      parentName: 
+      position: {x: -0.000018761006, y: 0.17972739, z: 0.01593456}
       rotation: {x: 0.49926686, y: -0.500738, z: -0.49926087, w: 0.50073206}
       scale: {x: 1, y: 0.99999994, z: 1}
-      transformModified: 1
     - name: Spine_02_J
-      position: {x: -0.0006668382, y: 4.466913e-19, z: -1.753067e-20}
+      parentName: 
+      position: {x: -0.20005146, y: 1.3400739e-16, z: -5.259201e-18}
       rotation: {x: -0.59696656, y: 0.09781116, z: 0.12643889, w: 0.7861789}
       scale: {x: 0.99999994, y: 0.9999999, z: 1.0000001}
-      transformModified: 1
     - name: Left_Clavicle_Jnt
-      position: {x: -0.0014331022, y: 2.7755575e-19, z: -3.122502e-19}
+      parentName: 
+      position: {x: -0.42993066, y: 8.326673e-17, z: -9.367507e-17}
       rotation: {x: -0.09437453, y: 0.08867176, z: 0.41551158, w: 0.9003227}
       scale: {x: 1.0000001, y: 1.0000001, z: 1}
-      transformModified: 1
     - name: Left_Shoulder_Jnt
-      position: {x: -0.0004147245, y: -0.000043290802, z: 1.04083406e-19}
+      parentName: 
+      position: {x: -0.12441735, y: -0.012987241, z: 3.1225023e-17}
       rotation: {x: 0.1108444, y: 0.0050924127, z: 0.19288874, w: 0.9749264}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Left_Elbow_Jnt
-      position: {x: -0.0015618663, y: 0.0000031179438, z: 0.000014951923}
+      parentName: 
+      position: {x: -0.46855992, y: 0.0009353832, z: 0.004485577}
       rotation: {x: -0.000801918, y: 0.04237517, z: -0.009427255, w: 0.99905705}
       scale: {x: 1.0000002, y: 0.99999994, z: 1}
-      transformModified: 1
     - name: Left_Wrist_Jnt
-      position: {x: -0.0014382958, y: 0.000000061662554, z: 0.00000040888574}
+      parentName: 
+      position: {x: -0.43148875, y: 0.000018498766, z: 0.00012266572}
       rotation: {x: -0.22900742, y: 0.009883725, z: 0.033405837, w: 0.9728011}
       scale: {x: 0.99999994, y: 1, z: 0.99999994}
-      transformModified: 1
     - name: Extra_J
-      position: {x: -0.00039774613, y: -0.0002976884, z: 0.000027209708}
+      parentName: 
+      position: {x: -0.11932385, y: -0.08930653, z: 0.008162912}
       rotation: {x: 0.12094005, y: -0.026973458, z: -0.038281977, w: 0.99155456}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Left_Thumb_Jnt_01
-      position: {x: -0.00015471496, y: -0.000110775785, z: 0.00016631791}
+      parentName: 
+      position: {x: -0.046414487, y: -0.033232737, z: 0.04989538}
       rotation: {x: 0.72672886, y: 0.33867967, z: -0.1923681, w: 0.56582314}
       scale: {x: 0.99999994, y: 1.0000002, z: 0.9999998}
-      transformModified: 1
     - name: Left_Thumb_Jnt_02
-      position: {x: -0.00015530662, y: -0.000011247226, z: 2.0196178e-12}
+      parentName: 
+      position: {x: -0.04659199, y: -0.003374168, z: 6.0588534e-10}
       rotation: {x: -0.000000029802322, y: 0.000000022351742, z: 0.0018379688, w: 0.9999984}
       scale: {x: 1, y: 0.99999976, z: 0.99999976}
-      transformModified: 1
     - name: Left_Fingers_Jnt_01
-      position: {x: -0.00037269984, y: -0.00001974032, z: 0.000009518054}
+      parentName: 
+      position: {x: -0.11180996, y: -0.005922097, z: 0.0028554162}
       rotation: {x: 0.06809138, y: -0.047413595, z: -0.032241866, w: 0.99603015}
       scale: {x: 0.99999994, y: 1, z: 1}
-      transformModified: 1
     - name: Left_Fingers_02_Jnt
-      position: {x: -0.00022224612, y: 0.0000017381616, z: -0.000003340123}
+      parentName: 
+      position: {x: -0.06667384, y: 0.0005214485, z: -0.0010020368}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Right_Clavicle_Jnt
-      position: {x: -0.0011669071, y: 0.0007982838, z: -0.00023421555}
+      parentName: 
+      position: {x: -0.35007215, y: 0.23948514, z: -0.07026467}
       rotation: {x: 0.6778914, y: 0.72148895, z: -0.12813944, w: 0.05913814}
       scale: {x: 1.0000002, y: 1.0000001, z: 1.0000001}
-      transformModified: 1
     - name: Right_Shoulder_Jnt
-      position: {x: 0.00041472306, y: 0.0000432938, z: -2.4078442e-10}
+      parentName: 
+      position: {x: 0.124416925, y: 0.012988141, z: -0.00000007223532}
       rotation: {x: 0.002953578, y: -0.01558602, z: 0.19730325, w: 0.9802141}
       scale: {x: 0.9999997, y: 0.99999976, z: 0.99999976}
-      transformModified: 1
     - name: Right_Elbow_Jnt
-      position: {x: 0.0015618708, y: -0.0000031241502, z: -0.0000149506695}
+      parentName: 
+      position: {x: 0.46856126, y: -0.0009372451, z: -0.004485201}
       rotation: {x: -0.00080188294, y: 0.042375162, z: -0.009427256, w: 0.999057}
       scale: {x: 1, y: 1.0000001, z: 0.9999999}
-      transformModified: 1
     - name: Right_Wrist_Jnt
-      position: {x: 0.0014382877, y: -0.000000056332144, z: -0.00000041050112}
+      parentName: 
+      position: {x: 0.43148634, y: -0.000016899645, z: -0.00012315036}
       rotation: {x: -0.12080175, y: 0.0061068125, z: 0.038679536, w: 0.991904}
       scale: {x: 1.0000002, y: 1.0000006, z: 1.0000005}
-      transformModified: 1
     - name: Extra2_J
-      position: {x: 0.00042635656, y: 0.00029531855, z: -0.0000259388}
+      parentName: 
+      position: {x: 0.12790698, y: 0.08859557, z: -0.00778164}
       rotation: {x: 0.99155456, y: -0.038281977, z: 0.026973484, w: -0.120940045}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Right_Thumb_Jnt_01
-      position: {x: 0.00015471918, y: 0.00011077791, z: -0.00016631765}
+      parentName: 
+      position: {x: 0.046415754, y: 0.033233374, z: -0.049895294}
       rotation: {x: -0.7267288, y: -0.3386733, z: 0.19236985, w: -0.5658263}
       scale: {x: 0.9999999, y: 0.99999976, z: 0.9999999}
-      transformModified: 1
     - name: Right_Thumb_Jnt_02
-      position: {x: 0.00015530449, y: 0.000011243494, z: -0.0000000020989452}
+      parentName: 
+      position: {x: 0.046591345, y: 0.0033730483, z: -0.0000006296836}
       rotation: {x: 0.000000022351742, y: -0.000000029802322, z: 0.0018380061, w: 0.99999833}
       scale: {x: 1.0000001, y: 1, z: 0.99999994}
-      transformModified: 1
     - name: Right_Fingers_Jnt_01
-      position: {x: 0.00037270092, y: 0.000019737157, z: -0.000009518082}
+      parentName: 
+      position: {x: 0.111810274, y: 0.0059211478, z: -0.0028554245}
       rotation: {x: 0.06809136, y: -0.0474136, z: -0.032241892, w: 0.99603015}
       scale: {x: 0.99999994, y: 0.9999999, z: 0.99999994}
-      transformModified: 1
     - name: Right_Fingers_02_Jnt
-      position: {x: 0.00022224538, y: -0.0000017389237, z: 0.0000033401432}
+      parentName: 
+      position: {x: 0.066673614, y: -0.0005216772, z: 0.0010020429}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: Head_Jnt_01
-      position: {x: -0.0017126689, y: 0.0005701714, z: -0.000003196319}
+      parentName: 
+      position: {x: -0.5138007, y: 0.17105141, z: -0.0009588958}
       rotation: {x: -0.07901131, y: -0.59974873, z: 0.7818165, w: 0.1510684}
       scale: {x: 1.0000002, y: 1.0000002, z: 1.0000001}
-      transformModified: 1
     - name: Pelvis_Jnt
-      position: {x: 8.470329e-24, y: 0, z: -8.673617e-21}
+      parentName: 
+      position: {x: 2.5410988e-21, y: 0, z: -2.6020852e-18}
       rotation: {x: 0.004415445, y: 0.010806454, z: 0.3782124, w: 0.92564523}
       scale: {x: 1, y: 0.9999999, z: 0.9999999}
-      transformModified: 1
     - name: R_Hip_J
-      position: {x: -0.000033297216, y: -0.00064253353, z: 0.000021426542}
+      parentName: 
+      position: {x: -0.009989165, y: -0.19276008, z: 0.006427963}
       rotation: {x: -0.6069702, y: 0.24441467, z: 0.6953603, w: 0.29719138}
       scale: {x: 1, y: 0.9999998, z: 1}
-      transformModified: 1
     - name: R_Knee_J
-      position: {x: -0.00007610768, y: 0.0018202657, z: -0.0000039134284}
+      parentName: 
+      position: {x: -0.022832304, y: 0.5460797, z: -0.0011740285}
       rotation: {x: -0.013450533, y: -0.028122544, z: -0.67849505, w: -0.73394334}
       scale: {x: 1.0000002, y: 1, z: 1}
-      transformModified: 1
     - name: R_Ankle_J
-      position: {x: 0.0020115357, y: 0.00002081884, z: 0.0000027367767}
+      parentName: 
+      position: {x: 0.6034607, y: 0.006245652, z: 0.000821033}
       rotation: {x: 0.7772787, y: 0.62886, z: 0.010614574, w: -0.01613301}
       scale: {x: 0.9999998, y: 0.9999999, z: 1.0000001}
-      transformModified: 1
     - name: R_Ball_J
-      position: {x: 0.00067292317, y: 0.0003519744, z: 0.0000113492815}
+      parentName: 
+      position: {x: 0.20187695, y: 0.105592325, z: 0.0034047845}
       rotation: {x: -0.023848683, y: -0.0021508336, z: -0.116376564, w: 0.99291646}
       scale: {x: 1.0000001, y: 1.0000004, z: 1.0000001}
-      transformModified: 1
     - name: R_Toe_J
-      position: {x: 0.00023186549, y: -0.000010968025, z: 0.000004866409}
+      parentName: 
+      position: {x: 0.06955965, y: -0.0032904076, z: 0.0014599228}
       rotation: {x: -0.011220428, y: -0.071804054, z: -0.047143377, w: 0.99624085}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_Hip_J
-      position: {x: -0.0006421539, y: -0.000045266308, z: 0.0000015095011}
+      parentName: 
+      position: {x: -0.19264618, y: -0.013579893, z: 0.00045285036}
       rotation: {x: -0.280663, y: -0.71903455, z: -0.24330154, w: 0.5873857}
       scale: {x: 1.0000001, y: 0.9999999, z: 1.0000001}
-      transformModified: 1
     - name: L_Knee_J
-      position: {x: 0.00007610766, y: -0.0018202657, z: 0.0000039133092}
+      parentName: 
+      position: {x: 0.022832297, y: -0.5460797, z: 0.0011739928}
       rotation: {x: -0.0134506365, y: -0.028122623, z: -0.67849505, w: -0.7339433}
       scale: {x: 1, y: 0.9999999, z: 0.9999998}
-      transformModified: 1
     - name: L_Ankle_J
-      position: {x: -0.00201154, y: -0.000020818763, z: -0.0000027369992}
+      parentName: 
+      position: {x: -0.6034621, y: -0.006245629, z: -0.0008210998}
       rotation: {x: -0.77725637, y: -0.62885803, z: -0.011687871, w: 0.016537454}
       scale: {x: 1.0000001, y: 1, z: 1.0000001}
-      transformModified: 1
     - name: L_Ball_J
-      position: {x: -0.0006729233, y: -0.00035197425, z: -0.000011350155}
+      parentName: 
+      position: {x: -0.201877, y: -0.10559228, z: -0.0034050466}
       rotation: {x: -0.023665912, y: -0.002181169, z: -0.116372116, w: 0.9929213}
       scale: {x: 1, y: 1, z: 1.0000001}
-      transformModified: 1
     - name: L_Toe_J
-      position: {x: -0.00023186603, y: 0.00001096802, z: -0.0000048663605}
+      parentName: 
+      position: {x: -0.069559805, y: 0.0032904062, z: -0.0014599082}
       rotation: {x: -0.011220428, y: -0.071804054, z: -0.047143377, w: 0.99624085}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -540,7 +541,10 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 3
   humanoidOversampling: 1
