@@ -71,7 +71,7 @@ public class NPC : MonoBehaviour {
         rb = transform.parent.GetComponent<Rigidbody>();
 		speakSource = GetComponent<AudioSource> ();
         // See if I have an animator before I try to use NPCAnimation.
-        if (transform.parent.GetComponentInChildren<Animator>().isHuman)
+        if (transform.parent.GetComponentInChildren<Animator>() != null && transform.parent.GetComponentInChildren<Animator>().isHuman)
         {
             npcAnimation = GetComponent<NPCAnimation>();
         }
@@ -614,7 +614,8 @@ public class NPC : MonoBehaviour {
             writer.WriteSpecifiedString(
                 "Hey! I wanted that " + targetObject.name + ", " + targetObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + "!"
                 );
-            npcAnimation.ObjectPickedUp();
+
+            if (npcAnimation != null) npcAnimation.ObjectPickedUp();
             EvaluateSurroundings();
         }
     }
