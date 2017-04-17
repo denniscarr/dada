@@ -30,7 +30,7 @@ public class D_microwaveFunction : D_Function {
                 if (hit.collider.GetComponentInChildren<InteractionSettings>() != null)
                 {
                     Debug.Log("heating up: " + hit.collider.gameObject.name);
-                    hit.collider.GetComponentInChildren<InteractionSettings>().heat += 0.4f * Time.deltaTime;
+                    hit.collider.GetComponentInChildren<InteractionSettings>().heat += 0.6f * Time.deltaTime;
                 }
             }
         }

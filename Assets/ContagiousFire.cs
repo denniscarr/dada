@@ -8,7 +8,7 @@ public class ContagiousFire : MonoBehaviour {
     {
         if (transform.parent.GetComponentInChildren<NPC>() != null)
         {
-            transform.parent.GetComponentInChildren<NPC>().health -= 0.3f * Time.deltaTime;
+            transform.parent.GetComponentInChildren<NPC>().health -= 20f * Time.deltaTime;
         }
     }
 
@@ -16,7 +16,7 @@ public class ContagiousFire : MonoBehaviour {
     {
         if (other.GetComponentInChildren<InteractionSettings>() != null)
         {
-            other.GetComponentInChildren<InteractionSettings>().heat += 0.3f * Time.deltaTime;
+            other.GetComponentInChildren<InteractionSettings>().heat += 1f * Time.deltaTime;
         }
     }
 
