@@ -19,9 +19,20 @@ public class D_beamGunFunction : D_Function {
 		Ray beamRay = new Ray (transform.position, -transform.forward);
 		RaycastHit Hit;
 		line.SetPosition (0, beamRay.origin);
-		if (Physics.Raycast(beamRay, out Hit, 100))
-			line.SetPosition(1, Hit.point);
-		else line.SetPosition (1, beamRay.GetPoint (100));
+        if (Physics.Raycast(beamRay, out Hit, 100))
+        {
+            line.SetPosition(1, Hit.point);
+            if (Hit.collider.GetComponent<Rigidbody>() != null)
+            {
+                Hit.collider.GetComponent<Rigidbody>().AddExplosionForce(5f, Hit.point, 3f, 2f, ForceMode.Impulse);
+            }
+
+            if (Hit.collider.GetComponentInChildren<NPC>() != null)
+            {
+                Hit.collider.GetComponentInChildren<NPC>().health -= 5f;
+            }
+        }
+        else line.SetPosition(1, beamRay.GetPoint(100));
 		Instantiate (spark, Hit.point, Quaternion.identity);
 
 		Invoke ("BeamOff", 0.1f);

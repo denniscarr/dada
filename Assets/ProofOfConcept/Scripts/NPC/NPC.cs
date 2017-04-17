@@ -46,7 +46,24 @@ public class NPC : MonoBehaviour {
 
     // USED FOR HATE
     [SerializeField] float hateProbability = 0.04f; // The probability that I will hate an object if I see it.
-    string[] hatedObjects;  // The name of objects that I hate.
+    List<string> hatedObjects;  // The name of objects that I hate.
+
+    // USED FOR PAIN & DEATH
+    float _health = 100f;
+    public float health
+    {
+        get { return _health; }
+        set
+        {
+            _health = value;
+            Debug.Log("Current health: " + _health);
+            if (_health <= 0)
+            {
+                Die();
+            }
+        }
+    }
+    float painThreshold = 10f;   // The collision magnitude below which health is not damaged.
 
     // GENERAL USE
     float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
@@ -68,6 +85,11 @@ public class NPC : MonoBehaviour {
 
     void Start()
     {
+        if (transform.parent.GetComponent<CollisionReporter>() == null)
+        {
+            transform.parent.gameObject.AddComponent<CollisionReporter>();
+        }
+
         rb = transform.parent.GetComponent<Rigidbody>();
 		speakSource = GetComponent<AudioSource> ();
         // See if I have an animator before I try to use NPCAnimation.
@@ -94,10 +116,10 @@ public class NPC : MonoBehaviour {
         // Decide which objects I should hate.
         int numberOfHatedObjects = Random.Range(0, 5);
         InteractionSettings[] allGameObjects = GameObject.FindObjectsOfType<InteractionSettings>();
-        hatedObjects = new string[numberOfHatedObjects];
+        hatedObjects = new List<string>();
         for (int i = 0; i < numberOfHatedObjects; i++)
         {
-            hatedObjects[i] = allGameObjects[Random.Range(0, allGameObjects.Length)].transform.parent.name;
+            hatedObjects.Add(allGameObjects[Random.Range(0, allGameObjects.Length)].transform.parent.name);
             //Debug.Log(hatedObjects[i]);
         }
 
@@ -134,9 +156,13 @@ public class NPC : MonoBehaviour {
             	npcAnimation.ObjectThrown();
 			}
 
-            writer.WriteSpecifiedString(
-                "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
-                );
+            if (carriedObject.GetComponentInChildren<InteractionSettings>() != null)
+            {
+                writer.WriteSpecifiedString(
+                    "Oh no! " +
+                    carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
+                    );
+            }
 
             //Play Voice Sound Effect
 			Speak();
@@ -631,6 +657,29 @@ public class NPC : MonoBehaviour {
 
 			speakSource.Play ();
 		}
-
 	}
+
+    public void CollisionInParent(Collision collision)
+    {
+        // If collision magnitude is over a certain amount, get hurt.
+        if (collision.relativeVelocity.magnitude > painThreshold)
+        {
+            Debug.Log("Ouch! That " + collision.gameObject.name + " hurt me!");
+            writer.WriteSpecifiedString("Ouch! That " + collision.gameObject.name + " hurt me!");
+
+            // See if we should start hating this object.s
+            if (!hatedObjects.Contains(collision.gameObject.name))
+            {
+                hatedObjects.Add(collision.gameObject.name);
+            }
+
+            health -= collision.relativeVelocity.magnitude * 0.2f;
+        }
+    }
+
+    void Die()
+    {
+        // Destroy NPC AI prefab
+        Destroy(gameObject);
+    }
 }
