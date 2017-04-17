@@ -128,6 +128,9 @@ public class NPC : MonoBehaviour {
             //Debug.Log(hatedObjects[i]);
         }
 
+        // I always hate things that are covered in feces.
+        hatedObjects.Add("Feces-Covered");
+
         EvaluateSurroundings();
         currentState = BehaviorState.NormalMovement;
     }
@@ -240,7 +243,7 @@ public class NPC : MonoBehaviour {
                 // See if I hate the object I'm looking at.
                 foreach (string name in hatedObjects)
                 {
-                    if (name == hit.collider.gameObject.name)
+                    if (hit.collider.gameObject.name.Contains(name))
                     {
                         writer.WriteSpecifiedString("Oh no! I hate " + name + "s! I'm out of here!");
                         baseDirection *= -1;
@@ -667,7 +670,7 @@ public class NPC : MonoBehaviour {
     public void CollisionInParent(Collision collision)
     {
         // If collision magnitude is over a certain amount, get hurt.
-        if (collision.relativeVelocity.magnitude > painThreshold)
+        if (collision.gameObject.name != "GROUND" && collision.relativeVelocity.magnitude > painThreshold)
         {
             Debug.Log("Ouch! That " + collision.gameObject.name + " hurt me!");
             writer.WriteSpecifiedString("Ouch! That " + collision.gameObject.name + " hurt me!");
@@ -704,5 +707,11 @@ public class NPC : MonoBehaviour {
 
         // Destroy NPC AI prefab
         gameObject.SetActive(false);
+    }
+
+
+    public void CatchOnFire()
+    {
+        writer.WriteSpecifiedString("Argh! I'm on fire!");
     }
 }

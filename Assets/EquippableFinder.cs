@@ -32,6 +32,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Get references to my buddies.
         writer = GetComponent<Writer>();
+        writer.textSize = 0.1f;
         equipReference = GameObject.Find("Equip Reference").transform;
     }
 
