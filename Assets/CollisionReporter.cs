@@ -8,7 +8,7 @@ public class CollisionReporter : MonoBehaviour {
 
     private void Start()
     {
-        npcScript = transform.parent.GetComponentInChildren<NPC>();
+        npcScript = GetComponentInChildren<NPC>();
     }
 
     private void OnCollisionEnter(Collision collision)

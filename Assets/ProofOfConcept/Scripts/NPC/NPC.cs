@@ -55,15 +55,18 @@ public class NPC : MonoBehaviour {
         get { return _health; }
         set
         {
-            _health = value;
-            Debug.Log("Current health: " + _health);
-            if (_health <= 0)
+            Debug.Log("Current health: " + value);
+            if (value <= 0f)
             {
                 Die();
             }
+
+            else
+                _health = value;
         }
     }
     float painThreshold = 10f;   // The collision magnitude below which health is not damaged.
+    Material ghostMaterial;
 
     // GENERAL USE
     float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
@@ -85,6 +88,8 @@ public class NPC : MonoBehaviour {
 
     void Start()
     {
+        ghostMaterial = Resources.Load("Materials/Ghost") as Material;
+
         if (transform.parent.GetComponent<CollisionReporter>() == null)
         {
             transform.parent.gameObject.AddComponent<CollisionReporter>();
@@ -156,7 +161,7 @@ public class NPC : MonoBehaviour {
             	npcAnimation.ObjectThrown();
 			}
 
-            if (carriedObject.GetComponentInChildren<InteractionSettings>() != null)
+            if (carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject != null)
             {
                 writer.WriteSpecifiedString(
                     "Oh no! " +
@@ -679,7 +684,25 @@ public class NPC : MonoBehaviour {
 
     void Die()
     {
+        writer.WriteSpecifiedString("Aargh! I've been murdered!");
+        
+        // Turn into ghost
+        transform.parent.gameObject.name = "Dead " + transform.parent.gameObject.name;
+
+        //foreach (MeshRenderer mr in transform.parent.GetComponentsInChildren<MeshRenderer>())
+        //{
+        //    mr.material = ghostMaterial;
+        //}
+
+        //transform.parent.GetComponent<Rigidbody>().mass *= 0.01f;
+        if (transform.parent.GetComponentInChildren<Animator>() != null) transform.parent.GetComponentInChildren<Animator>().enabled = false;
+        Destroy(transform.parent.GetComponent<CollisionReporter>());
+
+        transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+
+        Debug.Log("Dead");
+
         // Destroy NPC AI prefab
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }
