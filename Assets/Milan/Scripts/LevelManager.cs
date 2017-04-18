@@ -134,7 +134,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Destroy (l);
 	}
 
-	string SetLevelText(){
+	string SetLevelText() {
 		string line = "";
 		line += "Act " + ManagedObjects.Count + ": A Forest \n \n";
 		line += currentLevel._width + " metres by " + currentLevel._length + " metres\n";

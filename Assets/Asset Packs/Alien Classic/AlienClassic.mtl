@@ -1,0 +1,127 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+newmtl Tongue
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  0.5 0.5 0.5
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub Material__35 (2) to come 
+#
+newmtl Gums
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  0.5 0.5 0.5
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl Teeth
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  0.5 0.5 0.5
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub Material__35 done 
+#
+# Multi/Sub Material__46 (2) to come 
+#
+newmtl Gums
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  0.5 0.5 0.5
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl Teeth
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  0.5 0.5 0.5
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub Material__46 done 
+#
+# Multi/Sub Material__57 (2) to come 
+#
+newmtl Eye
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  0.5 0.5 0.5
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl EyeTrans
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub Material__57 done 
+#
+# Multi/Sub Material__68 (2) to come 
+#
+newmtl Eye
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  0.5 0.5 0.5
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl EyeTrans
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub Material__68 done 
+#
+newmtl Head
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl Skin
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub Material__79 (2) to come 
+#
+newmtl Skin
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl Head
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub Material__79 done 
+#
+# EOF

@@ -48,7 +48,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -81,8 +81,119 @@ ModelImporter:
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2
-    human: []
-    skeleton: []
+    human:
+    - boneName: joint3
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: joint8
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: joint5
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: joint9
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: joint6
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: joint10
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: joint7
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: Model2(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: UpperHalf
+      parentName: Model2(Clone)
+      position: {x: -1.7890781, y: 5.588272, z: 0.0030740113}
+      rotation: {x: 0.48537892, y: -0.5142055, z: -0.48537892, w: 0.5142055}
+      scale: {x: 2.3833427, y: 2.3833427, z: 2.3833427}
+    - name: joint1
+      parentName: Model2(Clone)
+      position: {x: -0, y: 9.360839, z: 0.24575874}
+      rotation: {x: -0.45106375, y: -0.54455626, z: 0.45106375, w: 0.54455626}
+      scale: {x: 1.0000005, y: 1.0000005, z: 1}
+    - name: joint2
+      parentName: joint1
+      position: {x: -2, y: -2.220446e-16, z: -6.661338e-16}
+      rotation: {x: -0, y: -0, z: -0.106282815, w: -0.99433595}
+      scale: {x: 1, y: 1, z: 1}
+    - name: joint3
+      parentName: joint2
+      position: {x: -3.4205527, y: 0.27643552, z: 6.661338e-16}
+      rotation: {x: -0.7499365, y: -0.13896431, z: 0.09222464, w: -0.6401397}
+      scale: {x: 1, y: 1.0000001, z: 1.0000001}
+    - name: joint5
+      parentName: joint3
+      position: {x: -0.047930308, y: -1.0798963, z: 0.2599608}
+      rotation: {x: -0.38481727, y: -0.16514608, z: -0.07173408, w: 0.9052606}
+      scale: {x: 1, y: 0.99999994, z: 1.0000001}
+    - name: joint6
+      parentName: joint5
+      position: {x: -1.4994861, y: -0.69265735, z: 0.051248517}
+      rotation: {x: 0.7715104, y: 0.2045906, z: 0.13454832, w: 0.5872062}
+      scale: {x: 1.0000002, y: 1, z: 1.0000004}
+    - name: joint7
+      parentName: joint6
+      position: {x: -1.5135837, y: -0.13748164, z: -0.22121574}
+      rotation: {x: 0.17379673, y: -0.6913879, z: -0.12256905, w: 0.6904739}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: joint8
+      parentName: joint3
+      position: {x: -0.70348257, y: 0.8572946, z: -0.07882914}
+      rotation: {x: 0.38030344, y: -0.88616896, z: -0.2638876, w: -0.020910844}
+      scale: {x: 1.0000002, y: 1.0000007, z: 1.000001}
+    - name: joint9
+      parentName: joint8
+      position: {x: 1.4994931, y: 0.69265884, z: -0.05124953}
+      rotation: {x: 0.7715104, y: 0.20459063, z: 0.13454832, w: 0.58720624}
+      scale: {x: 1.0000002, y: 1, z: 1.0000004}
+    - name: joint10
+      parentName: joint9
+      position: {x: 1.5130441, y: 0.15311669, z: 0.18639362}
+      rotation: {x: -0.17379679, y: 0.6913879, z: 0.12256894, w: -0.69047403}
+      scale: {x: 1.0000001, y: 1.0000001, z: 0.99999994}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -93,10 +204,10 @@ ModelImporter:
     rootMotionBoneName: 
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 3
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
