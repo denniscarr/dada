@@ -27,7 +27,7 @@ public class D_hammerFunction : D_Function {
 		//hammer.SetBool("Hammer", true);
 		print ("animation triggered");
 		GameObject hammerHit = hit.collider.gameObject;
-		hammerHit.transform.localScale -= new Vector3 (-5f, flattenMultiplier, -5f);
+		hammerHit.transform.localScale -= new Vector3 (-flattenMultiplier/2f, flattenMultiplier, -flattenMultiplier/2f);
 
 	}
 }

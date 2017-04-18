@@ -11,7 +11,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	public Level currentLevel;
 	public Light cookieLight;
 	public Light sun;
-	public int maxNPCs, maxPickups, maxObjects;
+	public int maxNPCs, maxObjects, maxSprites;
     public int levelNum = 0;
 	public int width, length, height;
 	public float tileScale = 1;
@@ -24,6 +24,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Start()
 	{
 
+		NoiseRemapping = new float[15];
+
+		for(int i = 0; i < NoiseRemapping.Length; i++) {
+			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+		}
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
 
@@ -43,7 +48,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Update()
     {
         // If the player has jumped off the level.
-		if (Services.Player.transform.position.y - currentLevel.transform.position.y < -currentLevel.mapHeight * 2){
+		if (Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
 //			if (currentLevel != null) currentLevel.enabled = false;
@@ -117,7 +122,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Destroy (l);
 	}
 
-	string SetLevelText(){
+	string SetLevelText() {
 		string line = "";
 		line += "Act " + ManagedObjects.Count + ": A Forest \n \n";
 		line += currentLevel._width + " metres by " + currentLevel._length + " metres\n";

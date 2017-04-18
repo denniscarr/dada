@@ -1,0 +1,179 @@
+fileFormatVersion: 2
+guid: eb1b1dba849819e4d8526f1e964a9ff8
+timeCreated: 1492313983
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: anteb_L
+    100002: anteb_L_001
+    100004: bones
+    100006: bra_L
+    100008: bra_L_001
+    100010: cabe
+    100012: cocha_L
+    100014: cocha_L_001
+    100016: cost1
+    100018: cost2
+    100020: cost3
+    100022: Cube_000
+    100024: dedo1_2_L
+    100026: dedo1_2_L_001
+    100028: dedo2_1_3_L
+    100030: dedo2_1_3_L_001
+    100032: dedo2_2_3_L
+    100034: dedo2_2_3_L_001
+    100036: dedo2_2_L
+    100038: dedo2_2_L_001
+    100040: dedo2_3_3_L
+    100042: dedo2_3_3_L_001
+    100044: dedo3_1_3_L
+    100046: dedo3_1_3_L_001
+    100048: dedo3_2_3_L
+    100050: dedo3_2_3_L_001
+    100052: dedo3_3_3_L
+    100054: dedo3_3_3_L_001
+    100056: dedo4_1_3_L
+    100058: dedo4_1_3_L_001
+    100060: dedo4_2_3_L
+    100062: dedo4_2_3_L_001
+    100064: dedo4_3_3_L
+    100066: dedo4_3_3_L_001
+    100068: dedo5_1_3_L
+    100070: dedo5_1_3_L_001
+    100072: dedo5_2_3_L
+    100074: dedo5_2_3_L_001
+    100076: dedo5_3_3_L
+    100078: dedo5_3_3_L_001
+    100080: mao_L
+    100082: mao_L_001
+    100084: pe1_L
+    100086: pe1_L_001
+    100088: pe2_L
+    100090: pe2_L_001
+    100092: perna_L
+    100094: perna_L_001
+    100096: pesc
+    100098: //RootNode
+    400000: anteb_L
+    400002: anteb_L_001
+    400004: bones
+    400006: bra_L
+    400008: bra_L_001
+    400010: cabe
+    400012: cocha_L
+    400014: cocha_L_001
+    400016: cost1
+    400018: cost2
+    400020: cost3
+    400022: Cube_000
+    400024: dedo1_2_L
+    400026: dedo1_2_L_001
+    400028: dedo2_1_3_L
+    400030: dedo2_1_3_L_001
+    400032: dedo2_2_3_L
+    400034: dedo2_2_3_L_001
+    400036: dedo2_2_L
+    400038: dedo2_2_L_001
+    400040: dedo2_3_3_L
+    400042: dedo2_3_3_L_001
+    400044: dedo3_1_3_L
+    400046: dedo3_1_3_L_001
+    400048: dedo3_2_3_L
+    400050: dedo3_2_3_L_001
+    400052: dedo3_3_3_L
+    400054: dedo3_3_3_L_001
+    400056: dedo4_1_3_L
+    400058: dedo4_1_3_L_001
+    400060: dedo4_2_3_L
+    400062: dedo4_2_3_L_001
+    400064: dedo4_3_3_L
+    400066: dedo4_3_3_L_001
+    400068: dedo5_1_3_L
+    400070: dedo5_1_3_L_001
+    400072: dedo5_2_3_L
+    400074: dedo5_2_3_L_001
+    400076: dedo5_3_3_L
+    400078: dedo5_3_3_L_001
+    400080: mao_L
+    400082: mao_L_001
+    400084: pe1_L
+    400086: pe1_L_001
+    400088: pe2_L
+    400090: pe2_L_001
+    400092: perna_L
+    400094: perna_L_001
+    400096: pesc
+    400098: //RootNode
+    4300000: Cube_000
+    7400000: Default Take
+    9500000: //RootNode
+    13700000: Cube_000
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
