@@ -56,6 +56,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		ground = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
+		ground.layer = 2;
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
 		ground.isStatic = true;
