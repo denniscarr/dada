@@ -5,8 +5,8 @@ using UnityEngine;
 public class BathSinkFunction : MonoBehaviour {
     public GameObject bathSink;
     public GameObject explosionParticle;
-    public float radius = 10.0F;
-    public float power = 100.0F;
+    float radius = 25.0F;
+    float power = 200.0F;
     public float fuseTime = 5f;
     public float bathSinkSpeed = 100f;
     public KeyCode useBathSink = KeyCode.Mouse0;

@@ -71,7 +71,7 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if (transform.parent.parent != null && transform.parent.parent.name == "UpperNode")
+            if (transform.parent.parent != null && transform.parent.parent.name == "INROOMOBJECTS")
             {
                 return true;
             }
