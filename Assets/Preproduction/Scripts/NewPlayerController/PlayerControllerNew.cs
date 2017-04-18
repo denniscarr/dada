@@ -96,7 +96,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitInRoomMode(){
+	public void InitInRoomMode(){
 		rigidbodyFirstPersonController.enabled = true;
 		insideVisorMan.enabled = true;
 		headBob.enabled = true;
@@ -123,7 +123,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitZoomOutMode(){
+	public void InitZoomOutMode(){
 		transform.position = initPos;
 		transform.rotation = initRotation;
 		UpperCamera.transform.rotation = initCameraRotation;
