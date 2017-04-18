@@ -20,5 +20,15 @@ public class Grail : MonoBehaviour {
                 }
             }
         }
+
+        // Run away from player.
+        if (Vector3.Distance(transform.position, Services.Player.transform.position) < 15f)
+        {
+            //Vector3 newPosition;
+            Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
+            directionFromPlayer = directionFromPlayer.normalized;
+
+            GetComponent<Rigidbody>().MovePosition(transform.position + directionFromPlayer * 1.01f);
+        }
 	}
 }
