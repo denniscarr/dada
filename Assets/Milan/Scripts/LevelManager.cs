@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Enum = System.Enum;
 
 public class LevelManager : SimpleManager.Manager<Level> {
 
@@ -26,9 +27,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		NoiseRemapping = new float[15];
 
-		for(int i = 0; i < NoiseRemapping.Length; i++) {
-			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
-		}
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
 
@@ -57,6 +55,20 @@ public class LevelManager : SimpleManager.Manager<Level> {
     }
 
 	public override Level Create(){
+		NoiseRemapping [0] = 0;
+		for(int i = 1; i < NoiseRemapping.Length; i++) {
+			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+			while(Mathf.Abs(NoiseRemapping[i] - NoiseRemapping[i-1]) > 0.33f){
+				NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
+			}
+		}
+
+		for (int j = 3; j < props.Length; j++) {
+			props [j] = (Services.TYPES) Random.Range (0, Services.Prefabs.PREFABS.Length);
+		}
+		for (int m = 0; m < 10; m++) {
+			props [Random.Range(0, props.Length)] = Services.TYPES.Sprite;
+		}
 
 		if (currentLevel != null) {
 			Destroy (currentLevel.gameObject);
