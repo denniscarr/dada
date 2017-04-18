@@ -48,7 +48,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		_width = Random.Range (10, 25);
 		_length = _width;
-		_height = Random.Range (1, 5);
+		_height = Random.Range (1, 4);
 
 		tileScale = Services.LevelGen.tileScale;
 
@@ -56,6 +56,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		ground = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
+		ground.layer = 2;
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
 		ground.isStatic = true;
@@ -67,15 +68,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
-		palette = new Color[12];
+		palette = new Color[10];
 		for (int i = 0; i < palette.Length; i++) {
-			float upper = (1 / ((float)palette.Length)) * (float)i;
+			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
-//			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
-//			palette [i] = new Color (Random.Range (0.0f, 1.0f),Random.Range (0.0f, 1.0f),Random.Range (0.0f, 1.0f));
+			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
-			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
 		SetGradient ();
@@ -141,7 +141,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 
 //		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
-
 		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 			if(c.name != "UpperCamera" && c){
 				c.backgroundColor = Color.Lerp (c.backgroundColor, Color.Lerp (Color.white, Color.black, playerHeightNormalized), Time.deltaTime * 3);
@@ -253,11 +252,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
                     }
                 }
 
-				vertices [i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
-				vertices [i] += (new Vector3 (x, 0, y) * tileScale) + new Vector3(Random.Range(-tileScale, tileScale)/3, 0, Random.Range(-tileScale, tileScale)/3);
+				perlinVal = Mathf.Pow (perlinVal, 1f);
 
+				vertices [i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
+				vertices [i] += (new Vector3 (x, 0, y) * tileScale) + new Vector3(Random.Range(0, tileScale), 0, Random.Range(0, tileScale));
 				//drag height to 0 around edge of circle
-				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 3));
+				perlinVal = Mathf.Lerp(perlinVal, 0f, Mathf.Pow(Vector3.Distance(centre, vertices[i])/((_width/2) * tileScale), 4));
 
 				vertices [i] += Vector3.up * _height * perlinVal * tileScale;
 
@@ -299,7 +299,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 			for (int x = 0; x <= _width; x++, i++){
 				
-				float perlinVal = (vertices [i].y / (float)_height)/(float)tileScale;
+				float perlinVal = (vertices [i].y / _height)/tileScale;
 				perlinVal = Mathf.Clamp01(perlinVal * normalizedPerlinHeight);
 
 					
@@ -389,11 +389,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		case 1:
-			spriteIndex = (int)Services.SPRITES.gate;
+			spriteIndex = (int)Services.SPRITES.tall;
 			break;
 
 		case 2:
-			spriteIndex = (int)Services.SPRITES.foliage;
+			spriteIndex = (int)Services.SPRITES.tall;
 			break;
 
 		case 3:
@@ -401,7 +401,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		default:
-			spriteIndex =  (int)Services.SPRITES.tall;
+			spriteIndex = Random.Range(1, Services.Prefabs.SPRITES.Length);
 			break;
 		}
 
@@ -428,13 +428,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				break;
 			} else {
 				Sprites++;
-				if (spriteIndex == (int)Services.SPRITES.image) {
-					tag = "ImageSprite";
-				} else {
-					tag = "InkSprite";
-				}
 			}
-				
+
+			if (spriteIndex == (int)Services.SPRITES.image) {
+				tag = "ImageSprite";
+			} else {
+				tag = "InkSprite";
+			}
 
 			break;
 
@@ -469,7 +469,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
-			newObject.tag = tag;
+
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
@@ -488,12 +488,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.localPosition = pos;
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () == null) {
-			newObject.transform.localScale *= Random.Range (2.0f, 4.0f);
+			newObject.transform.localScale *= Random.Range (3.0f, 5.0f);
 			newObject.transform.localPosition += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
 		} else {
-			if (spriteType == (int)Services.SPRITES.tall) {
-				newObject.transform.localScale *= Random.Range (3.0f, 4.0f);
-			}
+//			newObject.transform.localScale *= Random.Range (1.0f, 2.0f);
 			newObject.transform.localPosition -= Vector3.up * (newObject.GetComponent<SpriteRenderer> ().bounds.extents.y / 4);
 			newObject.AddComponent<BoxCollider> ().isTrigger = true;
 		}
