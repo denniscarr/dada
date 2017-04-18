@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Grail : MonoBehaviour {
 	
+    bool dying = false;
+
 	void Update ()
     {
+        if (dying) return;
+
 		// Suck all objects towards me.
         foreach(InteractionSettings interactionSettings in GameObject.FindObjectsOfType<InteractionSettings>())
         {
@@ -22,13 +26,29 @@ public class Grail : MonoBehaviour {
         }
 
         // Run away from player.
-        if (Vector3.Distance(transform.position, Services.Player.transform.position) < 15f)
+        if (Vector3.Distance(transform.position, Services.Player.transform.position) < 11f)
         {
             //Vector3 newPosition;
             Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
             directionFromPlayer = directionFromPlayer.normalized;
 
+            GetComponent<Rigidbody>().AddForce(directionFromPlayer * 1000f, ForceMode.Impulse);
+        }
+
+        if (Vector3.Distance(transform.position, Services.Player.transform.position) < 10f)
+        {
+            Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
+            directionFromPlayer = directionFromPlayer.normalized;
+
             GetComponent<Rigidbody>().MovePosition(transform.position + directionFromPlayer * 1.01f);
         }
-	}
+    }
+
+
+    public void GetReadyToDie()
+    {
+        GetComponent<Collider>().enabled = false;
+        Destroy(gameObject, 10f);
+        dying = true;
+    }
 }

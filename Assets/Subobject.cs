@@ -88,9 +88,9 @@ public class Subobject : MonoBehaviour {
         //GetComponent<MeshFilter>().sharedMesh.bounds = newBounds;
 
         // Get a new rotate speed.
-        rotateSpeed = Random.Range(1f, 2f);
+        rotateSpeed = Random.Range(3f, 8f);
 
-        sineSpeed = Random.Range(1f, 2f);
+        sineSpeed = Random.Range(3f, 8f);
 
         iGotToTheTop = false;
     }
