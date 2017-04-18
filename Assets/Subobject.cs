@@ -40,11 +40,11 @@ public class Subobject : MonoBehaviour {
 
         // Get a new transparency based on sine.
         GetComponent<MeshRenderer>().material.color = new Color(0.01f, 0.01f, 0.01f, MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, 1f));
-        GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new Color(
-            MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, topEmiss.r),
-            MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, topEmiss.g),
-            MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, topEmiss.b),
-            MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, 1f)));
+        //GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new Color(
+        //    MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, topEmiss.r),
+        //    MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, topEmiss.g),
+        //    MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, topEmiss.b),
+        //    MyMath.Map(Mathf.Sin(sineTime), -1f, 1f, 0f, 1f)));
 
 
         if (!iGotToTheTop && Mathf.Sin(sineTime) > 0f)
@@ -70,7 +70,7 @@ public class Subobject : MonoBehaviour {
         ResizeMeshToUnit();
 
         // Get a new color
-        GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Random.ColorHSV());
+        //GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Random.ColorHSV());
         //GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new Color(0.1f, 0.1f, 0.1f, 0.01f));
         topEmiss = GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
 
