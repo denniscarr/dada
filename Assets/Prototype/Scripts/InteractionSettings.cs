@@ -82,6 +82,21 @@ public class InteractionSettings : MonoBehaviour {
             }
         }
     }   // Whether this object is currently in the player's visor.
+    public bool IsEquipped
+    {
+        get
+        {
+            if (transform.parent.name.Contains("Equip Reference"))
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+    }
 
     bool IsNPC = true;
 
