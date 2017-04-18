@@ -57,7 +57,8 @@ public class MusicTrigger: MonoBehaviour {
 			} else if (collider.gameObject.tag == "InkSprite") {
 				inkSprites++;
 			} else if (collider.gameObject.GetComponentInChildren<InteractionSettings> () != null &&
-			           collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried) {
+				collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried == false && 
+				collider.gameObject.GetComponentInChildren<NPC>() == null) {
 				//Debug.Log ("nonpickup object");
 				nonPickups++;
 			} else if (collider.gameObject.GetComponentInChildren<NPC> () != null) {
@@ -77,7 +78,7 @@ public class MusicTrigger: MonoBehaviour {
 		Mathf.Clamp (imageSprites, 0f, 20f);
 		Mathf.Clamp (inkSprites, 0f, 20f);
 		Mathf.Clamp (nonPickups, 0f, 20f);
-		Mathf.Clamp (npcs, 0f, 20f);
+		Mathf.Clamp (npcs, 0f, 15f);
 		Mathf.Clamp (totalObjects, 0f, 20f);
 
 		//Debug.Log (inkSprites);

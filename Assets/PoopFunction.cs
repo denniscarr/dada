@@ -10,6 +10,8 @@ public class PoopFunction : D_Function {
     new void Start()
     {
         base.Start();
+
+        poopMat = Resources.Load("poop") as Material;
     }
 
     public override void Use()
