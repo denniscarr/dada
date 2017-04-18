@@ -6,8 +6,6 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 
 public class PlayerController : MonoBehaviour {
-	private float speed = 1.0F;
-	private float rotationSpeed = 100.0F;
 
 	public float ZoomInUpperCameraFoV = 17f;
 	public float ZoomOutUpperCameraFoV = 33f;

@@ -32,7 +32,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Get references to my buddies.
         writer = GetComponent<Writer>();
-        equipReference = GameObject.Find("Equip Reference").transform;
+        equipReference = GameObject.Find("New Equip Reference").transform;
     }
 
 
@@ -109,7 +109,7 @@ public class EquippableFinder : MonoBehaviour {
 
         originalScale = equippedObject.transform.localScale;
 
-		equippedObject.transform.SetParent(equipReference.parent, true);
+		equippedObject.transform.SetParent(equipReference, true);
 
 
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
@@ -130,7 +130,7 @@ public class EquippableFinder : MonoBehaviour {
 
         else
         {
-			equippedObject.transform.localScale = equipReference.localScale;
+			//equippedObject.transform.localScale = equipReference.localScale;
             equippedObject.transform.position = equipReference.position;
         }
 
