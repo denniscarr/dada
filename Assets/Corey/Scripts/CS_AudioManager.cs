@@ -378,7 +378,7 @@ public class CS_AudioManager : MonoBehaviour {
 			newImageSpriteVol = remapRange (n_image, 0.0f, totalObjects, -40f, 0f);
 			newInkSpriteVol = remapRange (n_ink, 0.0f, totalObjects, -40f, 0f);
 			newNPCStemVol = remapRange (n_npc, 0.0f, totalObjects, -40f, 0f);
-			newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -40f, 0f);
+			newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -40f, -10f);
 		}
 		
 

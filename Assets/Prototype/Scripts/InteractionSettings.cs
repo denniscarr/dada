@@ -85,6 +85,29 @@ public class InteractionSettings : MonoBehaviour {
 
     bool IsNPC = true;
 
+    // USED FOR CATCHING ON FIRE
+    GameObject firePrefab;
+    public bool onFire = false;
+    float _heat = 0f;
+    public float heat
+    {
+        get
+        {
+            return _heat;
+        }
+
+        set
+        {
+            if (value >= 1f && !onFire)
+            {
+                CatchFire();
+            }
+
+            value = Mathf.Clamp01(value);
+            _heat = value;
+        }
+    }// When it gets to 1 I catch on fire.
+
     public Vector3 equipPosition;
     public Vector3 equipRotation;
 
@@ -95,6 +118,8 @@ public class InteractionSettings : MonoBehaviour {
 
 	void Awake()
     {
+        firePrefab = Resources.Load("Contagious Fire") as GameObject;
+
         savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
 
@@ -130,5 +155,25 @@ public class InteractionSettings : MonoBehaviour {
         {
             IsNPC = true;
         }
+
+        if (heat > 0)
+        {
+            heat -= 0.01f * Time.deltaTime;
+        }
+    }
+
+
+    void CatchFire()
+    {
+        onFire = true;
+
+        if (IsNPC)
+        {
+            transform.parent.GetComponentInChildren<NPC>().CatchOnFire();
+        }
+
+        GameObject fire = Instantiate(firePrefab);
+        fire.transform.SetParent(transform.parent);
+        fire.transform.localPosition = Vector3.zero;
     }
 }

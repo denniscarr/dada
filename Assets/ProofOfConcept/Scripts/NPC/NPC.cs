@@ -46,7 +46,27 @@ public class NPC : MonoBehaviour {
 
     // USED FOR HATE
     [SerializeField] float hateProbability = 0.04f; // The probability that I will hate an object if I see it.
-    string[] hatedObjects;  // The name of objects that I hate.
+    List<string> hatedObjects;  // The name of objects that I hate.
+
+    // USED FOR PAIN & DEATH
+    float _health = 100f;
+    public float health
+    {
+        get { return _health; }
+        set
+        {
+            Debug.Log("Current health: " + value);
+            if (value <= 0f)
+            {
+                Die();
+            }
+
+            else
+                _health = value;
+        }
+    }
+    float painThreshold = 10f;   // The collision magnitude below which health is not damaged.
+    Material ghostMaterial;
 
     // GENERAL USE
     float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
@@ -68,10 +88,17 @@ public class NPC : MonoBehaviour {
 
     void Start()
     {
+        ghostMaterial = Resources.Load("Materials/Ghost") as Material;
+
+        if (transform.parent.GetComponent<CollisionReporter>() == null)
+        {
+            transform.parent.gameObject.AddComponent<CollisionReporter>();
+        }
+
         rb = transform.parent.GetComponent<Rigidbody>();
 		speakSource = GetComponent<AudioSource> ();
         // See if I have an animator before I try to use NPCAnimation.
-        if (transform.parent.GetComponentInChildren<Animator>().isHuman)
+        if (transform.parent.GetComponentInChildren<Animator>() != null && transform.parent.GetComponentInChildren<Animator>().isHuman)
         {
             npcAnimation = GetComponent<NPCAnimation>();
         }
@@ -94,12 +121,15 @@ public class NPC : MonoBehaviour {
         // Decide which objects I should hate.
         int numberOfHatedObjects = Random.Range(0, 5);
         InteractionSettings[] allGameObjects = GameObject.FindObjectsOfType<InteractionSettings>();
-        hatedObjects = new string[numberOfHatedObjects];
+        hatedObjects = new List<string>();
         for (int i = 0; i < numberOfHatedObjects; i++)
         {
-            hatedObjects[i] = allGameObjects[Random.Range(0, allGameObjects.Length)].transform.parent.name;
+            hatedObjects.Add(allGameObjects[Random.Range(0, allGameObjects.Length)].transform.parent.name);
             //Debug.Log(hatedObjects[i]);
         }
+
+        // I always hate things that are covered in feces.
+        hatedObjects.Add("Feces-Covered");
 
         EvaluateSurroundings();
         currentState = BehaviorState.NormalMovement;
@@ -134,9 +164,13 @@ public class NPC : MonoBehaviour {
             	npcAnimation.ObjectThrown();
 			}
 
-            writer.WriteSpecifiedString(
-                "Oh no! " + carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
-                );
+            if (carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject != null)
+            {
+                writer.WriteSpecifiedString(
+                    "Oh no! " +
+                    carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + " stole my " + carriedObject.name + "!"
+                    );
+            }
 
             //Play Voice Sound Effect
 			Speak();
@@ -209,7 +243,7 @@ public class NPC : MonoBehaviour {
                 // See if I hate the object I'm looking at.
                 foreach (string name in hatedObjects)
                 {
-                    if (name == hit.collider.gameObject.name)
+                    if (hit.collider.gameObject.name.Contains(name))
                     {
                         writer.WriteSpecifiedString("Oh no! I hate " + name + "s! I'm out of here!");
                         baseDirection *= -1;
@@ -614,7 +648,8 @@ public class NPC : MonoBehaviour {
             writer.WriteSpecifiedString(
                 "Hey! I wanted that " + targetObject.name + ", " + targetObject.GetComponentInChildren<InteractionSettings>().carryingObject.name + "!"
                 );
-            npcAnimation.ObjectPickedUp();
+
+            if (npcAnimation != null) npcAnimation.ObjectPickedUp();
             EvaluateSurroundings();
         }
     }
@@ -630,6 +665,53 @@ public class NPC : MonoBehaviour {
 
 			speakSource.Play ();
 		}
-
 	}
+
+    public void CollisionInParent(Collision collision)
+    {
+        // If collision magnitude is over a certain amount, get hurt.
+        if (collision.gameObject.name != "GROUND" && collision.relativeVelocity.magnitude > painThreshold)
+        {
+            Debug.Log("Ouch! That " + collision.gameObject.name + " hurt me!");
+            writer.WriteSpecifiedString("Ouch! That " + collision.gameObject.name + " hurt me!");
+
+            // See if we should start hating this object.s
+            if (!hatedObjects.Contains(collision.gameObject.name))
+            {
+                hatedObjects.Add(collision.gameObject.name);
+            }
+
+            health -= collision.relativeVelocity.magnitude * 0.2f;
+        }
+    }
+
+    void Die()
+    {
+        writer.WriteSpecifiedString("Aargh! I've been murdered!");
+        
+        // Turn into ghost
+        transform.parent.gameObject.name = "Dead " + transform.parent.gameObject.name;
+
+        //foreach (MeshRenderer mr in transform.parent.GetComponentsInChildren<MeshRenderer>())
+        //{
+        //    mr.material = ghostMaterial;
+        //}
+
+        //transform.parent.GetComponent<Rigidbody>().mass *= 0.01f;
+        if (transform.parent.GetComponentInChildren<Animator>() != null) transform.parent.GetComponentInChildren<Animator>().enabled = false;
+        Destroy(transform.parent.GetComponent<CollisionReporter>());
+
+        transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+
+        Debug.Log("Dead");
+
+        // Destroy NPC AI prefab
+        gameObject.SetActive(false);
+    }
+
+
+    public void CatchOnFire()
+    {
+        writer.WriteSpecifiedString("Argh! I'm on fire!");
+    }
 }
