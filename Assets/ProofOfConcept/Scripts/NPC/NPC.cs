@@ -702,6 +702,7 @@ public class NPC : MonoBehaviour {
         Destroy(transform.parent.GetComponent<CollisionReporter>());
 
         transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
 
         Debug.Log("Dead");
 
