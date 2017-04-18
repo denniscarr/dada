@@ -14,14 +14,14 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	public Light sun;
 	public int maxNPCs, maxObjects, maxSprites;
     public int levelNum = 0;
-	public int width, length, height;
+	public int radius, height;
 	public float tileScale = 1;
 	public float[] NoiseRemapping;
 	public float perlinFrequency = 0.02f;
 	private float xOffset, yOffset;
 	private Texture2D[] maps;
-	private Gradient gradient;
 	Writer writer;
+
 	void Start()
 	{
 
@@ -85,6 +85,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 			}
 		}
 
+		Level.xOrigin = Random.Range (0, 10000);
+		Level.yOrigin = Random.Range (0, 10000);
 //		NoiseRemapping = new float[20];
 //
 //		NoiseRemapping [0] = 0;
@@ -104,10 +106,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		sun.transform.position = newLevel.transform.position;
 		newLevel.name = "Level " + ManagedObjects.Count;
 
-		if (maps.Length > 0) {
-			l._bitmap = maps [Random.Range (0, maps.Length)];
-		}
-			
 		l.OnCreated ();
 
 		writer.textSize = 0.25f;
@@ -117,12 +115,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
         Services.IncoherenceManager.HandleObjects();
 		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
 
-		Level.xOrigin += width / Level.noiseScale;
-		Level.yOrigin += height / Level.noiseScale;
-
-
-		xOffset += width;
-		yOffset += height;
 	
 		levelNum--;
         ManagedObjects.Add (l);
@@ -134,7 +126,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Destroy (l);
 	}
 
-	string SetLevelText(){
+	string SetLevelText() {
 		string line = "";
 		line += "Act " + ManagedObjects.Count + ": A Forest \n \n";
 		line += currentLevel._width + " metres by " + currentLevel._length + " metres\n";

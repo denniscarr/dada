@@ -30,7 +30,6 @@ public class BathSinkFunction : MonoBehaviour {
 
     void Explosion()
     {
-        
         //Instantiate particle system and add force
         Instantiate(explosionParticle, transform.position, Quaternion.identity);
         Vector3 explosionPos = transform.position;
@@ -40,7 +39,7 @@ public class BathSinkFunction : MonoBehaviour {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             if (rb != null)
-                rb.AddExplosionForce(power, explosionPos, radius, 3.0F);
+                rb.AddExplosionForce(power, explosionPos, radius, 3.0F, ForceMode.Impulse);
 
         }
     }

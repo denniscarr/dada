@@ -15,6 +15,7 @@ public class MyFirstPersonController : MonoBehaviour
 	[SerializeField] private float m_RunSpeed;
 	[SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
 	[SerializeField] private float m_JumpSpeed;
+    private float originalJumpSpeed;
 	[SerializeField] private float m_StickToGroundForce;
 	[SerializeField] private float m_GravityMultiplier;
 	[SerializeField] private MouseLook m_MouseLook;
@@ -62,7 +63,7 @@ public class MyFirstPersonController : MonoBehaviour
 		m_AudioSource = GetComponent<AudioSource>();
 		m_MouseLook.Init(transform , m_Camera.transform);
 		footstepCooldown = 0f;
-
+        originalJumpSpeed = m_JumpSpeed;
 	}
 
 	// Update is called once per frame
@@ -160,6 +161,7 @@ public class MyFirstPersonController : MonoBehaviour
 				PlayJumpSound();
 				m_Jump = false;
 				m_Jumping = true;
+                m_JumpSpeed = originalJumpSpeed;
 			}
 		}
 		else
@@ -307,6 +309,13 @@ public class MyFirstPersonController : MonoBehaviour
 
 		body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
 	}
+
+
+    public void ForcedJump(float speed)
+    {
+        m_Jump = true;
+        m_JumpSpeed = speed;
+    }
 }
 
 
