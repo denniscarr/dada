@@ -16,7 +16,8 @@ public class D_hammerFunction : D_Function {
 	public override void Use () {
 		//Vector3 fwd = transform.TransformDirection(Vector3.forward);
 		base.Use ();
-		Ray hammerRay = new Ray (transform.position, transform.forward);
+		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
+		Ray hammerRay = new Ray (pos, t_player.forward);
 		Debug.DrawRay (hammerRay.origin, hammerRay.direction * 10f, Color.red);
 		RaycastHit hit;
 		if (Physics.Raycast(hammerRay, out hit, 10))

@@ -16,6 +16,9 @@ public class D_chairFunction : D_Function {
 	// Update is called once per frame
 	public override void Use () {
 		base.Use ();
+
+		ResetTransformOnTheGround();
+
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (transform.root);
             GetDropped();

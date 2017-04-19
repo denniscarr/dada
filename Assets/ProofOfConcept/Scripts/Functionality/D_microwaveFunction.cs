@@ -24,7 +24,6 @@ public class D_microwaveFunction : D_Function {
         {
 //<<<<<<< HEAD
 			Vector3 parentPos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition;
-			//Vector3 parentRotation
 			RaycastHit[] hits = Physics.SphereCastAll(parentPos, 2f, t_player.right, 5f);
 //=======
 //            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 13f);

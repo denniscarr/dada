@@ -8,10 +8,11 @@ public class D_drawerFunction : D_Function {
 	new void Start () {
 		base.Start();
 	}
-	
+
 	// Update is called once per frame
 	public override void Use () {
 		base.Use ();
-		Instantiate (steam, transform.position, Quaternion.identity);
+		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
+		Instantiate (steam, pos, Quaternion.identity);
 	}
 }
