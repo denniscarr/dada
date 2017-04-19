@@ -23,7 +23,9 @@ public class BathSinkFunction : MonoBehaviour {
             GetComponent<Collider>().enabled = true;
             GetComponent<Rigidbody>().useGravity = true;
             GetComponent<Rigidbody>().AddForce(transform.right * bathSinkSpeed);
-            transform.SetParent(null);
+			transform.parent.position = GameObject.Find("Equip Reference").transform.position+transform.GetComponentInParent<InteractionSettings>().equipPosition;
+			transform.parent.rotation = Quaternion.LookRotation(GameObject.Find("Player").transform.forward);
+            //transform.SetParent(null);
             Invoke("Explosion", fuseTime);
         }
 	}
@@ -32,8 +34,10 @@ public class BathSinkFunction : MonoBehaviour {
     {
 		
         //Instantiate particle system and add force
-		Vector3 explosionPos = GameObject.Find("Equip Reference").transform.position+transform.GetComponentInParent<InteractionSettings>().equipPosition;
-		transform.parent.rotation = Quaternion.LookRotation(GameObject.Find("Player").transform.forward);
+
+		Vector3 explosionPos = transform.position;
+			
+
 		Instantiate(explosionParticle, explosionPos, Quaternion.identity);
         
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);

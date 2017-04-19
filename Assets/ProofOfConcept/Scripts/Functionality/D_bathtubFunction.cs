@@ -13,12 +13,14 @@ public class D_bathtubFunction : D_Function {
 	// Update is called once per frame
 	public override void Use () {
 		base.Use();
+
+		ResetTransformOnTheGround();
+
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (null);
             GetDropped();
 		}
-		transform.parent.position = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition;
-		transform.parent.rotation = Quaternion.LookRotation(GameObject.Find("Player").transform.forward);
+
 		GetComponentInParent<Rigidbody>().AddForce(transform.right * bathtubSpeed);
 		Invoke ("vibrate", 3f);
 	}

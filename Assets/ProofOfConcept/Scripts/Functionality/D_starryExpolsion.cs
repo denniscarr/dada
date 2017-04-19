@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class D_starryExpolsion : D_Function {
-	public GameObject bathSink;
+	//public GameObject bathSink;
 	public GameObject[] explosionParticle;
 	public AudioClip explosionSound;
 	public float radius = 5.0F;
@@ -19,6 +19,9 @@ public class D_starryExpolsion : D_Function {
 	// Update is called once per frame
 	public override void Use () {
 		base.Use();
+
+		ResetTransformOnTheGround();
+
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (null);
             Services.Player.BroadcastMessage("AbandonItem", SendMessageOptions.DontRequireReceiver);
