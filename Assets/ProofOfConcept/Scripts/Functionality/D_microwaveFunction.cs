@@ -22,12 +22,13 @@ public class D_microwaveFunction : D_Function {
 
         if (em.enabled)
         {
-<<<<<<< HEAD
-            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 5f);
-=======
-            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 13f);
->>>>>>> master
-            Debug.DrawRay(transform.parent.position, transform.parent.right * 2f, Color.cyan);
+//<<<<<<< HEAD
+			Vector3 parentPos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition;
+			RaycastHit[] hits = Physics.SphereCastAll(parentPos, 2f, t_player.right, 5f);
+//=======
+//            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 13f);
+//>>>>>>> master
+            //Debug.DrawRay(transform.parent.position, transform.parent.right * 2f, Color.cyan);
             foreach (RaycastHit hit in hits)
             {
                 Debug.Log(hit.collider.gameObject.name);

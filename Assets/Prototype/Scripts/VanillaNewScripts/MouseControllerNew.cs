@@ -71,7 +71,7 @@ public class MouseControllerNew : MonoBehaviour {
 		}
 
 		if(playercontroller.Mode == ControlMode.IN_ROOM_MODE){
-			txtInfo.text = "";
+			
 		}else if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			clickGapCount += Time.fixedDeltaTime;
 			if(clickGapCount > CLICKGAPTIME){
@@ -120,7 +120,7 @@ public class MouseControllerNew : MonoBehaviour {
 					//in visor man.cs
 				}
 			}else if(!pointedObject.name.Equals("GROUND")){
-				txtInfo.text = pointedObject.name + "refuses to be picked up.";
+				txtInfo.text = pointedObject.name + " refuses to be picked up.";
 				GetComponent<Image> ().color = new Color(1,0,0,0.5f);
 				//give cannot feedback
 			}
@@ -130,7 +130,7 @@ public class MouseControllerNew : MonoBehaviour {
 			if(CheckAbility(inSets,true)){
 				GetComponent<Image> ().color = new Color(1,1,1,1);
 				//use object
-				txtInfo.text = "use "+pointedObject.name;
+				txtInfo.text = "Use "+pointedObject.name;
 				//UseHandler();
 			}else{
 				//give cannot feedback
@@ -166,22 +166,27 @@ public class MouseControllerNew : MonoBehaviour {
 		
 		if(pickedUpObject.parent != t_INROOMOBJECTS){
 			//change the parent of selected object
-			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
-			//change scale
-			float distanceInside = Mathf.Abs(
-				Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),
-					UpperCamera.transform.forward));
-			float distance = Mathf.Abs(
-				Vector3.Dot((pickedUpObject.position - playercontroller.m_Camera.transform.position),
-					playercontroller.m_Camera.transform.forward));
-			if(distance < 0){
-				Debug.Log("error");
+
+			if(!pickedUpObject.parent.name.Equals("New Equip Reference")){
+				Debug.Log("resize");
+				//change scale
+				float distanceInside = Mathf.Abs(
+					Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),
+						UpperCamera.transform.forward));
+				float distance = Mathf.Abs(
+					Vector3.Dot((pickedUpObject.position - playercontroller.m_Camera.transform.position),
+						playercontroller.m_Camera.transform.forward));
+				if(distance < 0){
+					Debug.Log("error");
+				}
+				float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+				float frustumHeight = distance * Mathf.Tan(playercontroller.m_Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+				float scale = frustumHeightInside/frustumHeight;
+				pickedUpObject.localScale *= scale;
+
 			}
-			float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-			float frustumHeight = distance * Mathf.Tan(playercontroller.m_Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-			float scale = frustumHeightInside/frustumHeight;
-			pickedUpObject.localScale *= scale;
+			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
 			//stop gravity simulation and free rotation
 			Debug.Log("pick up "+pickedUpObject.name+" outside visor");

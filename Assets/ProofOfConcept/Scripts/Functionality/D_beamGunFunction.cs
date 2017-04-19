@@ -16,9 +16,12 @@ public class D_beamGunFunction : D_Function {
 	public override void Use () {
 		base.Use();
 		line.enabled = true;
-		Ray beamRay = new Ray (transform.position, -transform.forward);
+
+		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
+		Ray beamRay = new Ray (pos, t_player.forward);
 		RaycastHit Hit;
 		line.SetPosition (0, beamRay.origin);
+
         if (Physics.Raycast(beamRay, out Hit, 100))
         {
             line.SetPosition(1, Hit.point);
@@ -31,9 +34,14 @@ public class D_beamGunFunction : D_Function {
             {
                 Hit.collider.GetComponentInChildren<NPC>().health -= 5f;
             }
+
+			Instantiate (spark, Hit.point, Quaternion.identity);
+
+
         }
-        else line.SetPosition(1, beamRay.GetPoint(100));
-		Instantiate (spark, Hit.point, Quaternion.identity);
+		else{
+			line.SetPosition(1, beamRay.GetPoint(100));	
+		} 
 
 		Invoke ("BeamOff", 0.1f);
 	}

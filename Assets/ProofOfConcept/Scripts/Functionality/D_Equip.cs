@@ -71,8 +71,8 @@ public class D_Equip : MonoBehaviour {
     void MoveToCamera ()
     {
         // Disable collision & gravity.
-		GetComponentInParent<Collider>().enabled = false;
-        GetComponent<Collider>().enabled = false;
+		//GetComponentInParent<Collider>().enabled = false;
+       // GetComponent<Collider>().enabled = false;
 		if (GetComponentInParent<Rigidbody>() != null) GetComponentInParent<Rigidbody>().isKinematic = true;
 
         // Set position & parentage.
