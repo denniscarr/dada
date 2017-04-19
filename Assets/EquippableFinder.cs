@@ -105,11 +105,11 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Disable collision & gravity.
         equippedObject = equipTarget;
-        equippedObject.GetComponent<Collider>().enabled = false;
+        //equippedObject.GetComponent<Collider>().enabled = false;
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
         originalScale = equippedObject.transform.localScale;
-
+		Debug.Log("SetParent equipReference");
 		equippedObject.transform.SetParent(equipReference, true);
 
 
