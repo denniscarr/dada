@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Tutorial : Quest {
 
+	// NOTE: WHEN ALL QUESTS DONE, REMOVE THIS QUEST FROM MANAGER AND ALL OBJECTS
+
 	// quest manager
 	QuestManager manager;
 
