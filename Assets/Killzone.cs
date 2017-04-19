@@ -6,7 +6,18 @@ public class Killzone : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
     {
-        other.transform.position = Services.LevelGen.currentLevel.transform.position;
-        other.transform.Translate(Random.Range(-10f, 10f), 40f, Random.Range(-10f, 10f));
+        // If the grail has fallen off the level, spawn a new grail.
+        if (other.name == "Grail")
+        {
+            Services.LevelGen.Create();
+            other.GetComponent<Grail>().GetReadyToDie();
+        }
+
+        // If this object is not the grail, put it back on the level.
+        else
+        {
+            other.transform.position = Services.LevelGen.currentLevel.transform.position;
+            other.transform.Translate(Random.Range(-20f, 20f), 40f, Random.Range(-20f, 20f));
+        }
     }
 }

@@ -55,7 +55,11 @@ public class NPC : MonoBehaviour {
         get { return _health; }
         set
         {
+//<<<<<<< HEAD
             Debug.Log("Current health: " + value);
+//=======
+            //Debug.Log("Current health: " + value);
+//>>>>>>> master
             if (value <= 0f)
             {
                 Die();
@@ -702,7 +706,10 @@ public class NPC : MonoBehaviour {
         Destroy(transform.parent.GetComponent<CollisionReporter>());
 
         transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+//<<<<<<< HEAD
+//=======
         transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
+//>>>>>>> master
 
         Debug.Log("Dead");
 
