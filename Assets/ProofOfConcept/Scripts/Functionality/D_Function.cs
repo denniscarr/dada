@@ -10,11 +10,11 @@ public class D_Function : MonoBehaviour {
 	public float audioJitter = 0f;
     float cooldownTimer = 0.2f;
     float currentCooldown = 0.2f;
-	protected Vector3 LOWER_EQUIP_REFERENCE_POSITION;
+	protected Transform LOWER_EQUIP_REFERENCE;
 
     public void Start()
     {
-		LOWER_EQUIP_REFERENCE_POSITION = GameObject.Find("Equip Reference").transform.position;
+		LOWER_EQUIP_REFERENCE = GameObject.Find("Equip Reference").transform;
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
     }
 

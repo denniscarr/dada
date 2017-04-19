@@ -33,6 +33,7 @@ public class BathSinkFunction : MonoBehaviour {
 		
         //Instantiate particle system and add force
 		Vector3 explosionPos = GameObject.Find("Equip Reference").transform.position+transform.GetComponentInParent<InteractionSettings>().equipPosition;
+		transform.parent.rotation = Quaternion.LookRotation(GameObject.Find("Player").transform.forward);
 		Instantiate(explosionParticle, explosionPos, Quaternion.identity);
         
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
