@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class D_Function : MonoBehaviour {
 
-    public InteractionSettings intSet;
+	protected InteractionSettings intSet;
     KeyCode useKey = KeyCode.Mouse1;
 	public AudioClip[] useSFX;
 	public float audioJitter = 0f;
     float cooldownTimer = 0.2f;
     float currentCooldown = 0.2f;
-	private Transform LOWER_EQUIP_REFERENCE;
-	private Transform t_player;
+	protected Transform LOWER_EQUIP_REFERENCE;
+	protected Transform t_player;
 
     public void Start()
     {
