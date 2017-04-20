@@ -53,7 +53,7 @@ public class QuestBuilderScript : MonoBehaviour {
 		// AND CERTAIN NUMBERS TURN OUT TO BE GENERATING CERTAIN QUEST TYPES
 
 
-		if (levelman.levelNum > 0) {
+		if (levelman.levelNum < 0) {
 			manager.questsToComplete = 1;
 		} else {
 			manager.questsToComplete = (Mathf.Abs (levelman.levelNum + 1));

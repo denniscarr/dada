@@ -17,7 +17,7 @@ public enum InterationState{
 }
 
 public class PlayerControllerNew : MonoBehaviour {
-	ControlMode mode;
+	public ControlMode mode;
 
 	public ControlMode Mode{
 		get{
@@ -112,7 +112,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitZoomInMode(){
+	public void InitZoomInMode(){
 		Debug.Log("reset");
 		transform.position = initPos;
 		transform.rotation = initRotation;
@@ -204,7 +204,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void ZoomOutUpdate(){
+	public void ZoomOutUpdate(){
 
 		if(UpperCamera.fieldOfView < ZoomOutUpperCameraFoV){
 			UpperCamera.fieldOfView ++;
