@@ -144,7 +144,7 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.transform.SetParent(null);
 
         // Re-enable collision & stuff.
-		equippedObject.GetComponent<Collider>().isTrigger = true;
+		//equippedObject.GetComponent<Collider>().isTrigger = true;
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = false;
         equippedObject.transform.localScale = originalScale;
 
