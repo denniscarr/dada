@@ -65,17 +65,30 @@ public class MouseControllerNew : MonoBehaviour {
 	void FixedUpdate () {
 		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			transform.position = Input.mousePosition;
-			
-		}else{
-			GetComponent<RectTransform>().localPosition = Vector3.zero;
-		}
-
-		if(playercontroller.Mode == ControlMode.IN_ROOM_MODE){
-			
-		}else if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			clickGapCount += Time.fixedDeltaTime;
 			if(clickGapCount > CLICKGAPTIME){
 				DetectSelection();
+			}
+		}else{
+			GetComponent<RectTransform>().localPosition = Vector3.zero;
+
+			if(playercontroller.Mode == ControlMode.ZOOM_IN_MODE){
+				if(selectedObject){
+					Debug.Log("Switch mode when picking up object");
+					ThrowObject();
+					Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
+					if(body){
+						body.isKinematic = false;
+						body.useGravity = true;
+						body.freezeRotation = false;
+					}
+					if (selectedObject.FindChild("Incoherence Controller") != null) selectedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
+					if (selectedObject.FindChild("NPC AI") != null) selectedObject.FindChild("NPC AI").gameObject.SetActive(true);
+					selectedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+
+					selectedObject = null;
+					//change state back
+				}
 			}
 		}
 
@@ -147,6 +160,8 @@ public class MouseControllerNew : MonoBehaviour {
 		}
 	}
 
+
+
 	bool CheckAbility(InteractionSettings ability, bool isCheckUsable){
 		if (ability != null) {
 			if (isCheckUsable) {
@@ -167,8 +182,7 @@ public class MouseControllerNew : MonoBehaviour {
 		if(pickedUpObject.parent != t_INROOMOBJECTS){
 			//change the parent of selected object
 
-
-			if(!pickedUpObject.parent.name.Equals("New Equip Reference")){
+			if(!(pickedUpObject.parent && pickedUpObject.parent.name.Equals("Equip Reference"))){
 				Debug.Log("resize");
 				//change scale
 				float distanceInside = Mathf.Abs(
@@ -241,22 +255,23 @@ public class MouseControllerNew : MonoBehaviour {
 			Debug.Log("place click");
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
+
 			if (Physics.Raycast (ray, out hit)){
 				if(hit.collider.tag.Equals("Visor")){
 					Debug.Log("place in visor");
 					//set layer to default 
-					selectedObject.gameObject.layer = 0;
+
 				}else{
 					Debug.LogError("click "+selectedObject.name+" in "+hit.collider.name);
 				}
 			}else{
 				//set layer to default 
-				selectedObject.gameObject.layer = 0;
+				//selectedObject.gameObject.layer = 0;
 
 				Debug.Log("Player threw "+selectedObject.name);
 				ThrowObject();
 			}
-				
+			selectedObject.gameObject.layer = 0;
 			clickGapCount = 0;
             Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
 			if(body){
@@ -279,7 +294,11 @@ public class MouseControllerNew : MonoBehaviour {
 		Services.AudioManager.PlaySFX (throwClip, sfxVolume);
 
 		Transform carriedObject = selectedObject;
+<<<<<<< HEAD
 
+=======
+		selectedObject.gameObject.layer = 0;
+>>>>>>> master
 		Ray ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
 		carriedObject.position = playercontroller.m_Camera.transform.position + ray.direction*5f;
 
