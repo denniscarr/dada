@@ -17,7 +17,7 @@ public enum InterationState{
 }
 
 public class PlayerControllerNew : MonoBehaviour {
-	ControlMode mode;
+	public ControlMode mode;
 
 	public ControlMode Mode{
 		get{
@@ -96,7 +96,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitInRoomMode(){
+	public void InitInRoomMode(){
 		rigidbodyFirstPersonController.enabled = true;
 		insideVisorMan.enabled = true;
 		headBob.enabled = true;
@@ -112,7 +112,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitZoomInMode(){
+	public void InitZoomInMode(){
 		Debug.Log("reset");
 		transform.position = initPos;
 		transform.rotation = initRotation;
@@ -123,7 +123,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitZoomOutMode(){
+	public void InitZoomOutMode(){
 		transform.position = initPos;
 		transform.rotation = initRotation;
 		UpperCamera.transform.rotation = initCameraRotation;
@@ -152,9 +152,10 @@ public class PlayerControllerNew : MonoBehaviour {
 		//change back to zoom out when click
 		Transform t_hit = CameraRayCast(UpperCamera);
 
-		if(t_hit){
+		if(t_hit && t_hit.parent){
 			//Debug.Log(t_hit.name);
 			if(t_hit.parent.name.Equals("Viewing Platform")){
+				txtInfo.text = "Platform is calling you...";
 				//Debug.Log(t_hit.parent.name);
 				if(Input.GetMouseButtonDown(0)){
 					Debug.Log(t_hit.parent.name);
@@ -186,6 +187,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		}
 
 		if(Input.GetKeyDown(KeyCode.Tab)){
+			txtInfo.text = "Switch to zoom out mode";
 			//switch to zoom out mode
 			InitZoomOutMode();
 			mode = ControlMode.ZOOM_OUT_MODE;
@@ -202,7 +204,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void ZoomOutUpdate(){
+	public void ZoomOutUpdate(){
 
 		if(UpperCamera.fieldOfView < ZoomOutUpperCameraFoV){
 			UpperCamera.fieldOfView ++;
@@ -230,11 +232,14 @@ public class PlayerControllerNew : MonoBehaviour {
 			//so here jus for use clicked object
 
 		}else if(Input.GetKeyDown(KeyCode.Tab)){
+			txtInfo.text = "Zoom in";
+
 			//switch to zoom in mode
 			mode = ControlMode.ZOOM_IN_MODE;
 			InitZoomInMode();
 
 		}else if(Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)){
+			txtInfo.text = "You walk off the platform";
 			mode = ControlMode.IN_ROOM_MODE;
 			InitInRoomMode();
 		}

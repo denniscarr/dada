@@ -28,6 +28,9 @@ public class PickupQuest : Quest {
 	public GameObject questItNote;
 	Transform visorNode;
 
+	// glow
+	GameObject fieryGlow;
+
 	// for finishing quest
 	public int requiredPickups;
 	public int numberofPickups;
@@ -69,7 +72,9 @@ public class PickupQuest : Quest {
 				pickedUp = false;
 			}
 		}
-	}
+
+		if (fieryGlow != null) fieryGlow.transform.position = parentObject.transform.position;
+    }
 
 	public void makeTheQuest(Quest type){
 
@@ -77,13 +82,17 @@ public class PickupQuest : Quest {
 		objectScript = parentObject.GetComponent<QuestObject> ();
 		requiredPickups = Random.Range (1, 5);
 
+		// add the glow
+		fieryGlow = Instantiate(Resources.Load ("questobject-fire", typeof (GameObject))) as GameObject;
+		fieryGlow.transform.parent = parentObject.transform;
+
 		// store the transform for later text spawning
 		positionX = parentObject.transform.position.x;
 		positionY = parentObject.transform.position.y + 1;
 		positionZ = parentObject.transform.position.z;
 
 		// create title to appear. THIS IS THE QUEST OBJECTIVE.
-		title = ("Pick up" + " " + parentObject.name); 
+		title = ("Drag the" + " " + parentObject.name + " " + "with the text on it"); 
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
@@ -96,7 +105,7 @@ public class PickupQuest : Quest {
 
 		// give it a description eh
 		// can make this more interesting later during tweaking/juicing stages
-		description = (title + " " + requiredPickups.ToString() + "times and put it down again");
+		description = (title + " " + requiredPickups.ToString() + " " + "times and put it down again");
 
 		questTextSpawn ();
 
@@ -106,8 +115,6 @@ public class PickupQuest : Quest {
 		CopyComponent (this, parentObject);
 
 		for (int i = 0; i < 20; i++) {
-//			GameObject noteSpawn = Instantiate (Resources.Load ("NoteSpawner", typeof(GameObject))) as GameObject;
-//			NoteSpawnerScript spawn = noteSpawn.GetComponent<NoteSpawnerScript> ();
 			NoteSpawnerScript noteSpawn = GameObject.Find("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript>();
 			noteSpawn.MakeItRain ();
 			noteSpawn.AssignID (1);
@@ -128,12 +135,11 @@ public class PickupQuest : Quest {
 	}
 
 	public void spawnNote(){
+		
         // make the questit note
-        visorNode = GameObject.Find("UpperNode").GetComponent<Transform>();
-        //visorNode = GameObject.Find("PlayerVisor").GetComponent<Transform>();
+        visorNode = GameObject.Find("INROOMOBJECTS").GetComponent<Transform>();
         questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
         questItNote.transform.parent = visorNode.transform;
-        //questItNote.transform.position = visorNode.transform.position;
         questItNote.transform.localPosition = new Vector3(
             Random.Range(-2.3f, 5.1f),
 			Random.Range(1f, 4.1f),
@@ -146,7 +152,6 @@ public class PickupQuest : Quest {
 
         // make the actual text appear
         Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
-		//questCanvas.transform.parent = questItNote.gameObject.transform;
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
 
@@ -156,12 +161,13 @@ public class PickupQuest : Quest {
     }
 
     public void questTextSpawn(){
+		
 		// put the text of the quest right over the object
 		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
 		textSpawn.transform.parent = parentObject.transform;
 		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
 		text = textSpawn.GetComponent<TextMesh> ();
-		text.text = (description);
+		text.text = ("pick me up" + " " + requiredPickups.ToString());
 		
 	}
 
@@ -175,33 +181,19 @@ public class PickupQuest : Quest {
 		progress = Quest.QuestProgress.COMPLETE;
 
 		// explode it
-		GameObject stars = Instantiate (Resources.Load ("explosion", typeof(GameObject))) as GameObject; 
+		GameObject stars = Instantiate (Resources.Load ("explosion-noforce", typeof(GameObject))) as GameObject; 
 		stars.transform.position = parentObject.transform.position; 
 
 		Destroy (parentObject);
 
 		// find the notes and destroy them
 		NoteSpawnerScript notes = GameObject.Find ("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript> ();
-		for (int i = 0; i < 10; i++) {
-			stars = Instantiate (Resources.Load("explosion", typeof (GameObject))) as GameObject;
-			stars.transform.parent.position = notes.id1 [i].transform.position;
-			Destroy (notes.id1[i]);
-		}
-
-		for (int i = 10; i < notes.id1.Count; i++) {
+		for (int i = 0; i < notes.id1.Count; i++) {
 			Destroy (notes.id1[i]);
 		}
 
 		notes.id1.Clear ();
-		//foreach(GameObject note in notes.id1){
-//			stars = Instantiate (Resources.Load ("explosion", typeof(GameObject))) as GameObject;
-//			stars.transform.position = note.transform.position;
-//			Destroy (note);
-//		}
-	}
 
-//	public override void CheckStatus() {
-//		// check if done on active quests
-//
-//	}
+		manager.currentCompletedQuests++;
+	}
 }

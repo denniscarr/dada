@@ -22,18 +22,16 @@ public class D_microwaveFunction : D_Function {
 
         if (em.enabled)
         {
-//<<<<<<< HEAD
-//            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 5f);
-//=======
-            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 13f);
-
-            Debug.DrawRay(transform.parent.position, transform.parent.right * 2f, Color.cyan);
+			Vector3 parentPos = transform.parent.position;
+			RaycastHit[] hits = Physics.SphereCastAll(parentPos, 2f, transform.right, 5f);
+//            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 13f);
+            //Debug.DrawRay(transform.parent.position, transform.parent.right * 2f, Color.cyan);
             foreach (RaycastHit hit in hits)
             {
-                Debug.Log(hit.collider.gameObject.name);
+                //Debug.Log(hit.collider.gameObject.name);
                 if (hit.collider.GetComponentInChildren<InteractionSettings>() != null)
                 {
-                    Debug.Log("heating up: " + hit.collider.gameObject.name);
+                    //Debug.Log("heating up: " + hit.collider.gameObject.name);
                     hit.collider.GetComponentInChildren<InteractionSettings>().heat += 0.6f * Time.deltaTime;
                 }
             }

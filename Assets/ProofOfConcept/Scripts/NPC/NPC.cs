@@ -55,8 +55,8 @@ public class NPC : MonoBehaviour {
         get { return _health; }
         set
         {
+            Debug.Log("Current health: " + value);
 
-            //Debug.Log("Current health: " + value);
             if (value <= 0f)
             {
                 Die();

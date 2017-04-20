@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class D_Function : MonoBehaviour {
 
-    public InteractionSettings intSet;
+	protected InteractionSettings intSet;
     KeyCode useKey = KeyCode.Mouse1;
 	public AudioClip[] useSFX;
 	public float audioJitter = 0f;
@@ -55,6 +55,7 @@ public class D_Function : MonoBehaviour {
 
     protected void GetDropped()
     {
+		Debug.Log("drop");
         if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
             Services.Player.BroadcastMessage("AbandonItem");
 
@@ -67,10 +68,11 @@ public class D_Function : MonoBehaviour {
         //{
         transform.parent.SetParent(null);
 
-            // Re-enable collision & stuff.
-            transform.parent.GetComponent<Collider>().enabled = true;
-            if (transform.parent.GetComponent<Rigidbody>() != null) transform.parent.GetComponent<Rigidbody>().isKinematic = false;
-            intSet.carryingObject = null;
+        // Re-enable collision & stuff.
+        transform.parent.GetComponent<Collider>().enabled = true;
+		transform.parent.GetComponent<Collider>().isTrigger = false;
+        if (transform.parent.GetComponent<Rigidbody>() != null) transform.parent.GetComponent<Rigidbody>().isKinematic = false;
+        intSet.carryingObject = null;
         //}
     }
 }

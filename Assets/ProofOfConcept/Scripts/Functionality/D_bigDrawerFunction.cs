@@ -15,10 +15,15 @@ public class D_bigDrawerFunction : D_Function {
 	// Update is called once per frame
 	public override void Use () {
 		base.Use ();
+
+		Vector3 pos = transform.position;
+
 		float meteorScale = Random.Range (meteorSizeMin, meteorSizeMax);
 		for (int i = 1; i<10; i++) 
-		{GameObject newMeteor = Instantiate (meteor, transform.position, Quaternion.identity);
-			newMeteor.transform.localScale = new Vector3 (meteorScale, meteorScale, meteorScale);}
+		{
+			GameObject newMeteor = Instantiate (meteor, pos, Quaternion.identity);
+			newMeteor.transform.localScale = new Vector3 (meteorScale, meteorScale, meteorScale);
+		}
 	}
 
 	/*void MeteorShower () {

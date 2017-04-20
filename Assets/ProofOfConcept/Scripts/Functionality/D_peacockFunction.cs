@@ -12,7 +12,9 @@ public class D_peacockFunction : D_Function {
 	public override void Use () {
 		base.Use ();
 
-        foreach(Collider collider in Physics.OverlapSphere(transform.parent.position, 10f))
+		Vector3 parentPos = transform.parent.position;
+
+		foreach(Collider collider in Physics.OverlapSphere(parentPos, 10f))
         {
             if (collider.GetComponent<MyFirstPersonController>() != null)
             {
