@@ -86,7 +86,7 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if (transform.parent.name.Contains("New Equip Reference"))
+            if (transform.parent.name.Contains("Equip Reference"))
             {
                 return true;
             }

@@ -17,8 +17,8 @@ public class D_GunFunction: D_Function
         base.Use();
 
         Debug.Log("Used Gun");
-		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
+		Vector3 pos = transform.position;
 		GameObject shoot = Instantiate (projectile[Random.Range (0, projectile.Length-1)], pos, Quaternion.identity) as GameObject;
-		shoot.GetComponent<Rigidbody>().AddForce(t_player.forward * muzzleVelocity);
+		shoot.GetComponent<Rigidbody>().AddForce(transform.forward * muzzleVelocity);
     }
 }

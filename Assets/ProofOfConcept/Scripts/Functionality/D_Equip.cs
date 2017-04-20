@@ -30,7 +30,7 @@ public class D_Equip : MonoBehaviour {
     {
         // Get references to my buddies.
         writer = GetComponent<Writer>();
-        equipReference = GameObject.Find("New Equip Reference").transform;
+        equipReference = GameObject.Find("Equip Reference").transform;
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
         originalScale = transform.parent.localScale;
     }
