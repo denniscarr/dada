@@ -28,10 +28,10 @@ public class D_microwaveFunction : D_Function {
             //Debug.DrawRay(transform.parent.position, transform.parent.right * 2f, Color.cyan);
             foreach (RaycastHit hit in hits)
             {
-                Debug.Log(hit.collider.gameObject.name);
+                //Debug.Log(hit.collider.gameObject.name);
                 if (hit.collider.GetComponentInChildren<InteractionSettings>() != null)
                 {
-                    Debug.Log("heating up: " + hit.collider.gameObject.name);
+                    //Debug.Log("heating up: " + hit.collider.gameObject.name);
                     hit.collider.GetComponentInChildren<InteractionSettings>().heat += 0.6f * Time.deltaTime;
                 }
             }

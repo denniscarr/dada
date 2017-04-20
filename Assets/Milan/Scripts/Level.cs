@@ -39,7 +39,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	Texture2D skyColor;
 	Texture2D groundLerpedColour;
 	Gradient gradient;
-	Color levelTint;
+	public Color levelTint;
 	float hypotenuse;
 	float distanceOutsideCircle;
 	float normalizedPerlinHeight;
