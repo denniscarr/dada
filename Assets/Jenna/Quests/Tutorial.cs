@@ -92,8 +92,7 @@ public class Tutorial : Quest {
 		//Debug.Log (controls.gameObject);
 		//controls.InitZoomInMode ();
 		//controls.ZoomOutUpdate ();
-		controls.mode = ControlMode.ZOOM_OUT_MODE;
-		
+		//controls.mode = ControlMode.ZOOM_OUT_MODE;
 	}
 
 	void Update() {
