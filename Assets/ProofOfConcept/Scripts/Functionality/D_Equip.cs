@@ -46,7 +46,7 @@ public class D_Equip : MonoBehaviour {
         //if (collider.GetComponent<NPC>() == null && collider.name != "Player") return;
 
 		if (collider.name == "Player") {
-            if (writer != null) writer.WriteSpecifiedString("Press E to equip " + transform.parent.name + ".");
+            if (writer != null) writer.WriteSpecifiedString("Press LMB to equip " + transform.parent.name + ".");
             readyToEquip = true;
 		}
 

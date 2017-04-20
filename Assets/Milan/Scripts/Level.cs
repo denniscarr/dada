@@ -337,7 +337,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		foreach (int indice in highestPointIndices) {
 			int length = Random.Range (10, 32);
 			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
-
+			Debug.Log ("Spawning tall object");
 			GameObject newObject = LevelObjectFactory (0,4, vertices[indice], index);
 
 			for (int j = 1; j < length; j++) {
@@ -377,6 +377,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		switch (propIndex) {
 		case 0:
+			Debug.Log ("I AM PICKING THE TALL SPRITE");
 			spriteIndex = (int)Services.SPRITES.tall;
 			break;
 
@@ -423,9 +424,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				Sprites++;
 			}
 
+			Debug.Log ("spawning sprite based on object tpy ecase");
+
 			if (spriteIndex == (int)Services.SPRITES.image) {
 				tag = "ImageSprite";
 			} else {
+				Debug.Log ("call me an ink sprite");
 				tag = "InkSprite";
 			}
 
@@ -462,7 +466,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = Color.black;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
-
+			////////////////////////////////////
+			/// MAKE SURE THIS THING IS HERE ///
+			////////////////////////////////////
+			newObject.tag = tag;
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
