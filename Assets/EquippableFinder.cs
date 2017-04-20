@@ -79,7 +79,7 @@ public class EquippableFinder : MonoBehaviour {
         // Show the equip prompt for the nearest object. (Just debug log for now.)
         if (nearestObject != null)
         {
-            writer.WriteAtPoint("Press E to equip " + nearestObject.name, transform.position + transform.forward*20f);
+            writer.WriteAtPoint("Press LMB to equip " + nearestObject.name, transform.position + transform.forward*20f);
             equipTarget = nearestObject;
         }
 
