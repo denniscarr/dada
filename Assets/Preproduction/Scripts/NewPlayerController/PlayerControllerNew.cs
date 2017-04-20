@@ -17,7 +17,7 @@ public enum InterationState{
 }
 
 public class PlayerControllerNew : MonoBehaviour {
-	ControlMode mode;
+	public ControlMode mode;
 
 	public ControlMode Mode{
 		get{
@@ -96,7 +96,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitInRoomMode(){
+	public void InitInRoomMode(){
 		rigidbodyFirstPersonController.enabled = true;
 		insideVisorMan.enabled = true;
 		headBob.enabled = true;
@@ -112,7 +112,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitZoomInMode(){
+	public void InitZoomInMode(){
 		Debug.Log("reset");
 		transform.position = initPos;
 		transform.rotation = initRotation;
@@ -123,7 +123,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void InitZoomOutMode(){
+	public void InitZoomOutMode(){
 		transform.position = initPos;
 		transform.rotation = initRotation;
 		UpperCamera.transform.rotation = initCameraRotation;
@@ -204,7 +204,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	}
 
-	void ZoomOutUpdate(){
+	public void ZoomOutUpdate(){
 
 		if(UpperCamera.fieldOfView < ZoomOutUpperCameraFoV){
 			UpperCamera.fieldOfView ++;

@@ -32,7 +32,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Get references to my buddies.
         writer = GetComponent<Writer>();
-        equipReference = GameObject.Find("New Equip Reference").transform;
+        equipReference = GameObject.Find("Equip Reference").transform;
         writer.textSize = 0.1f;
     }
 
@@ -79,7 +79,7 @@ public class EquippableFinder : MonoBehaviour {
         // Show the equip prompt for the nearest object. (Just debug log for now.)
         if (nearestObject != null)
         {
-            writer.WriteAtPoint("Press E to equip " + nearestObject.name, transform.position + transform.forward*20f);
+            writer.WriteAtPoint("Press LMB to equip " + nearestObject.name, transform.position + transform.forward*20f);
             equipTarget = nearestObject;
         }
 
@@ -144,7 +144,7 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.transform.SetParent(null);
 
         // Re-enable collision & stuff.
-        equippedObject.GetComponent<Collider>().enabled = true;
+		equippedObject.GetComponent<Collider>().isTrigger = true;
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = false;
         equippedObject.transform.localScale = originalScale;
 

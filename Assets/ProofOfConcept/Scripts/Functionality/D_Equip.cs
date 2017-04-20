@@ -30,7 +30,7 @@ public class D_Equip : MonoBehaviour {
     {
         // Get references to my buddies.
         writer = GetComponent<Writer>();
-        equipReference = GameObject.Find("New Equip Reference").transform;
+        equipReference = GameObject.Find("Equip Reference").transform;
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
         originalScale = transform.parent.localScale;
     }
@@ -46,7 +46,7 @@ public class D_Equip : MonoBehaviour {
         //if (collider.GetComponent<NPC>() == null && collider.name != "Player") return;
 
 		if (collider.name == "Player") {
-            if (writer != null) writer.WriteSpecifiedString("Press E to equip " + transform.parent.name + ".");
+            if (writer != null) writer.WriteSpecifiedString("Press LMB to equip " + transform.parent.name + ".");
             readyToEquip = true;
 		}
 
