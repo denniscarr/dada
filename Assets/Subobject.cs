@@ -112,7 +112,7 @@ public class Subobject : MonoBehaviour {
 
         if (Mathf.Abs(1.0f - size) < 0.01f)
         {
-            Debug.Log("Already unit size");
+            //Debug.Log("Already unit size");
             return;
         }
 
