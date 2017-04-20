@@ -16,7 +16,7 @@ public class D_Function : MonoBehaviour {
     public void Start()
     {
 		LOWER_EQUIP_REFERENCE = GameObject.Find("Equip Reference").transform;
-		t_player = Services.Player.transform.GetChild(0);//get camera
+		t_player = Services.Player.transform.Find("Player Camera");
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
     }
 
