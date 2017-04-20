@@ -17,8 +17,8 @@ public class D_beamGunFunction : D_Function {
 		base.Use();
 		line.enabled = true;
 
-		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
-		Ray beamRay = new Ray (pos, t_player.forward);
+		Vector3 pos = transform.position;
+		Ray beamRay = new Ray (pos, -transform.forward);
 		RaycastHit Hit;
 		line.SetPosition (0, beamRay.origin);
 

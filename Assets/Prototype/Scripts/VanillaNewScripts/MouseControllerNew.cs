@@ -65,17 +65,29 @@ public class MouseControllerNew : MonoBehaviour {
 	void FixedUpdate () {
 		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			transform.position = Input.mousePosition;
-			
-		}else{
-			GetComponent<RectTransform>().localPosition = Vector3.zero;
-		}
-
-		if(playercontroller.Mode == ControlMode.IN_ROOM_MODE){
-			
-		}else if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			clickGapCount += Time.fixedDeltaTime;
 			if(clickGapCount > CLICKGAPTIME){
 				DetectSelection();
+			}
+		}else{
+			GetComponent<RectTransform>().localPosition = Vector3.zero;
+
+			if(playercontroller.Mode == ControlMode.ZOOM_IN_MODE){
+				if(selectedObject){
+					ThrowObject();
+					Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
+					if(body){
+						body.isKinematic = false;
+						body.useGravity = true;
+						body.freezeRotation = false;
+					}
+					if (selectedObject.FindChild("Incoherence Controller") != null) selectedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
+					if (selectedObject.FindChild("NPC AI") != null) selectedObject.FindChild("NPC AI").gameObject.SetActive(true);
+					selectedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+
+					selectedObject = null;
+					//change state back
+				}
 			}
 		}
 
@@ -147,6 +159,8 @@ public class MouseControllerNew : MonoBehaviour {
 		}
 	}
 
+
+
 	bool CheckAbility(InteractionSettings ability, bool isCheckUsable){
 		if (ability != null) {
 			if (isCheckUsable) {
@@ -185,6 +199,8 @@ public class MouseControllerNew : MonoBehaviour {
 				float scale = frustumHeightInside/frustumHeight;
 				pickedUpObject.localScale *= scale;
 
+			}else{
+				pickedUpObject.GetComponent<Collider>().isTrigger = false;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
@@ -279,7 +295,7 @@ public class MouseControllerNew : MonoBehaviour {
 		Services.AudioManager.PlaySFX (throwClip, sfxVolume);
 
 		Transform carriedObject = selectedObject;
-
+		selectedObject.gameObject.layer = 0;
 		Ray ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
 		carriedObject.position = playercontroller.m_Camera.transform.position + ray.direction*5f;
 

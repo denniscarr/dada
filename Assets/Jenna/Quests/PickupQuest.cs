@@ -73,8 +73,8 @@ public class PickupQuest : Quest {
 			}
 		}
 
-		fieryGlow.transform.position = parentObject.transform.position;
-	}
+		if (fieryGlow != null) fieryGlow.transform.position = parentObject.transform.position;
+    }
 
 	public void makeTheQuest(Quest type){
 

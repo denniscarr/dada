@@ -10,13 +10,9 @@ public class D_Function : MonoBehaviour {
 	public float audioJitter = 0f;
     float cooldownTimer = 0.2f;
     float currentCooldown = 0.2f;
-	protected Transform LOWER_EQUIP_REFERENCE;
-	protected Transform t_player;
 
     public void Start()
     {
-		LOWER_EQUIP_REFERENCE = GameObject.Find("Equip Reference").transform;
-		t_player = Services.Player.transform.Find("Player Camera");
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
     }
 
@@ -48,13 +44,6 @@ public class D_Function : MonoBehaviour {
         }
     }
 
-	public void ResetTransformOnTheGround(){
-		transform.parent.position = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition;
-
-		transform.parent.rotation = Quaternion.LookRotation(t_player.forward,t_player.up);
-
-	}
-
     public virtual void Use()
     {
 		float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
@@ -66,6 +55,7 @@ public class D_Function : MonoBehaviour {
 
     protected void GetDropped()
     {
+		Debug.Log("drop");
         if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
             Services.Player.BroadcastMessage("AbandonItem");
 
@@ -78,10 +68,11 @@ public class D_Function : MonoBehaviour {
         //{
         transform.parent.SetParent(null);
 
-            // Re-enable collision & stuff.
-            transform.parent.GetComponent<Collider>().enabled = true;
-            if (transform.parent.GetComponent<Rigidbody>() != null) transform.parent.GetComponent<Rigidbody>().isKinematic = false;
-            intSet.carryingObject = null;
+        // Re-enable collision & stuff.
+        transform.parent.GetComponent<Collider>().enabled = true;
+		transform.parent.GetComponent<Collider>().isTrigger = false;
+        if (transform.parent.GetComponent<Rigidbody>() != null) transform.parent.GetComponent<Rigidbody>().isKinematic = false;
+        intSet.carryingObject = null;
         //}
     }
 }
