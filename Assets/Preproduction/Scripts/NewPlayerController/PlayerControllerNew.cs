@@ -233,6 +233,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		}else if(Input.GetKeyDown(KeyCode.Tab)){
 			txtInfo.text = "Zoom in";
+
 			//switch to zoom in mode
 			mode = ControlMode.ZOOM_IN_MODE;
 			InitZoomInMode();

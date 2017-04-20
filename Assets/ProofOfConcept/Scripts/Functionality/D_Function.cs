@@ -67,10 +67,11 @@ public class D_Function : MonoBehaviour {
         //{
         transform.parent.SetParent(null);
 
-            // Re-enable collision & stuff.
-            transform.parent.GetComponent<Collider>().enabled = true;
-            if (transform.parent.GetComponent<Rigidbody>() != null) transform.parent.GetComponent<Rigidbody>().isKinematic = false;
-            intSet.carryingObject = null;
+        // Re-enable collision & stuff.
+        transform.parent.GetComponent<Collider>().enabled = true;
+		transform.parent.GetComponent<Collider>().isTrigger = false;
+        if (transform.parent.GetComponent<Rigidbody>() != null) transform.parent.GetComponent<Rigidbody>().isKinematic = false;
+        intSet.carryingObject = null;
         //}
     }
 }
