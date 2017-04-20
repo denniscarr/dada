@@ -17,6 +17,7 @@ public class D_bathtubFunction : D_Function {
 			transform.parent.SetParent (null);
             GetDropped();
 		}
+		transform.parent.position = LOWER_EQUIP_REFERENCE_POSITION + intSet.equipPosition;
 		GetComponentInParent<Rigidbody>().AddForce(transform.right * bathtubSpeed);
 		Invoke ("vibrate", 3f);
 	}

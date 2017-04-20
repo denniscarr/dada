@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BathSinkFunction : MonoBehaviour {
-    public GameObject bathSink;
+   // public GameObject bathSink;
     public GameObject explosionParticle;
     float radius = 25.0F;
     float power = 200.0F;
@@ -17,7 +17,7 @@ public class BathSinkFunction : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (bathSink.transform.parent != null && Input.GetKeyDown(useBathSink))
+		if (/*bathSink.transform.parent != null &&*/ Input.GetKeyDown(useBathSink))
         {
             //enable essential components once thrown
             GetComponent<Collider>().enabled = true;
@@ -30,9 +30,11 @@ public class BathSinkFunction : MonoBehaviour {
 
     void Explosion()
     {
+		
         //Instantiate particle system and add force
-        Instantiate(explosionParticle, transform.position, Quaternion.identity);
-        Vector3 explosionPos = transform.position;
+		Vector3 explosionPos = GameObject.Find("Equip Reference").transform.position+transform.GetComponentInParent<InteractionSettings>().equipPosition;
+		Instantiate(explosionParticle, explosionPos, Quaternion.identity);
+        
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
         foreach (Collider hit in colliders)
         {
