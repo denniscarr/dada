@@ -18,7 +18,7 @@ Shader "Sprites/FadeableSprites" {
 	
         
 		CGPROGRAM
-		#pragma surface surf KRZ fullforwardshadows alpha
+		#pragma surface surf KRZ fullforwardshadows Alphatest:_Cutoff
       
 		sampler2D _MainTex;
 		fixed4 _Color;

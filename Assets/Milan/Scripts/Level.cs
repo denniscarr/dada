@@ -380,7 +380,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		switch (propIndex) {
 		case 0:
-			Debug.Log ("I AM PICKING THE TALL SPRITE");
 			spriteIndex = (int)Services.SPRITES.tall;
 			break;
 
@@ -426,12 +425,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			}
 			break;
 
-			Debug.Log ("spawning sprite based on object tpy ecase");
-
 			if (spriteIndex == (int)Services.SPRITES.image) {
 				tag = "ImageSprite";
 			} else {
-				Debug.Log ("call me an ink sprite");
 				tag = "InkSprite";
 			}
 
