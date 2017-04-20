@@ -44,14 +44,6 @@ public class QuestFinderScript : MonoBehaviour
 
 	public void FindQuests (){
 
-		// find the levelmanager + questmanager
-//		levelman = GameObject.Find("Bootstrapper").GetComponent<LevelManager>();
-//		questman = this.gameObject.GetComponent<QuestManager> ();
-//		levelNum = levelman.levelNum;
-
-		// change the size based on what level number we're in
-		//questman.currentQuestList.Capacity 
-
 		// find the items in the scene and add them to a list of questable items
 		interactables = new List<GameObject> ();
 		objects = GameObject.FindObjectsOfType<GameObject> ();
@@ -89,12 +81,6 @@ public class QuestFinderScript : MonoBehaviour
 									pickups.Add (go);
 								}
 							}
-//							if (ranger >= 0.65f) { 
-//								iset.ableToBeCarried = true; 
-//								if (!pickups.Contains (go)) { 
-//									pickups.Add (go);
-//								} 
-//							}
 
 							if (ranger >= 0.5f) {
 								if (!equippables.Contains (go)) {

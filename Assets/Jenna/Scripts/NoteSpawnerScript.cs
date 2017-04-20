@@ -10,9 +10,10 @@ public class NoteSpawnerScript : MonoBehaviour {
 	Transform visorNode;
 
 	// for storing which notes go where
+	// PICKUPS
 	public List<GameObject> id1 = new List<GameObject>();
-	//public GameObject[] id1;
-	//public list for id2
+	// EQUIPS
+	//public List<GameObject> id2 = new List<GameObject> ();
 	// etc etc
 
 	float ranger;
@@ -29,7 +30,7 @@ public class NoteSpawnerScript : MonoBehaviour {
 			QuestItNoteFunction[] funky = notes[i].GetComponentsInChildren<QuestItNoteFunction> ();
 			for (int j = 0; j < funky.Length; j++){
 				if (funky [j].questID == 1) {
-					id1.Add (funky [j].gameObject);
+					id1.Add (funky [j].transform.parent.gameObject);
 				}
 			}
 		}
@@ -59,10 +60,5 @@ public class NoteSpawnerScript : MonoBehaviour {
 	public void AssignID(int id){
 		QuestItNoteFunction funk = questItNote.GetComponentInChildren<QuestItNoteFunction> ();
 		funk.questID = id;
-	}
-
-	public void DestroyNotes(int id){
-
-
 	}
 }

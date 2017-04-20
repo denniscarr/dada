@@ -52,6 +52,19 @@ public class QuestBuilderScript : MonoBehaviour {
 		// CHANGE THIS TO BE A RANDOM ROLL
 		// AND CERTAIN NUMBERS TURN OUT TO BE GENERATING CERTAIN QUEST TYPES
 
+
+		if (levelman.levelNum < 0) {
+			manager.questsToComplete = 1;
+		} else {
+			manager.questsToComplete = (Mathf.Abs (levelman.levelNum + 1));
+		}
+
+		if (manager.currentCompletedQuests == manager.questsToComplete) {
+			manager.allQuestsCompleted = true;
+		} else {
+			manager.allQuestsCompleted = false;
+		}
+
 		if (Input.GetKeyDown(KeyCode.Tab)){
 			if (finder.pickups.Count > 0) {
 				if (manager.questList.Count <= (Mathf.Abs (levelman.levelNum + 1))) {
@@ -59,7 +72,7 @@ public class QuestBuilderScript : MonoBehaviour {
 						GeneratePickup ();
 					}
 				} else if (manager.questList.Count >= (Mathf.Abs (levelman.levelNum + 1))) {
-					for (int i = 0; i < Random.Range (0, 30); i++) {
+					for (int i = 0; i < Random.Range (10, 30); i++) {
 						NoteSpawnerScript rain = spawner.GetComponent<NoteSpawnerScript> ();
 						rain.MakeItRain ();
 					}

@@ -19,6 +19,13 @@ public class QuestManager : MonoBehaviour {
 	[HideInInspector]
 	public int tempID;
 
+	// number of quests to complete
+	public int questsToComplete;
+	public int currentCompletedQuests;
+
+	// quests completed
+	public bool allQuestsCompleted;
+
 	//private variables for QuestObject for later
 
 	void Awake() {
