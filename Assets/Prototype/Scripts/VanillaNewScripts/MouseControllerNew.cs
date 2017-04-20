@@ -74,6 +74,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 			if(playercontroller.Mode == ControlMode.ZOOM_IN_MODE){
 				if(selectedObject){
+					Debug.Log("Switch mode when picking up object");
 					ThrowObject();
 					Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
 					if(body){
@@ -181,8 +182,7 @@ public class MouseControllerNew : MonoBehaviour {
 		if(pickedUpObject.parent != t_INROOMOBJECTS){
 			//change the parent of selected object
 
-
-			if(!pickedUpObject.parent.name.Equals("New Equip Reference")){
+			if(!(pickedUpObject.parent && pickedUpObject.parent.name.Equals("Equip Reference"))){
 				Debug.Log("resize");
 				//change scale
 				float distanceInside = Mathf.Abs(
@@ -257,22 +257,23 @@ public class MouseControllerNew : MonoBehaviour {
 			Debug.Log("place click");
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
+
 			if (Physics.Raycast (ray, out hit)){
 				if(hit.collider.tag.Equals("Visor")){
 					Debug.Log("place in visor");
 					//set layer to default 
-					selectedObject.gameObject.layer = 0;
+
 				}else{
 					Debug.LogError("click "+selectedObject.name+" in "+hit.collider.name);
 				}
 			}else{
 				//set layer to default 
-				selectedObject.gameObject.layer = 0;
+				//selectedObject.gameObject.layer = 0;
 
 				Debug.Log("Player threw "+selectedObject.name);
 				ThrowObject();
 			}
-				
+			selectedObject.gameObject.layer = 0;
 			clickGapCount = 0;
             Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
 			if(body){
