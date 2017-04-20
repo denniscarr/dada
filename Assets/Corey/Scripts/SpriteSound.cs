@@ -39,7 +39,7 @@ public class SpriteSound : MonoBehaviour {
 
 
 
-		gameObject.GetComponent<SpriteRenderer> ().material.color = Color.magenta;
+		gameObject.GetComponent<SpriteRenderer> ().material.color = Color.white;
 
 		gameObject.GetComponent<SpriteRenderer> ().material.DOColor (origColor, 1.0f);
 

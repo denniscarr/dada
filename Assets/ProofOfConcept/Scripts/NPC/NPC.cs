@@ -706,7 +706,6 @@ public class NPC : MonoBehaviour {
 
         transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
 
-        Debug.Log("Dead");
 
         // Destroy NPC AI prefab
         gameObject.SetActive(false);

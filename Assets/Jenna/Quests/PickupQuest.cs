@@ -194,6 +194,6 @@ public class PickupQuest : Quest {
 
 		notes.id1.Clear ();
 
-		manager.questsToComplete++;
+		manager.currentCompletedQuests++;
 	}
 }
