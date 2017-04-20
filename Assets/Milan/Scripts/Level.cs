@@ -18,14 +18,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public float mapHeight;
 
 	bool playerPlaced;
-	bool usePerlin = false;
 
 	List<int> highestPointIndices;
 	int highestPointIndex;
 	public int NPCs, Pickups, NonPickups, Sprites;
 	int spriteType;
-
-	GameObject[,] children;
+	float distanceOutsideCircle;
 
 	GameObject ground, sky;
 	Vector3[] vertices;
@@ -39,9 +37,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	Texture2D skyColor;
 	Texture2D groundLerpedColour;
 	Gradient gradient;
-	Color levelTint;
+	public Color levelTint;
 	float hypotenuse;
-	float distanceOutsideCircle;
 	float normalizedPerlinHeight;
 
 	public void OnCreated(){
@@ -52,11 +49,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		tileScale = Services.LevelGen.tileScale;
 
-		children = new GameObject[_width, _height];
-
 		ground = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
-		ground.layer = 2;
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
 		ground.isStatic = true;
@@ -73,16 +67,17 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
-			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
+//			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
-//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
-		levelTint = Random.ColorHSV ();
+		levelTint = Random.ColorHSV (0, 1, 0, 0.5f, 0, 1);
+
+		Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor = levelTint;
 
 		SetGradient ();
 
-		usePerlin = true;
 		_bitmap = new Texture2D (_width + 1, _length + 1);
 
 //		skyColor = new Texture2D (_width + 1, _length + 1);
@@ -121,12 +116,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		highestPointIndices = new List<int> ();
 
-		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
-			if (c.name != "UpperCamera") {
-				c.backgroundColor = Color.black;
-				c.clearFlags = CameraClearFlags.Color;
-			}
-		}
+//		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
+//			if (c.name != "UpperCamera") {
+////				c.backgroundColor = Color.black;
+//				c.clearFlags = CameraClearFlags.Color;
+//			}
+//		}
+
+
 
 //		levelMesh = Instantiate (Resources.Load<Terrain> ("Terrain"), Vector3.zero, Quaternion.identity).GetComponent<Terrain>();
 
@@ -141,16 +138,16 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			playerHeightNormalized = Mathf.Abs(playerHeightNormalized);
 		}
 
-//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
-		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
-			if(c.name != "UpperCamera" && c){
-				c.backgroundColor = Color.Lerp (c.backgroundColor, Color.Lerp (levelTint, Color.black, playerHeightNormalized), Time.deltaTime * 3);
-			}
-		}
-
-
-		RenderSettings.fogColor = Services.Player.GetComponentInChildren<Camera> ().backgroundColor;
-		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, 1- playerHeightNormalized);
+////		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+//		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
+//			if(c.name != "UpperCamera" && c){
+////				c.backgroundColor = Color.Lerp (c.backgroundColor, Color.Lerp (levelTint, levelTint, playerHeightNormalized), Time.deltaTime * 3);
+//			}
+//		}
+//
+//
+//		RenderSettings.fogColor = Services.Player.GetComponentInChildren<Camera> ().backgroundColor;
+//		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, 1- playerHeightNormalized);
 //
 //
 //		float xCoord = xOrigin;
@@ -333,7 +330,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		terrain.vertices = vertices;
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 
-			
+
 		foreach (int indice in highestPointIndices) {
 			int length = Random.Range (10, 32);
 			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
@@ -341,18 +338,24 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			GameObject newObject = LevelObjectFactory (0,4, vertices[indice], index);
 
 			for (int j = 1; j < length; j++) {
-				Vector3 SpawnCirclePos = newObject.transform.position + (Vector3)(Random.insideUnitSphere.normalized * j);
+				
+				Vector3 SpawnCirclePos = (Random.insideUnitSphere.normalized * j) + newObject.transform.position;
 
 				RaycastHit hit;
-				if (Physics.Raycast(new Vector3(SpawnCirclePos.x, transform.position.y + highestPoint, SpawnCirclePos.z), -Vector3.up, out hit)) {
-					GameObject newChild = LevelObjectFactory (1, 4, hit.point - transform.position, index);
+				if (Physics.Raycast(new Vector3(SpawnCirclePos.x, transform.position.y + mapHeight, SpawnCirclePos.z), -Vector3.up, out hit)) {
 
-					if (newChild != null) {
+					GameObject newSprite = LevelObjectFactory (1, 4, hit.point - transform.position, index);
+
+					if (j % 3 == 0) {
+						GameObject newSpawn = LevelObjectFactory (indice, Random.Range(1, Services.Prefabs.PREFABS.Length), hit.point - transform.position, index);
+					}
+
+					if (newSprite != null) {
 //						newChild.transform.position = hit.point;
 						Vector3 targetPosition = newObject.transform.position;
-						targetPosition.y = newChild.transform.position.y;
-						newChild.transform.LookAt (targetPosition);
-						newChild.transform.Rotate (0, 180, 0);
+						targetPosition.y = newSprite.transform.position.y;
+						newSprite.transform.LookAt (targetPosition);
+						newSprite.transform.Rotate (0, 180, 0);
 					}
 				} 
 
@@ -409,7 +412,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		case (int)Services.TYPES.NPCs:
 			if (NPCs >= Services.LevelGen.maxNPCs) {
 				return null;
-				break;
 			} else {
 				NPCs++;
 			}
@@ -418,10 +420,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		case (int)Services.TYPES.Sprite:
 			if (Sprites >= Services.LevelGen.maxSprites) {
 				return null;
-				break;
 			} else {
 				Sprites++;
 			}
+			break;
 
 			if (spriteIndex == (int)Services.SPRITES.image) {
 				tag = "ImageSprite";
@@ -434,7 +436,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		case (int)Services.TYPES.Pickups:
 			if (Pickups >= Services.LevelGen.maxObjects) {
 				return null;
-				break;
 			} else {
 				Pickups++;
 			}
@@ -443,7 +444,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		case (int)Services.TYPES.NonPickups:
 			if (NonPickups >= Services.LevelGen.maxObjects) {
 				return null;
-				break;
 			} else {
 				NonPickups++;
 			}
@@ -462,7 +462,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = Color.black;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
-
+			newObject.tag = tag;
 
 		} else {
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {
@@ -682,6 +682,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	}
 
+	IEnumerator RayDebug(Vector3 pos){
+
+		while (true) {
+			Debug.DrawRay (pos, -Vector3.up * 10);
+			yield return null;
+		}
+	}
 
 	public void OnDestroyed(){
 

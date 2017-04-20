@@ -22,11 +22,11 @@ public class D_microwaveFunction : D_Function {
 
         if (em.enabled)
         {
-<<<<<<< HEAD
-            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 5f);
-=======
+//<<<<<<< HEAD
+//            RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 5f);
+//=======
             RaycastHit[] hits = Physics.SphereCastAll(transform.parent.position, 2f, transform.parent.right, 13f);
->>>>>>> master
+
             Debug.DrawRay(transform.parent.position, transform.parent.right * 2f, Color.cyan);
             foreach (RaycastHit hit in hits)
             {

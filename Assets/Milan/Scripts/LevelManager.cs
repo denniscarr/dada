@@ -19,7 +19,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	public float[] NoiseRemapping;
 	public float perlinFrequency = 0.02f;
 	private float xOffset, yOffset;
-	private Texture2D[] maps;
 	Writer writer;
 
 	void Start()
@@ -29,9 +28,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
-
-
-        maps = Resources.LoadAll<Texture2D> ("maps") as Texture2D[];
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
