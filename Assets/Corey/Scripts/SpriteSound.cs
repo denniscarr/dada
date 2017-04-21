@@ -55,7 +55,7 @@ public class SpriteSound : MonoBehaviour {
 				soundCount++;
 
 			}
-			if (soundCount >= 3) {
+			if (soundCount >= 1) {
 				return;
 			}
 		}
