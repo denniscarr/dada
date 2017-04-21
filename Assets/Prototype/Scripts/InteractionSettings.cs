@@ -214,5 +214,6 @@ public class InteractionSettings : MonoBehaviour {
     public void GetPurchased()
     {
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds -= price;
+        isOwnedByPlayer = true;
     }
 }

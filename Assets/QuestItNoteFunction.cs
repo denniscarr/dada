@@ -11,6 +11,10 @@ public class QuestItNoteFunction : D_Function {
 	new void Start () {
 		base.Start();
 
+        // These should always be owned by the player & free.
+        intSet.isOwnedByPlayer = true;
+        intSet.price = 0;
+
         if (useOnStart)
         {
             Use();

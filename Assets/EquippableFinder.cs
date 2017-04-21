@@ -51,6 +51,7 @@ public class EquippableFinder : MonoBehaviour {
 
         // CHECK OUT EACH OBJECT IN RANGE.
         equipTarget = null;
+        buyTarget = null;
 
         // A variable to save the closest object.
         Transform nearestObject = null;
@@ -91,6 +92,7 @@ public class EquippableFinder : MonoBehaviour {
             {
                 writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
                 equipTarget = nearestObject;
+                Debug.Log(equipTarget.name);
             }
 
             // If the player does not own this item:
@@ -106,7 +108,7 @@ public class EquippableFinder : MonoBehaviour {
                 // If the player does not have enough money to purchase this object.
                 else
                 {
-                    writer.WriteAtPoint("You need $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + " to purchase this " + nearestObject.gameObject.name, textPosition);
+                    writer.WriteAtPoint("You need $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + " to purchase this " + nearestObject.gameObject.name + ".", textPosition);
                 }
             }
         }
@@ -121,6 +123,7 @@ public class EquippableFinder : MonoBehaviour {
         // Buying targetted object.
         if (buyTarget != null && Input.GetKeyDown(equipKey))
         {
+            writer.DeleteTextBox();
             buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
         }
 
