@@ -12,7 +12,10 @@ public class EquippableFinder : MonoBehaviour {
     Transform equipTarget;  // The object that can currently be equipped.
     public Transform equippedObject;
 
+    Transform buyTarget;    // The object that can currently be bought.
+
     Writer writer;
+    Vector3 textPosition;   // Where equip text is written.
 
     KeyCode equipKey = KeyCode.Mouse0;
     KeyCode abandonKey = KeyCode.G;
@@ -33,13 +36,18 @@ public class EquippableFinder : MonoBehaviour {
         // Get references to my buddies.
         writer = GetComponent<Writer>();
         equipReference = GameObject.Find("Equip Reference").transform;
+
         writer.textSize = 0.1f;
+        textPosition = transform.position + transform.forward * 20f;
     }
 
 
     void Update()
     {
-        Debug.DrawRay(transform.position + transform.forward, transform.forward * equipRange, Color.cyan);
+        //Debug.DrawRay(transform.position + transform.forward, transform.forward * equipRange, Color.cyan);
+
+        // Update text position based on current position.
+        textPosition = transform.position + transform.forward * 20f;
 
         // CHECK OUT EACH OBJECT IN RANGE.
         equipTarget = null;
@@ -79,8 +87,28 @@ public class EquippableFinder : MonoBehaviour {
         // Show the equip prompt for the nearest object. (Just debug log for now.)
         if (nearestObject != null)
         {
-            writer.WriteAtPoint("Press LMB to equip " + nearestObject.name, transform.position + transform.forward*20f);
-            equipTarget = nearestObject;
+            if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
+            {
+                writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
+                equipTarget = nearestObject;
+            }
+
+            // If the player does not own this item:
+            else
+            {
+                // If the player has enough money to purchase this object.
+                if (nearestObject.GetComponentInChildren<InteractionSettings>().price < GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to purchase " + nearestObject.name + " for $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
+                    buyTarget = nearestObject;
+                }
+
+                // If the player does not have enough money to purchase this object.
+                else
+                {
+                    writer.WriteAtPoint("You need $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + " to purchase this " + nearestObject.gameObject.name, textPosition);
+                }
+            }
         }
 
         else
@@ -88,18 +116,27 @@ public class EquippableFinder : MonoBehaviour {
             writer.DeleteTextBox();
         }
 
-
         // PLAYER INPUT
-        if (equipTarget != null && Input.GetKeyDown(equipKey))
+
+        // Buying targetted object.
+        if (buyTarget != null && Input.GetKeyDown(equipKey))
+        {
+            buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
+        }
+
+        // Equipping targetted object.
+        else if (equipTarget != null && Input.GetKeyDown(equipKey))
         {
             MoveToCamera();
         }
 
+        // Abandoning equipped items.
         if (equippedObject != null && Input.GetKeyDown(abandonKey))
         {
             AbandonItem();
         }
     }
+
 
     void MoveToCamera ()
     {

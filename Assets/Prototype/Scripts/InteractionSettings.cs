@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class InteractionSettings : MonoBehaviour {
 
+    public int price;    // How much this item costs.
+    public bool isOwnedByPlayer = false;   // Whether the player owns this item.
+
 	public bool ableToBeCarried
     {
         get
@@ -133,13 +136,16 @@ public class InteractionSettings : MonoBehaviour {
 
 	void Awake()
     {
+        // Get my fire prfab ready.
         firePrefab = Resources.Load("Contagious Fire") as GameObject;
 
+        // Save my scale for later morphing.
         savedScale = transform.parent.localScale;
 		originalParent = transform.parent.parent;
 
         _carryingObject = null;
 
+        // See if I'm an NPC
         if (transform.parent.GetComponentInChildren<NPC>() == null)
         {
             IsNPC = false;
@@ -150,6 +156,18 @@ public class InteractionSettings : MonoBehaviour {
             IsNPC = true;
         }
 
+        // Determine my price.
+        if (IsNPC)
+        {
+            price = 1000;
+        }
+
+        else
+        {
+            price = 100;
+        }
+
+        // If I'm in my visor, then do different things to make sure bugs don't happen.
         if (IsInVisor)
         {
             originalParent = null;
@@ -190,5 +208,11 @@ public class InteractionSettings : MonoBehaviour {
         GameObject fire = Instantiate(firePrefab);
         fire.transform.SetParent(transform.parent);
         fire.transform.localPosition = Vector3.zero;
+    }
+
+
+    public void GetPurchased()
+    {
+        GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds -= price;
     }
 }
