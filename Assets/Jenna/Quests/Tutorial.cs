@@ -29,6 +29,8 @@ public class Tutorial : Quest {
 	// temporary items
 	GameObject visor;
 	GameObject textSpawn;
+	GameObject inRoomItem;
+	GameObject worldItem;
 
 	// bools for the things having been done
 	bool visorEquipped;
@@ -38,9 +40,14 @@ public class Tutorial : Quest {
 	bool tabPressed;
 	bool thingUsedOrMoved;
 	bool itemAdded;
+	bool jumpedOff;
 	bool finished;
 
 	void OnPostRender () {
+
+		//change the text on top of the screen to "press tab"
+		// or just do a text spawn that says "press tab"
+		// need to change locations of text too
 
 		// finding the quest manager
 		manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
@@ -93,6 +100,8 @@ public class Tutorial : Quest {
 		//controls.InitZoomInMode ();
 		//controls.ZoomOutUpdate ();
 		//controls.mode = ControlMode.ZOOM_OUT_MODE;
+
+		inRoomItem = GameObject.Find ("Colostomy Bag (1)");
 	}
 
 	void Update() {
@@ -112,6 +121,35 @@ public class Tutorial : Quest {
 				Input.GetKeyDown(KeyCode.D))
 		&& !roomEntered) {
 			enterRoom ();
+		}
+
+		// once you've entered the room and picked up the thing
+		if (roomEntered) {
+			if (inRoomItem.GetComponentInChildren<InteractionSettings> ().carryingObjectCarryingObject) {
+				nowExit ();
+			}
+		}
+
+		// great, now exit the visor and explore the world
+		if (thingMoved && roomEntered && !tabPressed) {
+			if (controller.GetComponent<PlayerControllerNew> ().mode == ControlMode.ZOOM_IN_MODE) {
+				if (Input.GetKeyDown (KeyCode.Tab)) {
+					interactWithAThing ();
+				}
+			}
+		}
+
+		// this nullifies the chance that tab has been pressed early because, like,
+		//tabpressed can only be true if you've interacted with a thing
+		if (tabPressed) {
+			if (!worldItem == null) {
+				text.text = ("Now add" + " " + worldItem.name + " " + "to your inventory. Grab it, press tab, and drop.");
+
+				if (worldItem.GetComponentInChildren<InteractionSettings> ().IsEquipped) {
+					manager.allQuestsCompleted = true;
+					text.text = "You've learned the basics. Now jump off the world. Go on.";
+				}
+			}
 		}
 	}
 
@@ -136,10 +174,44 @@ public class Tutorial : Quest {
 		roomEntered = true;
 
 		// change the text
-		text.text = "Now that you've walked around, try to move something.";
+		text.text = "Now that you've walked around, try to move the Colostomy Bag.";
+	}
 
-		// stick it to the screen
-		QuestItNoteFunction function = questItNote.GetComponent<QuestItNoteFunction> ();
-		function.StickToScreen ();
+	void nowExit(){
+
+		// mark off the bool
+		thingMoved = true;
+
+		// change the text
+		text.text = "Click on the viewing platform and press tab.";
+
+	}
+
+	void interactWithAThing(){
+
+		//mark off the bool
+		tabPressed = true;
+
+		// instantiate an item and put it somewhere else
+		GameObject newThing = Instantiate(Resources.Load("Pickups/Bathroom Sink", typeof(GameObject))) as GameObject;
+		newThing.transform.position = new Vector3 (this.transform.position.x - 5, this.transform.position.y + 15, this.transform.position.z + 10);
+
+		// change the text
+		text.text = "Find something in the world. Press right mouse button to interact.";
+
+	}
+
+	void OnCollisionEnter (Collider col){
+		if (col.name == "Killzone") {
+			if (manager.allQuestsCompleted) {
+				jumpedOff = true;
+				if (jumpedOff = true) {
+					finished = true;
+					if (finished = true) {
+						Destroy (this);
+					}
+				}
+			}
+		}
 	}
 }
