@@ -401,7 +401,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 		}
 
-		string tag = "Untagged";
+		string tag = "InkSprite";
 
 		switch (objectType) {
 
