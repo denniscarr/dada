@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 
 public enum InteractionMode{
 	GRAB_MODE = 0,
@@ -41,9 +41,14 @@ public class MouseControllerNew : MonoBehaviour {
     [SerializeField] Vector3 textPosition;
 
 	float CLICKGAPTIME = 0.3f;
+	public Shader outlineShader;
+	private Transform lastTargetObject;
+	List<Renderer> renderList;
+	List<string> shaderList;
 
 	// Use this for initialization
 	void Start () {
+
 		UpperCamera = playercontroller.UpperCamera;
         //txtInfo = transform.parent.FindChild("txtInfo").GetComponent<Text>();
 
@@ -105,6 +110,7 @@ public class MouseControllerNew : MonoBehaviour {
 	void DetectSelection(){
 		//get the ray to check whether player points at visor from upper camera
 		if(selectedObject){
+			//DeoutlineTargetObject();
 			//Debug.Log("select "+selectedObject.name);
 			UpdateDraggedObjectPosition(selectedObject);
 			DetectPlacing(selectedObject);
@@ -113,6 +119,10 @@ public class MouseControllerNew : MonoBehaviour {
 			//Debug.DrawRay(ray.origin,ray.direction);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
+				
+				//DeoutlineTargetObject();
+				//OutlineTargetObject(hit.transform);
+
 				CheckPointedObject(hit.transform);
 				return;
 			}
@@ -120,7 +130,48 @@ public class MouseControllerNew : MonoBehaviour {
 			ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
 			Debug.DrawRay(ray.origin,ray.direction);
 			if (Physics.Raycast (ray, out hit)) {
+
+//				DeoutlineTargetObject();
+//				OutlineTargetObject(hit.transform);
+
 				CheckPointedObject(hit.transform);
+			}else{
+				//DeoutlineTargetObject();
+			}
+		}
+	}
+
+	void DeoutlineTargetObject(){
+		Debug.Log("DeoutlineTargetObject");
+		if(renderList != null){
+			for(int i = 0; i < renderList.Count;i++){
+				renderList[i].material.shader = Shader.Find(shaderList[i]);
+				Debug.Log(shaderList[i]);
+			}
+
+			renderList.Clear();
+			shaderList.Clear();
+		}
+
+	}
+
+
+	void OutlineTargetObject(Transform t_hit){
+		Debug.Log("OutlineTargetObject");
+		Renderer renderer = t_hit.GetComponent<Renderer>();
+		renderList = new List<Renderer>();
+		shaderList = new List<string>();
+		if(renderer){
+			shaderList.Add(renderer.material.shader.name);
+			renderList.Add(renderer);
+			renderer.material.shader = Shader.Find("Mistral/Outline");
+		}
+		Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
+		for(int i = 0;i<renderers.Length;i++){
+			if(renderers[i]){
+				renderList.Add(renderers[i]);
+				shaderList.Add(renderers[i].material.shader.name);
+				renderers[i].material.shader = Shader.Find("Mistral/Outline");
 			}
 		}
 	}
