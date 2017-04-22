@@ -67,7 +67,7 @@ public class Subobject : MonoBehaviour {
         // Get a new mesh.
         GetComponent<MeshFilter>().mesh = potentialForms[Random.Range(0, potentialForms.Length)];
 
-        ResizeMeshToUnit();
+        MyMath.ResizeMeshToUnit(GetComponent<MeshFilter>().mesh);
 
         // Get a new color
         //GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Random.ColorHSV());
@@ -96,38 +96,38 @@ public class Subobject : MonoBehaviour {
     }
 
 
-    void ResizeMeshToUnit()
-    {
-        MeshFilter mf = GetComponent<MeshFilter>();
-        if (mf == null)
-            return;
-        Mesh mesh = mf.mesh;
-        Bounds bounds = mesh.bounds;
+    //void ResizeMeshToUnit()
+    //{
+    //    MeshFilter mf = GetComponent<MeshFilter>();
+    //    if (mf == null)
+    //        return;
+    //    Mesh mesh = mf.mesh;
+    //    Bounds bounds = mesh.bounds;
 
-        float size = bounds.size.x;
-        if (size < bounds.size.y)
-            size = bounds.size.y;
-        if (size < bounds.size.z)
-            size = bounds.size.z;
+    //    float size = bounds.size.x;
+    //    if (size < bounds.size.y)
+    //        size = bounds.size.y;
+    //    if (size < bounds.size.z)
+    //        size = bounds.size.z;
 
-        if (Mathf.Abs(1.0f - size) < 0.01f)
-        {
-            //Debug.Log("Already unit size");
-            return;
-        }
+    //    if (Mathf.Abs(1.0f - size) < 0.01f)
+    //    {
+    //        //Debug.Log("Already unit size");
+    //        return;
+    //    }
 
-        float scale = 1.0f / size;
+    //    float scale = 1.0f / size;
 
-        Vector3[] verts = mesh.vertices;
+    //    Vector3[] verts = mesh.vertices;
 
-        for (int i = 0; i < verts.Length; i++)
-        {
-            verts[i] = verts[i] * scale;
-        }
+    //    for (int i = 0; i < verts.Length; i++)
+    //    {
+    //        verts[i] = verts[i] * scale;
+    //    }
 
-        mesh.vertices = verts;
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
-    }
+    //    mesh.vertices = verts;
+    //    mesh.RecalculateBounds();
+    //    mesh.RecalculateNormals();
+    //}
 
 }

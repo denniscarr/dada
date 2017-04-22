@@ -27,7 +27,7 @@ public class AmbientMusic : MonoBehaviour {
 
 		Color.RGBToHSV( currentLevelColor,out hue, out lSat,out lVal);
 
-		Debug.Log (hue);
+		//Debug.Log (hue);
 
 		for( int i = 0; i < hiSource.Length; i ++ ) {
 
@@ -35,7 +35,7 @@ public class AmbientMusic : MonoBehaviour {
 			float hiBound = ((float)(i + 1f) * (1f / (float)hiSource.Length));
 
 			if (hue >= loBound && hue < hiBound) {
-				Debug.Log("range is greater than: " + loBound + "and less than " + hiBound);
+				//Debug.Log("range is greater than: " + loBound + "and less than " + hiBound);
 				hiSource [i].volume = 1.0f;
 			} else {
 				hiSource [i].volume = 0.0f;

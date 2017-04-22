@@ -73,7 +73,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 				if (go.GetComponentInChildren<InteractionSettings> () != null) {
 					if (go.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player.transform) {
 						if (go.GetComponentInChildren<InteractionSettings> ().transform.parent == go.transform) {
-							Debug.Log (go.name);
+							//Debug.Log (go.name);
 							Destroy (go);
 						}
 					}
@@ -104,7 +104,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		l.OnCreated ();
 
-		writer.textSize = 0.25f;
+		//writer.textSize = 0.25f;
 		writer.SetScript (SetLevelText ());
 		StartCoroutine (writer.WriteText ());
 

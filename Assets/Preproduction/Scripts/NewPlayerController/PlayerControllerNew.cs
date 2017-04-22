@@ -49,6 +49,8 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	//INSTRUCTIONS TEXT do not need any more
 	public Text txtInfo;
+    Writer writer;
+    Vector3 textPosition = new Vector3(18.049f, 189.5f, 32.3271f);
 
 	public RigidbodyFirstPersonController rigidbodyFirstPersonController;
 	public InsideVisorMan insideVisorMan;
@@ -78,9 +80,11 @@ public class PlayerControllerNew : MonoBehaviour {
 	void Start () {
 		initPos = transform.position;
 		initRotation = transform.rotation;
-		Debug.Log("init");
+		//Debug.Log("init");
 		initCameraRotation = UpperCamera.transform.rotation;
 		inPointForPlaneFromCube = cubeOnDraggedPlane.position;
+
+        writer = GameObject.Find("Mouse").GetComponent<Writer>();
 
 		//pressGapCount = 0f;
 		clickGapCount = 0f;
@@ -113,7 +117,8 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomInMode(){
-		Debug.Log("reset");
+        //Debug.Log("reset");
+        writer.DeleteTextBox();
 		transform.position = initPos;
 		transform.rotation = initRotation;
 
@@ -155,9 +160,9 @@ public class PlayerControllerNew : MonoBehaviour {
 		if(t_hit && t_hit.parent){
 			//Debug.Log(t_hit.name);
 			if(t_hit.parent.name.Equals("Viewing Platform")){
-				txtInfo.text = "Platform is calling you...";
-				//Debug.Log(t_hit.parent.name);
-				if(Input.GetMouseButtonDown(0)){
+                //txtInfo.text = "Platform is calling you...";
+                //Debug.Log(t_hit.parent.name);
+                if (Input.GetMouseButtonDown(0)){
 					Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
 					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.5f);
@@ -187,9 +192,10 @@ public class PlayerControllerNew : MonoBehaviour {
 		}
 
 		if(Input.GetKeyDown(KeyCode.Tab)){
-			txtInfo.text = "Switch to zoom out mode";
-			//switch to zoom out mode
-			InitZoomOutMode();
+            //txtInfo.text = "Switch to zoom out mode";
+            //switch to zoom out mode
+            writer.DeleteTextBox();
+            InitZoomOutMode();
 			mode = ControlMode.ZOOM_OUT_MODE;
 		}
 //		else if (Input.GetMouseButtonDown(0)){
@@ -232,15 +238,16 @@ public class PlayerControllerNew : MonoBehaviour {
 			//so here jus for use clicked object
 
 		}else if(Input.GetKeyDown(KeyCode.Tab)){
-			txtInfo.text = "Zoom in";
+			//txtInfo.text = "Zoom in";
 
 			//switch to zoom in mode
 			mode = ControlMode.ZOOM_IN_MODE;
 			InitZoomInMode();
 
 		}else if(Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)){
-			txtInfo.text = "You walk off the platform";
-			mode = ControlMode.IN_ROOM_MODE;
+            writer.DeleteTextBox();
+            writer.WriteAtPoint("Welcome home.", textPosition);
+            mode = ControlMode.IN_ROOM_MODE;
 			InitInRoomMode();
 		}
 
