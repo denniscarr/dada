@@ -84,7 +84,7 @@ public class PickupQuest : Quest {
 		objectScript = parentObject.GetComponent<QuestObject> ();
 		requiredPickups = Random.Range (2, 6);
         rewardMoney = 100 * requiredPickups;
-        Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
+        //Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
 
         // add the glow
         fieryGlow = Instantiate(Resources.Load ("questobject-fire", typeof (GameObject))) as GameObject;

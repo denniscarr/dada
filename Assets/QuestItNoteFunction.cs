@@ -13,7 +13,8 @@ public class QuestItNoteFunction : D_Function {
 
         if (transform.parent.name.Contains("(Clone)"))
         {
-            transform.parent.name.Remove(transform.parent.name.Length - 7, 7);
+            Debug.Log("Renaming Quest it note");
+            transform.parent.name = transform.parent.name.Remove(transform.parent.name.Length - 7, 7);
         }
 
         // These should always be owned by the player & free.
