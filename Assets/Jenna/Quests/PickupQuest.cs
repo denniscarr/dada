@@ -31,6 +31,9 @@ public class PickupQuest : Quest {
 	// glow
 	GameObject fieryGlow;
 
+	//sound
+	GameObject radarSound;
+
 	// for finishing quest
 	public int requiredPickups;
 	public int numberofPickups;
@@ -89,6 +92,10 @@ public class PickupQuest : Quest {
         // add the glow
         fieryGlow = Instantiate(Resources.Load ("questobject-fire", typeof (GameObject))) as GameObject;
 		fieryGlow.transform.parent = parentObject.transform;
+
+		// add the sound
+		radarSound = Instantiate(Resources.Load ("QuestItemChildren/QuestItemSound", typeof (GameObject))) as GameObject;
+		radarSound.transform.parent = parentObject.transform;
 
 		// store the transform for later text spawning
 		positionX = parentObject.transform.position.x;
@@ -209,6 +216,7 @@ public class PickupQuest : Quest {
         Destroy(parentObject.GetComponent<PickupQuest>());
         Destroy(parentObject.GetComponent<QuestObject>());
         Destroy(fieryGlow);
+		Destroy (radarSound);
 
         completed = true;
     }
