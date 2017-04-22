@@ -155,7 +155,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		if(t_hit && t_hit.parent){
 			//Debug.Log(t_hit.name);
 			if(t_hit.parent.name.Equals("Viewing Platform")){
-				txtInfo.text = "Platform is calling you...";
+				//txtInfo.text = "Platform is calling you...";
 				//Debug.Log(t_hit.parent.name);
 				if(Input.GetMouseButtonDown(0)){
 					Debug.Log(t_hit.parent.name);
@@ -187,7 +187,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		}
 
 		if(Input.GetKeyDown(KeyCode.Tab)){
-			txtInfo.text = "Switch to zoom out mode";
+			//txtInfo.text = "Switch to zoom out mode";
 			//switch to zoom out mode
 			InitZoomOutMode();
 			mode = ControlMode.ZOOM_OUT_MODE;
@@ -232,14 +232,14 @@ public class PlayerControllerNew : MonoBehaviour {
 			//so here jus for use clicked object
 
 		}else if(Input.GetKeyDown(KeyCode.Tab)){
-			txtInfo.text = "Zoom in";
+			//txtInfo.text = "Zoom in";
 
 			//switch to zoom in mode
 			mode = ControlMode.ZOOM_IN_MODE;
 			InitZoomInMode();
 
 		}else if(Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)){
-			txtInfo.text = "You walk off the platform";
+			//txtInfo.text = "You walk off the platform";
 			mode = ControlMode.IN_ROOM_MODE;
 			InitInRoomMode();
 		}

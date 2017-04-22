@@ -4,7 +4,7 @@ using System.Collections;
 public class Writer : MonoBehaviour {
 
 	public Color textColor = Color.white;
-	float lineLength = 3f;
+	public float lineLength = 3f;
     float lineSpacing = 1f;
     public float textSize = 0.1f;
 	public float tracking = 0.1f;
@@ -18,9 +18,11 @@ public class Writer : MonoBehaviour {
 	Vector3 originalPos;
 	Transform pivot;
     public Transform permaText;
+    public bool dontFacePlayer = false;
 
 	Vector3 	spawnPosition;
 	string[][]	_script;
+    public string lastWrite = "";
 	int 		wordIndex, lineIndex;
 	int 		stringIndex;
 	public float xOffset, yOffset, zOffset;
@@ -52,6 +54,8 @@ public class Writer : MonoBehaviour {
 
     public void SetScript(string _text)
     {
+        lastWrite = _text;
+
         string[] tempText = _text.Split(new char[] { '\n' });
 
         _script = new string[tempText.Length][];
@@ -105,14 +109,17 @@ public class Writer : MonoBehaviour {
     {
         SetScript(_text);
 
-        CreateTextBox (transform.position);
+        CreateTextBox (transform.position, false);
     }
+
 
     public void WriteAtPoint(string _text, Vector3 position)
     {
+        if (permaText != null) return;
+
         SetScript(_text);
 
-        CreateTextBox(position);
+        CreateTextBox(position, false);
     }
 
 
@@ -126,7 +133,7 @@ public class Writer : MonoBehaviour {
     }
 
 
-    public void CreateTextBox(Vector3 basePosition)
+    public void CreateTextBox(Vector3 basePosition, bool parentToMe)
     {
         if (timeSinceLastWrite < cooldownTime) return;
 
@@ -177,13 +184,21 @@ public class Writer : MonoBehaviour {
         }
 
         // Rotate the text containter towards the player.
-        textContainer.transform.LookAt(Services.Player.transform);
-        textContainer.transform.Rotate(0f, 180f, 0f);
+        if (!dontFacePlayer)
+        {
+            textContainer.transform.LookAt(Services.Player.transform);
+            textContainer.transform.Rotate(0f, 180f, 0f);
+        }
+
+        if (parentToMe)
+        {
+            textContainer.transform.SetParent(transform);
+        }
 
         // Set all values back to zero.
         wordIndex = 0;
 		spawnPosition = Vector3.zero;
-
+        
         timeSinceLastWrite = 0f;
     }
 
