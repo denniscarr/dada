@@ -178,26 +178,28 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		Debug.Log("OutlineTargetObject");
-		Renderer renderer = t_hit.GetComponent<Renderer>();
+		//Debug.Log("OutlineTargetObject");
+
 
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
+		Renderer renderer = t_hit.GetComponent<Renderer>();
 		if(renderer){
 			shaderList.Add(renderer.material.shader.name);
 			Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
 			renderer.material.shader = Shader.Find("Mistral/Outline");
+		}else{
+			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
+			for(int i = 0;i<renderers.Length;i++){
+				if(renderers[i]){
+					renderList.Add(renderers[i]);
+					Debug.Log(renderers[i].material.shader.name);
+					shaderList.Add(renderers[i].material.shader.name);
+					renderers[i].material.shader = Shader.Find("Mistral/Outline");
+				}
+			}
 		}
-//		Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
-//		for(int i = 0;i<renderers.Length;i++){
-//			if(renderers[i]){
-//				renderList.Add(renderers[i]);
-//				Debug.Log(renderer.material.shader.name);
-//				shaderList.Add(renderers[i].material.shader.name);
-//				renderers[i].material.shader = Shader.Find("Mistral/Outline");
-//			}
-//		}
 	}
 
     void MoveToCamera ()
