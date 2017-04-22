@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class D_hammerFunction : D_Function {
 	//Animator hammer;
@@ -25,6 +26,7 @@ public class D_hammerFunction : D_Function {
 			GameObject hammerHit = hit.collider.gameObject;
             if (hammerHit.name == "GROUND") return;
 			hammerHit.transform.localScale -= new Vector3 (-flattenMultiplier, flattenMultiplier, -flattenMultiplier);
+			//hammerHit.transform.DOScale -= new Vector3 (-flattenMultiplier, flattenMultiplier, -flattenMultiplier);
 		}
 		//GetComponentInParent<Animation> ().Play();
 		//hammer.SetBool("Hammer", true);
