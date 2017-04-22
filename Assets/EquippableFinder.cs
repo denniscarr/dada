@@ -46,6 +46,13 @@ public class EquippableFinder : MonoBehaviour {
     {
         //Debug.DrawRay(transform.position + transform.forward, transform.forward * equipRange, Color.cyan);
 
+        // Don't do anything if the player is in zoom out mode.
+        if (GameObject.Find("PlayerInRoom").GetComponent<PlayerControllerNew>().Mode == ControlMode.ZOOM_OUT_MODE)
+        {
+            writer.DeleteTextBox();
+            return;
+        }
+
         // Update text position based on current position.
         textPosition = transform.position + transform.forward * 20f;
 
@@ -61,7 +68,8 @@ public class EquippableFinder : MonoBehaviour {
             transform.position + transform.forward, transform.position + transform.forward*1.5f, equipSize, transform.forward, equipRange
             ))
         {
-            if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null && hit.transform.GetComponentInChildren<InteractionSettings>().ableToBeCarried)
+            if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
+                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.GetComponentInChildren<InteractionSettings>().ableToBeCarried)
             {
                 // Get the distance of this object and, if it's the closest to the player then save it.
                 float distance = Vector3.Distance(hit.point, transform.position);
@@ -92,7 +100,7 @@ public class EquippableFinder : MonoBehaviour {
             {
                 writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
                 equipTarget = nearestObject;
-                Debug.Log(equipTarget.name);
+                //Debug.Log(equipTarget.name);
             }
 
             // If the player does not own this item:
@@ -124,7 +132,15 @@ public class EquippableFinder : MonoBehaviour {
         if (buyTarget != null && Input.GetKeyDown(equipKey))
         {
             writer.DeleteTextBox();
-            buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
+            if (buyTarget.GetComponentInChildren<InteractionSettings>().price <= GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
+            {
+                buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
+            }
+
+            else
+            {
+                writer.WriteAtPoint("You cannot afford this " + buyTarget.name + "!", textPosition);
+            }
         }
 
         // Equipping targetted object.
@@ -149,7 +165,7 @@ public class EquippableFinder : MonoBehaviour {
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
         originalScale = equippedObject.transform.localScale;
-		Debug.Log("SetParent equipReference");
+		//Debug.Log("SetParent equipReference");
 		equippedObject.transform.SetParent(equipReference, true);
 
 

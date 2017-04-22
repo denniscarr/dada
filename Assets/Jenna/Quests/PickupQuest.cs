@@ -36,6 +36,8 @@ public class PickupQuest : Quest {
 	public int numberofPickups;
 	public bool pickedUp;
 	public D_starryExpolsion stars;
+    public int rewardMoney;
+    bool completed;
 
 	float positionX;
 	float positionY;
@@ -47,7 +49,6 @@ public class PickupQuest : Quest {
 		builder = gameObject.GetComponent<QuestBuilderScript> ();
 		qfs = gameObject.GetComponent<QuestFinderScript> ();
 		manager = gameObject.GetComponent<QuestManager> ();
-
 	}
 
 	public void FixedUpdate(){
@@ -58,7 +59,8 @@ public class PickupQuest : Quest {
 		{
 			if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
 			    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
-			    !pickedUp) {
+			    !pickedUp)
+            {
 				numberofPickups++;
 				text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
 
@@ -80,10 +82,12 @@ public class PickupQuest : Quest {
 
 		parentObject = builder.objeto;
 		objectScript = parentObject.GetComponent<QuestObject> ();
-		requiredPickups = Random.Range (1, 5);
+		requiredPickups = Random.Range (2, 6);
+        rewardMoney = 100 * requiredPickups;
+        Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
 
-		// add the glow
-		fieryGlow = Instantiate(Resources.Load ("questobject-fire", typeof (GameObject))) as GameObject;
+        // add the glow
+        fieryGlow = Instantiate(Resources.Load ("questobject-fire", typeof (GameObject))) as GameObject;
 		fieryGlow.transform.parent = parentObject.transform;
 
 		// store the transform for later text spawning
@@ -99,7 +103,7 @@ public class PickupQuest : Quest {
 		id = (QuestManager.questManager.questList.Count);
 
 		// add to the list of available quests on the parent object
-		objectScript.receivableQuestIDs.Add (id);
+		if (objectScript != null) objectScript.receivableQuestIDs.Add (id);
 		manager.CheckAvailableQuests (objectScript);
 		progress = Quest.QuestProgress.AVAILABLE;
 
@@ -111,8 +115,8 @@ public class PickupQuest : Quest {
 
 		spawnNote ();
 
-		// put it on the parent object
-		CopyComponent (this, parentObject);
+        // put it on the parent object
+        CopyComponent(this, parentObject);
 
 		for (int i = 0; i < 20; i++) {
 			NoteSpawnerScript noteSpawn = GameObject.Find("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript>();
@@ -123,7 +127,8 @@ public class PickupQuest : Quest {
 
 	// method to copy alla this shit on the pickupquest on the quest object generated
 	// in questbuilderscript
-	Component CopyComponent (Component original, GameObject destination){
+	Component CopyComponent (Component original, GameObject destination)
+    {
 		System.Type type = original.GetType ();
 		Component copy = destination.AddComponent(type);
 
@@ -173,6 +178,8 @@ public class PickupQuest : Quest {
 
 	public void FinishQuest(){
 
+        if (completed) return;
+
 		// find the quest
 		PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
 
@@ -182,9 +189,7 @@ public class PickupQuest : Quest {
 
 		// explode it
 		GameObject stars = Instantiate (Resources.Load ("explosion-noforce", typeof(GameObject))) as GameObject; 
-		stars.transform.position = parentObject.transform.position; 
-
-		Destroy (parentObject);
+		stars.transform.position = parentObject.transform.position;
 
 		// find the notes and destroy them
 		NoteSpawnerScript notes = GameObject.Find ("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript> ();
@@ -194,6 +199,17 @@ public class PickupQuest : Quest {
 
 		notes.id1.Clear ();
 
-		manager.currentCompletedQuests++;
-	}
+        // Give player money
+        Debug.Log("Giving reward: " + rewardMoney);
+        GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
+
+		if (manager != null) manager.currentCompletedQuests++;
+
+        //Destroy (parentObject);
+        Destroy(parentObject.GetComponent<PickupQuest>());
+        Destroy(parentObject.GetComponent<QuestObject>());
+        Destroy(fieryGlow);
+
+        completed = true;
+    }
 }

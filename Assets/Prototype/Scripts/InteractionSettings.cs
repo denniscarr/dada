@@ -11,19 +11,28 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if (IsNPC)
+            //if (IsNPC)
+            //{
+            //    return false;
+            //}
+
+    //        if (MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 4f)
+    //        { 
+    //            return true;
+    //        }
+
+    //        else
+    //        {
+				//return false;
+    //        }
+            if (!isOwnedByPlayer && price > GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
             {
                 return false;
             }
 
-            else if (MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 4f)
-            { 
-                return true;
-            }
-
             else
             {
-				return false;
+                return true;
             }
         }
     }	// Whether the object is able to be carried.
@@ -89,7 +98,7 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if (transform.parent.name.Contains("Equip Reference"))
+            if (transform.parent.parent != null && transform.parent.parent.name.Contains("Equip Reference"))
             {
                 return true;
             }

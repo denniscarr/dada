@@ -11,6 +11,11 @@ public class QuestItNoteFunction : D_Function {
 	new void Start () {
 		base.Start();
 
+        if (transform.parent.name.Contains("(Clone)"))
+        {
+            transform.parent.name.Remove(transform.parent.name.Length - 7, 7);
+        }
+
         // These should always be owned by the player & free.
         intSet.isOwnedByPlayer = true;
         intSet.price = 0;

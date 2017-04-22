@@ -55,7 +55,7 @@ public class NPC : MonoBehaviour {
         get { return _health; }
         set
         {
-            Debug.Log("Current health: " + value);
+            //Debug.Log("Current health: " + value);
 
             if (value <= 0f)
             {
@@ -673,7 +673,7 @@ public class NPC : MonoBehaviour {
         // If collision magnitude is over a certain amount, get hurt.
         if (collision.gameObject.name != "GROUND" && collision.relativeVelocity.magnitude > painThreshold)
         {
-            Debug.Log("Ouch! That " + collision.gameObject.name + " hurt me!");
+            //Debug.Log("Ouch! That " + collision.gameObject.name + " hurt me!");
             writer.WriteSpecifiedString("Ouch! That " + collision.gameObject.name + " hurt me!");
 
             // See if we should start hating this object.s

@@ -22,15 +22,11 @@ public class D_hammerFunction : D_Function {
 		RaycastHit hit;
 		if (Physics.Raycast(hammerRay, out hit, 10))
 		{
-			Debug.Log (hit.collider.gameObject.name);
 			GameObject hammerHit = hit.collider.gameObject;
-			hammerHit.transform.localScale -= new Vector3 (-flattenMultiplier/2f, flattenMultiplier, -flattenMultiplier/2f);
-			print ("animation triggered");
+            if (hammerHit.name == "GROUND") return;
+			hammerHit.transform.localScale -= new Vector3 (-flattenMultiplier, flattenMultiplier, -flattenMultiplier);
 		}
 		//GetComponentInParent<Animation> ().Play();
 		//hammer.SetBool("Hammer", true);
-
-
-
 	}
 }

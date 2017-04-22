@@ -334,7 +334,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		foreach (int indice in highestPointIndices) {
 			int length = Random.Range (10, 32);
 			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
-			Debug.Log ("Spawning tall object");
+			//Debug.Log ("Spawning tall object");
 			GameObject newObject = LevelObjectFactory (0,4, vertices[indice], index);
 
 			for (int j = 1; j < length; j++) {

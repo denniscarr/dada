@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMoneyManager : MonoBehaviour {
 
@@ -11,7 +12,17 @@ public class PlayerMoneyManager : MonoBehaviour {
         set
         {
             if (value < 0) value = 0;
+            displayText.text = "$" + value;
             _funds = value;
         }
+    }
+
+    Text displayText;
+
+
+    void Start()
+    {
+        displayText = GameObject.Find("Money Display").GetComponent<Text>();
+        displayText.text = "$" + _funds;
     }
 }
