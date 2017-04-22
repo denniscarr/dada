@@ -11,7 +11,7 @@ public class PoopFunction : D_Function {
     {
         base.Start();
 
-        poopMat = Resources.Load("poop") as Material;
+        //poopMat = Resources.Load("poop") as Material;
     }
 
     public override void Use()

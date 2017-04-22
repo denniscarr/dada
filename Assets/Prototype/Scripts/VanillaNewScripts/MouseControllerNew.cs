@@ -37,13 +37,19 @@ public class MouseControllerNew : MonoBehaviour {
 	public float sfxVolume = 0.1f;
 
 	public Text txtInfo;
+    Writer writer;
+    [SerializeField] Vector3 textPosition;
 
 	float CLICKGAPTIME = 0.3f;
 
 	// Use this for initialization
 	void Start () {
 		UpperCamera = playercontroller.UpperCamera;
-		//txtInfo = transform.parent.FindChild("txtInfo").GetComponent<Text>();
+        //txtInfo = transform.parent.FindChild("txtInfo").GetComponent<Text>();
+
+        writer = GetComponent<Writer>();
+        writer.lineLength = 20f;
+
 		clickGapCount = 0;
 
 		//state = InterationState.NONE_SELECTED_STATE;
@@ -121,19 +127,57 @@ public class MouseControllerNew : MonoBehaviour {
 
 	void CheckPointedObject(Transform pointedObject){
 		InteractionSettings inSets = pointedObject.GetComponentInChildren<InteractionSettings>();
-		if(Input.GetMouseButtonDown(0)){
+
+        // HELPER TEXT STUFF:
+        if (inSets != null)
+        {
+            // If the player already owns this item:
+            if (inSets.isOwnedByPlayer)
+            {
+                if (inSets.ableToBeCarried)
+                {
+                    writer.WriteAtPoint("Hold Left Mouse Button to pick up " + pointedObject.name + ".", textPosition);
+                }
+            }
+
+            // If the player does not own this item:
+            else
+            {
+                // If the player has enough money to purchase:
+                if (GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds >= inSets.price)
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to purchase " + pointedObject.name + " for $" + pointedObject.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
+                }
+
+                // If the player does not have enough money to purchase:
+                else
+                {
+                    writer.WriteAtPoint("You need $" + pointedObject.GetComponentInChildren<InteractionSettings>().price + " to purchase this " + pointedObject.gameObject.name + ".", textPosition);
+                }
+            }
+        }
+
+        else
+        {
+            writer.DeleteTextBox();
+        }
+
+        if (Input.GetMouseButtonDown(0)){
 			if(CheckAbility(inSets,false)){
-				GetComponent<Image> ().color = new Color(1,1,1,1);
+                GetComponent<Image> ().color = new Color(1,1,1,1);
 				if(playercontroller.Mode == ControlMode.ZOOM_IN_MODE){
-					//equip.cs
+					//EquippableFinder.cs
 				}else if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
-					txtInfo.text = "pick up "+pointedObject.name;
+                    //txtInfo.text = "pick up "+pointedObject.name;
+                    //Debug.Break();
 					PickUpObject(pointedObject);
 				}else{
-					//in visor man.cs
+					//InsideVisorMan.cs
 				}
 			}else if(!pointedObject.name.Equals("GROUND")){
-				txtInfo.text = pointedObject.name + " refuses to be picked up.";
+                writer.DeleteTextBox();
+                writer.WriteAtPoint(pointedObject.name + " refuses to be picked up.", textPosition);
+				//txtInfo.text = pointedObject.name + " refuses to be picked up.";
 				GetComponent<Image> ().color = new Color(1,0,0,0.5f);
 				//give cannot feedback
 			}
@@ -143,11 +187,13 @@ public class MouseControllerNew : MonoBehaviour {
 			if(CheckAbility(inSets,true)){
 				GetComponent<Image> ().color = new Color(1,1,1,1);
 				//use object
-				txtInfo.text = "Use "+pointedObject.name;
+				//txtInfo.text = "Use "+pointedObject.name;
 				//UseHandler();
 			}else{
-				//give cannot feedback
-				txtInfo.text = pointedObject.name + " refuses to be used.";
+                //give cannot feedback
+                writer.DeleteTextBox();
+                writer.WriteAtPoint(pointedObject.name + " refuses to be used.", textPosition);
+				//txtInfo.text = pointedObject.name + " refuses to be used.";
 				GetComponent<Image> ().color = new Color(1,0,0,0.5f);
 			}
 
@@ -178,12 +224,32 @@ public class MouseControllerNew : MonoBehaviour {
 
 	//do the transfer actions about the object
 	void PickUpObject(Transform pickedUpObject){
-		
+        // If this item is not yet owned by the player, then handle buying.
+        InteractionSettings intSet = pickedUpObject.GetComponentInChildren<InteractionSettings>();
+        PlayerMoneyManager moneyManager = GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>();
+        if (!intSet.isOwnedByPlayer)
+        {
+            //Debug.Log("Checking price.");
+
+            if (moneyManager.funds >= intSet.price)
+            {
+                intSet.GetPurchased();
+                writer.DeleteTextBox();
+            }
+
+            else
+            {
+                writer.WriteAtPoint("You cannot afford this " + pickedUpObject.name + "!", textPosition);
+            }
+
+            return;
+        }
+
 		if(pickedUpObject.parent != t_INROOMOBJECTS){
 			//change the parent of selected object
 
 			if(!(pickedUpObject.parent && pickedUpObject.parent.name.Equals("Equip Reference"))){
-				Debug.Log("resize");
+				//Debug.Log("resize");
 				//change scale
 				float distanceInside = Mathf.Abs(
 					Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),
@@ -203,11 +269,11 @@ public class MouseControllerNew : MonoBehaviour {
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
 			//stop gravity simulation and free rotation
-			Debug.Log("pick up "+pickedUpObject.name+" outside visor");
+			//Debug.Log("pick up "+pickedUpObject.name+" outside visor");
 
 		}else{
 
-			Debug.Log("pick up "+pickedUpObject.name+" inside visor");
+			//Debug.Log("pick up "+pickedUpObject.name+" inside visor");
 		}
 
 		//pickedUpObject.localScale = 
@@ -228,9 +294,37 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 
 	void UpdateDraggedObjectPosition(Transform draggedObject){
-		
-		//get the ray
-		Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
+
+        bool hitVisor = false;
+
+        Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] rayHits = Physics.RaycastAll(ray, 50f);
+        foreach (RaycastHit hit in rayHits)
+        {
+            if (hit.collider.tag.Equals("Visor"))
+            {
+                hitVisor = true;
+            }
+        }
+
+        string helperText = "";
+
+        if (hitVisor)
+        {
+            helperText = "Release Left Mouse Button to place " + draggedObject.name + " in your room.";
+
+        }
+        else
+        {
+            helperText = "Release Left Mouse Button to throw " + draggedObject.name + ".";
+        }
+        
+
+        if (writer.lastWrite != helperText)
+        {
+            writer.DeleteTextBox();
+            writer.WriteAtPoint(helperText, textPosition);
+        }
 
 		//update the mouse position when mouse ray intersects with the plane
 		float rayDistance = 10;
@@ -252,13 +346,13 @@ public class MouseControllerNew : MonoBehaviour {
 	void DetectPlacing(Transform draggedObject){
 		//detect click
 		if(Input.GetMouseButtonUp(0)){
-			Debug.Log("place click");
+			//Debug.Log("place click");
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 
 			if (Physics.Raycast (ray, out hit)){
 				if(hit.collider.tag.Equals("Visor")){
-					Debug.Log("place in visor");
+					//Debug.Log("place in visor");
 					//set layer to default 
 
 				}else{
@@ -268,7 +362,7 @@ public class MouseControllerNew : MonoBehaviour {
 				//set layer to default 
 				//selectedObject.gameObject.layer = 0;
 
-				Debug.Log("Player threw "+selectedObject.name);
+				//Debug.Log("Player threw "+selectedObject.name);
 				ThrowObject();
 			}
 			selectedObject.gameObject.layer = 0;
@@ -292,6 +386,8 @@ public class MouseControllerNew : MonoBehaviour {
 
 	void ThrowObject() {
 		Services.AudioManager.PlaySFX (throwClip, sfxVolume);
+
+        writer.DeleteTextBox();
 
 		Transform carriedObject = selectedObject;
 <<<<<<< HEAD

@@ -42,9 +42,8 @@ public class D_Function : MonoBehaviour {
                 Input.GetKey(useKey))
             {
                 Use();
+                currentCooldown = cooldownTimer;
             }
-
-            currentCooldown = cooldownTimer;
         }
     }
 
@@ -66,7 +65,7 @@ public class D_Function : MonoBehaviour {
 
     protected void GetDropped()
     {
-		Debug.Log("drop");
+		//Debug.Log("drop");
         if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
             Services.Player.BroadcastMessage("AbandonItem");
 
