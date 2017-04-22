@@ -162,13 +162,15 @@ public class EquippableFinder : MonoBehaviour {
         // Disable collision & gravity.
         equippedObject = equipTarget;
         //equippedObject.GetComponent<Collider>().enabled = false;
+        if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
+        // Save object's scale.
         originalScale = equippedObject.transform.localScale;
-		//Debug.Log("SetParent equipReference");
-		equippedObject.transform.SetParent(equipReference, true);
 
+        equippedObject.transform.SetParent(equipReference, true);
 
+        // Set position & parentage.
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
         {
             equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
@@ -179,7 +181,6 @@ public class EquippableFinder : MonoBehaviour {
             equippedObject.transform.rotation = equipReference.rotation;
         }
 
-        // Set position & parentage.
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
         {
             equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
@@ -191,6 +192,42 @@ public class EquippableFinder : MonoBehaviour {
             equippedObject.transform.position = equipReference.position;
         }
 
+        // Resize & reposition object so that it doesn't block the camera
+        int infinityPrevention = 0;
+        bool niceSize = false;
+        Camera myCamera = GetComponent<Camera>();
+        RaycastHit hit;
+        while (!niceSize)
+        {
+            if (Physics.Raycast(myCamera.ScreenPointToRay(new Vector3(myCamera.pixelWidth * 0.75f, myCamera.pixelHeight * 0.45f, 0f)), out hit, 5f))
+            {
+                Debug.Log("hit a thing.");
+
+                if (hit.collider.transform == equippedObject)
+                {
+                    Debug.Log("resized my thing");
+                    equippedObject.localPosition = new Vector3(
+                        equippedObject.localPosition.x,
+                        equippedObject.localPosition.y - 0.1f,
+                        equippedObject.localPosition.z - 0.1f
+                        );
+                    equippedObject.localScale *= 0.99f;
+                }
+            }
+
+            else
+            {
+                niceSize = true;
+            }
+
+            infinityPrevention += 1;
+            if (infinityPrevention > 100)
+            {
+                Debug.Log("Broke out of infinite loop.");
+                break;
+            }
+        }
+
         equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
 
@@ -200,11 +237,15 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.transform.SetParent(null);
 
         // Re-enable collision & stuff.
-		equippedObject.GetComponent<Collider>().isTrigger = false;
-        if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = false;
-        equippedObject.transform.localScale = originalScale;
+        //equippedObject.GetComponent<Collider>().isTrigger = false;
+        if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
+        if (equippedObject.GetComponent<Rigidbody>() != null)
+        {
+            equippedObject.GetComponent<Rigidbody>().isKinematic = false;
+            equippedObject.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+        }
 
-        equippedObject.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+        equippedObject.transform.localScale = originalScale;
 
         equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
     }
