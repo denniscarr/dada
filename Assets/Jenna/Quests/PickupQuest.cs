@@ -79,6 +79,7 @@ public class PickupQuest : Quest {
 		}
 
 		if (fieryGlow != null) fieryGlow.transform.position = parentObject.transform.position;
+		if (radarSound != null) radarSound.transform.position = parentObject.transform.position;
     }
 
 	public void makeTheQuest(Quest type){
