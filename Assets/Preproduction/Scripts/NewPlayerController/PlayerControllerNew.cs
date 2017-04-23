@@ -90,7 +90,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		//clickGapCount = 0f;
 		//fpController = this.GetComponent<FirstPersonController>();
 
-		mode = ControlMode.ZOOM_OUT_MODE;
+		mode = ControlMode.ZOOM_IN_MODE;
 		switch(mode){
 		case ControlMode.IN_ROOM_MODE:InitInRoomMode();break;
 		case ControlMode.ZOOM_IN_MODE:InitZoomInMode();break;

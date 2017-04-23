@@ -4,7 +4,7 @@ Shader "Mistral/Outline"
  {
      Properties 
      {
-         _Outline ( "The scale of the Outline", Range ( 0, 0.1 ) ) = 0.02
+         _Outline ( "The scale of the Outline", Range ( 0, 0.1 ) ) = 0.05
          _Factor ( "The Factor", Range ( 0, 0.1) ) = 0.02
          _Color ( "The Color of your Outline", Color ) = (1, 1, 1, 1)
      }

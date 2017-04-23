@@ -120,9 +120,6 @@ public class MouseControllerNew : MonoBehaviour {
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
 				
-				//DeoutlineTargetObject();
-				//OutlineTargetObject(hit.transform);
-
 				CheckPointedObject(hit.transform);
 				return;
 			}
@@ -131,22 +128,17 @@ public class MouseControllerNew : MonoBehaviour {
 			Debug.DrawRay(ray.origin,ray.direction);
 			if (Physics.Raycast (ray, out hit)) {
 
-//				DeoutlineTargetObject();
-//				OutlineTargetObject(hit.transform);
-
 				CheckPointedObject(hit.transform);
-			}else{
-				//DeoutlineTargetObject();
 			}
 		}
 	}
 
 	void DeoutlineTargetObject(){
-		Debug.Log("DeoutlineTargetObject");
+		//Debug.Log("DeoutlineTargetObject");
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
 				renderList[i].material.shader = Shader.Find(shaderList[i]);
-				Debug.Log(shaderList[i]);
+				//Debug.Log(shaderList[i]);
 			}
 
 			renderList.Clear();
@@ -157,21 +149,23 @@ public class MouseControllerNew : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		Debug.Log("OutlineTargetObject");
-		Renderer renderer = t_hit.GetComponent<Renderer>();
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
+		Renderer renderer = t_hit.GetComponent<Renderer>();
 		if(renderer){
 			shaderList.Add(renderer.material.shader.name);
+			Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
 			renderer.material.shader = Shader.Find("Mistral/Outline");
-		}
-		Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
-		for(int i = 0;i<renderers.Length;i++){
-			if(renderers[i]){
-				renderList.Add(renderers[i]);
-				shaderList.Add(renderers[i].material.shader.name);
-				renderers[i].material.shader = Shader.Find("Mistral/Outline");
+		}else{
+			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
+			for(int i = 0;i<renderers.Length;i++){
+				if(renderers[i]){
+					renderList.Add(renderers[i]);
+					Debug.Log(renderers[i].material.shader.name);
+					shaderList.Add(renderers[i].material.shader.name);
+					renderers[i].material.shader = Shader.Find("Mistral/Outline");
+				}
 			}
 		}
 	}
@@ -182,6 +176,10 @@ public class MouseControllerNew : MonoBehaviour {
         // HELPER TEXT STUFF:
         if (inSets != null)
         {
+
+			DeoutlineTargetObject();
+			OutlineTargetObject(pointedObject);
+
             // If the player already owns this item:
             if (inSets.isOwnedByPlayer)
             {
@@ -210,6 +208,7 @@ public class MouseControllerNew : MonoBehaviour {
 
         else
         {
+			DeoutlineTargetObject();
             writer.DeleteTextBox();
         }
 
@@ -316,8 +315,6 @@ public class MouseControllerNew : MonoBehaviour {
 				float scale = frustumHeightInside/frustumHeight;
 				pickedUpObject.localScale *= scale;
 
-			}else{
-				pickedUpObject.GetComponent<Collider>().isTrigger = false;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
@@ -444,6 +441,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 		Transform carriedObject = selectedObject;
 		selectedObject.gameObject.layer = 0;
+
 		Ray ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
 		carriedObject.position = playercontroller.m_Camera.transform.position + ray.direction*5f;
 

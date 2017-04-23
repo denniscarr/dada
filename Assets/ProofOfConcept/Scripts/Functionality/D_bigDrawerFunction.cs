@@ -16,7 +16,7 @@ public class D_bigDrawerFunction : D_Function {
 	public override void Use () {
 		base.Use ();
 
-		Vector3 pos = transform.position;
+		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
 
 		float meteorScale = Random.Range (meteorSizeMin, meteorSizeMax);
 		for (int i = 1; i<10; i++) 

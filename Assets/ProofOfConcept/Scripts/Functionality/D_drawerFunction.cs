@@ -12,7 +12,7 @@ public class D_drawerFunction : D_Function {
 	// Update is called once per frame
 	public override void Use () {
 		base.Use ();
-		Vector3 pos = transform.position;
+		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
 		Instantiate (steam, pos, Quaternion.identity);
 	}
 }
