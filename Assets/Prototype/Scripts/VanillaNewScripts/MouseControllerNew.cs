@@ -315,8 +315,6 @@ public class MouseControllerNew : MonoBehaviour {
 				float scale = frustumHeightInside/frustumHeight;
 				pickedUpObject.localScale *= scale;
 
-			}else{
-				pickedUpObject.GetComponent<Collider>().isTrigger = false;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
@@ -443,6 +441,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 		Transform carriedObject = selectedObject;
 		selectedObject.gameObject.layer = 0;
+
 		Ray ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
 		carriedObject.position = playercontroller.m_Camera.transform.position + ray.direction*5f;
 
