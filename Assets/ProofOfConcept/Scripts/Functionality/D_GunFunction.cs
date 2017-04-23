@@ -20,9 +20,13 @@ public class D_GunFunction: D_Function
 		Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
 		GameObject shoot = Instantiate (projectile[Random.Range (0, projectile.Length-1)], pos, Quaternion.identity) as GameObject;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		shoot.GetComponent<Rigidbody>().AddForce(t_player.forward * muzzleVelocity);
 =======
 		shoot.GetComponent<Rigidbody>().AddForce(transform.parent.forward * muzzleVelocity);
+>>>>>>> master
+=======
+		shoot.GetComponent<Rigidbody> ().velocity = transform.forward * muzzleVelocity;
 >>>>>>> master
     }
 }

@@ -60,7 +60,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	private Quaternion initRotation;
 	private Quaternion initCameraRotation;
 
-	private float clickGapCount;
+	//private float clickGapCount;
 	private const float CLICKGAPTIME = 0.3f;
 
 	public AudioClip pickupClip;
@@ -73,7 +73,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	private Plane draggedPlane;
 	public Transform cubeOnDraggedPlane;
-	private Vector3 inPointForPlaneFromCube;
+	//private Vector3 inPointForPlaneFromCube;
 
 
 	// Use this for initialization
@@ -82,12 +82,12 @@ public class PlayerControllerNew : MonoBehaviour {
 		initRotation = transform.rotation;
 		//Debug.Log("init");
 		initCameraRotation = UpperCamera.transform.rotation;
-		inPointForPlaneFromCube = cubeOnDraggedPlane.position;
+		//inPointForPlaneFromCube = cubeOnDraggedPlane.position;
 
         writer = GameObject.Find("Mouse").GetComponent<Writer>();
 
 		//pressGapCount = 0f;
-		clickGapCount = 0f;
+		//clickGapCount = 0f;
 		//fpController = this.GetComponent<FirstPersonController>();
 
 		mode = ControlMode.ZOOM_OUT_MODE;
