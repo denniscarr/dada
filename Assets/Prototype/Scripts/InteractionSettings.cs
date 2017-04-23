@@ -98,11 +98,8 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-<<<<<<< HEAD
-            if (transform.parent.name.Contains("New Equip Reference"))
-=======
+
             if (transform.parent.parent != null && transform.parent.parent.name.Contains("Equip Reference"))
->>>>>>> master
             {
                 return true;
             }

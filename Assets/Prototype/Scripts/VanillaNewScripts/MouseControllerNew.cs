@@ -440,11 +440,8 @@ public class MouseControllerNew : MonoBehaviour {
         writer.DeleteTextBox();
 
 		Transform carriedObject = selectedObject;
-<<<<<<< HEAD
-
-=======
 		selectedObject.gameObject.layer = 0;
->>>>>>> master
+
 		Ray ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
 		carriedObject.position = playercontroller.m_Camera.transform.position + ray.direction*5f;
 
