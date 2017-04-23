@@ -8,12 +8,16 @@ namespace UnityStandardAssets.Effects
     public class ExplosionPhysicsForce : MonoBehaviour
     {
         public float explosionForce = 4;
-
+		public AudioClip explosionClip;
+		private AudioSource source;
 
         private IEnumerator Start()
         {
             // wait one frame because some explosions instantiate debris which should then
             // be pushed by physics force
+			source = gameObject.GetComponent<AudioSource>();
+			source.PlayOneShot (explosionClip);
+
             yield return null;
 
             float multiplier = GetComponent<ParticleSystemMultiplier>().multiplier;

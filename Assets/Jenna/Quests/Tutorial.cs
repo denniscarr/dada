@@ -201,8 +201,8 @@ public class Tutorial : Quest {
 
 	}
 
-	void OnCollisionEnter (Collider col){
-		if (col.name == "Killzone") {
+	void OnCollisionEnter (Collision col){
+		if (col.gameObject.name == "Killzone") {
 			if (manager.allQuestsCompleted) {
 				jumpedOff = true;
 				if (jumpedOff = true) {

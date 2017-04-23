@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class tennisBallExplosion : MonoBehaviour {
 	public GameObject tennisExplosion;
-	public AudioClip explosionClip;
-	private AudioSource tennisSource;
+	//public AudioClip explosionClip;
+	//private AudioSource tennisSource;
 	// Use this for initialization
 	void Start () {
-		tennisSource = gameObject.GetComponent<AudioSource> ();
+		//tennisSource = gameObject.GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
@@ -18,7 +18,7 @@ public class tennisBallExplosion : MonoBehaviour {
 
 	void OnCollisionEnter (Collision collision) {
 		Instantiate (tennisExplosion, transform.position, Quaternion.identity);
-		tennisSource.PlayOneShot (explosionClip, 1);
-		Destroy (gameObject, 0.5f);
+		//tennisSource.PlayOneShot (explosionClip, 1);
+		Destroy (gameObject);
 	}
 }
