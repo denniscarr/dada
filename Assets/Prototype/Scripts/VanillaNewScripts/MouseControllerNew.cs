@@ -120,9 +120,6 @@ public class MouseControllerNew : MonoBehaviour {
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)){
 				
-				DeoutlineTargetObject();
-				OutlineTargetObject(hit.transform);
-
 				CheckPointedObject(hit.transform);
 				return;
 			}
@@ -131,12 +128,7 @@ public class MouseControllerNew : MonoBehaviour {
 			Debug.DrawRay(ray.origin,ray.direction);
 			if (Physics.Raycast (ray, out hit)) {
 
-				DeoutlineTargetObject();
-				OutlineTargetObject(hit.transform);
-
 				CheckPointedObject(hit.transform);
-			}else{
-				DeoutlineTargetObject();
 			}
 		}
 	}
@@ -184,6 +176,10 @@ public class MouseControllerNew : MonoBehaviour {
         // HELPER TEXT STUFF:
         if (inSets != null)
         {
+
+			DeoutlineTargetObject();
+			OutlineTargetObject(pointedObject);
+
             // If the player already owns this item:
             if (inSets.isOwnedByPlayer)
             {
@@ -212,6 +208,7 @@ public class MouseControllerNew : MonoBehaviour {
 
         else
         {
+			DeoutlineTargetObject();
             writer.DeleteTextBox();
         }
 

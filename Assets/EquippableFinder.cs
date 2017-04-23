@@ -194,7 +194,7 @@ public class EquippableFinder : MonoBehaviour {
 			for(int i = 0;i<renderers.Length;i++){
 				if(renderers[i]){
 					renderList.Add(renderers[i]);
-					Debug.Log(renderers[i].material.shader.name);
+					//Debug.Log(renderers[i].material.shader.name);
 					shaderList.Add(renderers[i].material.shader.name);
 					renderers[i].material.shader = Shader.Find("Mistral/Outline");
 				}
