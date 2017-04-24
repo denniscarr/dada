@@ -23,6 +23,9 @@ public class PlayerControllerNew : MonoBehaviour {
 		get{
 			return mode;
 		}
+		set{
+			mode = value;
+		}
 	}
 
 	//FirstPersonController fpController;//fps controller
