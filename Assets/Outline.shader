@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
 Shader "Mistral/Outline"
  {
@@ -37,7 +39,7 @@ Shader "Mistral/Outline"
              {
                  vertexOutput o;
  
-                 o.pos = mul ( UNITY_MATRIX_MVP, v.vertex );
+                 o.pos = UnityObjectToClipPos ( v.vertex );
                  float3 dir = normalize ( v.vertex.xyz );
                  float3 dir2 = v.normal;
                  dir = lerp ( dir, dir2, _Factor );
@@ -78,13 +80,13 @@ Shader "Mistral/Outline"
              vertexOutput vert ( appdata_full v )
              {
                  vertexOutput o;
-                 o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+                 o.pos = UnityObjectToClipPos (v.vertex);
  
                  float3 normalDirection = normalize ( mul ( float4 ( v.normal, 0.0 ), unity_WorldToObject ).xyz );
                  float3 lightDirection = normalize ( _WorldSpaceLightPos0.xyz );
                  float3 diffuseRelection = dot ( normalDirection, lightDirection );
                  o.col = fixed4 ( diffuseRelection, 1.0 ) * _LightColor0;
-                 o.pos = mul ( UNITY_MATRIX_MVP, v.vertex );
+                 o.pos = UnityObjectToClipPos ( v.vertex );
  
                  return o;
              }
