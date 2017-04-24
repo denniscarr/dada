@@ -27,9 +27,12 @@ public class D_vanillaGunFunction : D_Function {
 		if (Physics.Raycast (beamRay, out Hit, 100)) {
 			line.SetPosition (1, Hit.point);
 			GameObject atomicHit = Hit.collider.gameObject;
+			Vector3 atomicBox = atomicHit.transform.localScale;
+			Vector3 atomicPos = new Vector3 (Random.value * atomicBox.x, Random.value * atomicBox.y, Random.value * atomicBox.z);
+			atomicPos = transform.TransformPoint (atomicBox * 0.5f);
 			Destroy (atomicHit);
 			for (int i = 0; i < atomsCount; i++) {
-				Instantiate (atoms [Random.Range (0, atoms.Length - 1)], atomicHit.transform.position, Quaternion.identity);
+				Instantiate (atoms [Random.Range (0, atoms.Length - 1)], atomicPos, Quaternion.identity);
 			}
 		} else {
 			line.SetPosition(1, beamRay.GetPoint(100));	
