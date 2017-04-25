@@ -35,8 +35,7 @@ public class D_Function : MonoBehaviour {
             //}
 
             // If we're being carried by the player and the player presses the use key then get used.
-            if (intSet.
-                carryingObject != null 
+			if (intSet&& intSet.carryingObject != null 
                 && intSet.carryingObject == 
                 Services.Player.transform && 
                 Input.GetKey(useKey))

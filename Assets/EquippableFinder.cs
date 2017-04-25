@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class EquippableFinder : MonoBehaviour {
 
@@ -218,23 +219,25 @@ public class EquippableFinder : MonoBehaviour {
         // Set position & parentage.
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
         {
-            equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
+			equippedObject.transform.DOLocalRotate(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation,2.5f);
+            //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
         }
-
         else
         {
-            equippedObject.transform.rotation = equipReference.rotation;
+			equippedObject.transform.DORotateQuaternion(equipReference.rotation,2.5f);
+            //equippedObject.transform.rotation = equipReference.rotation;
         }
 
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
         {
-            equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
+			equippedObject.transform.DOLocalMove(equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition,2.5f);
+            //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
         }
-
         else
         {
 			//equippedObject.transform.localScale = equipReference.localScale;
-            equippedObject.transform.position = equipReference.position;
+			equippedObject.transform.DOMove(equipReference.position,2.5f);
+            //equippedObject.transform.position = equipReference.position;
         }
 
         // Resize & reposition object so that it doesn't block the camera
@@ -259,7 +262,6 @@ public class EquippableFinder : MonoBehaviour {
                     equippedObject.localScale *= 0.99f;
                 }
             }
-
             else
             {
                 niceSize = true;
