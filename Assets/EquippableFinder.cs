@@ -208,7 +208,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Disable collision & gravity.
         equippedObject = equipTarget;
-        equippedObject.GetComponent<Collider>().enabled = false;
+		equippedObject.GetComponent<Collider>().isTrigger = true;
         if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
@@ -285,7 +285,7 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.transform.SetParent(null);
 
         // Re-enable collision & stuff.
-        //equippedObject.GetComponent<Collider>().isTrigger = false;
+        equippedObject.GetComponent<Collider>().isTrigger = false;
         if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
         if (equippedObject.GetComponent<Rigidbody>() != null)
         {

@@ -137,7 +137,9 @@ public class MouseControllerNew : MonoBehaviour {
 		//Debug.Log("DeoutlineTargetObject");
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
-				renderList[i].material.shader = Shader.Find(shaderList[i]);
+				if(renderList[i]){
+					renderList[i].material.shader = Shader.Find(shaderList[i]);
+				}
 				//Debug.Log(shaderList[i]);
 			}
 
@@ -154,7 +156,7 @@ public class MouseControllerNew : MonoBehaviour {
 		Renderer renderer = t_hit.GetComponent<Renderer>();
 		if(renderer){
 			shaderList.Add(renderer.material.shader.name);
-			Debug.Log(renderer.material.shader.name);
+			//Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
 			renderer.material.shader = Shader.Find("Mistral/Outline");
 		}else{
@@ -279,8 +281,6 @@ public class MouseControllerNew : MonoBehaviour {
         PlayerMoneyManager moneyManager = GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>();
         if (!intSet.isOwnedByPlayer)
         {
-            //Debug.Log("Checking price.");
-
             if (moneyManager.funds >= intSet.price)
             {
                 intSet.GetPurchased();
@@ -315,6 +315,8 @@ public class MouseControllerNew : MonoBehaviour {
 				float scale = frustumHeightInside/frustumHeight;
 				pickedUpObject.localScale *= scale;
 
+			}else{
+				pickedUpObject.localScale = Vector3.one;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
@@ -415,6 +417,7 @@ public class MouseControllerNew : MonoBehaviour {
 				//Debug.Log("Player threw "+selectedObject.name);
 				ThrowObject();
 			}
+			selectedObject.GetComponent<Collider>().isTrigger = false;
 			selectedObject.gameObject.layer = 0;
 			clickGapCount = 0;
             Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
