@@ -6,6 +6,7 @@ public class D_vanillaGunFunction : D_Function {
 	private LineRenderer line;
 	public GameObject[] atoms;
     public GameObject[] molecules;
+	public GameObject key;
 	public int atomsCount = 50;
 	// Use this for initialization
 	new void Start () {
@@ -39,8 +40,8 @@ public class D_vanillaGunFunction : D_Function {
                 Destroy(atomicHit);
                 for (int i = 0; i < atomsCount; i++)
                 {
-                    Instantiate(atoms[Random.Range(0, atoms.Length - 1)], atomicPos, Quaternion.identity);
-                    Instantiate(molecules[Random.Range(0, molecules.Length - 1)], atomicPos, Quaternion.identity);
+                    Instantiate(atoms[Random.Range(0, atoms.Length)], atomicPos, Quaternion.identity);
+                    Instantiate(molecules[Random.Range(0, molecules.Length)], atomicPos, Quaternion.identity);
                 }
             }
             line.SetPosition(1, Hit.point);

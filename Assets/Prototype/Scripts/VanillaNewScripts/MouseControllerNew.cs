@@ -12,33 +12,35 @@ public enum InteractionMode{
 
 public class MouseControllerNew : MonoBehaviour {
 
-	public float throwForce = 100f;
-	private Camera UpperCamera;
+    public float throwForce = 100f;
+    private Camera UpperCamera;
 
-	//InterationState state;
-	InteractionMode mode;
-	//store the selected object, which will be null after deselecting
-	Transform selectedObject;
+    //InterationState state;
+    InteractionMode mode;
+    //store the selected object, which will be null after deselecting
+    Transform selectedObject;
 
-	//inpoint get from the reference cube for dragging plane, which is visible at the scene but hide later
-	Plane draggedPlane;
-	public Transform cubeOnDraggedPlane;
-	public Transform t_INROOMOBJECTS;
-	public PlayerControllerNew playercontroller;
-	Vector3 inPointForPlaneFromCube;
+    //inpoint get from the reference cube for dragging plane, which is visible at the scene but hide later
+    Plane draggedPlane;
+    public Transform cubeOnDraggedPlane;
+    public Transform t_INROOMOBJECTS;
+    public PlayerControllerNew playercontroller;
+    Vector3 inPointForPlaneFromCube;
 
-	//count the time between pickup and place,prevent from vaild click repeatly in a second
-	float clickGapCount;
+    //count the time between pickup and place,prevent from vaild click repeatly in a second
+    float clickGapCount;
 
-	//For Sound Effects
-	//CS_PlaySFX sfxScript;
-	public AudioClip pickupClip;
-	public AudioClip throwClip;
-	public float sfxVolume = 0.1f;
+    //For Sound Effects
+    //CS_PlaySFX sfxScript;
+    public AudioClip pickupClip;
+    public AudioClip throwClip;
+    public float sfxVolume = 0.1f;
 
-	public Text txtInfo;
+    public Text txtInfo;
     Writer writer;
     [SerializeField] Vector3 textPosition;
+
+    string lastCursorName;
 
 	float CLICKGAPTIME = 0.3f;
 	public Shader outlineShader;
@@ -137,7 +139,9 @@ public class MouseControllerNew : MonoBehaviour {
 		//Debug.Log("DeoutlineTargetObject");
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
-				renderList[i].material.shader = Shader.Find(shaderList[i]);
+				if(renderList[i]){
+					renderList[i].material.shader = Shader.Find(shaderList[i]);
+				}
 				//Debug.Log(shaderList[i]);
 			}
 
@@ -154,7 +158,7 @@ public class MouseControllerNew : MonoBehaviour {
 		Renderer renderer = t_hit.GetComponent<Renderer>();
 		if(renderer){
 			shaderList.Add(renderer.material.shader.name);
-			Debug.Log(renderer.material.shader.name);
+			//Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
 			renderer.material.shader = Shader.Find("Mistral/Outline");
 		}else{
@@ -195,6 +199,7 @@ public class MouseControllerNew : MonoBehaviour {
                 // If the player has enough money to purchase:
                 if (GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds >= inSets.price)
                 {
+                    ChangeCursor("buying");
                     writer.WriteAtPoint("Press Left Mouse Button to purchase " + pointedObject.name + " for $" + pointedObject.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
                 }
 
@@ -210,6 +215,7 @@ public class MouseControllerNew : MonoBehaviour {
         {
 			DeoutlineTargetObject();
             writer.DeleteTextBox();
+            ChangeCursor("idle");
         }
 
         if (Input.GetMouseButtonDown(0)){
@@ -279,8 +285,6 @@ public class MouseControllerNew : MonoBehaviour {
         PlayerMoneyManager moneyManager = GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>();
         if (!intSet.isOwnedByPlayer)
         {
-            //Debug.Log("Checking price.");
-
             if (moneyManager.funds >= intSet.price)
             {
                 intSet.GetPurchased();
@@ -315,6 +319,8 @@ public class MouseControllerNew : MonoBehaviour {
 				float scale = frustumHeightInside/frustumHeight;
 				pickedUpObject.localScale *= scale;
 
+			}else{
+				pickedUpObject.localScale = Vector3.one;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
 
@@ -415,6 +421,7 @@ public class MouseControllerNew : MonoBehaviour {
 				//Debug.Log("Player threw "+selectedObject.name);
 				ThrowObject();
 			}
+			selectedObject.GetComponent<Collider>().isTrigger = false;
 			selectedObject.gameObject.layer = 0;
 			clickGapCount = 0;
             Rigidbody body = selectedObject.GetComponentInChildren<Rigidbody>();
@@ -478,6 +485,20 @@ public class MouseControllerNew : MonoBehaviour {
 		selectedObject = null;
 		//change state back
 		//state = InterationState.NONE_SELECTED_STATE;
-
 	}
+
+    void ChangeCursor(string cursorName)
+    {
+        if (cursorName == lastCursorName) return;
+
+        // Set all animator bools to false.
+        Animator myAnimator = GetComponent<Animator>();
+        myAnimator.SetBool("idle", false);
+        myAnimator.SetBool("buying", false);
+        myAnimator.SetBool("equip", false);
+
+        myAnimator.SetBool(cursorName, true);
+
+        lastCursorName = cursorName;
+    }
 }
