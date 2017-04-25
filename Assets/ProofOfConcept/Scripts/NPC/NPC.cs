@@ -48,6 +48,10 @@ public class NPC : MonoBehaviour {
     [SerializeField] float hateProbability = 0.04f; // The probability that I will hate an object if I see it.
     List<string> hatedObjects;  // The name of objects that I hate.
 
+    // NAMES
+    string[] firstNames = { "Kuzman", "Nika", "Rhett", "Helmond", "Abner", "Dragan", "Atilla", "Jason", "Ron", "Paul", "Alain", "Shankar", "Alice", "Catherine", "Teodosio", "Sofija", "Maria", "Leopold", "Kojo", "Prakash", "Deepa", "Julius", "Rajni", "Adele", "Murali", "Vincent", "Lucretia", "Adam", "Stefania", "Nikolai", "Benjamin", "Amir", "Marcella", "Oluwafunmilayo", "Vivek", "Jo", "Makeda", "Nadia", "Wilhelm", "Arthur", "Petrus", "Agustina", "Marcio", "Corey", "Milan", "Mel", "Anuva", "Christopher", "Chao", "Andrew", "David", "Morgan", "Shiyun", "Longxiao", "Steven", "Timothy", "Wei", "Mark", "Pontius", "Wei", "Jing", "Aviv", "Guiying", "Germana", "Rajnish", "Clay", "Joao", "Jose", "Caetano", "Gal", "Erasmo", "Antonio", "Desmond", "Ella", "Billie", "Elizabeth", "Natalia", "Lydia", "Alejandro", "Ernesto", "Fernando", "Patricio", "Erkin", "Selda", "Hellen", "Joni", "Mayra"};
+    string[] surnames = { "Hummel", "Tirrell", "San Nicolas", "Wallis", "Thorn", "Buonarroti", "MacIntyre", "Lowe", "Dahl", "Hughes", "Thompson", "Gilbert", "Slane", "Jordan", "Babatunde", "Mosconi", "Payton", "Chen", "Jin", "Liu", "Li", "Han", "Zhang", "Zeng", "Boyd", "Babineaux", "Mitchell", "Rose", "Humphrey", "Carlsen", "McLain", "Little", "Waller", "Safrata", "Kim", "Park", "Jeon", "Williams", "Aranee", "Kwan", "Petersell", "Macri", "Lantz", "Foddy", "Yang", "Summers", "Lacey", "Salucci", "Richter", "Tos", "Braband", "Dohman", "Lambert", "Borisov", "Eklund", "Nemec", "Rains", "Bronson", "Patel", "Kurosawa", "Miyamoto", "Mindwipe", "Kuti", "Koray", "Veloso", "Gilberto", "Bethania", "Carlos", "Costa", "Jobim", "Kuti", "Ramirez", "Ellington", "Lawal", "Cale", "Coltrane", "Eno"};
+
     // USED FOR PAIN & DEATH
     float _health = 100f;
     public float health
@@ -106,6 +110,9 @@ public class NPC : MonoBehaviour {
 
     void Start()
     {
+        // Give myself a name.
+        transform.parent.gameObject.name = firstNames[Random.Range(0, firstNames.Length)] + " " + surnames[Random.Range(0, surnames.Length)];
+
         ghostMaterial = Resources.Load("Materials/Ghost") as Material;
 
         if (transform.parent.GetComponent<CollisionReporter>() == null)
