@@ -12,33 +12,35 @@ public enum InteractionMode{
 
 public class MouseControllerNew : MonoBehaviour {
 
-	public float throwForce = 100f;
-	private Camera UpperCamera;
+    public float throwForce = 100f;
+    private Camera UpperCamera;
 
-	//InterationState state;
-	InteractionMode mode;
-	//store the selected object, which will be null after deselecting
-	Transform selectedObject;
+    //InterationState state;
+    InteractionMode mode;
+    //store the selected object, which will be null after deselecting
+    Transform selectedObject;
 
-	//inpoint get from the reference cube for dragging plane, which is visible at the scene but hide later
-	Plane draggedPlane;
-	public Transform cubeOnDraggedPlane;
-	public Transform t_INROOMOBJECTS;
-	public PlayerControllerNew playercontroller;
-	Vector3 inPointForPlaneFromCube;
+    //inpoint get from the reference cube for dragging plane, which is visible at the scene but hide later
+    Plane draggedPlane;
+    public Transform cubeOnDraggedPlane;
+    public Transform t_INROOMOBJECTS;
+    public PlayerControllerNew playercontroller;
+    Vector3 inPointForPlaneFromCube;
 
-	//count the time between pickup and place,prevent from vaild click repeatly in a second
-	float clickGapCount;
+    //count the time between pickup and place,prevent from vaild click repeatly in a second
+    float clickGapCount;
 
-	//For Sound Effects
-	//CS_PlaySFX sfxScript;
-	public AudioClip pickupClip;
-	public AudioClip throwClip;
-	public float sfxVolume = 0.1f;
+    //For Sound Effects
+    //CS_PlaySFX sfxScript;
+    public AudioClip pickupClip;
+    public AudioClip throwClip;
+    public float sfxVolume = 0.1f;
 
-	public Text txtInfo;
+    public Text txtInfo;
     Writer writer;
     [SerializeField] Vector3 textPosition;
+
+    string lastCursorName;
 
 	float CLICKGAPTIME = 0.3f;
 	public Shader outlineShader;
@@ -197,6 +199,7 @@ public class MouseControllerNew : MonoBehaviour {
                 // If the player has enough money to purchase:
                 if (GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds >= inSets.price)
                 {
+                    ChangeCursor("buying");
                     writer.WriteAtPoint("Press Left Mouse Button to purchase " + pointedObject.name + " for $" + pointedObject.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
                 }
 
@@ -212,6 +215,7 @@ public class MouseControllerNew : MonoBehaviour {
         {
 			DeoutlineTargetObject();
             writer.DeleteTextBox();
+            ChangeCursor("idle");
         }
 
         if (Input.GetMouseButtonDown(0)){
@@ -481,6 +485,20 @@ public class MouseControllerNew : MonoBehaviour {
 		selectedObject = null;
 		//change state back
 		//state = InterationState.NONE_SELECTED_STATE;
-
 	}
+
+    void ChangeCursor(string cursorName)
+    {
+        if (cursorName == lastCursorName) return;
+
+        // Set all animator bools to false.
+        Animator myAnimator = GetComponent<Animator>();
+        myAnimator.SetBool("idle", false);
+        myAnimator.SetBool("buying", false);
+        myAnimator.SetBool("equip", false);
+
+        myAnimator.SetBool(cursorName, true);
+
+        lastCursorName = cursorName;
+    }
 }
