@@ -21,6 +21,7 @@ public class Writer : MonoBehaviour {
     public bool dontFacePlayer = false;
 
 	Vector3 	spawnPosition;
+	Vector3		spawnPosition2;
 	string[][]	_script;
     public string lastWrite = "";
 	int 		wordIndex, lineIndex;
@@ -41,6 +42,7 @@ public class Writer : MonoBehaviour {
 		pivot.transform.localRotation = Quaternion.Euler (Vector3.zero);
 		pivot.transform.localPosition = originalPos;
 		spawnPosition = Vector3.zero;
+		spawnPosition2 = Vector3.zero;
 //		if (sourceText != null) {
 //			SetScript (sourceText.text);
 //		}
@@ -89,11 +91,11 @@ public class Writer : MonoBehaviour {
 
 		foreach (string[] s in _script) {
 			foreach (string w in s) {
-				CreateWord (spawnPosition);
+				CreateWord (spawnPosition2);
 				yield return new WaitForSeconds (delay);
 			}
 		}
-		spawnPosition = Vector3.zero;
+		spawnPosition2 = Vector3.zero;
 
 	}
 
@@ -219,7 +221,7 @@ public class Writer : MonoBehaviour {
 //		newWord.transform.LookAt(Services.Player.transform.position);
 //		newWord.transform.Rotate (0, 180, 0);
 		newWord.transform.localScale = new Vector3 (textSize, textSize, textSize);
-		spawnPosition.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
+		spawnPosition2.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
 	
 		t.fade = fade;
 
@@ -234,8 +236,8 @@ public class Writer : MonoBehaviour {
 
 		if (wordIndex > _script [stringIndex].Length -1){
 			wordIndex = 0;
-			spawnPosition.x = 0;
-			spawnPosition.y -= leading;
+			spawnPosition2.x = 0;
+			spawnPosition2.y -= leading;
 			stringIndex++;
 			if (stringIndex > _script.Length -1) {
 				stringIndex = 0;
