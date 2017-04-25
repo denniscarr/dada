@@ -21,6 +21,8 @@ public class D_starryExpolsion : D_Function {
 	public override void Use () {
 		base.Use();
 
+		ResetTransformOnTheGround();
+
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (null);
             Services.Player.BroadcastMessage("AbandonItem", SendMessageOptions.DontRequireReceiver);

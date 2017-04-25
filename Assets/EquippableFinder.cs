@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class EquippableFinder : MonoBehaviour {
 
@@ -19,7 +20,7 @@ public class EquippableFinder : MonoBehaviour {
 
     KeyCode equipKey = KeyCode.Mouse0;
     KeyCode abandonKey = KeyCode.G;
-    private bool readyToEquip = false;
+    //private bool readyToEquip = false;
     Transform equipReference;
 
     InteractionSettings intSet;
@@ -30,9 +31,13 @@ public class EquippableFinder : MonoBehaviour {
 
     Vector3 originalScale;
 
+	List<Renderer> renderList;
+	List<string> shaderList;
 
     void Start()
     {
+		renderList = new List<Renderer>();
+		shaderList = new List<string>();
         // Get references to my buddies.
         writer = GetComponent<Writer>();
         equipReference = GameObject.Find("Equip Reference").transform;
@@ -96,6 +101,10 @@ public class EquippableFinder : MonoBehaviour {
         // Show the equip prompt for the nearest object. (Just debug log for now.)
         if (nearestObject != null)
         {
+
+			DeoutlineTargetObject();
+			OutlineTargetObject(nearestObject);
+
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
                 writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
@@ -123,6 +132,7 @@ public class EquippableFinder : MonoBehaviour {
 
         else
         {
+			DeoutlineTargetObject();
             writer.DeleteTextBox();
         }
 
@@ -156,6 +166,42 @@ public class EquippableFinder : MonoBehaviour {
         }
     }
 
+	void DeoutlineTargetObject(){
+		//Debug.Log("DeoutlineTargetObject");
+		for(int i = 0; i < renderList.Count;i++){
+			renderList[i].material.shader = Shader.Find(shaderList[i]);
+			//Debug.Log(shaderList[i]);
+		}
+
+		renderList.Clear();
+		shaderList.Clear();
+	}
+
+
+	void OutlineTargetObject(Transform t_hit){
+		//Debug.Log("OutlineTargetObject");
+
+
+		renderList = new List<Renderer>();
+		shaderList = new List<string>();
+		Renderer renderer = t_hit.GetComponent<Renderer>();
+		if(renderer){
+			shaderList.Add(renderer.material.shader.name);
+			Debug.Log(renderer.material.shader.name);
+			renderList.Add(renderer);
+			renderer.material.shader = Shader.Find("Mistral/Outline");
+		}else{
+			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
+			for(int i = 0;i<renderers.Length;i++){
+				if(renderers[i]){
+					renderList.Add(renderers[i]);
+					//Debug.Log(renderers[i].material.shader.name);
+					shaderList.Add(renderers[i].material.shader.name);
+					renderers[i].material.shader = Shader.Find("Mistral/Outline");
+				}
+			}
+		}
+	}
 
     void MoveToCamera ()
     {
@@ -173,23 +219,25 @@ public class EquippableFinder : MonoBehaviour {
         // Set position & parentage.
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
         {
-            equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
+			equippedObject.transform.DOLocalRotate(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation,2.5f);
+            //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
         }
-
         else
         {
-            equippedObject.transform.rotation = equipReference.rotation;
+			equippedObject.transform.DORotateQuaternion(equipReference.rotation,2.5f);
+            //equippedObject.transform.rotation = equipReference.rotation;
         }
 
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
         {
-            equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
+			equippedObject.transform.DOLocalMove(equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition,2.5f);
+            //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
         }
-
         else
         {
 			//equippedObject.transform.localScale = equipReference.localScale;
-            equippedObject.transform.position = equipReference.position;
+			equippedObject.transform.DOMove(equipReference.position,2.5f);
+            //equippedObject.transform.position = equipReference.position;
         }
 
         // Resize & reposition object so that it doesn't block the camera
@@ -214,7 +262,6 @@ public class EquippableFinder : MonoBehaviour {
                     equippedObject.localScale *= 0.99f;
                 }
             }
-
             else
             {
                 niceSize = true;

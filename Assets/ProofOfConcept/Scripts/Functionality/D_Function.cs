@@ -10,9 +10,13 @@ public class D_Function : MonoBehaviour {
 	public float audioJitter = 0f;
     float cooldownTimer = 0.2f;
     float currentCooldown = 0.2f;
+	protected Transform LOWER_EQUIP_REFERENCE;
+	protected Transform t_player;
 
     public void Start()
     {
+		LOWER_EQUIP_REFERENCE = GameObject.Find("Equip Reference").transform;
+		t_player = Services.Player.transform.Find("Player Camera");
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
     }
 
@@ -31,8 +35,7 @@ public class D_Function : MonoBehaviour {
             //}
 
             // If we're being carried by the player and the player presses the use key then get used.
-            if (intSet.
-                carryingObject != null 
+			if (intSet&& intSet.carryingObject != null 
                 && intSet.carryingObject == 
                 Services.Player.transform && 
                 Input.GetKey(useKey))
@@ -42,6 +45,13 @@ public class D_Function : MonoBehaviour {
             }
         }
     }
+
+	public void ResetTransformOnTheGround(){
+		transform.parent.position = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition;
+
+		transform.parent.rotation = Quaternion.LookRotation(t_player.forward,t_player.up);
+
+	}
 
     public virtual void Use()
     {
