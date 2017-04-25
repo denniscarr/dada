@@ -487,7 +487,7 @@ public class MouseControllerNew : MonoBehaviour {
 		//state = InterationState.NONE_SELECTED_STATE;
 	}
 
-    void ChangeCursor(string cursorName)
+    public void ChangeCursor(string cursorName)
     {
         if (cursorName == lastCursorName) return;
 

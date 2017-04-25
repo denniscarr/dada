@@ -34,8 +34,12 @@ public class EquippableFinder : MonoBehaviour {
 	List<Renderer> renderList;
 	List<string> shaderList;
 
+    MouseControllerNew mouse;
+
     void Start()
     {
+        mouse = GameObject.Find("Mouse").GetComponent<MouseControllerNew>();
+
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
         // Get references to my buddies.
@@ -108,6 +112,7 @@ public class EquippableFinder : MonoBehaviour {
 
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
+                mouse.ChangeCursor("equip");
                 writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
@@ -119,6 +124,7 @@ public class EquippableFinder : MonoBehaviour {
                 // If the player has enough money to purchase this object.
                 if (nearestObject.GetComponentInChildren<InteractionSettings>().price < GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
                 {
+                    mouse.ChangeCursor("buying");
                     writer.WriteAtPoint("Press Left Mouse Button to purchase " + nearestObject.name + " for $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
                     buyTarget = nearestObject;
                 }
@@ -134,6 +140,7 @@ public class EquippableFinder : MonoBehaviour {
         else
         {
 			DeoutlineTargetObject();
+            mouse.ChangeCursor("idle");
             writer.DeleteTextBox();
         }
 
