@@ -29,88 +29,77 @@ public class Tutorial : Quest {
 	// temporary items
 	GameObject visor;
 	GameObject textSpawn;
-	GameObject inRoomItem;
-	GameObject worldItem;
+	GameObject questItNote2;
+	Text txtInfo;
+	GameObject colostomyBag;
+	public GameObject inRoomItem;
+	public GameObject worldItem;
 
 	// bools for the things having been done
-	bool visorEquipped;
-	bool roomEntered;
-	bool thingMoved;
-	bool visorExited;
-	bool tabPressed;
-	bool thingUsedOrMoved;
-	bool itemAdded;
-	bool jumpedOff;
-	bool finished;
+	public bool visorEquipped;
+	public bool roomEntered;
+	public bool thingMoved;
+	public bool visorExited;
+	public bool tabPressed;
+	public bool thingUsedOrMoved;
+	public bool itemAdded;
+	public bool jumpedOff;
+	public bool finished;
 
-	void OnPostRender () {
-
-		//change the text on top of the screen to "press tab"
-		// or just do a text spawn that says "press tab"
-		// need to change locations of text too
+	void Start () {
 
 		// finding the quest manager
 		manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
 
 		// player controller
-		//controller = GameObject.Find ("PlayerControllerNew");
 		controller = GameObject.Find("PlayerInRoom");
-		//Debug.Log (controller.name);
 		controller.AddComponent<QuestObject> ();
-//		GameObject nodes = GameObject.Find ("UpperNode");
-//		nodes.SetActive (false);
-
-
-//		controls = controller.GetComponent<PlayerControllerNew> ();
-//		//Debug.Log (controls.gameObject);
-//		//controls.InitZoomInMode ();
-//		//controls.ZoomOutUpdate ();
-//		controls.mode = ControlMode.ZOOM_OUT_MODE;
 
 		// quest it note
 		questItNote = Instantiate(Resources.Load ("QuestItNote")) as GameObject;
-		questItNote.transform.position = new Vector3
-			(controller.transform.position.x,
-			controller.transform.position.y + 20,
-			controller.transform.position.z + 0.5f);
 
 		// spawn text over the questitnote so they know to go to it
 		textSpawn = Instantiate (Resources.Load("TextSpawn") as GameObject);
+		textSpawn.transform.position = new Vector3 (controller.transform.position.x, controller.transform.position.y + 10, controller.transform.position.z + 3);
 		TextMesh textSpawnText = textSpawn.GetComponent<TextMesh> ();
 		textSpawnText.text = "CLICK THE NOTE!";
-		textSpawn.transform.parent = questItNote.transform;
+		//textSpawn.transform.parent = questItNote.transform;
 
 		// put the words on the note
 		text = questItNote.GetComponentInChildren<Text> ();
-		text.text = "Pick up your visor.";		// lmao silly and redundant
+		text.text = "Pick up your visor. That gray thing over there.";		// lmao silly and redundant
 
 		// quest info itself
 		title = ("Tutorial");
 		id = (666);
 		description = ("Get through the tutorial.");
 
-		// visor, rip soon
-		visor = GameObject.Find("visor");
+		GameObject level = GameObject.Find ("Level 0");
+		float highPoint = level.GetComponent<Level> ().highestPoint;
+
+		visor = Instantiate (Resources.Load ("visor", typeof(GameObject))) as GameObject;
+		visor.transform.position = new Vector3 (level.transform.position.x, level.transform.position.y + highPoint, level.transform.position.z);
+		questItNote.transform.position = visor.transform.position;
+		visor.SetActive (false);
 
 		// interaction settings, rip soon
 		intSet = visor.GetComponentInChildren<InteractionSettings> ().GetComponent<InteractionSettings>();
 
 		controls = controller.GetComponent<PlayerControllerNew> ();
-		//Debug.Log (controls.gameObject);
-		//controls.InitZoomInMode ();
-		//controls.ZoomOutUpdate ();
-		//controls.mode = ControlMode.ZOOM_OUT_MODE;
-
-		inRoomItem = GameObject.Find ("Colostomy Bag (1)");
 	}
 
 	void Update() {
 
-		// if it's equipped, do the thing
-		if (intSet.IsEquipped == true && visor.activeInHierarchy) {
-			visorPickedUp ();
-			Destroy (visor);
-			Destroy (textSpawn);
+		// if visor is equipped, then...you know, destroy everything and move to the next thing
+		//EquippableFinder finder = GameObject.Find("FindEquip").GetComponent<EquippableFinder>();
+		Transform player = GameObject.Find("Player").GetComponent<Transform>();
+
+		if (questItNote.transform.parent == GameObject.Find ("Equip Reference").transform && visorEquipped == false) {
+			visor.SetActive (true);
+		}
+
+		if (intSet._carryingObject == player) {
+			visorPickedUp();
 		}
 
 		// if it's equipped and you walk around, do the thing
@@ -118,21 +107,25 @@ public class Tutorial : Quest {
 			(Input.GetKeyDown(KeyCode.W) ||
 				Input.GetKeyDown(KeyCode.A) ||
 				Input.GetKeyDown(KeyCode.S) ||
-				Input.GetKeyDown(KeyCode.D))
-		&& !roomEntered) {
+				Input.GetKeyDown(KeyCode.D)) && !roomEntered) {
 			enterRoom ();
 		}
 
 		// once you've entered the room and picked up the thing
 		if (roomEntered) {
-			if (inRoomItem.GetComponentInChildren<InteractionSettings> ().carryingObjectCarryingObject) {
-				nowExit ();
+			//if (inRoomItem.GetComponentInChildren<InteractionSettings> ().carryingObjectCarryingObject) {
+			//if (inRoomItem != null && txtInfo.text == "Click to move bag."){
+			GameObject inroomObjects = GameObject.Find("INROOMOBJECTS");
+			if (colostomyBag.transform.parent == inroomObjects.transform || questItNote2.transform.parent == inroomObjects.transform){
+				if (Input.GetKeyDown (KeyCode.Tab)) {
+					nowExit ();
+				}
 			}
 		}
 
 		// great, now exit the visor and explore the world
 		if (thingMoved && roomEntered && !tabPressed) {
-			if (controller.GetComponent<PlayerControllerNew> ().mode == ControlMode.ZOOM_IN_MODE) {
+			if (controls.mode == ControlMode.ZOOM_IN_MODE) {
 				if (Input.GetKeyDown (KeyCode.Tab)) {
 					interactWithAThing ();
 				}
@@ -158,14 +151,17 @@ public class Tutorial : Quest {
 		// yay! step one done
 		visorEquipped = true;
 
+		// destroy it bc its now useless
+		Destroy(visor);
+		Destroy (textSpawn); // for good measure
+
 		// change the text
 		text.text = "Walk around your room. See the sights. Take your time.";
 
 		// stick the note to the screen
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 
-		//controls.InitZoomOutMode ();
-		controller.SetActive(true);
+		controls.mode = ControlMode.ZOOM_OUT_MODE;
 	}
 
 	void enterRoom(){
@@ -173,14 +169,36 @@ public class Tutorial : Quest {
 		// mark off the bool
 		roomEntered = true;
 
+		GameObject fakeVisor = GameObject.Find ("FakeVisor");
+		// spawn something for the player to use
+		colostomyBag = Instantiate (Resources.Load("Pickups/Colostomy Bag")) as GameObject;
+		colostomyBag.transform.position = new Vector3 (fakeVisor.transform.position.x, fakeVisor.transform.position.y - 2, fakeVisor.transform.position.z);
+
+		inRoomItem = colostomyBag;
+
+		// spawn a new quest it note for good measure
+		questItNote2 = Instantiate(Resources.Load("QuestItNote")) as GameObject;
+		questItNote2.transform.position = fakeVisor.transform.position;
+//		questItNote2.transform.parent = platform.transform;
+		questItNote2.GetComponentInChildren<Text> ().text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
+
 		// change the text
-		text.text = "Now that you've walked around, try to move the Colostomy Bag.";
+		text.text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
+
+		// change the in room text, too
+		txtInfo = GameObject.Find("txtInfo").GetComponent<Text>();
+		txtInfo.text = "Click to move bag.";
+
 	}
 
 	void nowExit(){
-
 		// mark off the bool
 		thingMoved = true;
+
+		inRoomItem = null;
+
+		Destroy (questItNote2);
+		txtInfo.text = "Click platform. Press tab.";
 
 		// change the text
 		text.text = "Click on the viewing platform and press tab.";
@@ -191,6 +209,8 @@ public class Tutorial : Quest {
 
 		//mark off the bool
 		tabPressed = true;
+
+		controls.mode = ControlMode.ZOOM_OUT_MODE;
 
 		// instantiate an item and put it somewhere else
 		GameObject newThing = Instantiate(Resources.Load("Pickups/Bathroom Sink", typeof(GameObject))) as GameObject;
@@ -205,9 +225,9 @@ public class Tutorial : Quest {
 		if (col.gameObject.name == "Killzone") {
 			if (manager.allQuestsCompleted) {
 				jumpedOff = true;
-				if (jumpedOff = true) {
+				if (jumpedOff == true) {
 					finished = true;
-					if (finished = true) {
+					if (finished == true) {
 						Destroy (this);
 					}
 				}

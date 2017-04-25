@@ -104,7 +104,7 @@ public class PickupQuest : Quest {
 		positionZ = parentObject.transform.position.z;
 
 		// create title to appear. THIS IS THE QUEST OBJECTIVE.
-		title = ("Drag the" + " " + parentObject.name + " " + "with the text on it"); 
+		title = ("Drag the glowing" + " " + parentObject.name + " "); 
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
@@ -117,7 +117,7 @@ public class PickupQuest : Quest {
 
 		// give it a description eh
 		// can make this more interesting later during tweaking/juicing stages
-		description = (title + " " + requiredPickups.ToString() + " " + "times and put it down again");
+		description = (title + " " + requiredPickups.ToString() + " " + "times and put it down again. Reward: $" + rewardMoney);
 
 		questTextSpawn ();
 
