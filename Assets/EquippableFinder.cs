@@ -225,7 +225,7 @@ public class EquippableFinder : MonoBehaviour {
         }
         else
         {
-			equippedObject.transform.DORotateQuaternion(equipReference.rotation,1.5f);
+			equippedObject.transform.DOLocalRotate(Vector3.zero,1.5f);
             //equippedObject.transform.rotation = equipReference.rotation;
         }
 
@@ -237,7 +237,7 @@ public class EquippableFinder : MonoBehaviour {
         else
         {
 			//equippedObject.transform.localScale = equipReference.localScale;
-			equippedObject.transform.DOMove(equipReference.position,1.5f);
+			equippedObject.transform.DOLocalMove(Vector3.zero,1.5f);
             //equippedObject.transform.position = equipReference.position;
         }
 
