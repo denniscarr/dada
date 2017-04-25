@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+guid: deb128f3666f042008093482b563fecd
+timeCreated: 1492717683
+=======
 guid: f3a514b0ee6324df88a23a184715890a
 timeCreated: 1492717791
+>>>>>>> master
 licenseType: Free
 DefaultImporter:
   userData: 

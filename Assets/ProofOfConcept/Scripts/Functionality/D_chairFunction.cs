@@ -17,6 +17,8 @@ public class D_chairFunction : D_Function {
 	public override void Use () {
 		base.Use ();
 
+		ResetTransformOnTheGround();
+
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (transform.root);
             GetDropped();
