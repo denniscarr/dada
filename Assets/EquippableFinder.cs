@@ -74,8 +74,9 @@ public class EquippableFinder : MonoBehaviour {
             ))
         {
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
-                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.GetComponentInChildren<InteractionSettings>().ableToBeCarried)
+                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped)
             {
+				Debug.Log(hit.transform.name);
                 // Get the distance of this object and, if it's the closest to the player then save it.
                 float distance = Vector3.Distance(hit.point, transform.position);
 
@@ -101,7 +102,7 @@ public class EquippableFinder : MonoBehaviour {
         // Show the equip prompt for the nearest object. (Just debug log for now.)
         if (nearestObject != null)
         {
-
+			Debug.Log("Found object: "+nearestObject);
 			DeoutlineTargetObject();
 			OutlineTargetObject(nearestObject);
 
@@ -179,7 +180,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		//Debug.Log("OutlineTargetObject");
+		Debug.Log("OutlineTargetObject");
 
 
 		renderList = new List<Renderer>();
@@ -207,7 +208,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         // Disable collision & gravity.
         equippedObject = equipTarget;
-        //equippedObject.GetComponent<Collider>().enabled = false;
+		equippedObject.GetComponent<Collider>().isTrigger = true;
         if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
         if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
 
@@ -219,24 +220,24 @@ public class EquippableFinder : MonoBehaviour {
         // Set position & parentage.
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
         {
-			equippedObject.transform.DOLocalRotate(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation,2.5f);
+			equippedObject.transform.DOLocalRotate(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation,1.5f);
             //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
         }
         else
         {
-			equippedObject.transform.DORotateQuaternion(equipReference.rotation,2.5f);
+			equippedObject.transform.DOLocalRotate(Vector3.zero,1.5f);
             //equippedObject.transform.rotation = equipReference.rotation;
         }
 
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
         {
-			equippedObject.transform.DOLocalMove(equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition,2.5f);
+			equippedObject.transform.DOLocalMove(equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition,1.5f);
             //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
         }
         else
         {
 			//equippedObject.transform.localScale = equipReference.localScale;
-			equippedObject.transform.DOMove(equipReference.position,2.5f);
+			equippedObject.transform.DOLocalMove(Vector3.zero,1.5f);
             //equippedObject.transform.position = equipReference.position;
         }
 
@@ -284,7 +285,7 @@ public class EquippableFinder : MonoBehaviour {
         equippedObject.transform.SetParent(null);
 
         // Re-enable collision & stuff.
-        //equippedObject.GetComponent<Collider>().isTrigger = false;
+        equippedObject.GetComponent<Collider>().isTrigger = false;
         if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
         if (equippedObject.GetComponent<Rigidbody>() != null)
         {
