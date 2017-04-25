@@ -51,6 +51,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
     }
 
 	public override Level Create(){
+
+		radius += 5;
+		perlinFrequency -= 0.01f;
+		height += 3;
+
 		NoiseRemapping [0] = 0;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
 			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
@@ -97,7 +102,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		Level l = newLevel.AddComponent <Level> ();
 		currentLevel = l;
 
-		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 200);
+		newLevel.transform.position = Services.Player.transform.position - (Vector3.up * 100);
 		cookieLight.transform.position = newLevel.transform.position;
 		sun.transform.position = newLevel.transform.position;
 		newLevel.name = "Level " + ManagedObjects.Count;

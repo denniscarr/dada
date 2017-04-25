@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
+using DG.Tweening;
 
 public enum ControlMode{
 	ZOOM_IN_MODE = -1,
@@ -109,21 +110,24 @@ public class PlayerControllerNew : MonoBehaviour {
 		headBob.enabled = true;
 
 		//inRoomNode.gameObject.SetActive(true);
-
-		m_Camera.fieldOfView = ZoomOutMainCameraFoV;
-		UpperCamera.fieldOfView = ZoomOutUpperCameraFoV;
+		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
+		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
+//		m_Camera.fieldOfView = ZoomOutMainCameraFoV;
+//		UpperCamera.fieldOfView = ZoomOutUpperCameraFoV;
 
 		Debug.Log(mode);
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 0.5f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 1.0f);
 
 	}
 
 	public void InitZoomInMode(){
+		m_Camera.DOFieldOfView(ZoomInMainCameraFoV,1.5f);
+		UpperCamera.DOFieldOfView(ZoomInUpperCameraFoV,1.5f);
         //Debug.Log("reset");
         writer.DeleteTextBox();
-		transform.position = initPos;
-		transform.rotation = initRotation;
+		transform.DOMove(initPos,1.0f);
+		transform.DORotateQuaternion(initRotation,1.0f);
 
 		rigidbodyFirstPersonController.enabled = false;
 		insideVisorMan.enabled = false;
@@ -132,9 +136,15 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomOutMode(){
-		transform.position = initPos;
-		transform.rotation = initRotation;
-		UpperCamera.transform.rotation = initCameraRotation;
+		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
+		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
+
+		transform.DOMove(initPos,1.0f);
+		transform.DORotateQuaternion(initRotation,1.0f);
+		UpperCamera.transform.DORotateQuaternion(initCameraRotation,1.0f);
+//		transform.position = initPos;
+//		transform.rotation = initRotation;
+//		UpperCamera.transform.rotation = initCameraRotation;
 
 		Cursor.lockState = CursorLockMode.None;
 		rigidbodyFirstPersonController.enabled = false;
@@ -142,7 +152,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		headBob.enabled = false;
 
 
-		//Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.5f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 1.0f);
 	}
 
 
@@ -168,7 +178,7 @@ public class PlayerControllerNew : MonoBehaviour {
                 if (Input.GetMouseButtonDown(0)){
 					Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
-					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.5f);
+					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 1.0f);
 					InitZoomOutMode();
 
 				}
@@ -184,15 +194,6 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	void ZoomInUpdate(){
-
-		if(UpperCamera.fieldOfView > ZoomInUpperCameraFoV){
-			UpperCamera.fieldOfView --;
-		}
-
-		if(m_Camera.fieldOfView > ZoomInMainCameraFoV){
-			m_Camera.fieldOfView --;
-			//Debug.Log("my camera fov:"+myCamera.fieldOfView);
-		}
 
 		if(Input.GetKeyDown(KeyCode.Tab)){
             //txtInfo.text = "Switch to zoom out mode";
@@ -215,25 +216,10 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	public void ZoomOutUpdate(){
 
-		if(UpperCamera.fieldOfView < ZoomOutUpperCameraFoV){
-			UpperCamera.fieldOfView ++;
-			//Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
-
-		}
-		if(m_Camera.fieldOfView < ZoomOutMainCameraFoV){
-			m_Camera.fieldOfView ++;
-			//Debug.Log("my camera fov:"+myCamera.fieldOfView);
-		}
-		//PickUpHandler();
-
 		if(Input.GetMouseButtonDown(0)){
 			//pick up or drop
 			//if player is picking up an object then drop, else pick up
-			//if(player is picking up an object){
-			//	Drop();
-			//}else{
-			//	Check the object is carriable if(yes), pickup
-
+			//mousenew will do that
 
 		}else if(Input.GetMouseButtonDown(1)){
 			//use clicked object and also the equipped object at the same time
@@ -262,13 +248,11 @@ public class PlayerControllerNew : MonoBehaviour {
 		Debug.DrawRay(ray.origin,ray.direction);
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit) && !hit.collider.tag.Equals("Visor")){
-
-
+			
 			if(!hit.collider.name.Equals("ground")){
 
 				return hit.transform;
 			}
-			//return null;
 
 		}
 		return null;
