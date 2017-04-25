@@ -74,8 +74,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			
 		levelTint = Random.ColorHSV (0, 1, 0, 0.5f, 0, 1);
 
-		Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor = levelTint;
-
 		SetGradient ();
 
 		_bitmap = new Texture2D (_width + 1, _length + 1);
@@ -132,16 +130,18 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	void Update(){
 
+		Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor = Color.Lerp(Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor, levelTint, Time.deltaTime);
+
 		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (highestPoint * 2.5f));
 		float NormalisedToHighestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = Mathf.Abs(playerHeightNormalized);
 		}
 
-////		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
 //		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 //			if(c.name != "UpperCamera" && c){
-////				c.backgroundColor = Color.Lerp (c.backgroundColor, Color.Lerp (levelTint, levelTint, playerHeightNormalized), Time.deltaTime * 3);
+//				c.backgroundColor = Color.Lerp (c.backgroundColor, Color.Lerp (levelTint, levelTint, playerHeightNormalized), Time.deltaTime * 3);
 //			}
 //		}
 //
@@ -167,7 +167,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
 //
 //				float skyCoefficient = Mathf.Pow(perlinVal, 3);
-////				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
+//				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
 //				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
 //				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
 //				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x, y) + Grayscale);
@@ -272,8 +272,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		GameObject killzone = (GameObject)Instantiate(Services.LevelGen.KillZone, Vector3.zero, Quaternion.identity);
 		killzone.transform.parent = transform;
-		killzone.transform.localScale += Vector3.right * _width * tileScale * 2;
-		killzone.transform.localScale += Vector3.forward * _length * tileScale * 2;
+		killzone.transform.localScale += Vector3.right * _width * tileScale * 100;
+		killzone.transform.localScale += Vector3.forward * _length * tileScale * 100;
 		killzone.transform.localScale += Vector3.up * _height;
 		killzone.transform.localPosition = -Vector3.up;
 	}
@@ -299,13 +299,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //				LevelObjectFactory (perlinVal, vertices [i], new Vector2 (x, y));
 
 
-				if (Vector3.Distance (vertices [i], vertices [localMaxIndex]) < 30) {
+				if (Vector3.Distance (vertices [i], vertices [localMaxIndex]) < 30 && x < _width) {
 					if (perlinVal > localMaximum) {
 						localMaximum = perlinVal;
 						localMaxIndex = i;
 					}
 				} else {
-					if (localMaximum > 0.5f) {
+					if (localMaximum > 0.75f) {
 
 						bool nearExistingMax = false;
 
