@@ -132,6 +132,7 @@ public class EquippableFinder : MonoBehaviour {
                 // If the player does not have enough money to purchase this object.
                 else
                 {
+                    mouse.ChangeCursor("cantBuy");
                     writer.WriteAtPoint("You need $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + " to purchase this " + nearestObject.gameObject.name + ".", textPosition);
                 }
             }

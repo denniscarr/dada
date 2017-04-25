@@ -189,6 +189,7 @@ public class MouseControllerNew : MonoBehaviour {
             {
                 if (inSets.ableToBeCarried)
                 {
+                    ChangeCursor("openHand");
                     writer.WriteAtPoint("Hold Left Mouse Button to pick up " + pointedObject.name + ".", textPosition);
                 }
             }
@@ -351,6 +352,8 @@ public class MouseControllerNew : MonoBehaviour {
 
 	void UpdateDraggedObjectPosition(Transform draggedObject){
 
+        ChangeCursor("closedHand");
+
         bool hitVisor = false;
 
         Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
@@ -479,8 +482,6 @@ public class MouseControllerNew : MonoBehaviour {
 
 	public void StopHoldingItemInMouse()
 	{
-		Debug.Log ("hi");
-
 		selectedObject.gameObject.layer = 0;
 		selectedObject = null;
 		//change state back
@@ -496,6 +497,9 @@ public class MouseControllerNew : MonoBehaviour {
         myAnimator.SetBool("idle", false);
         myAnimator.SetBool("buying", false);
         myAnimator.SetBool("equip", false);
+        myAnimator.SetBool("cantBuy", false);
+        myAnimator.SetBool("openHand", false);
+        myAnimator.SetBool("closedHand", false);
 
         myAnimator.SetBool(cursorName, true);
 
