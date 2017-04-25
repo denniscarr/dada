@@ -69,6 +69,23 @@ public class NPC : MonoBehaviour {
     float painThreshold = 10f;   // The collision magnitude below which health is not damaged.
     Material ghostMaterial;
 
+    // USED FOR MONEY
+    int _funds;
+    public int funds
+    {
+        get
+        {
+            return _funds;
+        }
+
+        set
+        {
+            writer.WriteSpecifiedString("Great! Now I have $" + value + ".");
+
+            _funds = value;
+        }
+    }
+
     // GENERAL USE
     float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
 
@@ -97,7 +114,9 @@ public class NPC : MonoBehaviour {
         }
 
         rb = transform.parent.GetComponent<Rigidbody>();
-		speakSource = GetComponent<AudioSource> ();
+
+        speakSource = GetComponent<AudioSource> ();
+
         // See if I have an animator before I try to use NPCAnimation.
         if (transform.parent.GetComponentInChildren<Animator>() != null && transform.parent.GetComponentInChildren<Animator>().isHuman)
         {
@@ -131,6 +150,9 @@ public class NPC : MonoBehaviour {
 
         // I always hate things that are covered in feces.
         hatedObjects.Add("Feces-Covered");
+
+        // Decide how much money I should start with.
+        _funds = Random.Range(0, 500);
 
         EvaluateSurroundings();
         currentState = BehaviorState.NormalMovement;
@@ -706,11 +728,23 @@ public class NPC : MonoBehaviour {
 
         transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
 
+        // Drop money
+        GameObject moneyPrefab = Resources.Load("Pickups/Stack of Money") as GameObject;
+        while (funds > 10)
+        {
+            GameObject newMoneyStack = Instantiate(moneyPrefab);
+
+            int newMoneyValue = Random.Range(1, funds);
+            newMoneyStack.GetComponentInChildren<MoneyFunction>().value = newMoneyValue;
+            funds -= newMoneyValue;
+
+            newMoneyStack.transform.position = transform.position + Random.insideUnitSphere;
+            newMoneyStack.GetComponent<Rigidbody>().AddExplosionForce(25f, transform.position, 1f, 0.5f, ForceMode.Impulse);
+        }
 
         // Destroy NPC AI prefab
         gameObject.SetActive(false);
     }
-
 
     public void CatchOnFire()
     {
