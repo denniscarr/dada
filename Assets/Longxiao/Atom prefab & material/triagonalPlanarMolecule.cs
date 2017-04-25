@@ -8,11 +8,11 @@ public class triagonalPlanarMolecule : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//Spawn the center atom
-		atom = GameObject.Find ("Linear molecular generator").GetComponent<linearMolecule> ().atom;
+		atom = GameObject.Find ("Vanilla's gun function").GetComponent<D_vanillaGunFunction> ().atoms;
 		GameObject centerAtom = Instantiate (atom[Random.Range(0, atom.Length-1)], transform.position, Quaternion.identity);
 
 		//Spawn bounding keys around the center atom
-		key = GameObject.Find ("Linear molecular generator").GetComponent<linearMolecule> ().key;
+		key = GameObject.Find ("Vanilla's gun function").GetComponent<D_vanillaGunFunction> ().key;
 		Vector3 key1 = centerAtom.transform.position + new Vector3(((centerAtom.transform.localScale.x) / 2)+0.4f, 0, 0);
 		GameObject boundingKey1 = Instantiate (key, key1, Quaternion.Euler(0,0,90));
 		GameObject boundingKey2 = Instantiate (key, key1, Quaternion.Euler(0,0,90));
