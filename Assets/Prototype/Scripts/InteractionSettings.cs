@@ -174,7 +174,7 @@ public class InteractionSettings : MonoBehaviour {
 
         else
         {
-            price = 100;
+            //price = 100;
         }
 
         // If I'm in my visor, then do different things to make sure bugs don't happen.
