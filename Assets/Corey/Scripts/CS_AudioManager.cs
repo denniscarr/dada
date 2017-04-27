@@ -35,6 +35,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public float objectDensity;
 
+	public float musicFaderTime = 8.0f;
+
 
 	//private static CS_AudioManager instance = null;
 
@@ -377,7 +379,7 @@ public class CS_AudioManager : MonoBehaviour {
 		if (totalObjects != 0f) {
 			newImageSpriteVol = remapRange (n_image, 0.0f, 20f, -40f, 0f);
 			newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -40f, 0f);
-			newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -40f, 0f);
+			newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -30f, 5f);
 			newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -40f, -10f);
 		}
 		
@@ -390,16 +392,16 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 		if (newInkSpriteVol != inkStemVol) {
-			dadaMixer.DOSetFloat("InkSpriteVol", newInkSpriteVol, 6.0f);
+			dadaMixer.DOSetFloat("InkSpriteVol", newInkSpriteVol, musicFaderTime);
 		}
 		if (newImageSpriteVol != imageStemVol) {
-			dadaMixer.DOSetFloat("ImageSpriteVol", newImageSpriteVol, 6.0f);
+			dadaMixer.DOSetFloat("ImageSpriteVol", newImageSpriteVol, musicFaderTime);
 		}
 		if (newNPCStemVol != npcStemVol) {
-			dadaMixer.DOSetFloat("NPCStemVol", newNPCStemVol, 6.0f);
+			dadaMixer.DOSetFloat("NPCStemVol", newNPCStemVol, musicFaderTime);
 		}
 		if (newNonPickupVol != nonPickupVol) {
-			dadaMixer.DOSetFloat("NonPickupVol", newNonPickupVol, 6.0f);
+			dadaMixer.DOSetFloat("NonPickupVol", newNonPickupVol, musicFaderTime);
 		}
 			
 
