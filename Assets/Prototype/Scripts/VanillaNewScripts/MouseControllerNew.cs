@@ -112,7 +112,6 @@ public class MouseControllerNew : MonoBehaviour {
 	void DetectSelection(){
 		//get the ray to check whether player points at visor from upper camera
 		if(selectedObject){
-			//DeoutlineTargetObject();
 			//Debug.Log("select "+selectedObject.name);
 			UpdateDraggedObjectPosition(selectedObject);
 			DetectPlacing(selectedObject);
@@ -164,7 +163,7 @@ public class MouseControllerNew : MonoBehaviour {
 		}else{
 			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
 			for(int i = 0;i<renderers.Length;i++){
-				if(renderers[i]){
+				if(renderers[i] && renderers[i].GetComponent<ParticleSystem>() == null){
 					renderList.Add(renderers[i]);
 					Debug.Log(renderers[i].material.shader.name);
 					shaderList.Add(renderers[i].material.shader.name);
