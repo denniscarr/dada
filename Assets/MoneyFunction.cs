@@ -35,7 +35,7 @@ public class MoneyFunction : D_Function {
 
     new private void Update()
     {
-        if (intSet.carryingObject.name == "Player")
+        if (intSet.carryingObject != null && intSet.carryingObject.name == "Player")
         {
             Use();
         }
