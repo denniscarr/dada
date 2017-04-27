@@ -304,26 +304,28 @@ public class MouseControllerNew : MonoBehaviour {
 			//change the parent of selected object
 
 			if(!(pickedUpObject.parent && pickedUpObject.parent.name.Equals("Equip Reference"))){
-				//Debug.Log("resize");
-				//change scale
-				float distanceInside = Mathf.Abs(
-					Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),
-						UpperCamera.transform.forward));
-				float distance = Mathf.Abs(
-					Vector3.Dot((pickedUpObject.position - playercontroller.m_Camera.transform.position),
-						playercontroller.m_Camera.transform.forward));
-				if(distance < 0){
-					Debug.Log("error");
-				}
-				float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-				float frustumHeight = distance * Mathf.Tan(playercontroller.m_Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-				float scale = frustumHeightInside/frustumHeight;
-				pickedUpObject.localScale *= scale;
+                //Debug.Log("resize");
+                //change scale
+                float distanceInside = Mathf.Abs(
+                    Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),
+                        UpperCamera.transform.forward));
+                float distance = Mathf.Abs(
+                    Vector3.Dot((pickedUpObject.position - playercontroller.m_Camera.transform.position),
+                        playercontroller.m_Camera.transform.forward));
+                if (distance < 0)
+                {
+                    Debug.Log("error");
+                }
+                float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                float frustumHeight = distance * Mathf.Tan(playercontroller.m_Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                float scale = frustumHeightInside / frustumHeight;
+                pickedUpObject.localScale *= scale;
 
 			}else{
 				pickedUpObject.localScale = Vector3.one;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
+            pickedUpObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
 
 			//stop gravity simulation and free rotation
 			//Debug.Log("pick up "+pickedUpObject.name+" outside visor");
@@ -456,8 +458,11 @@ public class MouseControllerNew : MonoBehaviour {
 		carriedObject.position = playercontroller.m_Camera.transform.position + ray.direction*5f;
 
         carriedObject.SetParent(carriedObject.GetComponentInChildren<InteractionSettings>().originalParent, true);
+        carriedObject.localScale = carriedObject.GetComponentInChildren<InteractionSettings>().savedScale;
 
-		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce*5, playercontroller.m_Camera.transform.position, 10f);
+        carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+
+        carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce*5, playercontroller.m_Camera.transform.position, 10f);
 	}
 
 	//if this object can be interacted with, return true; else return false
