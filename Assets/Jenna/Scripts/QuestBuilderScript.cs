@@ -55,8 +55,8 @@ public class QuestBuilderScript : MonoBehaviour {
 		manager.questsToComplete = levelman.levelNum + 2;
 
 		if (manager.currentCompletedQuests >= manager.questsToComplete) {
-            Debug.Log("all quests complete!");
-            Debug.Break();
+            //Debug.Log("all quests complete!");
+            //Debug.Break();
 			manager.allQuestsCompleted = true;
 		} else {
 			manager.allQuestsCompleted = false;
@@ -65,7 +65,7 @@ public class QuestBuilderScript : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Tab)){
 			if (finder.pickups.Count > 0) {
 				if (manager.questList.Count <= (Mathf.Abs (levelman.levelNum + 1))) {
-					if (manager.questList.Count >= 0) {
+					if (manager.questList.Count >= 0 && !manager.allQuestsCompleted) {
 						GeneratePickup ();
 					}
 				} else if (manager.questList.Count >= (Mathf.Abs (levelman.levelNum + 1))) {
@@ -80,6 +80,7 @@ public class QuestBuilderScript : MonoBehaviour {
 
 	// generates pickup quest
 	public void GeneratePickup() {
+
 		// pick an object for it
 		questThing = ranger % length;
 		objeto = finder.pickups [Random.Range (0, finder.pickups.Count) % finder.pickups.Count];
@@ -92,7 +93,7 @@ public class QuestBuilderScript : MonoBehaviour {
 
 		if (newQuest.progress == Quest.QuestProgress.AVAILABLE) {
 			manager.QuestRequest(objectScript);
-			Debug.Log ("quest added to list");
+			//Debug.Log ("quest added to list");
 			pickup.spawnNote ();
 		}
 
