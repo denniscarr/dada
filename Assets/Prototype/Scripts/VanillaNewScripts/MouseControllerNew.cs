@@ -34,7 +34,7 @@ public class MouseControllerNew : MonoBehaviour {
     //CS_PlaySFX sfxScript;
     public AudioClip pickupClip;
     public AudioClip throwClip;
-    public float sfxVolume = 0.1f;
+    public float sfxVolume = 0.3f;
 
     public Text txtInfo;
     Writer writer;
