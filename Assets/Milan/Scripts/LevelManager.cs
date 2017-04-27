@@ -19,11 +19,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	public float[] NoiseRemapping;
 	public float perlinFrequency = 0.02f;
 	private float xOffset, yOffset;
+	public TextAsset sourceText;
+	string[] LevelDescriptions;
 	Writer writer;
 
 	void Start()
 	{
-
+		LevelDescriptions = sourceText.text.Split(new char[] { '\n' });
 		NoiseRemapping = new float[15];
 
         //SceneManager.sceneLoaded += OnSceneChange;
@@ -53,15 +55,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	public override Level Create(){
 
 		radius += 5;
-		perlinFrequency -= 0.01f;
-		height += 3;
+		perlinFrequency += 0.020f;
+		height += 2;
 
 		NoiseRemapping [0] = 0;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
-			NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
-			while(Mathf.Abs(NoiseRemapping[i] - NoiseRemapping[i-1]) > 0.33f){
-				NoiseRemapping [i] = Random.Range (0.00f, 1.00f);
-			}
+			NoiseRemapping [i] = Random.Range (0.00f, 1-Services.IncoherenceManager.globalIncoherence);
 		}
 
 		for (int j = 3; j < props.Length; j++) {
@@ -78,7 +77,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 				if (go.GetComponentInChildren<InteractionSettings> () != null) {
 					if (go.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player.transform) {
 						if (go.GetComponentInChildren<InteractionSettings> ().transform.parent == go.transform) {
-							//Debug.Log (go.name);
 							Destroy (go);
 						}
 					}
@@ -129,9 +127,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	string SetLevelText() {
 		string line = "";
-		line += "Act " + ManagedObjects.Count + ": A Forest \n \n";
-		line += currentLevel._width + " metres by " + currentLevel._length + " metres\n";
-		line += currentLevel.NPCs + " NPCs lounge in the glade\n";
+		line += ManagedObjects.Count + " floors down \n \n";
+		line += LevelDescriptions[Random.Range(0, LevelDescriptions.Length)];
 
 		return line;
 	}
