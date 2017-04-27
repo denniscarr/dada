@@ -75,7 +75,7 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			transform.position = Input.mousePosition;
 			clickGapCount += Time.fixedDeltaTime;
@@ -155,7 +155,7 @@ public class MouseControllerNew : MonoBehaviour {
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
 		Renderer renderer = t_hit.GetComponent<Renderer>();
-		if(renderer){
+		if(renderer && renderer.GetComponent<ParticleSystem>() == null){
 			shaderList.Add(renderer.material.shader.name);
 			//Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
@@ -323,7 +323,7 @@ public class MouseControllerNew : MonoBehaviour {
 			}else{
 				pickedUpObject.localScale = Vector3.one;
 			}
-			pickedUpObject.SetParent(t_INROOMOBJECTS);
+			pickedUpObject.SetParent(t_INROOMOBJECTS,true);
             pickedUpObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
 
 			//stop gravity simulation and free rotation

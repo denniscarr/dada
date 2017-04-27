@@ -294,7 +294,7 @@ public class EquippableFinder : MonoBehaviour {
 
     public void AbandonItem()
     {
-        equippedObject.transform.SetParent(null);
+		equippedObject.transform.SetParent(transform.root);
 
         // Re-enable collision & stuff.
         equippedObject.GetComponent<Collider>().isTrigger = false;
