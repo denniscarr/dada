@@ -93,12 +93,17 @@ public class IncoherenceManager : MonoBehaviour {
 
             if (affectedObjects[i].GetComponentInChildren<InteractionSettings>() != null && Random.value <= npcChance)
             {
-                
+                TurnObjectIntoNPC(affectedObjects[i].gameObject);
             }
         }
+    }
 
 
-        //
+    void TurnObjectIntoNPC(GameObject target)
+    {
+        if (target.GetComponentInChildren<NPC>() != null) return;
+
+        Instantiate(NPCAI, target.transform);
     }
 
 
