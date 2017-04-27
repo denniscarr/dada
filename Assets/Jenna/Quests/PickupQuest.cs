@@ -211,7 +211,18 @@ public class PickupQuest : Quest {
         Debug.Log("Giving reward: " + rewardMoney);
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
 
-		if (manager != null) manager.currentCompletedQuests++;
+        if (manager != null)
+        {
+            manager.currentCompletedQuests++;
+
+            if (manager.currentCompletedQuests >= manager.questsToComplete)
+            {
+                //Debug.Log("all quests complete!");
+                //Debug.Break();
+                manager.allQuestsCompleted = true;
+            }
+        }
+
 
         //Destroy (parentObject);
         Destroy(parentObject.GetComponent<PickupQuest>());
