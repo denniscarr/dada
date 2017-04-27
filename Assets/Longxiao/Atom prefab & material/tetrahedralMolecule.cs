@@ -9,7 +9,8 @@ public class tetrahedralMolecule : MonoBehaviour {
 	void Start () {
 		//Spawn the center atom
 		atom = GameObject.Find ("Vanilla's gun function").GetComponent<D_vanillaGunFunction> ().atoms;
-		GameObject centerAtom = Instantiate (atom[Random.Range(0, atom.Length-1)], transform.position, Quaternion.identity);
+		Debug.Log(atom.Length);
+		GameObject centerAtom = Instantiate (atom[Random.Range(0, atom.Length)], transform.position, Quaternion.identity);
 
 		//Spawn bounding keys around the center atom
 		key = GameObject.Find ("Vanilla's gun function").GetComponent<D_vanillaGunFunction> ().key;
@@ -19,12 +20,13 @@ public class tetrahedralMolecule : MonoBehaviour {
 		GameObject boundingKey2 = Instantiate (key, key1, Quaternion.Euler(0,0,251));
 		GameObject boundingKey3 = Instantiate (key, key1, Quaternion.Euler(0,0,251));
 		GameObject boundingKey4 = Instantiate (key, key2, Quaternion.Euler(0,0,0));
-		boundingKey1.transform.parent = centerAtom.transform;
-		boundingKey2.transform.parent = centerAtom.transform;
-		boundingKey3.transform.parent = centerAtom.transform;
-		boundingKey4.transform.parent = centerAtom.transform;
 		boundingKey2.transform.RotateAround (centerAtom.transform.position, centerAtom.transform.up, 120);
 		boundingKey3.transform.RotateAround (centerAtom.transform.position, centerAtom.transform.up, 240);
+		boundingKey1.transform.SetParent(centerAtom.transform,true);
+		boundingKey2.transform.SetParent(centerAtom.transform,true);
+		boundingKey3.transform.SetParent(centerAtom.transform,true);
+		boundingKey4.transform.SetParent(centerAtom.transform,true);
+
 
 		//Spawn side atoms
 		GameObject sideAtom1 = Instantiate (atom[Random.Range (0, atom.Length - 1)]);

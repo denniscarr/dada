@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 	public void Init(){
 
 		Services.Prefabs = gameObject.GetComponent<PrefabManager> ();
-		Services.Quests = gameObject.GetComponent<QuestManager> ();
+		Services.Quests = GameObject.Find("QuestManager").GetComponent<QuestManager> ();
 		Services.LevelGen = gameObject.GetComponent<LevelManager> ();
 		Services.AudioManager = gameObject.GetComponent<CS_AudioManager> ();
         Services.IncoherenceManager = gameObject.GetComponent<IncoherenceManager>();
@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour {
 	}
 		
 	void Awake () {
-
 		Init ();
 	}
 

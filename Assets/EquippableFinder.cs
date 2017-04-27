@@ -202,7 +202,7 @@ public class EquippableFinder : MonoBehaviour {
 		}else{
 			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
 			for(int i = 0;i<renderers.Length;i++){
-				if(renderers[i]){
+				if(renderers[i] && renderers[i].GetComponent<ParticleSystem>() == null){
 					renderList.Add(renderers[i]);
 					//Debug.Log(renderers[i].material.shader.name);
 					shaderList.Add(renderers[i].material.shader.name);

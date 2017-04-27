@@ -16,7 +16,6 @@ public class D_smallTableFunction : D_Function {
 	public override void Use () {
 		base.Use ();
 
-		ResetTransformOnTheGround();
 		rb.AddTorque (transform.up * torque);
 		Invoke ("torque1", 0.2f);
 		Transform smallTable = GetComponentInParent<Transform> ();
