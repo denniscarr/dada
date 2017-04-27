@@ -54,6 +54,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public override Level Create(){
 
+		maxNPCs += 1;
+		maxObjects += 2;
 		radius += 5;
 		perlinFrequency += 0.020f;
 		height += 2;

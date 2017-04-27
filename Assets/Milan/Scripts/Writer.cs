@@ -220,10 +220,7 @@ public class Writer : MonoBehaviour {
 		newWord.GetComponent<TextMesh> ().color = textColor;
 		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
 		newWord.AddComponent<BoxCollider2D> ();
-//		newWord.transform.LookAt(Services.Player.transform.position);
-//		newWord.transform.Rotate (0, 180, 0);
 		newWord.transform.localScale = Vector3.one * textSize;
-		Debug.Log (newWord.GetComponent<TextMesh>().text + "is " + newWord.GetComponent<MeshRenderer> ().bounds.size.x + " wide");
 		spawnPosition2.x += newWord.GetComponent<MeshRenderer> ().bounds.size.x + tracking;
 		newWord.transform.localPosition = pos;
 		newWord.transform.localRotation = Quaternion.Euler (Vector3.zero);
