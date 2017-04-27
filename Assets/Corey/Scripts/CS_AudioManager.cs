@@ -17,7 +17,7 @@ public class CS_AudioManager : MonoBehaviour {
 	//public List<GameObject> soundableObjects;
 
 
-	//POPULATE THIS
+	//POPULATE THIS - Audio Clips
 	public AudioClip[] voiceClipPool;
 	//private List<int> voiceClipPlaylist = new List<int> ();
 	//int lastVoiceSamplePlayed = int.MaxValue;
@@ -27,6 +27,15 @@ public class CS_AudioManager : MonoBehaviour {
 	public AudioClip[] tonesClipPool;
 	public AudioClip[] confirmationTones;
 	public List<AudioClip> instClipPool;
+
+	public AudioClip equipSound;
+	public AudioClip equipSoundEnd;
+	public AudioClip dropSound;
+
+	public AudioClip pickupSound;
+	public AudioClip buySound;
+	public AudioClip getMoney;
+
 
 
 	public GameObject tonePillowObject;
