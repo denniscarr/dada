@@ -118,6 +118,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         Services.Quests.allQuestsCompleted = false;
         Services.Quests.questsToComplete = levelNum + 2;
+        GetComponent<GrailSpawner>().grailHasSpawned = false;
 
         ManagedObjects.Add (l);
 		return l;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class GrailSpawner : MonoBehaviour {
 
     [SerializeField] private GameObject grailPrefab;
-    [SerializeField] private bool grailHasSpawned = false;
+    [SerializeField] public bool grailHasSpawned = false;
 
 
     private void Update()
