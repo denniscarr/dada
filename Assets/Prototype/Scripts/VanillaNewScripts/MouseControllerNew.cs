@@ -34,7 +34,7 @@ public class MouseControllerNew : MonoBehaviour {
     //CS_PlaySFX sfxScript;
     public AudioClip pickupClip;
     public AudioClip throwClip;
-    public float sfxVolume = 0.1f;
+    public float sfxVolume = 0.3f;
 
     public Text txtInfo;
     Writer writer;
@@ -188,6 +188,7 @@ public class MouseControllerNew : MonoBehaviour {
             {
                 if (inSets.ableToBeCarried)
                 {
+                    ChangeCursor("openHand");
                     writer.WriteAtPoint("Hold Left Mouse Button to pick up " + pointedObject.name + ".", textPosition);
                 }
             }
@@ -302,26 +303,28 @@ public class MouseControllerNew : MonoBehaviour {
 			//change the parent of selected object
 
 			if(!(pickedUpObject.parent && pickedUpObject.parent.name.Equals("Equip Reference"))){
-				//Debug.Log("resize");
-				//change scale
-				float distanceInside = Mathf.Abs(
-					Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),
-						UpperCamera.transform.forward));
-				float distance = Mathf.Abs(
-					Vector3.Dot((pickedUpObject.position - playercontroller.m_Camera.transform.position),
-						playercontroller.m_Camera.transform.forward));
-				if(distance < 0){
-					Debug.Log("error");
-				}
-				float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-				float frustumHeight = distance * Mathf.Tan(playercontroller.m_Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-				float scale = frustumHeightInside/frustumHeight;
-				pickedUpObject.localScale *= scale;
+                //Debug.Log("resize");
+                //change scale
+                float distanceInside = Mathf.Abs(
+                    Vector3.Dot((inPointForPlaneFromCube - UpperCamera.transform.position),
+                        UpperCamera.transform.forward));
+                float distance = Mathf.Abs(
+                    Vector3.Dot((pickedUpObject.position - playercontroller.m_Camera.transform.position),
+                        playercontroller.m_Camera.transform.forward));
+                if (distance < 0)
+                {
+                    Debug.Log("error");
+                }
+                float frustumHeightInside = distanceInside * Mathf.Tan(UpperCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                float frustumHeight = distance * Mathf.Tan(playercontroller.m_Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                float scale = frustumHeightInside / frustumHeight;
+                pickedUpObject.localScale *= scale;
 
 			}else{
 				pickedUpObject.localScale = Vector3.one;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS);
+            pickedUpObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
 
 			//stop gravity simulation and free rotation
 			//Debug.Log("pick up "+pickedUpObject.name+" outside visor");
@@ -349,6 +352,8 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 
 	void UpdateDraggedObjectPosition(Transform draggedObject){
+
+        ChangeCursor("closedHand");
 
         bool hitVisor = false;
 
@@ -452,8 +457,11 @@ public class MouseControllerNew : MonoBehaviour {
 		carriedObject.position = playercontroller.m_Camera.transform.position + ray.direction*5f;
 
         carriedObject.SetParent(carriedObject.GetComponentInChildren<InteractionSettings>().originalParent, true);
+        carriedObject.localScale = carriedObject.GetComponentInChildren<InteractionSettings>().savedScale;
 
-		carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce*5, playercontroller.m_Camera.transform.position, 10f);
+        carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+
+        carriedObject.GetComponent<Rigidbody> ().AddExplosionForce (throwForce*5, playercontroller.m_Camera.transform.position, 10f);
 	}
 
 	//if this object can be interacted with, return true; else return false
@@ -478,15 +486,13 @@ public class MouseControllerNew : MonoBehaviour {
 
 	public void StopHoldingItemInMouse()
 	{
-		Debug.Log ("hi");
-
 		selectedObject.gameObject.layer = 0;
 		selectedObject = null;
 		//change state back
 		//state = InterationState.NONE_SELECTED_STATE;
 	}
 
-    void ChangeCursor(string cursorName)
+    public void ChangeCursor(string cursorName)
     {
         if (cursorName == lastCursorName) return;
 
@@ -495,6 +501,9 @@ public class MouseControllerNew : MonoBehaviour {
         myAnimator.SetBool("idle", false);
         myAnimator.SetBool("buying", false);
         myAnimator.SetBool("equip", false);
+        myAnimator.SetBool("cantBuy", false);
+        myAnimator.SetBool("openHand", false);
+        myAnimator.SetBool("closedHand", false);
 
         myAnimator.SetBool(cursorName, true);
 

@@ -19,11 +19,11 @@ public class MusicTrigger: MonoBehaviour {
 
 	public float baseProbability = 0.001f;
 
-	public int totalObjects = 0;
-	public int nonPickups = 0;
-	public int inkSprites = 0;
-	public int imageSprites = 0;
-	public int npcs = 0;
+	public float totalObjects = 0f;
+	public float nonPickups = 0f;
+	public float inkSprites = 0f;
+	public float imageSprites = 0f;
+	public float npcs = 0f;
 
 	// Use this for initialization
 	void Start () {
@@ -44,11 +44,11 @@ public class MusicTrigger: MonoBehaviour {
 		Collider[] collidedObjects = Physics.OverlapSphere (transform.position, overlapRadius);
 		objectSources = new List<AudioSource> ();
 
-		totalObjects = 0;
-		nonPickups = 0;
-		inkSprites = 0;
-		imageSprites = 0;
-		npcs = 0;
+		totalObjects = 0f;
+		nonPickups = 0f;
+		inkSprites = 0f;
+		imageSprites = 0f;
+		npcs = 0f;
 
 		foreach (Collider collider in collidedObjects) {
 
@@ -75,11 +75,11 @@ public class MusicTrigger: MonoBehaviour {
 
 		//Debug.Log (nonPickups);
 
-		Mathf.Clamp (imageSprites, 0f, 20f);
-		Mathf.Clamp (inkSprites, 0f, 20f);
-		Mathf.Clamp (nonPickups, 0f, 20f);
-		Mathf.Clamp (npcs, 0f, 15f);
-		Mathf.Clamp (totalObjects, 0f, 20f);
+		imageSprites = Mathf.Clamp (imageSprites, 0f, 20f);
+		inkSprites = Mathf.Clamp (inkSprites, 0f, 20f);
+		nonPickups = Mathf.Clamp (nonPickups, 0f, 20f);
+		npcs = Mathf.Clamp (npcs, 0f, 15f);
+		totalObjects = Mathf.Clamp (totalObjects, 0f, 20f);
 
 		//Debug.Log (inkSprites);
 

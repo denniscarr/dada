@@ -54,7 +54,9 @@ public class QuestBuilderScript : MonoBehaviour {
 
 		manager.questsToComplete = levelman.levelNum + 2;
 
-		if (manager.currentCompletedQuests == manager.questsToComplete) {
+		if (manager.currentCompletedQuests >= manager.questsToComplete) {
+            Debug.Log("all quests complete!");
+            Debug.Break();
 			manager.allQuestsCompleted = true;
 		} else {
 			manager.allQuestsCompleted = false;

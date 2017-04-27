@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 15d5e2f0473ef6a46a230717b5b56030
-timeCreated: 1493151864
+guid: 0b2e865d2b6172447bde915c8aae8606
+timeCreated: 1493157109
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: moneyHand_0
-    21300002: moneyHand_1
-    21300004: moneyHand_2
+    21300000: noMoneyHand_0
+    21300002: noMoneyHand_1
+    21300004: noMoneyHand_2
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: moneyHand_0
+      name: noMoneyHand_0
       rect:
         serializedVersion: 2
         x: 0
@@ -110,7 +110,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: moneyHand_1
+      name: noMoneyHand_1
       rect:
         serializedVersion: 2
         x: 0
@@ -123,7 +123,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: moneyHand_2
+      name: noMoneyHand_2
       rect:
         serializedVersion: 2
         x: 0
