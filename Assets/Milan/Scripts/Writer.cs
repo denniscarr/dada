@@ -223,14 +223,14 @@ public class Writer : MonoBehaviour {
 		newWord.transform.localScale = new Vector3 (textSize, textSize, textSize);
 		spawnPosition2.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
 	
-		t.fade = fade;
+		t.fade = false;
 
 //		if (!noRotation) {
 //			t.transform.rotation = Quaternion.Euler (rotation); 
 //		}
 
 		t.delete = delete;
-		t.fadeIn = fade;
+		t.fadeIn = false;
 		t.speed = fadeSpeed;
 		wordIndex++;
 
