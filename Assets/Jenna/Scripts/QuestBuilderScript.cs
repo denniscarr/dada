@@ -52,16 +52,6 @@ public class QuestBuilderScript : MonoBehaviour {
 		// CHANGE THIS TO BE A RANDOM ROLL
 		// AND CERTAIN NUMBERS TURN OUT TO BE GENERATING CERTAIN QUEST TYPES
 
-		manager.questsToComplete = levelman.levelNum + 2;
-
-		if (manager.currentCompletedQuests >= manager.questsToComplete) {
-            //Debug.Log("all quests complete!");
-            //Debug.Break();
-			manager.allQuestsCompleted = true;
-		} else {
-			manager.allQuestsCompleted = false;
-		}
-
 		if (Input.GetKeyDown(KeyCode.Tab)){
 			if (finder.pickups.Count > 0) {
 				if (manager.questList.Count <= (Mathf.Abs (levelman.levelNum + 1))) {

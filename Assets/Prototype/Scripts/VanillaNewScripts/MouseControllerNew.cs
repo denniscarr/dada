@@ -75,7 +75,7 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			transform.position = Input.mousePosition;
 			clickGapCount += Time.fixedDeltaTime;
@@ -112,7 +112,6 @@ public class MouseControllerNew : MonoBehaviour {
 	void DetectSelection(){
 		//get the ray to check whether player points at visor from upper camera
 		if(selectedObject){
-			//DeoutlineTargetObject();
 			//Debug.Log("select "+selectedObject.name);
 			UpdateDraggedObjectPosition(selectedObject);
 			DetectPlacing(selectedObject);
@@ -156,7 +155,7 @@ public class MouseControllerNew : MonoBehaviour {
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
 		Renderer renderer = t_hit.GetComponent<Renderer>();
-		if(renderer){
+		if(renderer && renderer.GetComponent<ParticleSystem>() == null){
 			shaderList.Add(renderer.material.shader.name);
 			//Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
@@ -164,7 +163,7 @@ public class MouseControllerNew : MonoBehaviour {
 		}else{
 			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
 			for(int i = 0;i<renderers.Length;i++){
-				if(renderers[i]){
+				if(renderers[i] && renderers[i].GetComponent<ParticleSystem>() == null){
 					renderList.Add(renderers[i]);
 					Debug.Log(renderers[i].material.shader.name);
 					shaderList.Add(renderers[i].material.shader.name);
@@ -324,7 +323,7 @@ public class MouseControllerNew : MonoBehaviour {
 			}else{
 				pickedUpObject.localScale = Vector3.one;
 			}
-			pickedUpObject.SetParent(t_INROOMOBJECTS);
+			pickedUpObject.SetParent(t_INROOMOBJECTS,true);
             pickedUpObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
 
 			//stop gravity simulation and free rotation

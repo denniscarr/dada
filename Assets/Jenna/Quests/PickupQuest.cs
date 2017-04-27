@@ -112,7 +112,7 @@ public class PickupQuest : Quest {
 
 		// add to the list of available quests on the parent object
 		if (objectScript != null) objectScript.receivableQuestIDs.Add (id);
-		manager.CheckAvailableQuests (objectScript);
+		//manager.CheckAvailableQuests (objectScript);
 		progress = Quest.QuestProgress.AVAILABLE;
 
 		// give it a description eh
@@ -211,7 +211,18 @@ public class PickupQuest : Quest {
         Debug.Log("Giving reward: " + rewardMoney);
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
 
-		if (manager != null) manager.currentCompletedQuests++;
+        if (manager != null)
+        {
+            manager.currentCompletedQuests++;
+
+            if (manager.currentCompletedQuests >= manager.questsToComplete)
+            {
+                //Debug.Log("all quests complete!");
+                //Debug.Break();
+                manager.allQuestsCompleted = true;
+            }
+        }
+
 
         //Destroy (parentObject);
         Destroy(parentObject.GetComponent<PickupQuest>());

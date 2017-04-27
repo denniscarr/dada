@@ -112,10 +112,14 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		StartCoroutine (writer.WriteText ());
 
         Services.IncoherenceManager.HandleObjects();
-		GameObject.Find ("QuestManager").SendMessage ("FindQuests");
-
 	
 		levelNum--;
+
+        GetComponent<GrailSpawner>().grailHasSpawned = false;
+        Services.Quests.allQuestsCompleted = false;
+        Services.Quests.questsToComplete = levelNum + 2;
+        GameObject.Find("QuestManager").GetComponent<QuestFinderScript>().FindQuests();
+
         ManagedObjects.Add (l);
 		return l;
 	}

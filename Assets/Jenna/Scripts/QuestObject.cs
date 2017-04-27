@@ -33,26 +33,26 @@ public class QuestObject : MonoBehaviour {
 	// not sure if necessary but hey you know could be useful for something
 	// IT IS STILL BUGGY AND NOT CHANGING, but that can be easily fixed in a real future version
 	// if we even deem this to be necessary, which I'm not convinced it is.
-	public void SetQuestMarker() {
+	//public void SetQuestMarker() {
 
-		if (QuestManager.questManager.CheckCompletedQuests (this)) { //check to see if there are any completed quests on this objct + set sprite to available
-			QuestMarker.SetActive (true);
-			theImage.sprite = questReceivableSprite;
-			theImage.color = Color.yellow;
-		} else if (QuestManager.questManager.CheckAvailableQuests (this)) { //set quest marker to active/available
-			QuestMarker.SetActive (true);
-			theImage.sprite = questAvailableSprite;
-			theImage.color = Color.magenta;
-			assigned = true;
-		} else if (QuestManager.questManager.CheckAcceptedQuests (this)) {
-			QuestMarker.SetActive (true);
-			theImage.sprite = questReceivableSprite;
-			theImage.color = Color.gray;
-		} else { //disable
-			QuestMarker.SetActive (false);
+	//	if (QuestManager.questManager.CheckCompletedQuests (this)) { //check to see if there are any completed quests on this objct + set sprite to available
+	//		QuestMarker.SetActive (true);
+	//		theImage.sprite = questReceivableSprite;
+	//		theImage.color = Color.yellow;
+	//	} else if (QuestManager.questManager.CheckAvailableQuests (this)) { //set quest marker to active/available
+	//		QuestMarker.SetActive (true);
+	//		theImage.sprite = questAvailableSprite;
+	//		theImage.color = Color.magenta;
+	//		assigned = true;
+	//	} else if (QuestManager.questManager.CheckAcceptedQuests (this)) {
+	//		QuestMarker.SetActive (true);
+	//		theImage.sprite = questReceivableSprite;
+	//		theImage.color = Color.gray;
+	//	} else { //disable
+	//		QuestMarker.SetActive (false);
 
-		}
-	}
+	//	}
+	//}
 	
 	// Update is called once per frame
 	public void Update () {

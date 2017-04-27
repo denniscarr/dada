@@ -12,7 +12,7 @@ public class D_peacockFunction : D_Function {
 	public override void Use () {
 		base.Use ();
 
-		Vector3 parentPos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition;
+		Vector3 parentPos = transform.parent.position;
 
 		foreach(Collider collider in Physics.OverlapSphere(parentPos, 10f))
         {
