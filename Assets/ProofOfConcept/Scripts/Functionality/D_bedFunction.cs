@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class D_bedFunction : D_Function {
 
-    public GameObject dweller; 
+    public GameObject[] dweller; 
 
 	// Use this for initialization
 	new void Start () {
@@ -14,6 +14,6 @@ public class D_bedFunction : D_Function {
 	// Update is called once per frame
 	public override void Use () {
 		base.Use ();
-		Instantiate (dweller, transform.position, Quaternion.identity);
+		Instantiate (dweller[Random.Range(0, dweller.Length)], transform.position, Quaternion.identity);
 	}
 }

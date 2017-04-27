@@ -24,7 +24,6 @@ public class triagonalPlanarMolecule : MonoBehaviour {
 		boundingKey3.transform.RotateAround (centerAtom.transform.position, centerAtom.transform.up, 240);
 
 		//Spawn surrounding atoms
-		//int num = Random.Range (0, atom.Length - 1);
 		GameObject sideAtom1 = Instantiate (atom[Random.Range (0, atom.Length - 1)]);
 		GameObject sideAtom2 = Instantiate (atom[Random.Range (0, atom.Length - 1)]);
 		GameObject sideAtom3 = Instantiate (atom[Random.Range (0, atom.Length - 1)]);
