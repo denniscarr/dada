@@ -112,7 +112,7 @@ public class PickupQuest : Quest {
 
 		// add to the list of available quests on the parent object
 		if (objectScript != null) objectScript.receivableQuestIDs.Add (id);
-		manager.CheckAvailableQuests (objectScript);
+		//manager.CheckAvailableQuests (objectScript);
 		progress = Quest.QuestProgress.AVAILABLE;
 
 		// give it a description eh
