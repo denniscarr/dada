@@ -10,7 +10,7 @@ Shader "Sprites/FadeableSprites" {
 	
 	SubShader {
 
-   	 	Tags {"IgnoreProjector"="True"  "Queue"="Transparent" "RenderType"="Transparent" }
+   	 	Tags {"IgnoreProjector"="True" "RenderType"="Transparent"}
     	LOD 300
  
 		Cull Off
@@ -18,10 +18,11 @@ Shader "Sprites/FadeableSprites" {
 	
         
 		CGPROGRAM
-		#pragma surface surf KRZ fullforwardshadows Alphatest:_Cutoff
+		#pragma surface surf KRZ
       
 		sampler2D _MainTex;
 		fixed4 _Color;
+		float _Cutoff;
 		float _LightCutoff;
 		uniform float _ScaleX;
         uniform float _ScaleY;
@@ -75,7 +76,7 @@ Shader "Sprites/FadeableSprites" {
 
 			float4 c;
 			c.rgb = (_LightColor0.rgb * s.Albedo) * (atten);
-			c.a = s.Alpha;
+			c.a = step(_Cutoff, s.Alpha);
 			return c;
 		}
 	
