@@ -307,6 +307,8 @@ public class EquippableFinder : MonoBehaviour {
 
         equippedObject.transform.localScale = originalScale;
 
+		Services.AudioManager.PlaySFX (Services.AudioManager.dropSound);
+
         equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
     }
 }
