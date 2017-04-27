@@ -74,13 +74,13 @@ public class EquippableFinder : MonoBehaviour {
         float nearestObjectDistance = 0f;
 
         foreach (RaycastHit hit in Physics.CapsuleCastAll(
-            transform.position + transform.forward, transform.position + transform.forward*1.5f, equipSize, transform.forward, equipRange
+            transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange
             ))
         {
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
                 !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped)
             {
-				Debug.Log(hit.transform.name);
+				//Debug.Log(hit.transform.name);
                 // Get the distance of this object and, if it's the closest to the player then save it.
                 float distance = Vector3.Distance(hit.point, transform.position);
 
@@ -106,7 +106,7 @@ public class EquippableFinder : MonoBehaviour {
         // Show the equip prompt for the nearest object. (Just debug log for now.)
         if (nearestObject != null)
         {
-			Debug.Log("Found object: "+nearestObject);
+			//Debug.Log("Found object: "+nearestObject);
 			DeoutlineTargetObject();
 			OutlineTargetObject(nearestObject);
 
@@ -167,9 +167,9 @@ public class EquippableFinder : MonoBehaviour {
         {
             MoveToCamera();
         }
-
+			
         // Abandoning equipped items.
-        if (equippedObject != null && Input.GetKeyDown(abandonKey))
+		if (equippedObject != null && Input.GetKeyDown(abandonKey))
         {
             AbandonItem();
         }
@@ -188,7 +188,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		Debug.Log("OutlineTargetObject");
+		//Debug.Log("OutlineTargetObject");
 
 
 		renderList = new List<Renderer>();
@@ -196,7 +196,7 @@ public class EquippableFinder : MonoBehaviour {
 		Renderer renderer = t_hit.GetComponent<Renderer>();
 		if(renderer){
 			shaderList.Add(renderer.material.shader.name);
-			Debug.Log(renderer.material.shader.name);
+			//Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
 			renderer.material.shader = Shader.Find("Mistral/Outline");
 		}else{
@@ -215,39 +215,43 @@ public class EquippableFinder : MonoBehaviour {
     void MoveToCamera ()
     {
         // Disable collision & gravity.
-        equippedObject = equipTarget;
-		equippedObject.GetComponent<Collider>().isTrigger = true;
-        if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
-        if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
+       
+		equipTarget.GetComponent<Collider>().isTrigger = true;
+		if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
+		if (equipTarget.GetComponent<Rigidbody>() != null) equipTarget.GetComponent<Rigidbody>().isKinematic = true;
 
         // Save object's scale.
-        originalScale = equippedObject.transform.localScale;
+		originalScale = equipTarget.transform.localScale;
 
-        equippedObject.transform.SetParent(equipReference, true);
+		equipTarget.SetParent(equipReference, true);
 
         // Set position & parentage.
-        if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
+		if (equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
         {
-			equippedObject.transform.DOLocalRotate(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation,1.5f);
+			equipTarget.DOLocalRotate(equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation,1.0f);
             //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
         }
         else
         {
-			equippedObject.transform.DOLocalRotate(Vector3.zero,1.5f);
+			equipTarget.DOLocalRotate(Vector3.zero,1.0f);
             //equippedObject.transform.rotation = equipReference.rotation;
         }
 
-        if (equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
+		if (equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
         {
-			equippedObject.transform.DOLocalMove(equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition,1.5f);
+			Debug.Log("1");
+			equipTarget.DOLocalMove(equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition,1.0f);
             //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
         }
         else
         {
+			Debug.Log("1");
 			//equippedObject.transform.localScale = equipReference.localScale;
-			equippedObject.transform.DOLocalMove(Vector3.zero,1.5f);
+			equipTarget.DOLocalMove(Vector3.zero,1.0f);
             //equippedObject.transform.position = equipReference.position;
         }
+
+		StartCoroutine("complete",equipTarget);
 
         // Resize & reposition object so that it doesn't block the camera
         int infinityPrevention = 0;
@@ -260,15 +264,15 @@ public class EquippableFinder : MonoBehaviour {
             {
                 Debug.Log("hit a thing.");
 
-                if (hit.collider.transform == equippedObject)
+				if (hit.collider.transform == equipTarget)
                 {
                     Debug.Log("resized my thing");
-                    equippedObject.localPosition = new Vector3(
-                        equippedObject.localPosition.x,
-                        equippedObject.localPosition.y - 0.1f,
-                        equippedObject.localPosition.z - 0.1f
+					equipTarget.localPosition = new Vector3(
+						equipTarget.localPosition.x,
+						equipTarget.localPosition.y - 0.1f,
+						equipTarget.localPosition.z - 0.1f
                         );
-                    equippedObject.localScale *= 0.99f;
+					equipTarget.localScale *= 0.99f;
                 }
             }
             else
@@ -284,9 +288,24 @@ public class EquippableFinder : MonoBehaviour {
             }
         }
 
-        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+		equipTarget = null;
+//		equippedObject = equipTarget;
+//		equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
 
+	IEnumerator complete(Transform _equipTarget){
+		//Debug.Log("complete "+equippedObject.name);
+		yield return new WaitForSeconds(1.0f);
+		equippedObject = _equipTarget;
+		equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+	}
+
+	void myCompleteFunction(Transform _equipTarget){
+		Debug.Log("on my complete "+equippedObject.name);
+		equippedObject = _equipTarget;
+		equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+		//return new TweenCallback();
+	}
 
     public void AbandonItem()
     {
@@ -303,6 +322,8 @@ public class EquippableFinder : MonoBehaviour {
 
         equippedObject.transform.localScale = originalScale;
 
+
         equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+		equippedObject = null;
     }
 }
