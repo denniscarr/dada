@@ -225,6 +225,10 @@ public class EquippableFinder : MonoBehaviour {
 
         equippedObject.transform.SetParent(equipReference, true);
 
+		//play equip sound effect
+
+		Services.AudioManager.PlaySFX (Services.AudioManager.equipSound);
+
         // Set position & parentage.
         if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
         {
@@ -302,6 +306,8 @@ public class EquippableFinder : MonoBehaviour {
         }
 
         equippedObject.transform.localScale = originalScale;
+
+		Services.AudioManager.PlaySFX (Services.AudioManager.dropSound);
 
         equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
     }

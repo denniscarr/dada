@@ -18,6 +18,7 @@ public class MoneyFunction : D_Function {
             _value = value;
         }
     }
+    [SerializeField] GameObject gainParticles;
 
 
     new private void Start()
@@ -29,6 +30,15 @@ public class MoneyFunction : D_Function {
         transform.parent.name = "$" + value;
 
         intSet.isOwnedByPlayer = true;
+    }
+
+
+    new private void Update()
+    {
+        if (intSet.carryingObject.name == "Player")
+        {
+            Use();
+        }
     }
 
 
@@ -50,6 +60,9 @@ public class MoneyFunction : D_Function {
         {
             intSet.carryingObject.GetComponentInChildren<NPC>().funds += value;
         }
+
+        Instantiate(gainParticles, transform.parent.position, Quaternion.Euler(270f, 0f, 0f));
+        GameObject.Find("Money Display").GetComponent<Animator>().SetTrigger("FlashGreen");
 
         Destroy(transform.parent.gameObject);
     }
