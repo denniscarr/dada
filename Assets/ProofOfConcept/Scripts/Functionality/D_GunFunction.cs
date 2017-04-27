@@ -5,6 +5,7 @@ using UnityEngine;
 public class D_GunFunction: D_Function
 {
 	public GameObject[] projectile;
+    public GameObject muzzleFlash;
 	public float muzzleVelocity = 100f;
 
     new void Start()
@@ -23,5 +24,7 @@ public class D_GunFunction: D_Function
 		shoot.GetComponent<Rigidbody>().AddForce(transform.parent.forward * muzzleVelocity);
 
 		shoot.GetComponent<Rigidbody> ().velocity = transform.forward * muzzleVelocity;
+
+        Instantiate(muzzleFlash, transform.position, Quaternion.identity);
     }
 }
