@@ -8,7 +8,8 @@ public class IncoherenceManager : MonoBehaviour {
 
     public float interactionIncrease = 0.05f;  // How much an object's incoherence increases when the player interacts with that object.
 
-    [SerializeField] float replaceObjectThreshold = 0.1f; // How high global incoherence needs to be before we start replacing interactive objects.
+    [SerializeField] float inanimateObjectNPCThreshold = 0.1f;  // How high global incoherence needs to be before we start turning random objects into NPCS.
+    [SerializeField] float replaceObjectThreshold = 0.3f; // How high global incoherence needs to be before we start replacing interactive objects.
     [SerializeField] float affectStaticObjectThreshold = 0.9f; // How high global incoherence needs to be before we start affecting all game objects (bad things will happen.)
 
     // Prefab references.
@@ -74,6 +75,7 @@ public class IncoherenceManager : MonoBehaviour {
         if (globalIncoherence < replaceObjectThreshold) return;
 
         // Get the probability that any item will be replaced.
+        float npcChance = MiscFunctions.Map(globalIncoherence, inanimateObjectNPCThreshold, 1f, 0f, 0.7f);
         float normalChance = MiscFunctions.Map(globalIncoherence, replaceObjectThreshold, 1f, 0f, 1f);
         float staticChance = MiscFunctions.Map(globalIncoherence, affectStaticObjectThreshold, 1f, 0f, 0.5f);
 
@@ -88,7 +90,15 @@ public class IncoherenceManager : MonoBehaviour {
             {
                 ReplaceObject(affectedObjects[i].gameObject);
             }
+
+            if (affectedObjects[i].GetComponentInChildren<InteractionSettings>() != null && Random.value <= npcChance)
+            {
+                
+            }
         }
+
+
+        //
     }
 
 
