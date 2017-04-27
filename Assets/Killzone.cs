@@ -14,7 +14,7 @@ public class Killzone : MonoBehaviour {
         }
 
         // If this object is not the grail, put it back on the level.
-        else
+        else if (other == Services.Player)
         {
             other.transform.position = Services.LevelGen.currentLevel.transform.position;
             other.transform.Translate(Random.Range(-20f, 20f), 40f, Random.Range(-20f, 20f));

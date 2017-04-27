@@ -146,6 +146,12 @@ public class InteractionSettings : MonoBehaviour {
 
 	void Awake()
     {
+        // Remove '(Clone)' from my name
+        if (gameObject.name.Contains("(Clone)"))
+        {
+            gameObject.name = gameObject.name.Remove(gameObject.name.Length - 7, 7);
+        }
+
         // Get my fire prfab ready.
         firePrefab = Resources.Load("Contagious Fire") as GameObject;
 
