@@ -104,7 +104,7 @@ public class PickupQuest : Quest {
 		positionZ = parentObject.transform.position.z;
 
 		// create title to appear. THIS IS THE QUEST OBJECTIVE.
-		title = ("Drag the glowing" + " " + parentObject.name + " "); 
+		title = ("Pick up the glowing" + " " + parentObject.name + " "); 
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
