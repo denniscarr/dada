@@ -49,7 +49,9 @@ public class CS_AudioManager : MonoBehaviour {
 
 	//private static CS_AudioManager instance = null;
 
+
 	[SerializeField] GameObject myPrefabSFX;
+
 
 	[SerializeField] AudioSource myAudioSource;
 
@@ -98,14 +100,7 @@ public class CS_AudioManager : MonoBehaviour {
 	//right now have 2 overloads one for just playing an SFX clip, another for pitch ctrl
 	//could make more overloads for PLaySFX in the future
 
-	public void PlaySFX (AudioClip g_SFX) {
-		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
-		t_SFX.name = "SFX_" + g_SFX.name;
-		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
-		t_SFX.GetComponent<AudioSource> ().outputAudioMixerGroup = SFXGroup;
-		t_SFX.GetComponent<AudioSource> ().Play ();
-		DestroyObject(t_SFX, g_SFX.length);
-	}
+
 
 	public void PlaySFX (AudioClip g_SFX, float g_volume = 1.0f, float g_Pitch = 1.0f) {
         if (g_SFX == null) return;
