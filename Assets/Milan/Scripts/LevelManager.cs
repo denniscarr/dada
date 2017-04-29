@@ -55,11 +55,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public override Level Create(){
 
-		maxNPCs += 1;
-		maxObjects += 2;
-		radius += 5;
-		perlinFrequency += 0.020f;
-		height += 2;
 
 		NoiseRemapping [0] = 0;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
@@ -122,6 +117,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
         Services.Quests.allQuestsCompleted = false;
         Services.Quests.questsToComplete = levelNum + 2;
         GameObject.Find("QuestManager").GetComponent<QuestFinderScript>().FindQuests();
+
+		maxNPCs += 1;
+		maxObjects += 2;
+		maxSprites += 10;
+		radius += 5;
+		perlinFrequency += 0.020f;
+		height += 1;
 
         ManagedObjects.Add (l);
 		return l;
