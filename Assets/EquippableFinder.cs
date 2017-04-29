@@ -123,7 +123,7 @@ public class EquippableFinder : MonoBehaviour {
             else
             {
                 // If the player has enough money to purchase this object.
-                if (nearestObject.GetComponentInChildren<InteractionSettings>().price < GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
+                if (nearestObject.GetComponentInChildren<InteractionSettings>().price <= GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
                 {
                     mouse.ChangeCursor("buying");
                     writer.WriteAtPoint("Press Left Mouse Button to purchase " + nearestObject.name + " for $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
