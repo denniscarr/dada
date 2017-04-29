@@ -139,5 +139,7 @@ public class IncoherenceManager : MonoBehaviour {
 
         if (totalIncoherence > globalIncoherence)
             globalIncoherence = totalIncoherence;
+
+        Debug.Log("Global incoherence: " + globalIncoherence);
     }
 }

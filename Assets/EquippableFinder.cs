@@ -358,7 +358,7 @@ public class EquippableFinder : MonoBehaviour {
 
         foreach (Transform equippedObj in equippedObjects)
         {
-            equippedObj.SetParent(transform.root);
+            equippedObj.SetParent(null);
 
             // Re-enable collision & stuff.
             equippedObj.GetComponent<Collider>().isTrigger = false;
