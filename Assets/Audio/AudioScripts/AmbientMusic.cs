@@ -8,6 +8,8 @@ public class AmbientMusic : MonoBehaviour {
 	public AudioSource[] loSource;
 	public AudioSource[] ambienceSource;
 
+	public BufferShuffler[] shufflers;
+
 	float lHue, lSat, lVal;
 
 	float hue;
@@ -18,10 +20,17 @@ public class AmbientMusic : MonoBehaviour {
 
 	[SerializeField] float crossfadeThreshold;
 
-
+	void Awake() {
+		shufflers = GetComponentsInChildren<BufferShuffler> ();
+		foreach (BufferShuffler shuffler in shufflers) {
+			shuffler.enabled = false;
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
+
+		
 
 		currentLevelColor = Services.LevelGen.currentLevel.levelTint;
 
@@ -51,7 +60,7 @@ public class AmbientMusic : MonoBehaviour {
 			float hiSatBound = ((float)(i + 1f) * (1f / (float)loSource.Length));
 
 			if (lSat >= loSatBound*0.5f && lSat < hiSatBound*0.5f) {
-				Debug.Log("lSat is " + lSat);
+				
 				loSource [i].volume = 1.0f;
 			} else {
 				loSource [i].volume = 0.0f;
@@ -84,11 +93,25 @@ public class AmbientMusic : MonoBehaviour {
 				float hiSatBound = ((float)(i + 1f) * (1f / (float)loSource.Length));
 
 				if (lSat >= loSatBound*0.5f && lSat < hiSatBound*0.5f) {
-					Debug.Log("lSat is " + lSat);
+					
 					loSource [i].volume = 1.0f;
 				} else {
 					loSource [i].volume = 0.0f;
 				}
+			}
+
+		}
+
+		if (Services.IncoherenceManager.globalIncoherence > 0.25f) {
+
+			foreach (BufferShuffler shuffler in shufflers) {
+				shuffler.enabled = true;
+				shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
+				shuffler.SecondsPerCrossfade = 0.1f;
+				float shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 1.9f);
+				shuffler.SecondsPerShuffle = 2.0f - shufflerTime;
+
+
 			}
 
 		}

@@ -142,7 +142,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Update() {
 		//AltitudeMusic ();
-
+		dadaMixer.SetFloat("Distortion", Services.IncoherenceManager.globalIncoherence);
 
 	}
 
@@ -160,63 +160,124 @@ public class CS_AudioManager : MonoBehaviour {
 
 	}
 
-//	public AudioClip[] Clips;
-//	private List<int> ClipsPlayList = new List<int>();
-//	private int lastSamplePlayed = System.Int16.MaxValue;
-//	private bool freshList = false;
-//
-//	private AudioSource mySource;
-//
-//	void Start()
-//	{
-//		; //populate the list of ints
-//		mySource = GetComponent<AudioSource>(); //get our audio source
-//	}
-//
-//	private void PlayClip() //plays a random clip
-//	{
-//		mySource.clip = PickClip(Clips, ClipsPlayList);
-//		mySource.Play();
-//	}
-//
-//
-//	void PopulateRandomList(AudioClip[] clips, List<int> playList) //shuffles the list
-//	{
-//		int i = 0;
-//		foreach (AudioClip clip in clips)
-//		{
-//			playList.Insert(Random.Range(0, i + 1), i);
-//			i++;
-//		}
-//		freshList = true;
-//	}
-//
-//	int noRepeatClipIndex(List<int> playList) //grab a new clip index & ensure we don't play the same clip twice 
-//	{
-//		int index = Random.Range(0, playList.Count - 1);
-//		int clipIndex = playList[index];
-//		if (freshList) //we only risk repetition when we have a new list
-//		{
-//			if (clipIndex == lastSamplePlayed) //if we got to the same list
-//			{
-//				return noRepeatClipIndex(playList); //just keep searching
-//			}
-//		}
-//		freshList = false; //no longer a fresh list
-//		playList.RemoveAt(index); //remove the int from the list
-//		lastSamplePlayed = clipIndex; //store the last sample played
-//		return clipIndex;
-//	}
-//
-//	AudioClip PickClip(AudioClip[] clips, List<int> playList) //pick a clip
-//	{
-//		if (playList.Count <= 0) //if we're out of ints in our list
-//		{
-//			PopulateRandomList(clips, playList); //make a new list
-//		}
-//		int clipIndex = noRepeatClipIndex(playList); //grab a new index
-//		return clips[clipIndex]; //return the clip at that index
-//	}
+
+
+	public static float remapRange(float oldValue, float oldMin, float oldMax, float newMin, float newMax )
+	{
+		float newValue = 0;
+		float oldRange = (oldMax - oldMin);
+		float newRange = (newMax - newMin);
+		newValue = (((oldValue - oldMin) * newRange) / oldRange) + newMin;
+		return newValue;
+	}
+
+	public void EqualizeStems (float n_ink, float n_image, float n_npc, float n_nonPickup, float totalObjects) {
+
+
+		float newImageSpriteVol = -60f;
+		float newInkSpriteVol = -60f;
+		float newNPCStemVol = -60f;
+		float newNonPickupVol = -60f;
+
+		if (totalObjects != 0f) {
+			newImageSpriteVol = remapRange (n_image, 0.0f, 20f, -40f, 0f);
+			newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -40f, 0f);
+			newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -30f, 5f);
+			newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -40f, -10f);
+		}
+		
+
+		inkStemVol = GetGroupLevel ("InkSpriteVol");
+		imageStemVol = GetGroupLevel ("ImageSpriteVol");
+		npcStemVol = GetGroupLevel ("NPCStemVol");
+		nonPickupVol = GetGroupLevel ("NonPickupVol");
+
+
+
+		if (newInkSpriteVol != inkStemVol) {
+			dadaMixer.DOSetFloat("InkSpriteVol", newInkSpriteVol, musicFaderTime);
+		}
+		if (newImageSpriteVol != imageStemVol) {
+			dadaMixer.DOSetFloat("ImageSpriteVol", newImageSpriteVol, musicFaderTime);
+		}
+		if (newNPCStemVol != npcStemVol) {
+			dadaMixer.DOSetFloat("NPCStemVol", newNPCStemVol, musicFaderTime);
+		}
+		if (newNonPickupVol != nonPickupVol) {
+			dadaMixer.DOSetFloat("NonPickupVol", newNonPickupVol, musicFaderTime);
+		}
+			
+
+	}
+
+	public float GetGroupLevel(string mixerGroup){
+		float value;
+		bool result =  dadaMixer.GetFloat(mixerGroup, out value);
+		if(result){
+			return value;
+		}else{
+			return 0f;
+		}
+	}
+
+	#region Graveyard
+	//	public AudioClip[] Clips;
+	//	private List<int> ClipsPlayList = new List<int>();
+	//	private int lastSamplePlayed = System.Int16.MaxValue;
+	//	private bool freshList = false;
+	//
+	//	private AudioSource mySource;
+	//
+	//	void Start()
+	//	{
+	//		; //populate the list of ints
+	//		mySource = GetComponent<AudioSource>(); //get our audio source
+	//	}
+	//
+	//	private void PlayClip() //plays a random clip
+	//	{
+	//		mySource.clip = PickClip(Clips, ClipsPlayList);
+	//		mySource.Play();
+	//	}
+	//
+	//
+	//	void PopulateRandomList(AudioClip[] clips, List<int> playList) //shuffles the list
+	//	{
+	//		int i = 0;
+	//		foreach (AudioClip clip in clips)
+	//		{
+	//			playList.Insert(Random.Range(0, i + 1), i);
+	//			i++;
+	//		}
+	//		freshList = true;
+	//	}
+	//
+	//	int noRepeatClipIndex(List<int> playList) //grab a new clip index & ensure we don't play the same clip twice 
+	//	{
+	//		int index = Random.Range(0, playList.Count - 1);
+	//		int clipIndex = playList[index];
+	//		if (freshList) //we only risk repetition when we have a new list
+	//		{
+	//			if (clipIndex == lastSamplePlayed) //if we got to the same list
+	//			{
+	//				return noRepeatClipIndex(playList); //just keep searching
+	//			}
+	//		}
+	//		freshList = false; //no longer a fresh list
+	//		playList.RemoveAt(index); //remove the int from the list
+	//		lastSamplePlayed = clipIndex; //store the last sample played
+	//		return clipIndex;
+	//	}
+	//
+	//	AudioClip PickClip(AudioClip[] clips, List<int> playList) //pick a clip
+	//	{
+	//		if (playList.Count <= 0) //if we're out of ints in our list
+	//		{
+	//			PopulateRandomList(clips, playList); //make a new list
+	//		}
+	//		int clipIndex = noRepeatClipIndex(playList); //grab a new index
+	//		return clips[clipIndex]; //return the clip at that index
+	//	}
 
 	/*
 
@@ -234,24 +295,24 @@ public class CS_AudioManager : MonoBehaviour {
 	}
 	*/
 
-//	public void AltitudeMusic() {
-//
-//		if (Services.LevelGen.currentLevel != null) {	
-//			float maxLevelHeight = ((float)Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float)Services.LevelGen.currentLevel.transform.position.y;
-//
-//			float minLevelHeight = ((float)Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale) + ((float)Services.LevelGen.height * 0.9f);
-//
-//			float normalizedHeights = (float)(Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
-//
-//			float clampedNormHeights = Mathf.Clamp (normalizedHeights, 0f, 1f);
-//
-//			float[] weights = new float[] { clampedNormHeights, 1.0f - clampedNormHeights };
-//			//Debug.Log (clampedNormHeights);
-//
-//			dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
-//		}
-//
-//	}
+	//	public void AltitudeMusic() {
+	//
+	//		if (Services.LevelGen.currentLevel != null) {	
+	//			float maxLevelHeight = ((float)Services.LevelGen.height * (float)Services.LevelGen.tileScale) + (float)Services.LevelGen.currentLevel.transform.position.y;
+	//
+	//			float minLevelHeight = ((float)Services.LevelGen.currentLevel.transform.position.y * (float)Services.LevelGen.tileScale) + ((float)Services.LevelGen.height * 0.9f);
+	//
+	//			float normalizedHeights = (float)(Services.Player.gameObject.transform.position.y - minLevelHeight) / (maxLevelHeight - minLevelHeight);
+	//
+	//			float clampedNormHeights = Mathf.Clamp (normalizedHeights, 0f, 1f);
+	//
+	//			float[] weights = new float[] { clampedNormHeights, 1.0f - clampedNormHeights };
+	//			//Debug.Log (clampedNormHeights);
+	//
+	//			dadaMixer.TransitionToSnapshots (altitudeBlend, weights, 0.01f);
+	//		}
+	//
+	//	}
 
 
 	//================================================================================
@@ -364,64 +425,6 @@ public class CS_AudioManager : MonoBehaviour {
 	//
 	//	}
 	*/
-
-	float remapRange(float oldValue, float oldMin, float oldMax, float newMin, float newMax )
-	{
-		float newValue = 0;
-		float oldRange = (oldMax - oldMin);
-		float newRange = (newMax - newMin);
-		newValue = (((oldValue - oldMin) * newRange) / oldRange) + newMin;
-		return newValue;
-	}
-
-	public void EqualizeStems (float n_ink, float n_image, float n_npc, float n_nonPickup, float totalObjects) {
-
-
-		float newImageSpriteVol = -60f;
-		float newInkSpriteVol = -60f;
-		float newNPCStemVol = -60f;
-		float newNonPickupVol = -60f;
-
-		if (totalObjects != 0f) {
-			newImageSpriteVol = remapRange (n_image, 0.0f, 20f, -40f, 0f);
-			newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -40f, 0f);
-			newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -30f, 5f);
-			newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -40f, -10f);
-		}
-		
-
-		inkStemVol = GetGroupLevel ("InkSpriteVol");
-		imageStemVol = GetGroupLevel ("ImageSpriteVol");
-		npcStemVol = GetGroupLevel ("NPCStemVol");
-		nonPickupVol = GetGroupLevel ("NonPickupVol");
-
-
-
-		if (newInkSpriteVol != inkStemVol) {
-			dadaMixer.DOSetFloat("InkSpriteVol", newInkSpriteVol, musicFaderTime);
-		}
-		if (newImageSpriteVol != imageStemVol) {
-			dadaMixer.DOSetFloat("ImageSpriteVol", newImageSpriteVol, musicFaderTime);
-		}
-		if (newNPCStemVol != npcStemVol) {
-			dadaMixer.DOSetFloat("NPCStemVol", newNPCStemVol, musicFaderTime);
-		}
-		if (newNonPickupVol != nonPickupVol) {
-			dadaMixer.DOSetFloat("NonPickupVol", newNonPickupVol, musicFaderTime);
-		}
-			
-
-	}
-
-	public float GetGroupLevel(string mixerGroup){
-		float value;
-		bool result =  dadaMixer.GetFloat(mixerGroup, out value);
-		if(result){
-			return value;
-		}else{
-			return 0f;
-		}
-	}
-
+	#endregion
 
 }
