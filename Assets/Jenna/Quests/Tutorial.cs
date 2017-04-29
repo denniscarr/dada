@@ -83,7 +83,7 @@ public class Tutorial : Quest {
 		visor.SetActive (false);
 
 		// interaction settings, rip soon
-		intSet = visor.GetComponentInChildren<InteractionSettings> ().GetComponent<InteractionSettings>();
+		intSet = visor.GetComponentInChildren<InteractionSettings> ();
 
 		controls = controller.GetComponent<PlayerControllerNew> ();
 	}
