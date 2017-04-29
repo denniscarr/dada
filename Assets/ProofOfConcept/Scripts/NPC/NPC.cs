@@ -756,5 +756,7 @@ public class NPC : MonoBehaviour {
     public void CatchOnFire()
     {
         writer.WriteSpecifiedString("Argh! I'm on fire!");
+		speakSource.clip = Services.AudioManager.NPCOnFire;
+		speakSource.Play ();
     }
 }
