@@ -7,6 +7,7 @@ public class IncoherenceManager : MonoBehaviour {
     public float globalIncoherence = 0.0f;
 
     public float interactionIncrease = 0.05f;  // How much an object's incoherence increases when the player interacts with that object.
+    public float questIncrease = 0.1f;
 
     [SerializeField] float inanimateObjectNPCThreshold = 0.1f;  // How high global incoherence needs to be before we start turning random objects into NPCS.
     [SerializeField] float replaceObjectThreshold = 0.3f; // How high global incoherence needs to be before we start replacing interactive objects.

@@ -229,6 +229,8 @@ public class PickupQuest : Quest {
         Destroy(fieryGlow);
 		Destroy (radarSound);
 
+        if (parentObject.GetComponentInChildren<InteractionSettings>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
+
         completed = true;
     }
 }
