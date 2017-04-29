@@ -25,7 +25,8 @@ public class InteractionSettings : MonoBehaviour {
             //        {
             //return false;
             //        }
-            transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+            transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += 
+                Services.IncoherenceManager.interactionIncrease;
 
             if (!isOwnedByPlayer && price > GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
             {

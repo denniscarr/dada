@@ -48,13 +48,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		if (Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
-//			if (currentLevel != null) currentLevel.enabled = false;
+            //			if (currentLevel != null) currentLevel.enabled = false;
+            Services.IncoherenceManager.TallyIncoherence();
             Create();
         }
     }
 
 	public override Level Create(){
-
 
 		NoiseRemapping [0] = 0;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
