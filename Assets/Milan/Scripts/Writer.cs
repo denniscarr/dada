@@ -5,6 +5,7 @@ public class Writer : MonoBehaviour {
 
 	public Color textColor = Color.white;
 	public float lineLength = 3f;
+	public float GlitchTextThreshold = 0.3f;
     float lineSpacing = 1f;
     public float textSize = 0.1f;
 	public float tracking = 0.1f;
@@ -151,21 +152,24 @@ public class Writer : MonoBehaviour {
         permaText = textContainer.transform;
         textContainer.transform.position = basePosition;
 
-        while (wordIndex < _script [stringIndex].Length)
-        {
-            // Instantiate the text object.
-            GameObject newWord = (GameObject) Instantiate(textPrefab, basePosition, Quaternion.identity);
-            newWord.transform.parent = textContainer.transform;
+		while (wordIndex < _script [stringIndex].Length) {
+			// Instantiate the text object.
+			GameObject newWord = (GameObject)Instantiate (textPrefab, basePosition, Quaternion.identity);
+			newWord.transform.parent = textContainer.transform;
 
-            // Set styling & text for the next word.
-            TextStyling textStyling = newWord.GetComponent<TextStyling>();
-            textStyling.setText(_script[stringIndex][wordIndex]);
-            Font currentFont = fonts[Random.Range(0, fonts.Length - 1)];
+			// Set styling & text for the next word.
+			TextStyling textStyling = newWord.GetComponent<TextStyling> ();
+			textStyling.setText (_script [stringIndex] [wordIndex]);
+			Font currentFont = fonts [Random.Range (0, fonts.Length - 1)];
 
-            newWord.GetComponent<TextMesh>().font = currentFont;
-            newWord.GetComponent<TextMesh>().color = textColor;
-            newWord.GetComponent<Renderer>().sharedMaterial = currentFont.material;
-
+			newWord.GetComponent<TextMesh> ().font = currentFont;
+			newWord.GetComponent<TextMesh> ().color = textColor;
+			float glitchChance = MiscFunctions.Map (Services.IncoherenceManager.globalIncoherence, GlitchTextThreshold, 1f, 0f, 1f); 
+			if (glitchChance >= GlitchTextThreshold){
+				}else{
+			newWord.GetComponent<Renderer> ().sharedMaterial = currentFont.material;
+		}
+			
             // Set this word's local position.
             newWord.transform.localPosition = spawnPosition;
             newWord.transform.localScale = new Vector3(textSize, textSize, textSize);

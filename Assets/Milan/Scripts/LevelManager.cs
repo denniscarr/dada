@@ -23,6 +23,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	string[] LevelDescriptions;
 	Writer writer;
 
+
 	void Start()
 	{
 		LevelDescriptions = sourceText.text.Split(new char[] { '\n' });
@@ -38,8 +39,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		RenderSettings.fogEndDistance = 100;
 
         Create();
-
     }
+
 
 	void Update()
     {
@@ -47,18 +48,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		if (Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
-//			if (currentLevel != null) currentLevel.enabled = false;
+            //			if (currentLevel != null) currentLevel.enabled = false;
+            Services.IncoherenceManager.TallyIncoherence();
             Create();
         }
     }
 
 	public override Level Create(){
-
-		maxNPCs += 1;
-		maxObjects += 2;
-		radius += 5;
-		perlinFrequency += 0.020f;
-		height += 2;
 
 		NoiseRemapping [0] = 0;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
@@ -121,6 +117,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
         Services.Quests.allQuestsCompleted = false;
         Services.Quests.questsToComplete = levelNum + 2;
         GameObject.Find("QuestManager").GetComponent<QuestFinderScript>().FindQuests();
+
+		maxNPCs += 1;
+		maxObjects += 2;
+		maxSprites += 10;
+		radius += 5;
+		perlinFrequency += 0.020f;
+		height += 1;
 
         ManagedObjects.Add (l);
 		return l;

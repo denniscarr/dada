@@ -223,12 +223,13 @@ public class PickupQuest : Quest {
             }
         }
 
-
         //Destroy (parentObject);
         Destroy(parentObject.GetComponent<PickupQuest>());
         Destroy(parentObject.GetComponent<QuestObject>());
         Destroy(fieryGlow);
 		Destroy (radarSound);
+
+        if (parentObject.GetComponentInChildren<InteractionSettings>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
 
         completed = true;
     }
