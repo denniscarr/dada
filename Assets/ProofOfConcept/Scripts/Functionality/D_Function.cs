@@ -45,7 +45,8 @@ public class D_Function : MonoBehaviour {
 
     public virtual void Use()
     {
-		float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
+        transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+        float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
         if (useSFX.Length > 0)
         {
             Services.AudioManager.Play3DSFX(useSFX[Random.Range(0, useSFX.Length)], transform.position, 1f, pitchJitter);
