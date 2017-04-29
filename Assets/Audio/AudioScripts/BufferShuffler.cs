@@ -5,6 +5,9 @@ using Beat;
 public class BufferShuffler : MonoBehaviour
 {
     public AudioClip ClipToShuffle;
+
+	public AudioClip MusicClip;
+
     public float SecondsPerShuffle;
     public float SecondsPerCrossfade;
     public Clock MyClock;
@@ -18,6 +21,7 @@ public class BufferShuffler : MonoBehaviour
     public TickValue BeatsPerCrossfade;
 
     private AudioClip _clipToShuffle;
+
 
     private float[] _clipData = new float[0];
     private float[] _clipDataR = new float[0];

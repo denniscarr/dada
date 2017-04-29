@@ -9,20 +9,26 @@ public class AmbientMusic : MonoBehaviour {
 	public AudioSource[] ambienceSource;
 
 	public BufferShuffler[] shufflers;
+	BufferShuffler currentShuffler = null;
 
 	float lHue, lSat, lVal;
 
 	float hue;
 
+	float shufflerTime;
+
 	Color currentLevelColor;
 
 	public float fadeOutTime = 5.0f;
+
+	float prevIncoherence = 0f;
 
 	[SerializeField] float crossfadeThreshold;
 
 	void Awake() {
 		shufflers = GetComponentsInChildren<BufferShuffler> ();
 		foreach (BufferShuffler shuffler in shufflers) {
+			shuffler.MusicClip = shuffler.gameObject.GetComponent<AudioSource> ().clip;
 			shuffler.enabled = false;
 		}
 	}
@@ -102,21 +108,33 @@ public class AmbientMusic : MonoBehaviour {
 
 		}
 
+		
+
 		if (Services.IncoherenceManager.globalIncoherence > 0.25f) {
 
 			foreach (BufferShuffler shuffler in shufflers) {
-				shuffler.enabled = true;
-				shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
-				shuffler.SecondsPerCrossfade = 0.1f;
-				float shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 1.9f);
-				shuffler.SecondsPerShuffle = 2.0f - shufflerTime;
+				if (!shuffler.enabled) {
+					shuffler.enabled = true;
+					shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
+					shuffler.SecondsPerCrossfade = 0.1f;
+				}
 
+				shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+
+				shuffler.SecondsPerShuffle = 3.0f - shufflerTime;
+				
 
 			}
 
 		}
 
+		prevIncoherence = Services.IncoherenceManager.globalIncoherence;
+
 	}
+
+
+
+
 
 
 
