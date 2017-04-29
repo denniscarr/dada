@@ -54,6 +54,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public override Level Create(){
 
+		maxNPCs += 1;
+		maxObjects += 2;
 		radius += 5;
 		perlinFrequency += 0.020f;
 		height += 2;
@@ -131,7 +133,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	string SetLevelText() {
 		string line = "";
-		line += ManagedObjects.Count + " floors down \n \n";
+		line += ManagedObjects.Count + " floors down" + "\n" + "\n";
 		line += LevelDescriptions[Random.Range(0, LevelDescriptions.Length)];
 
 		return line;

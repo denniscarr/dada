@@ -89,6 +89,10 @@ public class Writer : MonoBehaviour {
 
 		string line = "";
 
+		stringIndex = 0;
+		lineIndex = 0;
+		wordIndex = 0;
+
 		foreach (string[] s in _script) {
 			foreach (string w in s) {
 				CreateWord (spawnPosition2);
@@ -216,13 +220,10 @@ public class Writer : MonoBehaviour {
 		newWord.GetComponent<TextMesh> ().color = textColor;
 		newWord.GetComponent<Renderer> ().sharedMaterial = curFont.material;
 		newWord.AddComponent<BoxCollider2D> ();
+		newWord.transform.localScale = Vector3.one * textSize;
+		spawnPosition2.x += newWord.GetComponent<MeshRenderer> ().bounds.size.x + tracking;
 		newWord.transform.localPosition = pos;
 		newWord.transform.localRotation = Quaternion.Euler (Vector3.zero);
-//		newWord.transform.LookAt(Services.Player.transform.position);
-//		newWord.transform.Rotate (0, 180, 0);
-		newWord.transform.localScale = new Vector3 (textSize, textSize, textSize);
-		spawnPosition2.x += newWord.GetComponent<BoxCollider2D> ().bounds.size.x + tracking;
-	
 		t.fade = false;
 
 //		if (!noRotation) {
