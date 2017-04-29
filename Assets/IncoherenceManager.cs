@@ -136,10 +136,11 @@ public class IncoherenceManager : MonoBehaviour {
         }
 
         totalIncoherence /= incoherenceNum;
+        Debug.Log("Average incoherence in this level: " + totalIncoherence);
 
         if (totalIncoherence > globalIncoherence)
             globalIncoherence = totalIncoherence;
 
-        Debug.Log("Global incoherence: " + globalIncoherence);
+        Debug.Log("Global incoherence set to: " + globalIncoherence);
     }
 }
