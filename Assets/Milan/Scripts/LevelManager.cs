@@ -23,6 +23,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	string[] LevelDescriptions;
 	Writer writer;
 
+
 	void Start()
 	{
 		LevelDescriptions = sourceText.text.Split(new char[] { '\n' });
@@ -38,8 +39,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		RenderSettings.fogEndDistance = 100;
 
         Create();
-
     }
+
 
 	void Update()
     {

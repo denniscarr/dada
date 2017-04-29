@@ -12,6 +12,7 @@ public class EquippableFinder : MonoBehaviour {
 
     Transform equipTarget;  // The object that can currently be equipped.
     public Transform equippedObject;
+    public List<Transform> equippedObjects;
 
     Transform buyTarget;    // The object that can currently be bought.
 
@@ -154,6 +155,8 @@ public class EquippableFinder : MonoBehaviour {
             if (buyTarget.GetComponentInChildren<InteractionSettings>().price <= GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
             {
                 buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
+                writer.DeleteTextBox();
+                writer.WriteAtPoint("Purchased " + buyTarget.name + " for " + buyTarget.GetComponentInChildren<InteractionSettings>().price + "!", textPosition);
             }
 
             else
@@ -169,13 +172,14 @@ public class EquippableFinder : MonoBehaviour {
         }
 
         // Abandoning equipped items.
-        if (equippedObject != null && Input.GetKeyDown(abandonKey))
+        if (equippedObjects.Count > 0 && Input.GetKeyDown(abandonKey))
         {
             AbandonItem();
         }
     }
 
 	void DeoutlineTargetObject(){
+        if (renderList == null) return;
 		//Debug.Log("DeoutlineTargetObject");
 		for(int i = 0; i < renderList.Count;i++){
 			renderList[i].material.shader = Shader.Find(shaderList[i]);
@@ -214,46 +218,25 @@ public class EquippableFinder : MonoBehaviour {
 
     void MoveToCamera ()
     {
+        equippedObjects.Add(equipTarget);
+
         // Disable collision & gravity.
-        equippedObject = equipTarget;
-		equippedObject.GetComponent<Collider>().isTrigger = true;
-        if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
-        if (equippedObject.GetComponent<Rigidbody>() != null) equippedObject.GetComponent<Rigidbody>().isKinematic = true;
+        equipTarget.GetComponent<Collider>().isTrigger = true;
+        if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
+        if (equipTarget.GetComponent<Rigidbody>() != null) equipTarget.GetComponent<Rigidbody>().isKinematic = true;
 
         // Save object's scale.
-        originalScale = equippedObject.transform.localScale;
-
-        equippedObject.transform.SetParent(equipReference, true);
+        originalScale = equipTarget.transform.localScale;
+        equipTarget.transform.SetParent(equipReference, true);
 
 		//play equip sound effect
-
 		Services.AudioManager.PlaySFX (Services.AudioManager.equipSound);
 
-        // Set position & parentage.
-        if (equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
-        {
-			equippedObject.transform.DOLocalRotate(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation,1.5f);
-            //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
-        }
-        else
-        {
-			equippedObject.transform.DOLocalRotate(Vector3.zero,1.5f);
-            //equippedObject.transform.rotation = equipReference.rotation;
-        }
+        // Get position and size for object.
+        Vector3 equipPosition = equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition;
+        Vector3 equipRotation = equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation;
+        //Vector3 equipScale = equipTarget.GetComponentInChildren<InteractionSettings>().equipScale;
 
-        if (equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
-        {
-			equippedObject.transform.DOLocalMove(equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition,1.5f);
-            //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
-        }
-        else
-        {
-			//equippedObject.transform.localScale = equipReference.localScale;
-			equippedObject.transform.DOLocalMove(Vector3.zero,1.5f);
-            //equippedObject.transform.position = equipReference.position;
-        }
-
-        // Resize & reposition object so that it doesn't block the camera
         int infinityPrevention = 0;
         bool niceSize = false;
         Camera myCamera = GetComponent<Camera>();
@@ -262,17 +245,14 @@ public class EquippableFinder : MonoBehaviour {
         {
             if (Physics.Raycast(myCamera.ScreenPointToRay(new Vector3(myCamera.pixelWidth * 0.75f, myCamera.pixelHeight * 0.45f, 0f)), out hit, 5f))
             {
-                Debug.Log("hit a thing.");
-
-                if (hit.collider.transform == equippedObject)
+                if (hit.collider.transform == equipTarget)
                 {
-                    Debug.Log("resized my thing");
-                    equippedObject.localPosition = new Vector3(
-                        equippedObject.localPosition.x,
-                        equippedObject.localPosition.y - 0.1f,
-                        equippedObject.localPosition.z - 0.1f
+                    equipTarget.localPosition = new Vector3(
+                        equipTarget.localPosition.x,
+                        equipTarget.localPosition.y - 0.1f,
+                        equipTarget.localPosition.z - 0.1f
                         );
-                    equippedObject.localScale *= 0.99f;
+                    equipTarget.localScale *= 0.99f;
                 }
             }
             else
@@ -283,32 +263,60 @@ public class EquippableFinder : MonoBehaviour {
             infinityPrevention += 1;
             if (infinityPrevention > 100)
             {
-                Debug.Log("Broke out of infinite loop.");
                 break;
             }
         }
 
-        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+
+        // Tween object to correct position.
+        if (equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
+        {
+            equipTarget.transform.DOLocalRotate(equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation, 1.5f);
+            //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
+        }
+        else
+        {
+            equipTarget.transform.DOLocalRotate(Vector3.zero, 1.5f);
+            //equippedObject.transform.rotation = equipReference.rotation;
+        }
+
+        if (equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
+        {
+            equipTarget.transform.DOLocalMove(equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition, 1.5f);
+            //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
+        }
+        else
+        {
+            //equipTarget.transform.localScale = equipReference.localScale;
+            equipTarget.transform.DOLocalMove(Vector3.zero, 1.5f);
+            //equipTarget.transform.position = equipReference.position;
+        }
+
+
+        equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
 
 
     public void AbandonItem()
     {
-		equippedObject.transform.SetParent(transform.root);
+        Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
 
-        // Re-enable collision & stuff.
-        equippedObject.GetComponent<Collider>().isTrigger = false;
-        if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
-        if (equippedObject.GetComponent<Rigidbody>() != null)
+        foreach (Transform equippedObj in equippedObjects)
         {
-            equippedObject.GetComponent<Rigidbody>().isKinematic = false;
-            equippedObject.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+            equippedObj.SetParent(transform.root);
+
+            // Re-enable collision & stuff.
+            equippedObj.GetComponent<Collider>().isTrigger = false;
+            if (equippedObj.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObj.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
+            if (equippedObj.GetComponent<Rigidbody>() != null)
+            {
+                equippedObj.GetComponent<Rigidbody>().isKinematic = false;
+                equippedObj.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+            }
+
+            equippedObj.transform.localScale = originalScale;
+
+            equippedObj.GetComponentInChildren<InteractionSettings>().carryingObject = null;
         }
-
-        equippedObject.transform.localScale = originalScale;
-
-		Services.AudioManager.PlaySFX (Services.AudioManager.dropSound);
-
-        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
     }
 }

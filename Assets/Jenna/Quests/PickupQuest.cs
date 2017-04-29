@@ -223,7 +223,6 @@ public class PickupQuest : Quest {
             }
         }
 
-
         //Destroy (parentObject);
         Destroy(parentObject.GetComponent<PickupQuest>());
         Destroy(parentObject.GetComponent<QuestObject>());

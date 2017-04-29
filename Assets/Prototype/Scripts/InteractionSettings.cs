@@ -43,7 +43,18 @@ public class InteractionSettings : MonoBehaviour {
     public Transform _carryingObject;
 	public Transform carryingObject // If I am being held, this is the object that is holding me.
     {
-        get { return _carryingObject; }
+        get
+        {
+            if (transform.parent.parent != null && (transform.parent.parent.name == "INROOMOBJECTS" || transform.parent.parent.name == "Equip Reference"))
+            {
+                return Services.Player.transform;
+            }
+
+            else
+            {
+                return _carryingObject;
+            }
+        }
         set
         {
 			if (value == null){ _carryingObject = null;return;}
