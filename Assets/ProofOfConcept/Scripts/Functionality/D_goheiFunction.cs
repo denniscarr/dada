@@ -7,13 +7,12 @@ public class D_goheiFunction : D_Function {
 	public int pelletCount = 8;
 	//public float pelletVelocity = 150f;
 	public float spreadFactor = 0.1f;
-	public ParticleSystem soulParticle;
-	private List<ParticleCollisionEvent> collisionEvents;
+
 
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
-		collisionEvents = new List<ParticleCollisionEvent> ();
+
 	}
 	
 	// Update is called once per frame
