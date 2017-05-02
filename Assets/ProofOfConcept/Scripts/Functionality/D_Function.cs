@@ -45,7 +45,9 @@ public class D_Function : MonoBehaviour {
 
     public virtual void Use()
     {
-        transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+        if (transform.parent.GetComponentInChildren<IncoherenceController>() != null)
+            transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += 
+                Services.IncoherenceManager.interactionIncrease;
         float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
         if (useSFX.Length > 0)
         {

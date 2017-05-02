@@ -25,8 +25,6 @@ public class InteractionSettings : MonoBehaviour {
             //        {
             //return false;
             //        }
-            transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += 
-                Services.IncoherenceManager.interactionIncrease;
 
             if (!isOwnedByPlayer && price > GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
             {
@@ -50,7 +48,6 @@ public class InteractionSettings : MonoBehaviour {
         {
             if (transform.parent.parent != null && (transform.parent.parent.name == "INROOMOBJECTS" || transform.parent.parent.name == "Equip Reference"))
             {
-                if (transform.parent.GetComponentInChildren<IncoherenceController>() != null) transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
                 return Services.Player.transform;
             }
 
@@ -98,10 +95,6 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if (transform.parent.GetComponentInChildren<IncoherenceController>() != null)
-                transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += 
-                    Services.IncoherenceManager.interactionIncrease;
-
             if (transform.parent.parent != null && transform.parent.parent.name == "INROOMOBJECTS")
             {
                 return true;
@@ -117,8 +110,6 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
-
             if (transform.parent.parent != null && transform.parent.parent.name.Contains("Equip Reference"))
             {
                 return true;

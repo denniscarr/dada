@@ -57,10 +57,14 @@ public class Tutorial : Quest {
 
 		// quest it note
 		questItNote = Instantiate(Resources.Load ("QuestItNote")) as GameObject;
+		questItNote.transform.position = controller.transform.position + controller.transform.forward*3;
 
 		// spawn text over the questitnote so they know to go to it
 		textSpawn = Instantiate (Resources.Load("TextSpawn") as GameObject);
-		textSpawn.transform.position = new Vector3 (controller.transform.position.x, controller.transform.position.y + 10, controller.transform.position.z + 3);
+		textSpawn.transform.position = new Vector3 (controller.transform.position.x, controller.transform.position.y + 10, controller.transform.position.z)
+			+ controller.transform.forward;
+		
+		
 		TextMesh textSpawnText = textSpawn.GetComponent<TextMesh> ();
 		textSpawnText.text = "CLICK THE NOTE!";
 		//textSpawn.transform.parent = questItNote.transform;
@@ -89,7 +93,8 @@ public class Tutorial : Quest {
 	}
 
 	void Update() {
-
+		//questItNote.transform.position = 
+		questItNote.transform.LookAt(controller.transform,Vector3.forward);
 		// if visor is equipped, then...you know, destroy everything and move to the next thing
 		//EquippableFinder finder = GameObject.Find("FindEquip").GetComponent<EquippableFinder>();
 		Transform player = GameObject.Find("Player").GetComponent<Transform>();
