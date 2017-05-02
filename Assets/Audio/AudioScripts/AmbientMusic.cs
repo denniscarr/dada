@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Beat;
 
 public class AmbientMusic : MonoBehaviour {
 
@@ -19,8 +20,8 @@ public class AmbientMusic : MonoBehaviour {
 
 	float shufflerTime;
 
-	float pitchShiftingScale;
-	float pitchShiftingTimer;
+	public float pitchShiftingScale;
+	public float pitchShiftingTimer;
 
 	Color currentLevelColor;
 
@@ -38,6 +39,9 @@ public class AmbientMusic : MonoBehaviour {
 		}
 
 		pitchShiftingScale = 0f;
+		pitchShiftingTimer = 1f;
+
+		StartCoroutine ("RemapPitch");
 	}
 
 	// Use this for initialization
@@ -130,12 +134,20 @@ public class AmbientMusic : MonoBehaviour {
 
 				shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
 
-				shuffler.SecondsPerShuffle = 3.0f - (shufflerTime * Random.value);
-				
+				shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+
 
 			}
 
+
+
+			pitchShiftingScale = 3.0f * Services.IncoherenceManager.globalIncoherence;
+			pitchShiftingTimer = 2.0f - Services.IncoherenceManager.globalIncoherence;
+
 		}
+
+
+
 
 		prevIncoherence = Services.IncoherenceManager.globalIncoherence;
 
@@ -145,7 +157,7 @@ public class AmbientMusic : MonoBehaviour {
 		while (true) {
 
 			yield return new WaitForSeconds (pitchShiftingTimer);
-			currentHiSource.pitch =  1 + (Random.value * pitchShiftingScale) - pitchShiftingScale;
+			currentHiSource.pitch =  1f + (Random.value * pitchShiftingScale) - (pitchShiftingScale/2f);
 
 		}
 
