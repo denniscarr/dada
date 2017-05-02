@@ -113,7 +113,7 @@ public class AmbientMusic : MonoBehaviour {
 		if (Services.IncoherenceManager.globalIncoherence > 0.25f) {
 
 			foreach (BufferShuffler shuffler in shufflers) {
-				if (!shuffler.enabled) {
+				if (!shuffler.enabled  && shuffler.gameObject.GetComponent<AudioSource>().volume == 1f) {
 					shuffler.enabled = true;
 					shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
 					shuffler.SecondsPerCrossfade = 0.1f;
