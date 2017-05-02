@@ -321,7 +321,7 @@ public class MouseControllerNew : MonoBehaviour {
                 pickedUpObject.localScale *= scale;
 
 			}else{
-				pickedUpObject.localScale = Vector3.one;
+                pickedUpObject.localScale = pickedUpObject.GetComponentInChildren<InteractionSettings>().savedScale;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS,true);
             pickedUpObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
