@@ -16,15 +16,16 @@ public class InteractionSettings : MonoBehaviour {
             //    return false;
             //}
 
-    //        if (MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 4f)
-    //        { 
-    //            return true;
-    //        }
+            //        if (MyMath.LargestCoordinate(transform.parent.GetComponent<Collider>().bounds.extents) < 4f)
+            //        { 
+            //            return true;
+            //        }
 
-    //        else
-    //        {
-				//return false;
-    //        }
+            //        else
+            //        {
+            //return false;
+            //        }
+
             if (!isOwnedByPlayer && price > GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
             {
                 return false;
@@ -43,7 +44,18 @@ public class InteractionSettings : MonoBehaviour {
     public Transform _carryingObject;
 	public Transform carryingObject // If I am being held, this is the object that is holding me.
     {
-        get { return _carryingObject; }
+        get
+        {
+            if (transform.parent.parent != null && (transform.parent.parent.name == "INROOMOBJECTS" || transform.parent.parent.name == "Equip Reference"))
+            {
+                return Services.Player.transform;
+            }
+
+            else
+            {
+                return _carryingObject;
+            }
+        }
         set
         {
 			if (value == null){ _carryingObject = null;return;}
@@ -98,7 +110,6 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-
             if (transform.parent.parent != null && transform.parent.parent.name.Contains("Equip Reference"))
             {
                 return true;
@@ -216,6 +227,8 @@ public class InteractionSettings : MonoBehaviour {
     {
         onFire = true;
 
+        transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+
         if (IsNPC)
         {
             transform.parent.GetComponentInChildren<NPC>().CatchOnFire();
@@ -230,6 +243,7 @@ public class InteractionSettings : MonoBehaviour {
     public void GetPurchased()
     {
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds -= price;
+        transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
         Instantiate(Resources.Load("Buy Particles"), transform.parent.position, Quaternion.Euler(270f, 0f, 0f));
         isOwnedByPlayer = true;
     }

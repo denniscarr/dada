@@ -135,6 +135,7 @@ public class Writer : MonoBehaviour {
         if (permaText != null)
         {
             Destroy(permaText.gameObject);
+
             timeSinceLastWrite = cooldownTime;
         }
     }
@@ -165,7 +166,7 @@ public class Writer : MonoBehaviour {
 			newWord.GetComponent<TextMesh> ().font = currentFont;
 			newWord.GetComponent<TextMesh> ().color = textColor;
 			float glitchChance = MiscFunctions.Map (Services.IncoherenceManager.globalIncoherence, GlitchTextThreshold, 1f, 0f, 1f); 
-			if (glitchChance <= GlitchTextThreshold){
+			if (glitchChance >= GlitchTextThreshold){
 				}else{
 			newWord.GetComponent<Renderer> ().sharedMaterial = currentFont.material;
 		}
@@ -177,7 +178,7 @@ public class Writer : MonoBehaviour {
             // Text styling stuff.
             textStyling.fade = fade;
             textStyling.delete = delete;
-            textStyling.fadeIn = fade;
+            textStyling.fadeIn = true;
             textStyling.speed = fadeSpeed;
 
             // Get the position of the next word.
@@ -235,7 +236,7 @@ public class Writer : MonoBehaviour {
 //		}
 
 		t.delete = delete;
-		t.fadeIn = false;
+		t.fadeIn = true;
 		t.speed = fadeSpeed;
 		wordIndex++;
 

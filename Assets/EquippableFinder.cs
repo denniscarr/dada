@@ -12,6 +12,7 @@ public class EquippableFinder : MonoBehaviour {
 
     Transform equipTarget;  // The object that can currently be equipped.
     public Transform equippedObject;
+    public List<Transform> equippedObjects;
 
     Transform buyTarget;    // The object that can currently be bought.
 
@@ -103,7 +104,7 @@ public class EquippableFinder : MonoBehaviour {
             }
         }
 
-        // Show the equip prompt for the nearest object. (Just debug log for now.)
+        // Show the equip prompt for the nearest object.
         if (nearestObject != null)
         {
 			//Debug.Log("Found object: "+nearestObject);
@@ -122,7 +123,7 @@ public class EquippableFinder : MonoBehaviour {
             else
             {
                 // If the player has enough money to purchase this object.
-                if (nearestObject.GetComponentInChildren<InteractionSettings>().price < GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
+                if (nearestObject.GetComponentInChildren<InteractionSettings>().price <= GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
                 {
                     mouse.ChangeCursor("buying");
                     writer.WriteAtPoint("Press Left Mouse Button to purchase " + nearestObject.name + " for $" + nearestObject.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
@@ -154,6 +155,8 @@ public class EquippableFinder : MonoBehaviour {
             if (buyTarget.GetComponentInChildren<InteractionSettings>().price <= GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds)
             {
                 buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
+                writer.DeleteTextBox();
+                writer.WriteAtPoint("Purchased " + buyTarget.name + " for " + buyTarget.GetComponentInChildren<InteractionSettings>().price + "!", textPosition);
             }
 
             else
@@ -169,7 +172,7 @@ public class EquippableFinder : MonoBehaviour {
         }
 			
         // Abandoning equipped items.
-		if (equippedObject != null && Input.GetKeyDown(abandonKey))
+        if (equippedObjects.Count > 0 && Input.GetKeyDown(abandonKey))
         {
             AbandonItem();
         }
@@ -178,7 +181,10 @@ public class EquippableFinder : MonoBehaviour {
 	void DeoutlineTargetObject(){
 		//Debug.Log("DeoutlineTargetObject");
 		for(int i = 0; i < renderList.Count;i++){
-			renderList[i].material.shader = Shader.Find(shaderList[i]);
+            if (renderList[i] != null)
+            {
+                renderList[i].material.shader = Shader.Find(shaderList[i]);
+            }
 			//Debug.Log(shaderList[i]);
 		}
 
@@ -215,49 +221,35 @@ public class EquippableFinder : MonoBehaviour {
     void MoveToCamera ()
     {
         // Disable collision & gravity.
+        equipTarget.GetComponent<Collider>().isTrigger = true;
+        if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
+        if (equipTarget.GetComponent<Rigidbody>() != null) equipTarget.GetComponent<Rigidbody>().isKinematic = true;
+
+        // Save object's scale.
+        originalScale = equipTarget.transform.localScale;
+        equipTarget.transform.SetParent(equipReference, true);
        
 		equipTarget.GetComponent<Collider>().isTrigger = true;
 		if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
 		if (equipTarget.GetComponent<Rigidbody>() != null) equipTarget.GetComponent<Rigidbody>().isKinematic = true;
 
-        // Save object's scale.
-		originalScale = equipTarget.transform.localScale;
-
-		equipTarget.SetParent(equipReference, true);
-
 		//play equip sound effect
-
 		Services.AudioManager.PlaySFX (Services.AudioManager.equipSound);
 
-        // Set position & parentage.
-		if (equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation != Vector3.zero)
-        {
-			equipTarget.DOLocalRotate(equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation,1.0f);
-            //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
-        }
-        else
-        {
-			equipTarget.DOLocalRotate(Vector3.zero,1.0f);
-            //equippedObject.transform.rotation = equipReference.rotation;
-        }
+        // Get position and size for object.
+        Vector3 equipPosition = equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition;
+        Vector3 equipRotation = equipTarget.GetComponentInChildren<InteractionSettings>().equipRotation;
+        Vector3 equipScale = equipTarget.localScale;
 
-		if (equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition != Vector3.zero)
-        {
-			Debug.Log("1");
-			equipTarget.DOLocalMove(equipTarget.GetComponentInChildren<InteractionSettings>().equipPosition,1.0f);
-            //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
-        }
-        else
-        {
-			Debug.Log("1");
-			//equippedObject.transform.localScale = equipReference.localScale;
-			equipTarget.DOLocalMove(Vector3.zero,1.0f);
-            //equippedObject.transform.position = equipReference.position;
-        }
+        Vector3 savedPosition = equipTarget.localPosition;
+        Quaternion savedRotation = equipTarget.localRotation;
+        Vector3 savedScale = equipTarget.localScale;
 
-		StartCoroutine("complete",equipTarget);
+        // Resize & reposition object so that it doesn't block the 
+        equipTarget.localPosition = equipPosition;
+        equipTarget.localRotation = Quaternion.Euler(equipRotation);
+        equipTarget.localScale = equipScale;
 
-        // Resize & reposition object so that it doesn't block the camera
         int infinityPrevention = 0;
         bool niceSize = false;
         Camera myCamera = GetComponent<Camera>();
@@ -268,67 +260,112 @@ public class EquippableFinder : MonoBehaviour {
             {
                 Debug.Log("hit a thing.");
 
-				if (hit.collider.transform == equipTarget)
+                if (hit.collider.transform == equipTarget)
                 {
                     Debug.Log("resized my thing");
-					equipTarget.localPosition = new Vector3(
-						equipTarget.localPosition.x,
-						equipTarget.localPosition.y - 0.1f,
-						equipTarget.localPosition.z - 0.1f
+                    equipTarget.localPosition = new Vector3(
+                        equipTarget.localPosition.x,
+                        equipTarget.localPosition.y - 0.1f,
+                        equipTarget.localPosition.z - 0.1f
                         );
-					equipTarget.localScale *= 0.99f;
+                    equipTarget.localScale *= 0.99f;
                 }
             }
             else
             {
+                equipPosition = equipTarget.transform.localPosition;
+                equipScale = equipTarget.localScale;
+
+                equipTarget.localPosition = savedPosition;
+                equipTarget.localScale = savedScale;
+                equipTarget.localRotation = savedRotation;
                 niceSize = true;
             }
 
             infinityPrevention += 1;
             if (infinityPrevention > 100)
             {
-                Debug.Log("Broke out of infinite loop.");
                 break;
             }
         }
 
+        // Tween object to correct position.
+        if (equipRotation != Vector3.zero)
+        {
+            equipTarget.transform.DOLocalRotate(equipRotation, 1.5f);
+            //equippedObject.transform.localRotation = Quaternion.Euler(equippedObject.GetComponentInChildren<InteractionSettings>().equipRotation);
+        }
+        else
+        {
+            equipTarget.transform.DOLocalRotate(Vector3.zero, 1.5f);
+            //equippedObject.transform.rotation = equipReference.rotation;
+        }
+
+        if (equipPosition != Vector3.zero)
+        {
+            equipTarget.transform.DOLocalMove(equipPosition, 1.5f);
+            //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
+        }
+        else
+        {
+            //equipTarget.transform.localScale = equipReference.localScale;
+            equipTarget.transform.DOLocalMove(Vector3.zero, 1.5f);
+            //equipTarget.transform.position = equipReference.position;
+        }
+
+        equipTarget.transform.DOScale(equipScale, 1.5f);
+        //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
+
+        StartCoroutine("complete", equipTarget);
+
 		equipTarget = null;
-//		equippedObject = equipTarget;
-//		equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
 
 	IEnumerator complete(Transform _equipTarget){
 		//Debug.Log("complete "+equippedObject.name);
-		yield return new WaitForSeconds(1.0f);
-		equippedObject = _equipTarget;
-		equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+		yield return new WaitForSeconds(1.5f);
+        if (_equipTarget != null)
+        {
+            Debug.Log("Coroutine finished");
+		    equippedObjects.Add(_equipTarget);
+		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+        }
 	}
 
-	void myCompleteFunction(Transform _equipTarget){
-		Debug.Log("on my complete "+equippedObject.name);
-		equippedObject = _equipTarget;
-		equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
-		//return new TweenCallback();
-	}
+	//void myCompleteFunction(Transform _equipTarget){
+	//	Debug.Log("on my complete "+equippedObject.name);
+	//	equippedObject = _equipTarget;
+	//	equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+	//	//return new TweenCallback();
+	//}
 
     public void AbandonItem()
     {
-		equippedObject.transform.SetParent(transform.root);
+        if (equippedObjects.Count <= 0) return;
 
-        // Re-enable collision & stuff.
-        equippedObject.GetComponent<Collider>().isTrigger = false;
-        if (equippedObject.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObject.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
-        if (equippedObject.GetComponent<Rigidbody>() != null)
+        Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
+
+        foreach (Transform equippedObj in equippedObjects)
         {
-            equippedObject.GetComponent<Rigidbody>().isKinematic = false;
-            equippedObject.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+            if (equippedObj != null)
+            {
+                equippedObj.SetParent(null);
+
+                // Re-enable collision & stuff.
+                equippedObj.GetComponent<Collider>().isTrigger = false;
+                if (equippedObj.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObj.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
+                if (equippedObj.GetComponent<Rigidbody>() != null)
+                {
+                    equippedObj.GetComponent<Rigidbody>().isKinematic = false;
+                    equippedObj.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+                }
+
+                equippedObj.transform.localScale = originalScale;
+
+                equippedObj.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+
+                equippedObjects.Remove(equippedObj);
+            }
         }
-
-        equippedObject.transform.localScale = originalScale;
-
-		Services.AudioManager.PlaySFX (Services.AudioManager.dropSound);
-
-        equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
-		equippedObject = null;
     }
 }
