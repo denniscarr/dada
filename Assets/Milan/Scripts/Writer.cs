@@ -13,7 +13,8 @@ public class Writer : MonoBehaviour {
 	public Font[] fonts;
 	public GameObject textPrefab;
 	public bool fade, noRotation, delete, WordbyWord;
-	public float delay; 
+	public float delay;
+    public float fadeInSpeed = 1f;
 	public float fadeSpeed;
 	public TextAsset sourceText;
 	Vector3 originalPos;
@@ -135,7 +136,11 @@ public class Writer : MonoBehaviour {
         if (permaText != null)
         {
             Destroy(permaText.gameObject);
-
+            //foreach(TextStyling text in permaText.GetComponentsInChildren<TextStyling>())
+            //{
+            //    text.fade = true;
+            //}
+            permaText = null;
             timeSinceLastWrite = cooldownTime;
         }
     }
@@ -179,7 +184,7 @@ public class Writer : MonoBehaviour {
             textStyling.fade = fade;
             textStyling.delete = delete;
             textStyling.fadeIn = true;
-            textStyling.speed = fadeSpeed;
+            textStyling.fadeSpeed = fadeSpeed;
 
             // Get the position of the next word.
             spawnPosition.x += (newWord.GetComponent<Renderer>().bounds.size.x + tracking);
@@ -237,7 +242,8 @@ public class Writer : MonoBehaviour {
 
 		t.delete = delete;
 		t.fadeIn = true;
-		t.speed = fadeSpeed;
+        t.fadeInSpeed = fadeInSpeed;
+		t.fadeSpeed = fadeSpeed;
 		wordIndex++;
 
 		if (wordIndex > _script [stringIndex].Length -1){
