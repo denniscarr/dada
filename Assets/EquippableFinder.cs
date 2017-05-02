@@ -162,7 +162,7 @@ public class EquippableFinder : MonoBehaviour {
             {
                 buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
                 writer.DeleteTextBox();
-                writer.WriteAtPoint("Purchased " + buyTarget.name + " for " + buyTarget.GetComponentInChildren<InteractionSettings>().price + "!", textPosition);
+                writer.WriteAtPoint("Purchased " + buyTarget.name + " for $" + buyTarget.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
             }
 
             else
