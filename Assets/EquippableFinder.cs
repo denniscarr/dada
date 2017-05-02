@@ -16,6 +16,8 @@ public class EquippableFinder : MonoBehaviour {
 
     Transform buyTarget;    // The object that can currently be bought.
 
+    Transform lastObjectInspected;  // The last object that was looked at using the mouse.
+
     Writer writer;
     Vector3 textPosition;   // Where equip text is written.
 
@@ -104,6 +106,11 @@ public class EquippableFinder : MonoBehaviour {
             }
         }
 
+        if (nearestObject == null || (lastObjectInspected != null && nearestObject != lastObjectInspected))
+        {
+            writer.DeleteTextBox();
+        }
+
         // Show the equip prompt for the nearest object.
         if (nearestObject != null)
         {
@@ -139,11 +146,10 @@ public class EquippableFinder : MonoBehaviour {
             }
         }
 
-        else
+        else if (nearestObject == null)
         {
 			DeoutlineTargetObject();
             mouse.ChangeCursor("idle");
-            writer.DeleteTextBox();
         }
 
         // PLAYER INPUT
@@ -156,7 +162,7 @@ public class EquippableFinder : MonoBehaviour {
             {
                 buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
                 writer.DeleteTextBox();
-                writer.WriteAtPoint("Purchased " + buyTarget.name + " for " + buyTarget.GetComponentInChildren<InteractionSettings>().price + "!", textPosition);
+                writer.WriteAtPoint("Purchased " + buyTarget.name + " for $" + buyTarget.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
             }
 
             else
@@ -178,6 +184,7 @@ public class EquippableFinder : MonoBehaviour {
         }
     }
 
+
 	void DeoutlineTargetObject(){
 		//Debug.Log("DeoutlineTargetObject");
 		for(int i = 0; i < renderList.Count;i++){
@@ -188,14 +195,18 @@ public class EquippableFinder : MonoBehaviour {
 			//Debug.Log(shaderList[i]);
 		}
 
+        //lastObjectInspected = null;
 		renderList.Clear();
 		shaderList.Clear();
 	}
 
 
 	void OutlineTargetObject(Transform t_hit){
-		//Debug.Log("OutlineTargetObject");
+        //Debug.Log("OutlineTargetObject");
+        if (t_hit.
+            GetComponent<Renderer>() == null) return;
 
+        lastObjectInspected = t_hit;
 
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
