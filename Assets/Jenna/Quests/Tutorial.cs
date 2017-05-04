@@ -13,6 +13,7 @@ public enum TutorialState{
 	EQUIP_GUN = 6,
 	USE_GUN = 7,
 	DROP_GUN = 8,
+	SKIP_TUTORIAL = 9,
 }
 
 public class Tutorial : Quest {
@@ -39,7 +40,7 @@ public class Tutorial : Quest {
 
 	// quest it note
 	GameObject questItNote;
-	Text text;
+	Text QuestItNoreText;
 
 	// temporary items
 	GameObject visor;
@@ -47,8 +48,8 @@ public class Tutorial : Quest {
 	GameObject questItNote2;
 	Text txtInfo;
 	GameObject colostomyBag;
-	public GameObject inRoomItem;
-	public GameObject worldItem;
+//	public GameObject inRoomItem;
+//	public GameObject worldItem;
 
 //	// bools for the things having been done
 //	public bool visorEquipped;
@@ -65,10 +66,26 @@ public class Tutorial : Quest {
 
 	GameObject go_AK12;
 
+	MouseControllerNew mouseControllerNew;
+
+	//Writer writer;
+
 	int numPressTab = 0;
 
 	void Start () {
+		if(state == TutorialState.SKIP_TUTORIAL){
+			this.enabled = false;
+			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
+			return;
+		}
+		GetComponent<QuestManager>().enabled =false;
+		GetComponent<QuestFinderScript>().enabled = false;
+		GetComponent<QuestBuilderScript>().enabled = false;
+		GetComponent<PickupQuest>().enabled = false;
 		
+		mouseControllerNew = GameObject.FindObjectOfType<MouseControllerNew>();
+		//writer = mouseControllerNew.writer;
+
 		player = GameObject.Find("Player").transform;
 		platformWriter = GameObject.Find("Viewing Platform").AddComponent<Writer>();
 		// finding the quest manager
@@ -94,8 +111,8 @@ public class Tutorial : Quest {
 		//textSpawn.transform.parent = questItNote.transform;
 
 		// put the words on the note
-		text = questItNote.GetComponentInChildren<Text> ();
-		text.text = "Pick up your visor. That gray thing over there.";		// lmao silly and redundant
+		QuestItNoreText = questItNote.GetComponentInChildren<Text> ();
+		QuestItNoreText.text = "Pick up your visor. That gray thing over there.";		// lmao silly and redundant
 
 		// quest info itself
 		title = ("Tutorial");
@@ -130,6 +147,7 @@ public class Tutorial : Quest {
 		case TutorialState.EQUIP_GUN:OnEquipGun();break;
 		case TutorialState.USE_GUN:OnUseGun();break;
 		case TutorialState.DROP_GUN:OnDropGun();break;
+		//case TutorialState.JUMP_OFF:OnJumpOff();break;
 		}
 
 
@@ -189,7 +207,7 @@ public class Tutorial : Quest {
 			Destroy(textSpawn); // for good measure
 
 			// change the text
-			text.text = "Find the operation platform.";
+			QuestItNoreText.text = "Find the operation platform.";
 
 			// stick the note to the screen
 			questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -208,7 +226,7 @@ public class Tutorial : Quest {
 			if (Physics.Raycast(ray, out hit)){
 				if(hit.collider.transform.parent.name.Equals("Viewing Platform")){
 					state = TutorialState.DRAG_NOTE_IN;
-					text.text = "Drag me in.";
+					QuestItNoreText.text = "Drag me in.";
 				}
 				// the object identified by hit.transform was clicked
 				// do whatever you want
@@ -219,7 +237,7 @@ public class Tutorial : Quest {
 	void OnDragNoteIn(){
 		if(questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.THROW_NOTE_OUT;
-			text.text = "Drag me out.";
+			QuestItNoreText.text = "Drag me out.";
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();//useless?
 		}
 	}
@@ -228,56 +246,86 @@ public class Tutorial : Quest {
 		Debug.Log(questItNote.transform.parent);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.PRESS_TAB;
-			text.text = "Press TAB 5 times";
+			Destroy(questItNote);
+			mouseControllerNew.writer.WriteAtPoint("Press TAB 5 times", mouseControllerNew.textPosition);
+			//text.text = "Press TAB 5 times";
+			// make the questit note
+			Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
+			questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
+			questItNote.transform.parent = visorNode.transform;
+			questItNote.transform.localPosition = new Vector3(
+				Random.Range(-2.3f, 5.1f),
+				Random.Range(1f, 4.1f),
+				2.5f);
+
+			questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
+				0f,
+				0f,
+				Random.Range(-1f, 1f)));
+			QuestItNoreText = questItNote.GetComponentInChildren<Text>();
+			QuestItNoreText.text = "Press TAB 5 times";
+			questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 			//controller
 		}
 	}
 
 	void OnPressTab(){
+		mouseControllerNew.writer.WriteAtPoint("Press TAB "+ (5 - numPressTab).ToString() +" times", mouseControllerNew.textPosition);
 		if(Input.GetKeyDown(KeyCode.Tab)){
 			numPressTab ++;
 			int rest = 5 - numPressTab;
 			if(rest > 0){
-				text.text = "Press TAB "+ rest.ToString() +" times";
+				
+				QuestItNoreText.text = "Press TAB "+ rest.ToString() +" times";
 			}else{
 				state = TutorialState.EQUIP_GUN;//go_AK12 = Resources.Load("Pickups/AK12") as GameObject;
 				go_AK12 = Instantiate(Resources.Load<GameObject>("Pickups/AK12"));
 				go_AK12.transform.position = player.transform.position + player.transform.forward*3;
 				//instantiate gun
-				text.text = "Try to equip the gun here.";
+				//mouseControllerNew.writer.WriteAtPoint("Press TAB 5 times", mouseControllerNew.textPosition);
+				QuestItNoreText.text = "Left click to equip the gun in zoom-in mode.";
 			}
 
 
 		}
+
 	}
 
 	void OnEquipGun(){
 		if(go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
-			state = TutorialState.EQUIP_GUN;
-			text.text = "Try to use the gun.";
+			state = TutorialState.USE_GUN;
+			QuestItNoreText.text = "Right click to use the gun.";
 		}
 
 
 	}
 
 	void OnUseGun(){
-		if(controller.GetComponent<PlayerControllerNew>().Mode == ControlMode.ZOOM_IN_MODE 
-			&& go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped
-			&& Input.GetMouseButtonDown(0)){
+		if(go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped
+			&& Input.GetMouseButtonDown(1)){
 			state = TutorialState.DROP_GUN;
-			text.text = "Press G to drop the gun.";
+			QuestItNoreText.text = "Press G to drop the gun.";
 		}
 	}
 
 	void OnDropGun(){
 		if(!go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
 			Debug.Log("Tutorial is done.");
-			//Destroy(gameObject);
+			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
+			//Destroy(questItNote);
+			QuestItNoreText.text = "Be brave to jump off.";
+			this.enabled = false;
 		}
 	}
 
 
+
+
+	/// <summary>
+	/// jenna's great work below
+	/// </summary>
 
 	void visorPickedUp(){
 
@@ -289,7 +337,7 @@ public class Tutorial : Quest {
 		Destroy (textSpawn); // for good measure
 
 		// change the text
-		text.text = "Click the platform to go back.";
+		QuestItNoreText.text = "Click the platform to go back.";
 
 		// stick the note to the screen
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -308,7 +356,7 @@ public class Tutorial : Quest {
 		colostomyBag = Instantiate (Resources.Load("Pickups/Colostomy Bag")) as GameObject;
 		colostomyBag.transform.position = new Vector3 (fakeVisor.transform.position.x, fakeVisor.transform.position.y - 2, fakeVisor.transform.position.z);
 
-		inRoomItem = colostomyBag;
+		//inRoomItem = colostomyBag;
 
 		// spawn a new quest it note for good measure
 		questItNote2 = Instantiate(Resources.Load("QuestItNote")) as GameObject;
@@ -317,7 +365,7 @@ public class Tutorial : Quest {
 		questItNote2.GetComponentInChildren<Text> ().text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
 
 		// change the text
-		text.text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
+		QuestItNoreText.text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
 
 		// change the in room text, too
 		txtInfo = GameObject.Find("txtInfo").GetComponent<Text>();
@@ -329,13 +377,13 @@ public class Tutorial : Quest {
 		// mark off the bool
 		//thingMoved = true;
 
-		inRoomItem = null;
+		//inRoomItem = null;
 
 		Destroy (questItNote2);
 		txtInfo.text = "Click platform. Press tab.";
 
 		// change the text
-		text.text = "Click on the viewing platform and press tab.";
+		QuestItNoreText.text = "Click on the viewing platform and press tab.";
 
 	}
 
@@ -351,7 +399,7 @@ public class Tutorial : Quest {
 		newThing.transform.position = new Vector3 (this.transform.position.x - 5, this.transform.position.y + 15, this.transform.position.z + 10);
 
 		// change the text
-		text.text = "Find something in the world. Press right mouse button to interact.";
+		QuestItNoreText.text = "Find something in the world. Press right mouse button to interact.";
 
 	}
 

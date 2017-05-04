@@ -23,7 +23,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	string[] LevelDescriptions;
 	Writer writer;
 
-	bool isTutorialCompleted;
+	public bool isTutorialCompleted = false;
 
 	void Start()
 	{
