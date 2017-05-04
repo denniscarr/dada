@@ -158,9 +158,9 @@ public class InteractionSettings : MonoBehaviour {
 	void Awake()
     {
         // Remove '(Clone)' from my name
-        if (gameObject.name.Contains("(Clone)"))
+        if (transform.parent.name.Contains("(Clone)"))
         {
-            gameObject.name = gameObject.name.Remove(gameObject.name.Length - 7, 7);
+            transform.parent.name = transform.parent.name.Remove(transform.parent.name.Length - 7, 7);
         }
 
         // Get my fire prfab ready.
