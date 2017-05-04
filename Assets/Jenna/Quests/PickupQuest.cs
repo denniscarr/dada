@@ -203,7 +203,7 @@ public class PickupQuest : Quest {
 		PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
 
 		// mark it done
-		text.text = ("donezo");
+		//text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
 		// explode it
