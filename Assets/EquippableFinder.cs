@@ -81,7 +81,7 @@ public class EquippableFinder : MonoBehaviour {
             ))
         {
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
-                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped)
+                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
             {
 				//Debug.Log(hit.transform.name);
                 // Get the distance of this object and, if it's the closest to the player then save it.
@@ -362,26 +362,26 @@ public class EquippableFinder : MonoBehaviour {
 
         Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
 
-        foreach (Transform equippedObj in equippedObjects)
+        for (int i = 0; i < equippedObjects.Count; i++)
         {
-            if (equippedObj != null)
+            if (equippedObjects[i] != null)
             {
-                equippedObj.SetParent(null);
+                equippedObjects[i].SetParent(null);
 
                 // Re-enable collision & stuff.
-                equippedObj.GetComponent<Collider>().isTrigger = false;
-                if (equippedObj.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObj.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
-                if (equippedObj.GetComponent<Rigidbody>() != null)
+                equippedObjects[i].GetComponent<Collider>().isTrigger = false;
+                if (equippedObjects[i].GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObjects[i].GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
+                if (equippedObjects[i].GetComponent<Rigidbody>() != null)
                 {
-                    equippedObj.GetComponent<Rigidbody>().isKinematic = false;
-                    equippedObj.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+                    equippedObjects[i].GetComponent<Rigidbody>().isKinematic = false;
+                    equippedObjects[i].GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
                 }
 
-                equippedObj.transform.localScale = originalScale;
+                equippedObjects[i].transform.localScale = originalScale;
 
-                equippedObj.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
-                equippedObjects.Remove(equippedObj);
+                equippedObjects.Remove(equippedObjects[i]);
             }
         }
     }

@@ -38,7 +38,7 @@ public class MouseControllerNew : MonoBehaviour {
 
     public Text txtInfo;
     public Writer writer;
-	public Vector3 textPosition;
+    public Vector3 textPosition;
 
     string lastCursorName;
 
