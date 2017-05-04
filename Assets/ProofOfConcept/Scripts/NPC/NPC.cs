@@ -279,18 +279,18 @@ public class NPC : MonoBehaviour {
                 }
 
                 // See if the object we're looking at is a player or another NPC. (For waving hello.)
-                if (hit.collider.GetComponentInChildren<NPC>() != null ||
-                     hit.collider.name == "Player")
+                if ((hit.collider.GetComponentInChildren<NPC>() != null ||
+                     hit.collider.name == "Player") && hit.collider.transform != transform.parent)
                 {
                     // If we're saying hello to ourself, acknowledge it.
-                    if (hit.collider.transform == transform.parent)
-                    {
-                        helloName = "myself";
-                    }
-                    else
-                    {
+                    //if (hit.collider.transform == transform.parent)
+                    //{
+                    //    helloName = "myself";
+                    //}
+                    //else
+                    //{
                         helloName = hit.collider.name;
-                    }
+                    //}
 
                     // Get prepare to switch to 'saying hello' mode.
                     if (npcAnimation != null) npcAnimation.WaveHello();
