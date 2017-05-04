@@ -128,7 +128,7 @@ public class PickupQuest : Quest {
 
 		// give it a description eh
 		// can make this more interesting later during tweaking/juicing stages
-		description = (title + " " + requiredPickups.ToString() + " " + "and place it in your room. Reward: $" + rewardMoney);
+		description = (title + " " + "and place it in your room. Reward: $" + rewardMoney);
 
 		questTextSpawn ();
 
@@ -187,11 +187,11 @@ public class PickupQuest : Quest {
     public void questTextSpawn(){
 		
 		// put the text of the quest right over the object
-		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
-		textSpawn.transform.parent = parentObject.transform;
-		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
-		text = textSpawn.GetComponent<TextMesh> ();
-		text.text = ("pick me up" + " " + requiredPickups.ToString());
+		//textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
+		//textSpawn.transform.parent = parentObject.transform;
+		//textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
+		//text = textSpawn.GetComponent<TextMesh> ();
+		//text.text = ("pick me up" + " " + requiredPickups.ToString());
 		
 	}
 
