@@ -95,19 +95,36 @@ public class Tutorial : Quest {
 		controller = GameObject.Find("PlayerInRoom");
 		controller.AddComponent<QuestObject> ();
 
-		// quest it note
-		questItNote = Instantiate(Resources.Load ("QuestItNote")) as GameObject;
-		//questItNote.transform.localScale *= 2;
-		questItNote.transform.position = controller.transform.position + controller.transform.forward*3;
 
-		// spawn text over the questitnote so they know to go to it
-		textSpawn = Instantiate (Resources.Load("TextSpawn") as GameObject);
-		textSpawn.transform.position = new Vector3 (controller.transform.position.x, controller.transform.position.y + 10, controller.transform.position.z)
-			+ controller.transform.forward;
-		
-		
-		TextMesh textSpawnText = textSpawn.GetComponent<TextMesh> ();
-		textSpawnText.text = "CLICK THE NOTE!";
+		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
+		Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
+		questItNote.transform.parent = visorNode.transform;
+		questItNote.transform.localPosition = new Vector3(
+			Random.Range(-2.3f, 5.1f),
+			Random.Range(1f, 4.1f),
+			2.5f);
+
+		questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
+			0f,
+			0f,
+			Random.Range(-1f, 1f)));
+		//QuestItNoreText = questItNote.GetComponentInChildren<Text>();
+		//QuestItNoreText.text = "Press TAB 5 times";
+		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+
+		// quest it note
+//		questItNote = Instantiate(Resources.Load ("QuestItNote")) as GameObject;
+//		//questItNote.transform.localScale *= 2;
+//		questItNote.transform.position = controller.transform.position + controller.transform.forward*3;
+//
+//		// spawn text over the questitnote so they know to go to it
+//		textSpawn = Instantiate (Resources.Load("TextSpawn") as GameObject);
+//		textSpawn.transform.position = new Vector3 (controller.transform.position.x, controller.transform.position.y + 10, controller.transform.position.z)
+//			+ controller.transform.forward;
+//		
+//		
+//		TextMesh textSpawnText = textSpawn.GetComponent<TextMesh> ();
+//		textSpawnText.text = "CLICK THE NOTE!";
 		//textSpawn.transform.parent = questItNote.transform;
 
 		// put the words on the note
@@ -124,8 +141,8 @@ public class Tutorial : Quest {
 
 		visor = Instantiate (Resources.Load ("visor", typeof(GameObject))) as GameObject;
 		visor.transform.position = new Vector3 (level.transform.position.x, level.transform.position.y + highPoint, level.transform.position.z);
-		questItNote.transform.position = visor.transform.position;
-		visor.transform.localScale *= 2;
+		//questItNote.transform.position = visor.transform.position;
+		visor.transform.localScale *= 5;
 		visor.SetActive (false);
 
 		// interaction settings, rip soon
@@ -188,10 +205,10 @@ public class Tutorial : Quest {
 	}
 
 	void OnPickUpNote(){
-		if (questItNote.transform.parent == GameObject.Find ("Equip Reference").transform) {
+		//if (questItNote.transform.parent == GameObject.Find ("Equip Reference").transform) {
 			visor.SetActive (true);
 			state = TutorialState.PICKUP_VISOR;
-		}
+		//}
 	}
 
 	void OnPickUpVisor(){
