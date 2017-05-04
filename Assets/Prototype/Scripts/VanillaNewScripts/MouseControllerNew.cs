@@ -37,8 +37,8 @@ public class MouseControllerNew : MonoBehaviour {
     public float sfxVolume = 0.3f;
 
     public Text txtInfo;
-    Writer writer;
-    [SerializeField] Vector3 textPosition;
+    public Writer writer;
+    [SerializeField] public Vector3 textPosition;
 
     string lastCursorName;
 
