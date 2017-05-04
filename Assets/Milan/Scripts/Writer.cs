@@ -48,6 +48,12 @@ public class Writer : MonoBehaviour {
 //		if (sourceText != null) {
 //			SetScript (sourceText.text);
 //		}
+
+        if (gameObject.name == "NPC AI")
+        {
+            fade = true;
+            delete = true;
+        }
 	}
 
     private void Update()

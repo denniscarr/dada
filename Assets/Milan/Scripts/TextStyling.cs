@@ -30,15 +30,21 @@ public class TextStyling : MonoBehaviour {
 
 		if (fadeIn) {
 			lerpVal += Time.deltaTime / fadeInSpeed;
-			FadeIn ();
+            lerpVal = Mathf.Clamp01(lerpVal);
+
+            FadeIn();
 		} else {
             lerpVal -= Time.deltaTime / fadeSpeed;
+            lerpVal = Mathf.Clamp01(lerpVal);
+
 			if (fade) Text.color = new Color (Text.color.r, Text.color.g, Text.color.b, lerpVal); 
 		}
+
 			
 		if (lerpVal < 0.01f && delete) {
             if (transform.parent.name == "Text Container")
             {
+                Debug.Log("destorying text containter");
                 Destroy(transform.parent.gameObject);
             }
 			Destroy (this.gameObject);
@@ -64,7 +70,7 @@ public class TextStyling : MonoBehaviour {
 		if (Text.color.a < 1) {
 			Text.color = new Color (Text.color.r, Text.color.g, Text.color.b, lerpVal);
 		}
-		if (Text.color.a >= 1) {
+		if (Text.color.a >= 0.99f) {
 			fadeIn = false;
 		}
 	}
