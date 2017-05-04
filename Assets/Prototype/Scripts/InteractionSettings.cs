@@ -243,7 +243,9 @@ public class InteractionSettings : MonoBehaviour {
     public void GetPurchased()
     {
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds -= price;
-        transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+		if (transform.parent.GetComponentInChildren<IncoherenceController>() != null) {
+			transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+		}
         Instantiate(Resources.Load("Buy Particles"), transform.parent.position, Quaternion.Euler(270f, 0f, 0f));
         isOwnedByPlayer = true;
     }

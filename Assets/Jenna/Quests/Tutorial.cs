@@ -3,8 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum TutorialState{
+	PICKUP_NOTE = 0,
+	PICKUP_VISOR = 1,
+	USE_PLATFORM = 2,
+	DRAG_NOTE_IN = 3,
+	THROW_NOTE_OUT = 4,
+	PRESS_TAB = 5,
+	EQUIP_GUN = 6,
+	USE_GUN = 7,
+	DROP_GUN = 8,
+}
+
 public class Tutorial : Quest {
 
+	public TutorialState state = TutorialState.PICKUP_NOTE;
+
+	Writer platformWriter;
 	// NOTE: WHEN ALL QUESTS DONE, REMOVE THIS QUEST FROM MANAGER AND ALL OBJECTS
 
 	// quest manager
@@ -35,19 +50,23 @@ public class Tutorial : Quest {
 	public GameObject inRoomItem;
 	public GameObject worldItem;
 
-	// bools for the things having been done
-	public bool visorEquipped;
-	public bool roomEntered;
-	public bool thingMoved;
-	public bool visorExited;
-	public bool tabPressed;
-	public bool thingUsedOrMoved;
-	public bool itemAdded;
-	public bool jumpedOff;
-	public bool finished;
+//	// bools for the things having been done
+//	public bool visorEquipped;
+//	public bool roomEntered;
+//	public bool thingMoved;
+//	public bool visorExited;
+//	public bool tabPressed;
+//	public bool thingUsedOrMoved;
+//	public bool itemAdded;
+//	public bool jumpedOff;
+//	public bool finished;
+
+	Transform player;
 
 	void Start () {
-
+		
+		player = GameObject.Find("Player").transform;
+		platformWriter = GameObject.Find("Viewing Platform").AddComponent<Writer>();
 		// finding the quest manager
 		manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
 
@@ -93,86 +112,139 @@ public class Tutorial : Quest {
 	}
 
 	void Update() {
+		switch(state){
+		case TutorialState.PICKUP_NOTE:OnPickUpNote();break;
+		case TutorialState.PICKUP_VISOR:OnPickUpVisor();break;
+		case TutorialState.USE_PLATFORM:break;
+		case TutorialState.DRAG_NOTE_IN:break;
+		case TutorialState.THROW_NOTE_OUT:break;
+		case TutorialState.PRESS_TAB:break;
+		case TutorialState.EQUIP_GUN:break;
+		case TutorialState.USE_GUN:break;
+		case TutorialState.DROP_GUN:break;
+		}
+
+
 		//questItNote.transform.position = 
-		questItNote.transform.LookAt(controller.transform,Vector3.forward);
+		//questItNote.transform.LookAt(controller.transform,Vector3.forward);
 		// if visor is equipped, then...you know, destroy everything and move to the next thing
 		//EquippableFinder finder = GameObject.Find("FindEquip").GetComponent<EquippableFinder>();
-		Transform player = GameObject.Find("Player").GetComponent<Transform>();
+		//Transform player = GameObject.Find("Player").GetComponent<Transform>();
+//		// if it's equipped and you walk around, do the thing
+//		if (visorEquipped &&
+//			(Input.GetKeyDown(KeyCode.W) ||
+//				Input.GetKeyDown(KeyCode.A) ||
+//				Input.GetKeyDown(KeyCode.S) ||
+//				Input.GetKeyDown(KeyCode.D)) && !roomEntered) {
+//			enterRoom ();
+//		}
 
-		if (questItNote.transform.parent == GameObject.Find ("Equip Reference").transform && visorEquipped == false) {
+//		// great, now exit the visor and explore the world
+//		if (thingMoved && roomEntered && !tabPressed) {
+//			if (controls.mode == ControlMode.ZOOM_IN_MODE) {
+//				if (Input.GetKeyDown (KeyCode.Tab)) {
+//					interactWithAThing ();
+//				}
+//			}
+//		}
+//
+//		// this nullifies the chance that tab has been pressed early because, like,
+//		//tabpressed can only be true if you've interacted with a thing
+//		if (tabPressed) {
+//			if (!worldItem == null) {
+//				text.text = ("Now add" + " " + worldItem.name + " " + "to your inventory. Grab it, press tab, and drop.");
+//
+//				if (worldItem.GetComponentInChildren<InteractionSettings> ().IsEquipped) {
+//					manager.allQuestsCompleted = true;
+//					text.text = "You've learned the basics. Now jump off the world. Go on.";
+//				}
+//			}
+//		}
+	}
+
+	void OnPickUpNote(){
+		if (questItNote.transform.parent == GameObject.Find ("Equip Reference").transform) {
 			visor.SetActive (true);
-		}
-
-		if (intSet._carryingObject == player) {
-			visorPickedUp();
-		}
-
-		// if it's equipped and you walk around, do the thing
-		if (visorEquipped &&
-			(Input.GetKeyDown(KeyCode.W) ||
-				Input.GetKeyDown(KeyCode.A) ||
-				Input.GetKeyDown(KeyCode.S) ||
-				Input.GetKeyDown(KeyCode.D)) && !roomEntered) {
-			enterRoom ();
-		}
-
-		// once you've entered the room and picked up the thing
-		if (roomEntered) {
-			//if (inRoomItem.GetComponentInChildren<InteractionSettings> ().carryingObjectCarryingObject) {
-			//if (inRoomItem != null && txtInfo.text == "Click to move bag."){
-			GameObject inroomObjects = GameObject.Find("INROOMOBJECTS");
-			if (colostomyBag.transform.parent == inroomObjects.transform || questItNote2.transform.parent == inroomObjects.transform){
-				if (Input.GetKeyDown (KeyCode.Tab)) {
-					nowExit ();
-				}
-			}
-		}
-
-		// great, now exit the visor and explore the world
-		if (thingMoved && roomEntered && !tabPressed) {
-			if (controls.mode == ControlMode.ZOOM_IN_MODE) {
-				if (Input.GetKeyDown (KeyCode.Tab)) {
-					interactWithAThing ();
-				}
-			}
-		}
-
-		// this nullifies the chance that tab has been pressed early because, like,
-		//tabpressed can only be true if you've interacted with a thing
-		if (tabPressed) {
-			if (!worldItem == null) {
-				text.text = ("Now add" + " " + worldItem.name + " " + "to your inventory. Grab it, press tab, and drop.");
-
-				if (worldItem.GetComponentInChildren<InteractionSettings> ().IsEquipped) {
-					manager.allQuestsCompleted = true;
-					text.text = "You've learned the basics. Now jump off the world. Go on.";
-				}
-			}
+			state = TutorialState.PICKUP_VISOR;
 		}
 	}
+
+	void OnPickUpVisor(){
+		if (intSet._carryingObject == player) {
+			Debug.Log("tutorial -- pick up visor");
+			// yay! step one done
+			//visorEquipped = true;
+			state = TutorialState.USE_PLATFORM;
+
+			// destroy it bc its now useless
+			Destroy(visor);
+			Destroy (textSpawn); // for good measure
+
+			// change the text
+			text.text = "Click the platform to go back.";
+
+			// stick the note to the screen
+			questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+
+			controls.Mode = ControlMode.ZOOM_OUT_MODE;
+			platformWriter.WriteAtPoint("Click me to revert to visor mode",platformWriter.transform.position+new Vector3(0,0,1));
+
+		}
+	}
+
+	void OnUsePlatform(){
+		
+	}
+
+	void OnDragNoteIn(){
+		
+	}
+
+	void OnThrowNoteOut(){
+		
+	}
+
+	void OnPressTab(){
+		
+	}
+
+	void OnEquipGun(){
+		
+	}
+
+	void OnUseGun(){
+		
+	}
+
+	void OnDragGun(){
+		
+	}
+
+
 
 	void visorPickedUp(){
 
 		// yay! step one done
-		visorEquipped = true;
+		//visorEquipped = true;
 
 		// destroy it bc its now useless
 		Destroy(visor);
 		Destroy (textSpawn); // for good measure
 
 		// change the text
-		text.text = "Walk around your room. See the sights. Take your time.";
+		text.text = "Click the platform to go back.";
 
 		// stick the note to the screen
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 
-		controls.mode = ControlMode.ZOOM_OUT_MODE;
+		controls.Mode = ControlMode.ZOOM_OUT_MODE;
 	}
 
 	void enterRoom(){
+		Debug.Log("enter room");
 
 		// mark off the bool
-		roomEntered = true;
+		//roomEntered = true;
 
 		GameObject fakeVisor = GameObject.Find ("FakeVisor");
 		// spawn something for the player to use
@@ -198,7 +270,7 @@ public class Tutorial : Quest {
 
 	void nowExit(){
 		// mark off the bool
-		thingMoved = true;
+		//thingMoved = true;
 
 		inRoomItem = null;
 
@@ -213,9 +285,9 @@ public class Tutorial : Quest {
 	void interactWithAThing(){
 
 		//mark off the bool
-		tabPressed = true;
+		//tabPressed = true;
 
-		controls.mode = ControlMode.ZOOM_OUT_MODE;
+		controls.Mode = ControlMode.ZOOM_OUT_MODE;
 
 		// instantiate an item and put it somewhere else
 		GameObject newThing = Instantiate(Resources.Load("Pickups/Bathroom Sink", typeof(GameObject))) as GameObject;
@@ -229,13 +301,13 @@ public class Tutorial : Quest {
 	void OnCollisionEnter (Collision col){
 		if (col.gameObject.name == "Killzone") {
 			if (manager.allQuestsCompleted) {
-				jumpedOff = true;
-				if (jumpedOff == true) {
-					finished = true;
-					if (finished == true) {
-						Destroy (this);
-					}
-				}
+//				jumpedOff = true;
+//				if (jumpedOff == true) {
+//					finished = true;
+//					if (finished == true) {
+//						Destroy (this);
+//					}
+//				}
 			}
 		}
 	}

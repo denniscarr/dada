@@ -18,7 +18,7 @@ public enum InterationState{
 }
 
 public class PlayerControllerNew : MonoBehaviour {
-	public ControlMode mode;
+	private ControlMode mode;
 
 	public ControlMode Mode{
 		get{
@@ -26,6 +26,11 @@ public class PlayerControllerNew : MonoBehaviour {
 		}
 		set{
 			mode = value;
+			switch(mode){
+			case ControlMode.IN_ROOM_MODE:InitInRoomMode();break;
+			case ControlMode.ZOOM_IN_MODE:InitZoomInMode();break;
+			case ControlMode.ZOOM_OUT_MODE:InitZoomOutMode();break;
+			}
 		}
 	}
 
@@ -136,6 +141,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomOutMode(){
+		Debug.Log("zoom out");
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
 		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
 
