@@ -176,6 +176,10 @@ public class MouseControllerNew : MonoBehaviour {
 		}
 	}
 
+	public void TutorialPressTabTip(int num){
+		writer.WriteAtPoint("Press Tab " + num.ToString() + " times", textPosition);
+	}
+
 	void CheckPointedObject(Transform pointedObject){
 		InteractionSettings inSets = pointedObject.GetComponentInChildren<InteractionSettings>();
 

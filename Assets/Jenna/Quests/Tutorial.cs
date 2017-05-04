@@ -63,6 +63,10 @@ public class Tutorial : Quest {
 
 	Transform player;
 
+	GameObject go_AK12;
+
+	int numPressTab = 0;
+
 	void Start () {
 		
 		player = GameObject.Find("Player").transform;
@@ -76,6 +80,7 @@ public class Tutorial : Quest {
 
 		// quest it note
 		questItNote = Instantiate(Resources.Load ("QuestItNote")) as GameObject;
+		//questItNote.transform.localScale *= 2;
 		questItNote.transform.position = controller.transform.position + controller.transform.forward*3;
 
 		// spawn text over the questitnote so they know to go to it
@@ -103,25 +108,28 @@ public class Tutorial : Quest {
 		visor = Instantiate (Resources.Load ("visor", typeof(GameObject))) as GameObject;
 		visor.transform.position = new Vector3 (level.transform.position.x, level.transform.position.y + highPoint, level.transform.position.z);
 		questItNote.transform.position = visor.transform.position;
+		visor.transform.localScale *= 2;
 		visor.SetActive (false);
 
 		// interaction settings, rip soon
 		intSet = visor.GetComponentInChildren<InteractionSettings> ();
 
 		controls = controller.GetComponent<PlayerControllerNew> ();
+
+
 	}
 
 	void Update() {
 		switch(state){
 		case TutorialState.PICKUP_NOTE:OnPickUpNote();break;
 		case TutorialState.PICKUP_VISOR:OnPickUpVisor();break;
-		case TutorialState.USE_PLATFORM:break;
-		case TutorialState.DRAG_NOTE_IN:break;
-		case TutorialState.THROW_NOTE_OUT:break;
-		case TutorialState.PRESS_TAB:break;
-		case TutorialState.EQUIP_GUN:break;
-		case TutorialState.USE_GUN:break;
-		case TutorialState.DROP_GUN:break;
+		case TutorialState.USE_PLATFORM:OnUsePlatform();break;
+		case TutorialState.DRAG_NOTE_IN:OnDragNoteIn();break;
+		case TutorialState.THROW_NOTE_OUT:OnThrowNoteOut();break;
+		case TutorialState.PRESS_TAB:OnPressTab();break;
+		case TutorialState.EQUIP_GUN:OnEquipGun();break;
+		case TutorialState.USE_GUN:OnUseGun();break;
+		case TutorialState.DROP_GUN:OnDropGun();break;
 		}
 
 
@@ -178,46 +186,95 @@ public class Tutorial : Quest {
 
 			// destroy it bc its now useless
 			Destroy(visor);
-			Destroy (textSpawn); // for good measure
+			Destroy(textSpawn); // for good measure
 
 			// change the text
-			text.text = "Click the platform to go back.";
+			text.text = "Find the operation platform.";
 
 			// stick the note to the screen
 			questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 
 			controls.Mode = ControlMode.ZOOM_OUT_MODE;
-			platformWriter.WriteAtPoint("Click me to revert to visor mode",platformWriter.transform.position+new Vector3(0,0,1));
+			//platformWriter.WriteAtPoint("Click me to revert to visor mode",platformWriter.transform.position+new Vector3(0,0,1));
 
 		}
 	}
 
 	void OnUsePlatform(){
-		
+
+		if (Input.GetMouseButtonDown(0)){ // if left button pressed...
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit)){
+				if(hit.collider.transform.parent.name.Equals("Viewing Platform")){
+					state = TutorialState.DRAG_NOTE_IN;
+					text.text = "Drag me in.";
+				}
+				// the object identified by hit.transform was clicked
+				// do whatever you want
+			}
+		}
 	}
 
 	void OnDragNoteIn(){
-		
+		if(questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
+			state = TutorialState.THROW_NOTE_OUT;
+			text.text = "Drag me out.";
+			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();//useless?
+		}
 	}
 
 	void OnThrowNoteOut(){
-		
+		Debug.Log(questItNote.transform.parent);
+		if(questItNote.transform.parent == null){
+			state = TutorialState.PRESS_TAB;
+			text.text = "Press TAB 5 times";
+			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+			//controller
+		}
 	}
 
 	void OnPressTab(){
-		
+		if(Input.GetKeyDown(KeyCode.Tab)){
+			numPressTab ++;
+			int rest = 5 - numPressTab;
+			if(rest > 0){
+				text.text = "Press TAB "+ rest.ToString() +" times";
+			}else{
+				state = TutorialState.EQUIP_GUN;//go_AK12 = Resources.Load("Pickups/AK12") as GameObject;
+				go_AK12 = Instantiate(Resources.Load<GameObject>("Pickups/AK12"));
+				go_AK12.transform.position = player.transform.position + player.transform.forward*3;
+				//instantiate gun
+				text.text = "Try to equip the gun here.";
+			}
+
+
+		}
 	}
 
 	void OnEquipGun(){
-		
+		if(go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
+			state = TutorialState.EQUIP_GUN;
+			text.text = "Try to use the gun.";
+		}
+
+
 	}
 
 	void OnUseGun(){
-		
+		if(controller.GetComponent<PlayerControllerNew>().Mode == ControlMode.ZOOM_IN_MODE 
+			&& go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped
+			&& Input.GetMouseButtonDown(0)){
+			state = TutorialState.DROP_GUN;
+			text.text = "Press G to drop the gun.";
+		}
 	}
 
-	void OnDragGun(){
-		
+	void OnDropGun(){
+		if(!go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
+			Debug.Log("Tutorial is done.");
+			//Destroy(gameObject);
+		}
 	}
 
 
