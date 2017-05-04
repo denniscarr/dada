@@ -152,6 +152,9 @@ public class MouseControllerNew : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
+
+        if (t_hit.name.Contains("Grail")) return;
+
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
 		Renderer renderer = t_hit.GetComponent<Renderer>();
@@ -219,7 +222,14 @@ public class MouseControllerNew : MonoBehaviour {
         }
 
         if (Input.GetMouseButtonDown(0)){
-			if(CheckAbility(inSets,false)){
+
+            if (pointedObject.GetComponentInChildren<GrailFunction>() != null)
+            {
+                pointedObject.GetComponentInChildren<GrailFunction>().Use();
+                return;
+            }
+
+            if (CheckAbility(inSets,false)){
                 GetComponent<Image> ().color = new Color(1,1,1,1);
 				if(playercontroller.Mode == ControlMode.ZOOM_IN_MODE){
 					//EquippableFinder.cs

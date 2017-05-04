@@ -180,7 +180,8 @@ public class Writer : MonoBehaviour {
 			if (glitchChance >= GlitchTextThreshold){
 				}else{
 			newWord.GetComponent<Renderer> ().sharedMaterial = currentFont.material;
-		}
+                newWord.GetComponent<Renderer>().sharedMaterial.renderQueue = 4000;
+            }
 			
             // Set this word's local position.
             newWord.transform.localPosition = spawnPosition;

@@ -203,12 +203,12 @@ public class EquippableFinder : MonoBehaviour {
 
 	void OutlineTargetObject(Transform t_hit){
         //Debug.Log("OutlineTargetObject");
-        if (t_hit.
-            GetComponent<Renderer>() == null) return;
 
         lastObjectInspected = t_hit;
 
-		renderList = new List<Renderer>();
+        if (t_hit.GetComponent<Renderer>() == null || t_hit.name.Contains("Grail")) return;
+
+        renderList = new List<Renderer>();
 		shaderList = new List<string>();
 		Renderer renderer = t_hit.GetComponent<Renderer>();
 		if(renderer){
@@ -231,6 +231,12 @@ public class EquippableFinder : MonoBehaviour {
 
     void MoveToCamera ()
     {
+        if (equipTarget.GetComponentInChildren<GrailFunction>() != null)
+        {
+            equipTarget.GetComponentInChildren<GrailFunction>().Use();
+            return;
+        }
+
         // Disable collision & gravity.
         equipTarget.GetComponent<Collider>().isTrigger = true;
         if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());

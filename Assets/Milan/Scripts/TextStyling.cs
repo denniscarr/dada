@@ -44,7 +44,6 @@ public class TextStyling : MonoBehaviour {
 		if (lerpVal < 0.01f && delete) {
             if (transform.parent.name == "Text Container")
             {
-                Debug.Log("destorying text containter");
                 Destroy(transform.parent.gameObject);
             }
 			Destroy (this.gameObject);
