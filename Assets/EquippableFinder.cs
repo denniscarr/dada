@@ -81,7 +81,7 @@ public class EquippableFinder : MonoBehaviour {
             ))
         {
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
-                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped)
+                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
             {
 				//Debug.Log(hit.transform.name);
                 // Get the distance of this object and, if it's the closest to the player then save it.
