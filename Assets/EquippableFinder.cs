@@ -275,11 +275,11 @@ public class EquippableFinder : MonoBehaviour {
         {
             if (Physics.Raycast(myCamera.ScreenPointToRay(new Vector3(myCamera.pixelWidth * 0.75f, myCamera.pixelHeight * 0.45f, 0f)), out hit, 5f))
             {
-                Debug.Log("hit a thing.");
+                //Debug.Log("hit a thing.");
 
                 if (hit.collider.transform == equipTarget)
                 {
-                    Debug.Log("resized my thing");
+                    //Debug.Log("resized my thing");
                     equipTarget.localPosition = new Vector3(
                         equipTarget.localPosition.x,
                         equipTarget.localPosition.y - 0.1f,
@@ -343,7 +343,7 @@ public class EquippableFinder : MonoBehaviour {
 		yield return new WaitForSeconds(1.5f);
         if (_equipTarget != null)
         {
-            Debug.Log("Coroutine finished");
+            //Debug.Log("Coroutine finished");
 		    equippedObjects.Add(_equipTarget);
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
         }

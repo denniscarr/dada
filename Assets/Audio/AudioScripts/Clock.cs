@@ -242,7 +242,7 @@ namespace Beat
         public event BeatEvent Beat;
        
         /// <summary>
-        /// Event sent every 32nd note
+        /// Event sent every Measure
         /// </summary>
         public event BeatEvent Measure;
 
