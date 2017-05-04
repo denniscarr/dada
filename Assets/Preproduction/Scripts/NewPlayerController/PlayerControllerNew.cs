@@ -49,8 +49,6 @@ public class PlayerControllerNew : MonoBehaviour {
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
 	//float pressGapCount;
 
-	CS_PlaySFX playSFXScript;
-
 	//INSTRUCTIONS TEXT do not need any more
 	public Text txtInfo;
     Writer writer;
@@ -117,7 +115,8 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		Debug.Log(mode);
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 1.0f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 0.2f);
+		//Debug.Log ("playing fucking sfx");
 
 	}
 
@@ -132,6 +131,8 @@ public class PlayerControllerNew : MonoBehaviour {
 		rigidbodyFirstPersonController.enabled = false;
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
+
+		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
 
 	}
 
@@ -152,7 +153,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		headBob.enabled = false;
 
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 1.0f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, 0.7f);
 	}
 
 
@@ -178,7 +179,7 @@ public class PlayerControllerNew : MonoBehaviour {
                 if (Input.GetMouseButtonDown(0)){
 					Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
-					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 1.0f);
+					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
 					InitZoomOutMode();
 
 				}

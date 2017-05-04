@@ -13,7 +13,7 @@ public class QuestItNoteFunction : D_Function {
 
         if (transform.parent.name.Contains("(Clone)"))
         {
-            Debug.Log("Renaming Quest it note");
+            //Debug.Log("Renaming Quest it note");
             transform.parent.name = transform.parent.name.Remove(transform.parent.name.Length - 7, 7);
         }
 
