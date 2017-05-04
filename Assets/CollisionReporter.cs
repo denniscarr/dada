@@ -4,22 +4,11 @@ using UnityEngine;
 
 public class CollisionReporter : MonoBehaviour {
 
-    NPC npcScript;
-
-    private void Start()
-    {
-        npcScript = GetComponentInChildren<NPC>();
-    }
+    public bool collidedWithSomethingAtLeastOnce;
 
     private void OnCollisionEnter(Collision collision)
     {
-        // See if this object is no longer an NPC, if so just kill myself.
-        if (npcScript == null)
-        {
-            Destroy(this);
-            return;
-        }
-
-        npcScript.CollisionInParent(collision);
+        collidedWithSomethingAtLeastOnce = true;
     }
+
 }

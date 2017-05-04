@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Beat;
 
 public class AmbientMusic : MonoBehaviour {
 
 	public AudioSource[] hiSource; 
+	AudioSource currentHiSource;
 	public AudioSource[] loSource;
+	AudioSource currentLoSource;
 	public AudioSource[] ambienceSource;
 
 	public BufferShuffler[] shufflers;
@@ -16,6 +19,9 @@ public class AmbientMusic : MonoBehaviour {
 	float hue;
 
 	float shufflerTime;
+
+	public float pitchShiftingScale;
+	public float pitchShiftingTimer;
 
 	Color currentLevelColor;
 
@@ -31,6 +37,11 @@ public class AmbientMusic : MonoBehaviour {
 			shuffler.MusicClip = shuffler.gameObject.GetComponent<AudioSource> ().clip;
 			shuffler.enabled = false;
 		}
+
+		pitchShiftingScale = 0f;
+		pitchShiftingTimer = 1f;
+
+		StartCoroutine ("RemapPitch");
 	}
 
 	// Use this for initialization
@@ -54,6 +65,7 @@ public class AmbientMusic : MonoBehaviour {
 			if (lHue >= loHueBound && lHue < hiHueBound) {
 				//Debug.Log("range is greater than: " + loBound + "and less than " + hiBound);
 				hiSource [i].volume = 1.0f;
+				currentHiSource = hiSource [i];
 			} else {
 				hiSource [i].volume = 0.0f;
 			}
@@ -87,6 +99,7 @@ public class AmbientMusic : MonoBehaviour {
 
 				if (lHue >= ((float)i * (1.0f / (float)hiSource.Length)) && lHue <= ((float)(i + 1f) * (1f / (float)hiSource.Length))) {
 					hiSource [i].volume = 1.0f;
+					currentHiSource = hiSource [i];
 				} else {
 					hiSource [i].volume = 0.0f;
 				}
@@ -113,7 +126,7 @@ public class AmbientMusic : MonoBehaviour {
 		if (Services.IncoherenceManager.globalIncoherence > 0.25f) {
 
 			foreach (BufferShuffler shuffler in shufflers) {
-				if (!shuffler.enabled) {
+				if (!shuffler.enabled  && shuffler.gameObject.GetComponent<AudioSource>().volume == 1f) {
 					shuffler.enabled = true;
 					shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
 					shuffler.SecondsPerCrossfade = 0.1f;
@@ -121,21 +134,32 @@ public class AmbientMusic : MonoBehaviour {
 
 				shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
 
-				shuffler.SecondsPerShuffle = 3.0f - shufflerTime;
-				
+				shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+
 
 			}
 
+
+
+			pitchShiftingScale = 3.0f * Services.IncoherenceManager.globalIncoherence;
+			pitchShiftingTimer = 2.0f - Services.IncoherenceManager.globalIncoherence;
+
 		}
+
+
+
 
 		prevIncoherence = Services.IncoherenceManager.globalIncoherence;
 
 	}
 
+	IEnumerator RemapPitch() {
+		while (true) {
 
+			yield return new WaitForSeconds (pitchShiftingTimer);
+			currentHiSource.pitch =  1f + (Random.value * pitchShiftingScale) - (pitchShiftingScale/2f);
 
+		}
 
-
-
-
+	}
 }

@@ -60,22 +60,33 @@ public class PickupQuest : Quest {
 
 		if (parentObject != null && parentObject.GetComponentInChildren<InteractionSettings>() != null)
 		{
-			if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
-			    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
-			    !pickedUp)
-            {
-				numberofPickups++;
-				text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
+			//if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
+			//    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
+			//    !pickedUp)
+   //         {
+			//	numberofPickups++;
+			//	text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
 
-				if (numberofPickups >= requiredPickups) {
-					FinishQuest ();
-				}
+			//	if (numberofPickups >= requiredPickups) {
+			//		FinishQuest ();
+			//	}
 
-				pickedUp = true;
+			//	pickedUp = true;
 			
-			} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
-				pickedUp = false;
-			}
+			//} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
+			//	pickedUp = false;
+			//}
+
+            if (parentObject.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            {
+                parentObject.AddComponent<CollisionReporter>();
+
+                if (parentObject.GetComponent<CollisionReporter>() != null && parentObject.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player && parentObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
+                {
+                    Destroy(parentObject.GetComponent<CollisionReporter>());
+                    FinishQuest();
+                }
+            }
 		}
 
 		if (fieryGlow != null) fieryGlow.transform.position = parentObject.transform.position;
@@ -117,7 +128,7 @@ public class PickupQuest : Quest {
 
 		// give it a description eh
 		// can make this more interesting later during tweaking/juicing stages
-		description = (title + " " + requiredPickups.ToString() + " " + "times and put it down again. Reward: $" + rewardMoney);
+		description = (title + " " + "and place it in your room. Reward: $" + rewardMoney);
 
 		questTextSpawn ();
 
@@ -176,11 +187,11 @@ public class PickupQuest : Quest {
     public void questTextSpawn(){
 		
 		// put the text of the quest right over the object
-		textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
-		textSpawn.transform.parent = parentObject.transform;
-		textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
-		text = textSpawn.GetComponent<TextMesh> ();
-		text.text = ("pick me up" + " " + requiredPickups.ToString());
+		//textSpawn = Instantiate (Resources.Load("TextSpawn", typeof(GameObject))) as GameObject;
+		//textSpawn.transform.parent = parentObject.transform;
+		//textSpawn.transform.position = new Vector3 (positionX, positionY, positionZ);
+		//text = textSpawn.GetComponent<TextMesh> ();
+		//text.text = ("pick me up" + " " + requiredPickups.ToString());
 		
 	}
 
@@ -192,7 +203,7 @@ public class PickupQuest : Quest {
 		PickupQuest theCurrentQuest = parentObject.GetComponent<PickupQuest>();
 
 		// mark it done
-		text.text = ("donezo");
+		//text.text = ("donezo");
 		progress = Quest.QuestProgress.COMPLETE;
 
 		// explode it

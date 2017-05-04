@@ -14,10 +14,12 @@ public class Killzone : MonoBehaviour {
         }
 
         // If this object is not the grail, put it back on the level.
-        else if (other == Services.Player)
+        else
         {
+            Debug.Log(other.name);
+            float currentLevelRadius = Services.LevelGen.currentLevel._width * Services.LevelGen.tileScale;
             other.transform.position = Services.LevelGen.currentLevel.transform.position;
-            other.transform.Translate(Random.Range(-20f, 20f), 40f, Random.Range(-20f, 20f));
+            other.transform.Translate(Random.Range(-currentLevelRadius, currentLevelRadius), 25f, Random.Range(-currentLevelRadius, currentLevelRadius));
         }
     }
 }

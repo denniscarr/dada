@@ -158,9 +158,9 @@ public class InteractionSettings : MonoBehaviour {
 	void Awake()
     {
         // Remove '(Clone)' from my name
-        if (gameObject.name.Contains("(Clone)"))
+        if (transform.parent.name.Contains("(Clone)"))
         {
-            gameObject.name = gameObject.name.Remove(gameObject.name.Length - 7, 7);
+            transform.parent.name = transform.parent.name.Remove(transform.parent.name.Length - 7, 7);
         }
 
         // Get my fire prfab ready.
@@ -243,7 +243,9 @@ public class InteractionSettings : MonoBehaviour {
     public void GetPurchased()
     {
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds -= price;
-        transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+        if (transform.parent.GetComponentInChildren<IncoherenceController>() != null) {
+            transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+        }
         Instantiate(Resources.Load("Buy Particles"), transform.parent.position, Quaternion.Euler(270f, 0f, 0f));
         isOwnedByPlayer = true;
     }

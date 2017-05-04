@@ -13,7 +13,8 @@ public class Writer : MonoBehaviour {
 	public Font[] fonts;
 	public GameObject textPrefab;
 	public bool fade, noRotation, delete, WordbyWord;
-	public float delay; 
+	public float delay;
+    public float fadeInSpeed = 1f;
 	public float fadeSpeed;
 	public TextAsset sourceText;
 	Vector3 originalPos;
@@ -47,6 +48,12 @@ public class Writer : MonoBehaviour {
 //		if (sourceText != null) {
 //			SetScript (sourceText.text);
 //		}
+
+        if (gameObject.name == "NPC AI")
+        {
+            fade = true;
+            delete = true;
+        }
 	}
 
     private void Update()
@@ -116,7 +123,7 @@ public class Writer : MonoBehaviour {
     {
         SetScript(_text);
 
-        CreateTextBox (transform.position, false);
+        CreateTextBox (new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), false);
     }
 
 
@@ -135,7 +142,11 @@ public class Writer : MonoBehaviour {
         if (permaText != null)
         {
             Destroy(permaText.gameObject);
-
+            //foreach(TextStyling text in permaText.GetComponentsInChildren<TextStyling>())
+            //{
+            //    text.fade = true;
+            //}
+            permaText = null;
             timeSinceLastWrite = cooldownTime;
         }
     }
@@ -169,7 +180,8 @@ public class Writer : MonoBehaviour {
 			if (glitchChance >= GlitchTextThreshold){
 				}else{
 			newWord.GetComponent<Renderer> ().sharedMaterial = currentFont.material;
-		}
+                newWord.GetComponent<Renderer>().sharedMaterial.renderQueue = 4000;
+            }
 			
             // Set this word's local position.
             newWord.transform.localPosition = spawnPosition;
@@ -179,7 +191,7 @@ public class Writer : MonoBehaviour {
             textStyling.fade = fade;
             textStyling.delete = delete;
             textStyling.fadeIn = true;
-            textStyling.speed = fadeSpeed;
+            textStyling.fadeSpeed = fadeSpeed;
 
             // Get the position of the next word.
             spawnPosition.x += (newWord.GetComponent<Renderer>().bounds.size.x + tracking);
@@ -197,7 +209,15 @@ public class Writer : MonoBehaviour {
         // Rotate the text containter towards the player.
         if (!dontFacePlayer)
         {
-            textContainer.transform.LookAt(Services.Player.transform);
+            if (transform.parent.GetComponentInChildren<InteractionSettings>() != null && transform.parent.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            {
+                textContainer.transform.LookAt(GameObject.Find("PlayerInRoon").transform);
+            }
+            else
+            {
+                textContainer.transform.LookAt(Services.Player.transform);
+            }
+
             textContainer.transform.Rotate(0f, 180f, 0f);
         }
 
@@ -237,7 +257,8 @@ public class Writer : MonoBehaviour {
 
 		t.delete = delete;
 		t.fadeIn = true;
-		t.speed = fadeSpeed;
+        t.fadeInSpeed = fadeInSpeed;
+		t.fadeSpeed = fadeSpeed;
 		wordIndex++;
 
 		if (wordIndex > _script [stringIndex].Length -1){

@@ -16,6 +16,8 @@ public class EquippableFinder : MonoBehaviour {
 
     Transform buyTarget;    // The object that can currently be bought.
 
+    Transform lastObjectInspected;  // The last object that was looked at using the mouse.
+
     Writer writer;
     Vector3 textPosition;   // Where equip text is written.
 
@@ -78,8 +80,13 @@ public class EquippableFinder : MonoBehaviour {
             transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange
             ))
         {
+
+//			if(hit.transform.parent && hit.transform.parent.name.Equals("Viewing Platform")){
+//				writer.WriteAtPoint("Click to stand on " + nearestObject.name, textPosition);
+//			}
+
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
-                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped)
+                !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
             {
 				//Debug.Log(hit.transform.name);
                 // Get the distance of this object and, if it's the closest to the player then save it.
@@ -102,6 +109,11 @@ public class EquippableFinder : MonoBehaviour {
                     }
                 }
             }
+        }
+
+        if (nearestObject == null || (lastObjectInspected != null && nearestObject != lastObjectInspected))
+        {
+            writer.DeleteTextBox();
         }
 
         // Show the equip prompt for the nearest object.
@@ -139,11 +151,10 @@ public class EquippableFinder : MonoBehaviour {
             }
         }
 
-        else
+        else if (nearestObject == null)
         {
 			DeoutlineTargetObject();
             mouse.ChangeCursor("idle");
-            writer.DeleteTextBox();
         }
 
         // PLAYER INPUT
@@ -156,7 +167,7 @@ public class EquippableFinder : MonoBehaviour {
             {
                 buyTarget.GetComponentInChildren<InteractionSettings>().GetPurchased();
                 writer.DeleteTextBox();
-                writer.WriteAtPoint("Purchased " + buyTarget.name + " for " + buyTarget.GetComponentInChildren<InteractionSettings>().price + "!", textPosition);
+                writer.WriteAtPoint("Purchased " + buyTarget.name + " for $" + buyTarget.GetComponentInChildren<InteractionSettings>().price + ".", textPosition);
             }
 
             else
@@ -178,6 +189,7 @@ public class EquippableFinder : MonoBehaviour {
         }
     }
 
+
 	void DeoutlineTargetObject(){
 		//Debug.Log("DeoutlineTargetObject");
 		for(int i = 0; i < renderList.Count;i++){
@@ -188,16 +200,20 @@ public class EquippableFinder : MonoBehaviour {
 			//Debug.Log(shaderList[i]);
 		}
 
+        //lastObjectInspected = null;
 		renderList.Clear();
 		shaderList.Clear();
 	}
 
 
 	void OutlineTargetObject(Transform t_hit){
-		//Debug.Log("OutlineTargetObject");
+        //Debug.Log("OutlineTargetObject");
 
+        lastObjectInspected = t_hit;
 
-		renderList = new List<Renderer>();
+        if (t_hit.GetComponent<Renderer>() == null || t_hit.name.Contains("Grail")) return;
+
+        renderList = new List<Renderer>();
 		shaderList = new List<string>();
 		Renderer renderer = t_hit.GetComponent<Renderer>();
 		if(renderer){
@@ -220,6 +236,12 @@ public class EquippableFinder : MonoBehaviour {
 
     void MoveToCamera ()
     {
+        if (equipTarget.GetComponentInChildren<GrailFunction>() != null)
+        {
+            equipTarget.GetComponentInChildren<GrailFunction>().Use();
+            return;
+        }
+
         // Disable collision & gravity.
         equipTarget.GetComponent<Collider>().isTrigger = true;
         if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
@@ -345,26 +367,26 @@ public class EquippableFinder : MonoBehaviour {
 
         Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
 
-        foreach (Transform equippedObj in equippedObjects)
+        for (int i = 0; i < equippedObjects.Count; i++)
         {
-            if (equippedObj != null)
+            if (equippedObjects[i] != null)
             {
-                equippedObj.SetParent(null);
+                equippedObjects[i].SetParent(null);
 
                 // Re-enable collision & stuff.
-                equippedObj.GetComponent<Collider>().isTrigger = false;
-                if (equippedObj.GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObj.GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
-                if (equippedObj.GetComponent<Rigidbody>() != null)
+                equippedObjects[i].GetComponent<Collider>().isTrigger = false;
+                if (equippedObjects[i].GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObjects[i].GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
+                if (equippedObjects[i].GetComponent<Rigidbody>() != null)
                 {
-                    equippedObj.GetComponent<Rigidbody>().isKinematic = false;
-                    equippedObj.GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+                    equippedObjects[i].GetComponent<Rigidbody>().isKinematic = false;
+                    equippedObjects[i].GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
                 }
 
-                equippedObj.transform.localScale = originalScale;
+                equippedObjects[i].transform.localScale = originalScale;
 
-                equippedObj.GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
-                equippedObjects.Remove(equippedObj);
+                equippedObjects.Remove(equippedObjects[i]);
             }
         }
     }

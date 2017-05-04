@@ -18,7 +18,7 @@ public enum InterationState{
 }
 
 public class PlayerControllerNew : MonoBehaviour {
-	public ControlMode mode;
+	private ControlMode mode;
 
 	public ControlMode Mode{
 		get{
@@ -26,6 +26,11 @@ public class PlayerControllerNew : MonoBehaviour {
 		}
 		set{
 			mode = value;
+			switch(mode){
+			case ControlMode.IN_ROOM_MODE:InitInRoomMode();break;
+			case ControlMode.ZOOM_IN_MODE:InitZoomInMode();break;
+			case ControlMode.ZOOM_OUT_MODE:InitZoomOutMode();break;
+			}
 		}
 	}
 
@@ -48,8 +53,6 @@ public class PlayerControllerNew : MonoBehaviour {
 
 	//count the time between pickup and place,prevent from vaild click repeatly in a second
 	//float pressGapCount;
-
-	CS_PlaySFX playSFXScript;
 
 	//INSTRUCTIONS TEXT do not need any more
 	public Text txtInfo;
@@ -117,7 +120,8 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		Debug.Log(mode);
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 1.0f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 0.2f);
+		//Debug.Log ("playing fucking sfx");
 
 	}
 
@@ -133,9 +137,12 @@ public class PlayerControllerNew : MonoBehaviour {
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
 
+		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
+
 	}
 
 	public void InitZoomOutMode(){
+		Debug.Log("zoom out");
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
 		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
 
@@ -152,7 +159,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		headBob.enabled = false;
 
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 1.0f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, 0.7f);
 	}
 
 
@@ -178,7 +185,7 @@ public class PlayerControllerNew : MonoBehaviour {
                 if (Input.GetMouseButtonDown(0)){
 					Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
-					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 1.0f);
+					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
 					InitZoomOutMode();
 
 				}

@@ -37,8 +37,8 @@ public class MouseControllerNew : MonoBehaviour {
     public float sfxVolume = 0.3f;
 
     public Text txtInfo;
-    Writer writer;
-    [SerializeField] Vector3 textPosition;
+    public Writer writer;
+    public Vector3 textPosition;
 
     string lastCursorName;
 
@@ -152,6 +152,9 @@ public class MouseControllerNew : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
+
+        if (t_hit.name.Contains("Grail")) return;
+
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
 		Renderer renderer = t_hit.GetComponent<Renderer>();
@@ -171,6 +174,10 @@ public class MouseControllerNew : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	public void TutorialPressTabTip(int num){
+		writer.WriteAtPoint("Press Tab " + num.ToString() + " times", textPosition);
 	}
 
 	void CheckPointedObject(Transform pointedObject){
@@ -219,7 +226,14 @@ public class MouseControllerNew : MonoBehaviour {
         }
 
         if (Input.GetMouseButtonDown(0)){
-			if(CheckAbility(inSets,false)){
+
+            if (pointedObject.GetComponentInChildren<GrailFunction>() != null)
+            {
+                pointedObject.GetComponentInChildren<GrailFunction>().Use();
+                return;
+            }
+
+            if (CheckAbility(inSets,false)){
                 GetComponent<Image> ().color = new Color(1,1,1,1);
 				if(playercontroller.Mode == ControlMode.ZOOM_IN_MODE){
 					//EquippableFinder.cs
@@ -321,7 +335,7 @@ public class MouseControllerNew : MonoBehaviour {
                 pickedUpObject.localScale *= scale;
 
 			}else{
-				pickedUpObject.localScale = Vector3.one;
+                pickedUpObject.localScale = pickedUpObject.GetComponentInChildren<InteractionSettings>().savedScale;
 			}
 			pickedUpObject.SetParent(t_INROOMOBJECTS,true);
             pickedUpObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
