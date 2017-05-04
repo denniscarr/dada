@@ -78,7 +78,7 @@ public class Tutorial : Quest {
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 			return;
 		}
-		GetComponent<QuestManager>().enabled =false;
+		GetComponent<QuestManager>().enabled = false;
 		GetComponent<QuestFinderScript>().enabled = false;
 		GetComponent<QuestBuilderScript>().enabled = false;
 		GetComponent<PickupQuest>().enabled = false;
@@ -333,8 +333,12 @@ public class Tutorial : Quest {
 		if(!go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
 			Debug.Log("Tutorial is done.");
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
-			//Destroy(questItNote);
-			QuestItNoreText.text = "Be brave to jump off.";
+            GetComponent<QuestManager>().enabled = true;
+            GetComponent<QuestFinderScript>().enabled = true;
+            GetComponent<QuestBuilderScript>().enabled = true;
+            GetComponent<PickupQuest>().enabled = true;
+            //Destroy(questItNote);
+            QuestItNoreText.text = "Be brave to jump off.";
 			this.enabled = false;
 		}
 	}
