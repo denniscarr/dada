@@ -81,7 +81,7 @@ public class PickupQuest : Quest {
             {
                 parentObject.AddComponent<CollisionReporter>();
 
-                if (parentObject.GetComponent<CollisionReporter>() != null && parentObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
+                if (parentObject.GetComponent<CollisionReporter>() != null && parentObject.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player && parentObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
                 {
                     Destroy(parentObject.GetComponent<CollisionReporter>());
                     FinishQuest();
