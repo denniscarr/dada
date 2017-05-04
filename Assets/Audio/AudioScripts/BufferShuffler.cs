@@ -13,10 +13,7 @@ public class BufferShuffler : MonoBehaviour
     public Clock MyClock;
 
 	public bool ShuffleUpdate;
-
-	//
-
-
+	bool shuffleUpdated;
 
     public bool TempoSynced;
     public TickValue BeatsPerShuffle;
@@ -69,6 +66,7 @@ public class BufferShuffler : MonoBehaviour
         _outputSampleRate = AudioSettings.outputSampleRate;
 
 		ShuffleUpdate = false;
+		shuffleUpdated = false;
     }
 
     public void SetSecondsPerShuffle(float secondsPerShuffle)
@@ -180,6 +178,13 @@ public class BufferShuffler : MonoBehaviour
 
     void Update()
     {
+
+		if (shuffleUpdated != ShuffleUpdate) {
+			transform.parent.gameObject.BroadcastMessage ("NewShuffle");
+			//Debug.Log ("did shit");
+			shuffleUpdated = false;
+			ShuffleUpdate = false;
+		}
         if (_clipToShuffle != ClipToShuffle)
         {
             LoadNewClip(ClipToShuffle);
@@ -294,7 +299,8 @@ public class BufferShuffler : MonoBehaviour
 			} 
 			else if ((_fadeIndex + clipIndex) == _crossFadeSamples) 
 			{
-				ShuffleUpdate = !ShuffleUpdate;
+				shuffleUpdated = true;
+
 			}
             else
             {
@@ -308,6 +314,10 @@ public class BufferShuffler : MonoBehaviour
         _fadeIndex += clipIndex;
         _theLastStartIndex += clipIndex;
     }
+
+	void NewShuffle() {
+
+	}
 
 //	public AudioClip CrossFadeClip(float[] clipData) { 
 //

@@ -43,6 +43,8 @@ public class SpriteSound : MonoBehaviour {
 
 		gameObject.GetComponent<SpriteRenderer> ().material.DOColor (origColor, 1.0f);
 
+		gameObject.GetComponent<ChangeSprite> ().changeSprite ();
+
 		int soundCount = 0;
 
 		foreach (Collider collider in overlapObjects) {
