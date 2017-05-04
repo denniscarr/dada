@@ -115,9 +115,9 @@ public class NPC : MonoBehaviour {
 
         ghostMaterial = Resources.Load("Materials/Ghost") as Material;
 
-        if (transform.parent.GetComponent<CollisionReporter>() == null)
+        if (transform.parent.GetComponent<CollisionReporterNPC>() == null)
         {
-            transform.parent.gameObject.AddComponent<CollisionReporter>();
+            transform.parent.gameObject.AddComponent<CollisionReporterNPC>();
         }
 
         rb = transform.parent.GetComponent<Rigidbody>();
@@ -730,7 +730,7 @@ public class NPC : MonoBehaviour {
 
         //transform.parent.GetComponent<Rigidbody>().mass *= 0.01f;
         if (transform.parent.GetComponentInChildren<Animator>() != null) transform.parent.GetComponentInChildren<Animator>().enabled = false;
-        Destroy(transform.parent.GetComponent<CollisionReporter>());
+        Destroy(transform.parent.GetComponent<CollisionReporterNPC>());
 
         transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 

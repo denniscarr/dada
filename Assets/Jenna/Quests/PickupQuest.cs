@@ -60,22 +60,33 @@ public class PickupQuest : Quest {
 
 		if (parentObject != null && parentObject.GetComponentInChildren<InteractionSettings>() != null)
 		{
-			if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
-			    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
-			    !pickedUp)
-            {
-				numberofPickups++;
-				text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
+			//if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
+			//    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
+			//    !pickedUp)
+   //         {
+			//	numberofPickups++;
+			//	text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
 
-				if (numberofPickups >= requiredPickups) {
-					FinishQuest ();
-				}
+			//	if (numberofPickups >= requiredPickups) {
+			//		FinishQuest ();
+			//	}
 
-				pickedUp = true;
+			//	pickedUp = true;
 			
-			} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
-				pickedUp = false;
-			}
+			//} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
+			//	pickedUp = false;
+			//}
+
+            if (parentObject.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            {
+                parentObject.AddComponent<CollisionReporter>();
+
+                if (parentObject.GetComponent<CollisionReporter>() != null && parentObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
+                {
+                    Destroy(parentObject.GetComponent<CollisionReporter>());
+                    FinishQuest();
+                }
+            }
 		}
 
 		if (fieryGlow != null) fieryGlow.transform.position = parentObject.transform.position;
@@ -117,7 +128,7 @@ public class PickupQuest : Quest {
 
 		// give it a description eh
 		// can make this more interesting later during tweaking/juicing stages
-		description = (title + " " + requiredPickups.ToString() + " " + "times and put it down again. Reward: $" + rewardMoney);
+		description = (title + " " + requiredPickups.ToString() + " " + "and place it in your room. Reward: $" + rewardMoney);
 
 		questTextSpawn ();
 
