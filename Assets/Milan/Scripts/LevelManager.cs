@@ -131,7 +131,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		maxNPCs += 1;
 		maxObjects += 2;
-		maxSprites += 20;
+		maxSprites += 50;
 		radius += 10;
 		perlinFrequency += 0.020f;
 		height += 1;
