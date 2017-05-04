@@ -23,9 +23,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	string[] LevelDescriptions;
 	Writer writer;
 
+	public bool isTutorialCompleted = false;
 
 	void Start()
 	{
+		isTutorialCompleted = false;
 		LevelDescriptions = sourceText.text.Split(new char[] { '\n' });
 		NoiseRemapping = new float[15];
 
@@ -45,7 +47,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	void Update()
     {
         // If the player has jumped off the level.
-		if (Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
+		if (isTutorialCompleted && Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
             //			if (currentLevel != null) currentLevel.enabled = false;

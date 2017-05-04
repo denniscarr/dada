@@ -38,7 +38,7 @@ public class MouseControllerNew : MonoBehaviour {
 
     public Text txtInfo;
     public Writer writer;
-    [SerializeField] public Vector3 textPosition;
+    public Vector3 textPosition;
 
     string lastCursorName;
 
@@ -174,6 +174,10 @@ public class MouseControllerNew : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	public void TutorialPressTabTip(int num){
+		writer.WriteAtPoint("Press Tab " + num.ToString() + " times", textPosition);
 	}
 
 	void CheckPointedObject(Transform pointedObject){
