@@ -142,7 +142,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	void Update() {
 		//AltitudeMusic ();
-		dadaMixer.SetFloat("Distortion", Services.IncoherenceManager.globalIncoherence);
+
 
 	}
 

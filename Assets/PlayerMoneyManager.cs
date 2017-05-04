@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerMoneyManager : MonoBehaviour {
 
-    int _funds = 499;
+    [SerializeField] int _funds = 499;
     public int funds
     {
         get { return _funds; }

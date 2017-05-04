@@ -4,7 +4,7 @@ using System.Collections;
 public class TextStyling : MonoBehaviour {
 
 	TextMesh Text;
-	public float speed;
+	public float fadeSpeed, fadeInSpeed;
 	public bool fade, fadeIn, delete, rotFixed;
 
 	private float lerpVal;
@@ -29,12 +29,17 @@ public class TextStyling : MonoBehaviour {
 		}
 
 		if (fadeIn) {
-			lerpVal += Time.deltaTime;
-			FadeIn ();
+			lerpVal += Time.deltaTime / fadeInSpeed;
+            lerpVal = Mathf.Clamp01(lerpVal);
+
+            FadeIn();
 		} else {
-			lerpVal -= Time.deltaTime / speed;
+            lerpVal -= Time.deltaTime / fadeSpeed;
+            lerpVal = Mathf.Clamp01(lerpVal);
+
 			if (fade) Text.color = new Color (Text.color.r, Text.color.g, Text.color.b, lerpVal); 
 		}
+
 			
 		if (lerpVal < 0.01f && delete) {
             if (transform.parent.name == "Text Container")
@@ -51,7 +56,7 @@ public class TextStyling : MonoBehaviour {
 //	}
 
 	public void SetDecay(int x){
-		speed = x;
+		fadeSpeed = x;
 	}
 
 	public void setText(string text){
@@ -64,7 +69,7 @@ public class TextStyling : MonoBehaviour {
 		if (Text.color.a < 1) {
 			Text.color = new Color (Text.color.r, Text.color.g, Text.color.b, lerpVal);
 		}
-		if (Text.color.a >= 1) {
+		if (Text.color.a >= 0.99f) {
 			fadeIn = false;
 		}
 	}

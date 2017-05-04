@@ -266,9 +266,7 @@ public class NPC : MonoBehaviour {
                 rayDirection = Vector3.ProjectOnPlane(rayDirection, hit.normal);
             }
 
-            Debug.DrawRay(rayOrigin, rayDirection * lookForwardRange, Color.blue);
-
-            if (Physics.Raycast(rayOrigin, rayDirection, out hit, lookForwardRange))
+            if (Physics.SphereCast(new Vector3(rayOrigin.x, rayOrigin.y + 1.2f, rayOrigin.z), 1f, rayDirection, out hit, lookForwardRange))
             {
                 // See if I hate the object I'm looking at.
                 foreach (string name in hatedObjects)
@@ -684,7 +682,8 @@ public class NPC : MonoBehaviour {
         }
     }
 
-	//this does audio stuff
+	
+    //this does audio stuff
 	void Speak() {
 
 		if (Services.AudioManager != null)
@@ -696,6 +695,7 @@ public class NPC : MonoBehaviour {
 			speakSource.Play ();
 		}
 	}
+
 
     public void CollisionInParent(Collision collision)
     {
@@ -714,6 +714,7 @@ public class NPC : MonoBehaviour {
             health -= collision.relativeVelocity.magnitude * 0.2f;
         }
     }
+
 
     void Die()
     {
@@ -752,6 +753,7 @@ public class NPC : MonoBehaviour {
         // Destroy NPC AI prefab
         gameObject.SetActive(false);
     }
+
 
     public void CatchOnFire()
     {

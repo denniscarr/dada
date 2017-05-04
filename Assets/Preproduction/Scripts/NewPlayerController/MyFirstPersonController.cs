@@ -120,7 +120,7 @@ public class MyFirstPersonController : MonoBehaviour
 		}
 		//float magnitude = playercontroller.Mode == contro? m_Input.magnitude:m_Input.y;
 
-		if (Mathf.Abs (magnitude) > 0.2f && footstepCooldown > 0.5f) {
+		if (Mathf.Abs (magnitude) > 0.2f && footstepCooldown > 0.5f  && m_CharacterController.isGrounded) {
 			int n = Random.Range(1, m_FootstepSounds.Length);
 			m_AudioSource.clip = m_FootstepSounds[n];
 			m_AudioSource.Play();

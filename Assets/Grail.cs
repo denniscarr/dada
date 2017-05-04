@@ -6,6 +6,7 @@ public class Grail : MonoBehaviour {
 	
     bool dying = false;
 
+
 	void Update ()
     {
         if (dying) return;
@@ -26,22 +27,22 @@ public class Grail : MonoBehaviour {
         }
 
         // Run away from player.
-        if (Vector3.Distance(transform.position, Services.Player.transform.position) < 11f)
-        {
-            //Vector3 newPosition;
-            Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
-            directionFromPlayer = directionFromPlayer.normalized;
+        //if (Vector3.Distance(transform.position, Services.Player.transform.position) < 11f)
+        //{
+        //    Vector3 newPosition;
+        //    Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
+        //    directionFromPlayer = directionFromPlayer.normalized;
 
-            GetComponent<Rigidbody>().AddForce(directionFromPlayer * 1000f, ForceMode.Impulse);
-        }
+        //    GetComponent<Rigidbody>().AddForce(directionFromPlayer * 1000f, ForceMode.Impulse);
+        //}
 
-        if (Vector3.Distance(transform.position, Services.Player.transform.position) < 10f)
-        {
-            Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
-            directionFromPlayer = directionFromPlayer.normalized;
+        //if (Vector3.Distance(transform.position, Services.Player.transform.position) < 10f)
+        //{
+        //    Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
+        //    directionFromPlayer = directionFromPlayer.normalized;
 
-            GetComponent<Rigidbody>().MovePosition(transform.position + directionFromPlayer * 1.01f);
-        }
+        //    GetComponent<Rigidbody>().MovePosition(transform.position + directionFromPlayer * 1.01f);
+        //}
     }
 
 
