@@ -9,7 +9,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public static float xOrigin, yOrigin;
 	public float DistanceBetweenTrees = 20;
 	public float childrenDistance = 1;
-	public float TreeChildrenCount = 20;
+	public float TreeChildrenCount = 10;
 	public int PaletteAmount = 10;
 	public float TreeHeightThreshold = 0.75f;
 

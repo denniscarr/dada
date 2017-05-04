@@ -37,7 +37,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		maxObjects = 0;
 		maxSprites = 0;
 
-		radius = 15;
+		radius = 25;
 		height = 1;
 		tileScale = 2;
 
