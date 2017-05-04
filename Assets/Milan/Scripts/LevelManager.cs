@@ -31,6 +31,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
+		maxNPCs = 0;
+		maxObjects = 0;
+		maxSprites = 0;
+
+		radius = 15;
+		height = 1;
+		tileScale = 2;
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -49,16 +56,18 @@ public class LevelManager : SimpleManager.Manager<Level> {
             
 			Services.Player = GameObject.Find ("Player");
             //			if (currentLevel != null) currentLevel.enabled = false;
-            Services.IncoherenceManager.TallyIncoherence();
+//            Services.IncoherenceManager.TallyIncoherence();
             Create();
         }
     }
 
 	public override Level Create(){
 
-		NoiseRemapping [0] = 0;
+		NoiseRemapping [0] = 0.5f;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
-			NoiseRemapping [i] = Random.Range (0.00f, 1-Services.IncoherenceManager.globalIncoherence);
+//			NoiseRemapping [i] = NoiseRemapping [i-1] + Random.Range (-Services.IncoherenceManager.globalIncoherence, Services.IncoherenceManager.globalIncoherence);
+			NoiseRemapping [i] = Random.Range (0.00f, Services.IncoherenceManager.globalIncoherence + 0.1f);
+			NoiseRemapping [i] = Mathf.Clamp01 (NoiseRemapping [i]);
 		}
 
 		for (int j = 3; j < props.Length; j++) {
@@ -120,10 +129,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		maxNPCs += 1;
 		maxObjects += 2;
-		maxSprites += 10;
-		radius += 5;
+		maxSprites += 20;
+		radius += 10;
 		perlinFrequency += 0.020f;
 		height += 1;
+		Services.IncoherenceManager.globalIncoherence += 0.05f;
 
         ManagedObjects.Add (l);
 		return l;
