@@ -112,7 +112,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		distanceOutsideCircle = hypotenuse - ((_width/2) * tileScale);
 
 		mapHeight = _height * tileScale;
-		spriteType = Random.Range(0, Services.Prefabs.SPRITES.Length);
+		spriteType = Random.Range(1, Services.Prefabs.SPRITES.Length);
 
 		NPCs = 0;
 		Pickups = 0;
@@ -407,7 +407,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 100)) {
 				spriteIndex = 0;
 			} else {
-				spriteIndex = Random.Range (1, Services.Prefabs.SPRITES.Length);
+				spriteIndex = spriteType;
 			}
 
 			break;
