@@ -24,6 +24,7 @@ public class CS_AudioManager : MonoBehaviour {
 	//int lastVoiceSamplePlayed = int.MaxValue;
 
 	public AudioClip enterRoomClip, exitRoomClip;
+	public AudioClip toggleVisor;
 
 	public AudioClip[] tonesClipPool;
 	public AudioClip[] confirmationTones;
@@ -180,10 +181,18 @@ public class CS_AudioManager : MonoBehaviour {
 		float newNonPickupVol = -60f;
 
 		if (totalObjects != 0f) {
-			newImageSpriteVol = remapRange (n_image, 0.0f, 20f, -40f, 0f);
-			newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -40f, 0f);
-			newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -30f, 5f);
-			newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -40f, -10f);
+			if (n_image != 0f) {
+				newImageSpriteVol = remapRange (n_image, 0.0f, 20f, -20f, 0f);
+			}
+			if (n_ink != 0f) {
+				newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -20f, 0f);
+			}
+			if (n_npc != 0f) {
+				newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -10f, 5f);
+			}
+			if (n_nonPickup != 0f) {
+				newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -20f, -10f);
+			}
 		}
 		
 

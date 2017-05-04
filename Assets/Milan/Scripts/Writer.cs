@@ -123,7 +123,7 @@ public class Writer : MonoBehaviour {
     {
         SetScript(_text);
 
-        CreateTextBox (transform.position, false);
+        CreateTextBox (new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), false);
     }
 
 
@@ -209,7 +209,15 @@ public class Writer : MonoBehaviour {
         // Rotate the text containter towards the player.
         if (!dontFacePlayer)
         {
-            textContainer.transform.LookAt(Services.Player.transform);
+            if (transform.parent.GetComponentInChildren<InteractionSettings>() != null && transform.parent.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            {
+                textContainer.transform.LookAt(GameObject.Find("PlayerInRoon").transform);
+            }
+            else
+            {
+                textContainer.transform.LookAt(Services.Player.transform);
+            }
+
             textContainer.transform.Rotate(0f, 180f, 0f);
         }
 
