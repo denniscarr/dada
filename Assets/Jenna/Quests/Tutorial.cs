@@ -147,7 +147,6 @@ public class Tutorial : Quest {
 		case TutorialState.EQUIP_GUN:OnEquipGun();break;
 		case TutorialState.USE_GUN:OnUseGun();break;
 		case TutorialState.DROP_GUN:OnDropGun();break;
-		//case TutorialState.JUMP_OFF:OnJumpOff();break;
 		}
 
 
@@ -219,7 +218,7 @@ public class Tutorial : Quest {
 	}
 
 	void OnUsePlatform(){
-
+		mouseControllerNew.writer.WriteAtPoint("Find the operation platform.", mouseControllerNew.textPosition);
 		if (Input.GetMouseButtonDown(0)){ // if left button pressed...
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
@@ -235,6 +234,7 @@ public class Tutorial : Quest {
 	}
 
 	void OnDragNoteIn(){
+		mouseControllerNew.writer.WriteAtPoint("Drag note in", mouseControllerNew.textPosition);
 		if(questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.THROW_NOTE_OUT;
 			QuestItNoreText.text = "Drag me out.";
@@ -243,6 +243,7 @@ public class Tutorial : Quest {
 	}
 
 	void OnThrowNoteOut(){
+		mouseControllerNew.writer.WriteAtPoint("Drag note out", mouseControllerNew.textPosition);
 		Debug.Log(questItNote.transform.parent);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.PRESS_TAB;

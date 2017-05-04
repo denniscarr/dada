@@ -80,6 +80,11 @@ public class EquippableFinder : MonoBehaviour {
             transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange
             ))
         {
+
+//			if(hit.transform.parent && hit.transform.parent.name.Equals("Viewing Platform")){
+//				writer.WriteAtPoint("Click to stand on " + nearestObject.name, textPosition);
+//			}
+
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
                 !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
             {
