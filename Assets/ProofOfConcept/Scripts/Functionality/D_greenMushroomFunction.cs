@@ -23,6 +23,12 @@ public class D_greenMushroomFunction : D_Function {
         if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
         {
             playerCamera.GetComponent<VignetteAndChromaticAberration>().enabled = !playerCamera.GetComponent<VignetteAndChromaticAberration>().enabled;
+            Invoke("BackToNormal", 60f);
         }
+    }
+
+    void BackToNormal()
+    {
+        playerCamera.GetComponent<VignetteAndChromaticAberration>().enabled = !playerCamera.GetComponent<VignetteAndChromaticAberration>().enabled;
     }
 }
