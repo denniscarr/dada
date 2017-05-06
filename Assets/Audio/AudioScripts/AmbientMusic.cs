@@ -13,7 +13,7 @@ public class AmbientMusic : MonoBehaviour {
 
 	public BufferShuffler[] shufflers;
 	BufferShuffler currentShuffler = null;
-	bool shuffleTrigger;
+	public bool shuffleTrigger;
 
 	Clock myClock;
 
@@ -38,6 +38,7 @@ public class AmbientMusic : MonoBehaviour {
 	public void NewShuffle() {
 
 		Debug.Log ("new shuffle");
+		shuffleTrigger = true;
 
 	}
 
@@ -102,7 +103,9 @@ public class AmbientMusic : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		shuffleTrigger = false;
+		if (shuffleTrigger == true) {
+			shuffleTrigger = false;
+		}
 
 		if (Services.LevelGen.currentLevel.levelTint != currentLevelColor) {
 
