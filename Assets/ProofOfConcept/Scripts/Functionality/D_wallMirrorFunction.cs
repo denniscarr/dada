@@ -18,8 +18,13 @@ public class D_wallMirrorFunction : D_Function {
 		if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
 		{
 			playerCamera.GetComponent <Twirl>().enabled = !playerCamera.GetComponent <Twirl>().enabled;
-			print ("Wall mirror function triggered");
+            Invoke("BackToNormal", 60f);
 		}
 
 	}
+
+    void BackToNormal()
+    {
+        playerCamera.GetComponent<Twirl>().enabled = !playerCamera.GetComponent<Twirl>().enabled;
+    }
 }

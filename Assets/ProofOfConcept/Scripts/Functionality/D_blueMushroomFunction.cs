@@ -20,6 +20,12 @@ public class D_blueMushroomFunction : D_Function {
 		print ("Blue mushroom function triggered");
         if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform) { 
             playerCamera.GetComponent<ColorCorrectionCurves>().enabled = !playerCamera.GetComponent<ColorCorrectionCurves>().enabled;
+            Invoke("BackToNormal", 60f);
         }
 	}
+
+    void BackToNormal()
+    {
+        playerCamera.GetComponent<ColorCorrectionCurves>().enabled = !playerCamera.GetComponent<ColorCorrectionCurves>().enabled;
+    }
 }

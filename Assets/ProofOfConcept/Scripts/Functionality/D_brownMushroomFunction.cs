@@ -23,6 +23,12 @@ public class D_brownMushroomFunction : D_Function {
         {
             Debug.Log("brown mushroom function activated");
             playerCamera.GetComponent<DepthOfField>().enabled = !playerCamera.GetComponent<DepthOfField>().enabled;
+            Invoke("BackToNormal", 60f);
         }
+    }
+
+    void BackToNormal()
+    {
+        playerCamera.GetComponent<DepthOfField>().enabled = !playerCamera.GetComponent<DepthOfField>().enabled;
     }
 }

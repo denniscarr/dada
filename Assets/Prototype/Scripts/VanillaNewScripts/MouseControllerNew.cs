@@ -316,7 +316,8 @@ public class MouseControllerNew : MonoBehaviour {
 		if(pickedUpObject.parent != t_INROOMOBJECTS){
 			//change the parent of selected object
 
-			if(!(pickedUpObject.parent && pickedUpObject.parent.name.Equals("Equip Reference"))){
+			//if(!(pickedUpObject.parent && pickedUpObject.parent.name.Equals("Equip Reference"))){
+            if (1 == 1) {
                 //Debug.Log("resize");
                 //change scale
                 float distanceInside = Mathf.Abs(
@@ -430,7 +431,7 @@ public class MouseControllerNew : MonoBehaviour {
 					//set layer to default 
 
 				}else{
-					Debug.LogError("click "+selectedObject.name+" in "+hit.collider.name);
+					//Debug.LogError("click "+selectedObject.name+" in "+hit.collider.name);
 				}
 			}else{
 				//set layer to default 
