@@ -29,13 +29,14 @@ public class LevelManager : SimpleManager.Manager<Level> {
 	{
 		isTutorialCompleted = false;
 		LevelDescriptions = sourceText.text.Split(new char[] { '\n' });
-		NoiseRemapping = new float[15];
+		NoiseRemapping = new float[10];
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
 		maxNPCs = 0;
 		maxObjects = 0;
 		maxSprites = 0;
+
 
 		radius = 25;
 		height = 1;
@@ -133,8 +134,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		maxObjects += 2;
 		maxSprites += 50;
 		radius += 10;
-		perlinFrequency += 0.020f;
-		height += 1;
+//		perlinFrequency += 0.020f;
+		height += 5;
 		Services.IncoherenceManager.globalIncoherence += 0.05f;
 
         ManagedObjects.Add (l);

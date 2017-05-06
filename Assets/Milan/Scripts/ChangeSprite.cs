@@ -12,10 +12,16 @@ public class ChangeSprite : MonoBehaviour {
 	}
 
 	public void OnMouseOver(){
-		
+
+		Vector3 targetPosition = Services.Player.transform.position;
+		targetPosition.y = transform.position.y;
+		transform.LookAt(targetPosition);
+		transform.Rotate (0, 180, 0);
+
 		if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 20)) {
 			changeSprite ();
 		}
+
 	}
 
 	public void changeSprite(){
