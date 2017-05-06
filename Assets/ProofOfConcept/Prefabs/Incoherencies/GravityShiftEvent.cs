@@ -4,8 +4,26 @@ using UnityEngine;
 
 public class GravityShiftEvent : IncoherenceEvent {
 
-    public float maxMultiplier = 60f;
+    float maxMultiplier = 60f;   // The maximum thing that gravity can turn into.
+    float returnSpeed = 0f; // How quickly we should return to normal gravity.
     Vector3 savedGravity; // The gravity before my last shift.
+
+
+    new void Start()
+    {
+        base.Start();
+    }
+
+
+    new void Update()
+    {
+        base.Update();
+
+        if (active)
+        {
+            Perform();
+        }
+    }
 
 
     public GravityShiftEvent()
@@ -18,16 +36,24 @@ public class GravityShiftEvent : IncoherenceEvent {
     {
         base.Initiate();
 
+        // Save gravity.
         savedGravity = Physics.gravity;
+
+        maxMultiplier = Random.Range(0f, MyMath.Map(Services.IncoherenceManager.globalIncoherence, 0f, 1f, 0f, 100f));
+
+        // Randomize gravity
         Vector3 newGravity = Random.insideUnitSphere * maxMultiplier;
-        newGravity.y = Mathf.Clamp(newGravity.y, 1f, maxMultiplier);
+
+        // Make sure gravity doesn't ever just throw you upwards.
+        //newGravity.y = Mathf.Clamp(newGravity.y, 1f, maxMultiplier);
         Physics.gravity = newGravity;
+
         active = true;
     }
 
 
     public override void Perform()
     {
-        // 
+        // Lerp gravity back to original value.
     }
 }
