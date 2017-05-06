@@ -212,6 +212,19 @@ public class Tutorial : Quest {
 	}
 
 	void OnPickUpVisor(){
+		if(Input.GetKeyDown(KeyCode.Tab)){
+			state = TutorialState.SKIP_TUTORIAL;
+
+			// destroy it bc its now useless
+			Destroy(visor);
+			Destroy(textSpawn); // for good measure
+			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
+			//Destroy(questItNote);
+			QuestItNoreText.text = "Be brave to jump off.";
+			this.enabled = false;
+			return;
+		}
+
 		if (intSet._carryingObject == player) {
 			Debug.Log("tutorial -- pick up visor");
 			// yay! step one done
@@ -252,7 +265,7 @@ public class Tutorial : Quest {
 
 	void OnDragNoteIn(){
 		mouseControllerNew.writer.WriteAtPoint("Drag note in", mouseControllerNew.textPosition);
-		if(questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
+		if(questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.THROW_NOTE_OUT;
 			QuestItNoreText.text = "Drag me out.";
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();//useless?
