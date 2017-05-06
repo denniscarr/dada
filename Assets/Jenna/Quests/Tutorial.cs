@@ -97,17 +97,6 @@ public class Tutorial : Quest {
 
 
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-		Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
-		questItNote.transform.parent = visorNode.transform;
-		questItNote.transform.localPosition = new Vector3(
-			Random.Range(-1.3f, 4.1f),
-			Random.Range(1f, 4.1f),
-			2.5f);
-
-		questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
-			0f,
-			0f,
-			Random.Range(-1f, 1f)));
 		//QuestItNoreText = questItNote.GetComponentInChildren<Text>();
 		//QuestItNoreText.text = "Press TAB 5 times";
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -269,18 +258,7 @@ public class Tutorial : Quest {
 			mouseControllerNew.writer.WriteAtPoint("Press TAB 5 times.", mouseControllerNew.textPosition);
 			//text.text = "Press TAB 5 times";
 			// make the questit note
-			Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
 			questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-			questItNote.transform.parent = visorNode.transform;
-			questItNote.transform.localPosition = new Vector3(
-				Random.Range(-1.3f, 4.1f),
-				Random.Range(1f, 4.1f),
-				2.5f);
-
-			questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
-				0f,
-				0f,
-				Random.Range(-1f, 1f)));
 			QuestItNoreText = questItNote.GetComponentInChildren<Text>();
 			QuestItNoreText.text = "Press TAB 5 times.";
 			questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();

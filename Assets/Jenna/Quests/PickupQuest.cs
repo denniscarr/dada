@@ -164,18 +164,7 @@ public class PickupQuest : Quest {
 	public void spawnNote(){
 		
         // make the questit note
-        visorNode = GameObject.Find("INROOMOBJECTS").GetComponent<Transform>();
         questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-        questItNote.transform.parent = visorNode.transform;
-        questItNote.transform.localPosition = new Vector3(
-            Random.Range(-2.3f, 5.1f),
-			Random.Range(1f, 4.1f),
-			2.5f);
-
-        questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
-            0f,
-            0f,
-            Random.Range(-1f, 1f)));
 
         // make the actual text appear
         Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
