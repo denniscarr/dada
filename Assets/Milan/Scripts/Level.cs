@@ -28,6 +28,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	int highestPointIndex;
 	public int NPCs, Pickups, NonPickups, Sprites;
 	int spriteType;
+	int npcType;
 	float distanceOutsideCircle;
 
 	GameObject ground, sky;
@@ -113,7 +114,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		mapHeight = _height * tileScale;
 		spriteType = Random.Range(1, Services.Prefabs.SPRITES.Length);
-
+		npcType = Random.Range (0, Services.Prefabs.PREFABS [(int)Services.TYPES.NPCs].Length);
+			
 		NPCs = 0;
 		Pickups = 0;
 		NonPickups = 0;
@@ -385,6 +387,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		GameObject newObject = null;
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
+		int objectType = Random.Range (0, Services.Prefabs.PREFABS [objectVal].Length);
 
 		int propIndex = Mathf.RoundToInt (perlin * (Services.LevelGen.props.Length-1));
 //		int objectType = (int)Services.LevelGen.props [propIndex];
@@ -422,6 +425,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				return null;
 			} else {
 				NPCs++;
+				objectType = npcType;
 			}
 			break;
 
@@ -463,7 +467,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 
 
-		newObject = Instantiate (Services.Prefabs.PREFABS[objectVal][Random.Range(0, Services.Prefabs.PREFABS[objectVal].Length)], Vector3.zero, Quaternion.identity) as GameObject;
+		newObject = Instantiate (Services.Prefabs.PREFABS[objectVal][objectType], Vector3.zero, Quaternion.identity) as GameObject;
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
 			
