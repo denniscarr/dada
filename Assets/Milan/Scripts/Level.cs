@@ -434,7 +434,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				return null;
 			} else {
 				NPCs++;
-				Debug.Log ("Spawning NPC");
+				//Debug.Log ("Spawning NPC");
 				objectType = npcType;
 			}
 			break;

@@ -60,11 +60,11 @@ public class IncoherenceManager : MonoBehaviour {
         // Wait for the next audio shuffle and apply the event.
         else if (nextEvent != null)
         {
-            timeSinceLastEvent += 0.0f;
+            timeSinceLastEvent += Time.deltaTime;
             if (timeSinceLastEvent >= timeUntilNextEvent)
             {
-                Debug.Log("Event.");
                 nextEvent.Initiate();
+                nextEvent = null;
             }
         }
     }
@@ -74,9 +74,8 @@ public class IncoherenceManager : MonoBehaviour {
     {
         nextEvent = activeEvents[Random.Range(0, activeEvents.Count)];
 
-        Debug.Log("Queuing: " + nextEvent);
-
         timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 2f);
+        Debug.Log("Queuing: " + nextEvent + ". " + timeUntilNextEvent + " seconds.");
         timeSinceLastEvent = 0.0f;
     }
 
@@ -208,11 +207,11 @@ public class IncoherenceManager : MonoBehaviour {
         // See if the threshold for any incoherence events has been added.
         if (dormantEvents.Count > 0)
         {
-            Debug.Log("smokeeklf");
             for (int i = 0; i < dormantEvents.Count; i++)
             {
                 if (globalIncoherence >= dormantEvents[i].threshold)
                 {
+                    Debug.Log("adding event.");
                     activeEvents.Add(dormantEvents[i]);
                     dormantEvents.Remove(dormantEvents[i]);
                 }

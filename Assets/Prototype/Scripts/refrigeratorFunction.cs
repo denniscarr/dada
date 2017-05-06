@@ -44,6 +44,6 @@ public class refrigeratorFunction: D_Function
 		}
 
 		GetComponentInParent<Rigidbody>().AddForce(transform.right * refrigeratorSpeed);
-		Debug.Log("lol");
+		//Debug.Log("lol");
 	}
 }
