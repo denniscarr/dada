@@ -31,7 +31,7 @@ public class BufferShuffler : MonoBehaviour
     private float[] _nextClipDataL = new float[0];
 
     private AudioSource _bufferShufflerAudioSource;
-    private int _buffersPerShuffle;
+    private int _buffersPerShuffle = 0;
     private int _crossFadeSamples;
     private int _currentShuffleBuffer;
 
@@ -258,7 +258,11 @@ public class BufferShuffler : MonoBehaviour
         float bufferSizeInSeconds = (float)_bufferSize/(float)_outputSampleRate;
         if (TempoSynced)
         {
-            _buffersPerShuffle = Mathf.RoundToInt((float)(((int)BeatsPerShuffle * MyClock.TickLength) / bufferSizeInSeconds));
+			//Debug.Log (_buffersPerShuffle);
+            _buffersPerShuffle = Mathf.RoundToInt((float)
+				(((int)BeatsPerShuffle * 
+					MyClock.TickLength) / 
+					bufferSizeInSeconds));
             _crossFadeSamples = _bufferSize * Mathf.RoundToInt((float)(((int)BeatsPerCrossfade * MyClock.TickLength) / bufferSizeInSeconds));
         }
         else
