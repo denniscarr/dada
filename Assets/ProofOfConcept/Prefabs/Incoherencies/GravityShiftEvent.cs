@@ -60,6 +60,8 @@ public class GravityShiftEvent : IncoherenceEvent {
 
     public override void Perform()
     {
+        base.Perform();
+
         lerpValue += returnSpeed * Time.deltaTime;
 
         // Lerp gravity back to original value.
