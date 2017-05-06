@@ -83,7 +83,7 @@ public class PickupQuest : Quest {
 
             if (parentObject.GetComponentInChildren<InteractionSettings>().IsInVisor)
             {
-                parentObject.AddComponent<CollisionReporter>();
+                if (parentObject.GetComponent<CollisionReporter>() == null) parentObject.AddComponent<CollisionReporter>();
 
                 if (parentObject.GetComponent<CollisionReporter>() != null && parentObject.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player && parentObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
                 {
