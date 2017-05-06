@@ -717,8 +717,9 @@ public class NPC : MonoBehaviour {
 
     public void RestoreHealth(float healthRestored)
     {
-        writer.WriteSpecifiedString("Yummy! This "+ carriedObject.name+ "restored my health by " +healthRestored+"!");
+        writer.WriteSpecifiedString("Yummy! This "+ carriedObject.name+ " restored my health by " +healthRestored+"!");
         health += healthRestored;
+		print ("Message recieved");
     }
 
     void Die()

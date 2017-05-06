@@ -339,18 +339,21 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 
 		foreach (int indice in highestPointIndices) {
-
-			if (Sprites >= Services.LevelGen.maxSprites) {
-				break;
-			}
 				
 			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
 
-			GameObject newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices[indice], index);
+			GameObject newObject;
+
+			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 25)) {
+				newObject = LevelObjectFactory (Random.Range(0.00f, 1.00f), Random.Range(0, Services.Prefabs.PREFABS.Length), vertices [indice], index);
+			} else {
+				newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices [indice], index);
+			}
+
 			if (newObject == null) {
 				break;
 			}
-			newObject.transform.localScale *= 3;
+			newObject.transform.localScale *= 2;
 
 			for (int j = 1; j < TreeChildrenCount; j++) {
 				
@@ -431,7 +434,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		case (int)Services.TYPES.Sprite:
-			if (Sprites >= Services.LevelGen.maxSprites) {
+			if (Sprites >= Services.LevelGen.maxSprites && spriteType != (int)Services.SPRITES.tall) {
 				return null;
 			} else {
 				Sprites++;
