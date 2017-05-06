@@ -7,11 +7,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	public static float noiseScale;
 	public static float xOrigin, yOrigin;
-	public float DistanceBetweenTrees = Random.Range(10, 100);
+	public float DistanceBetweenTrees = 40;
 	public float childrenDistance = 1;
-	public float TreeChildrenCount = Random.Range(5, 100);
+	public float TreeChildrenCount = 15;
 	public int PaletteAmount = 8;
-	public float TreeHeightThreshold = 0.75f;
+	public float TreeHeightThreshold = 0.5f;
 
 	Terrain levelMesh;
 
@@ -51,6 +51,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
 
+		DistanceBetweenTrees = Random.Range(10, 100);
+			
 		_width = Services.LevelGen.radius;
 		_length = _width;
 		_height = Random.Range (1, Services.LevelGen.height);
@@ -80,7 +82,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
 //			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
-			palette [i] = Random.ColorHSV(0, 1, 0, 0.5f, lower, upper) * levelTint;
+			palette [i] = Random.ColorHSV(0, 1, 0, 0.5f, lower, upper);
 		}
 			
 
@@ -127,6 +129,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		Services.LevelGen.sun.color = levelTint;
 
 		Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
+		Services.Player.GetComponentInChildren<ColorfulFog> ().ApplyGradientChanges ();
 
 //		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 //			if (c.name != "UpperCamera") {
@@ -236,23 +239,21 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
 
-//				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
-//				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
-//
-//
-//                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
-//
-//                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
-//                {
-//                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
-//                }
-//                else
-//                {
-//                    if (remapIndex > 0 && difference < 0)
-//                    {
-//                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
-//                    }
-//                }
+//				if (perlinVal < 0.5f) {
+					int remapIndex = Mathf.RoundToInt (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1));
+					float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1)) - (float)remapIndex;
+
+
+					perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
+
+					if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0) {
+						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
+					} else {
+						if (remapIndex > 0 && difference < 0) {
+							perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs (difference));
+						}
+					}
+//				}
 
 				perlinVal = Mathf.Pow (perlinVal, 1f);
 
@@ -359,11 +360,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			}
 			newObject.transform.localScale *= 2;
 
-			for (int j = 1; j < TreeChildrenCount; j++) {
+			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
 				
-				Vector3 SpawnCirclePos = (Random.insideUnitSphere.normalized * j * childrenDistance) + newObject.transform.position;
+				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)) + newObject.transform.position;
 
 				RaycastHit hit;
+					
 				if (Physics.Raycast(new Vector3(SpawnCirclePos.x, transform.position.y + mapHeight, SpawnCirclePos.z), -Vector3.up, out hit)) {
 
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
@@ -405,7 +407,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		case 0:
 			spriteIndex = (int)Services.SPRITES.tall;
 			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 25)) {
-				spriteIndex = 0;
+				spriteIndex = Random.Range (0, 3);
 			}
 			break;
 		
@@ -480,7 +482,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
 			
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
-			newObject.GetComponent<SpriteRenderer> ().material.color = levelTint;
+			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
 			newObject.tag = tag;
 		}
