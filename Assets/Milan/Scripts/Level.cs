@@ -359,7 +359,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
 
-					if (j == 2) {
+					if (j % 3 == 0) {
 						LevelObjectFactory (perlin, Random.Range (0, Services.Prefabs.PREFABS.Length), hit.point - transform.position, index);
 					} else {
 						GameObject newSprite = LevelObjectFactory (perlin, (int)Services.TYPES.Sprite, hit.point - transform.position, index);

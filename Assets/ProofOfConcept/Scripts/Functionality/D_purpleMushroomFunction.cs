@@ -23,6 +23,11 @@ public class D_purpleMushroomFunction : D_Function {
         if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
         {
             playerCamera.GetComponent<Grayscale>().enabled = !playerCamera.GetComponent<Grayscale>().enabled;
+            Invoke("BackToNormal", 60f);
         }
+    }
+
+    void BackToNormal() {
+        playerCamera.GetComponent<Grayscale>().enabled = !playerCamera.GetComponent<Grayscale>().enabled;
     }
 }

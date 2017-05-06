@@ -22,6 +22,12 @@ public class D_yellowMushroomFunction : D_Function {
         if (transform.parent.GetComponentInChildren<InteractionSettings>().carryingObject == Services.Player.transform)
         {
             playerCamera.GetComponent<Bloom>().enabled = !playerCamera.GetComponent<Bloom>().enabled;
+            Invoke("BackToNormal", 60f);
         }
+    }
+
+    void BackToNormal()
+    {
+        playerCamera.GetComponent<Bloom>().enabled = !playerCamera.GetComponent<Bloom>().enabled;
     }
 }
