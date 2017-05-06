@@ -76,6 +76,9 @@ public class QuestBuilderScript : MonoBehaviour {
 		objeto = finder.pickups [Random.Range (0, finder.pickups.Count) % finder.pickups.Count];
 		objectScript = objeto.GetComponent<QuestObject> ();
 
+        if (objeto.GetComponent<PickupQuest>() != null) return;
+        else if (objeto.GetComponentInChildren<InteractionSettings>().IsInVisor) return;
+
 		// add the script if it's part of finder.pickups
 		PickupQuest newQuest = objeto.AddComponent<PickupQuest> ();
 		pickup.makeTheQuest (newQuest);

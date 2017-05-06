@@ -74,8 +74,8 @@ public class QuestFinderScript : MonoBehaviour
 								questItems.Add (go);
 							}
 
-							// can it be picked up? Add it to the list!
-							if (go.GetComponentInChildren<InteractionSettings>() != null && go.GetComponentInChildren<InteractionSettings>().ableToBeCarried == true){
+                            // can it be picked up? Add it to the list!
+							if (iset.ableToBeCarried == true && go.GetComponent<PickupQuest>() == null && go.GetComponent<QuestObject>() == null && !go.name.Contains("QuestItNote")){
 								if (!pickups.Contains (go)) {
                                     //Debug.Log(go.name);
 									pickups.Add (go);

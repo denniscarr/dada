@@ -211,7 +211,7 @@ public class Writer : MonoBehaviour {
         {
             if (transform.parent.GetComponentInChildren<InteractionSettings>() != null && transform.parent.GetComponentInChildren<InteractionSettings>().IsInVisor)
             {
-                textContainer.transform.LookAt(GameObject.Find("PlayerInRoon").transform);
+                textContainer.transform.LookAt(GameObject.Find("PlayerInRoom").transform);
             }
             else
             {
