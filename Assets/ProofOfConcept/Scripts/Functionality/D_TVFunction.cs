@@ -14,5 +14,11 @@ public class D_TVFunction : D_Function {
 	public override void Use () {
 		base.Use ();
 		Time.timeScale = timeSpeed;
+        Invoke("BackToNormal", 60f);
 	}
+
+    void BackToNormal()
+    {
+        Time.timeScale = 1f;
+    }
 }

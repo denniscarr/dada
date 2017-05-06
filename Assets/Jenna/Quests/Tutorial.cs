@@ -78,7 +78,7 @@ public class Tutorial : Quest {
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 			return;
 		}
-		GetComponent<QuestManager>().enabled =false;
+		GetComponent<QuestManager>().enabled = false;
 		GetComponent<QuestFinderScript>().enabled = false;
 		GetComponent<QuestBuilderScript>().enabled = false;
 		GetComponent<PickupQuest>().enabled = false;
@@ -97,17 +97,6 @@ public class Tutorial : Quest {
 
 
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-		Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
-		questItNote.transform.parent = visorNode.transform;
-		questItNote.transform.localPosition = new Vector3(
-			Random.Range(-2.3f, 5.1f),
-			Random.Range(1f, 4.1f),
-			2.5f);
-
-		questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
-			0f,
-			0f,
-			Random.Range(-1f, 1f)));
 		//QuestItNoreText = questItNote.GetComponentInChildren<Text>();
 		//QuestItNoreText.text = "Press TAB 5 times";
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -139,10 +128,10 @@ public class Tutorial : Quest {
 		GameObject level = GameObject.Find ("Level 0");
 		float highPoint = level.GetComponent<Level> ().highestPoint;
 
-		visor = Instantiate (Resources.Load ("visor", typeof(GameObject))) as GameObject;
+		visor = Instantiate (Resources.Load ("Visor", typeof(GameObject))) as GameObject;
 		visor.transform.position = new Vector3 (level.transform.position.x, level.transform.position.y + highPoint, level.transform.position.z);
 		//questItNote.transform.position = visor.transform.position;
-		visor.transform.localScale *= 5;
+		visor.transform.localScale *= 1;
 		visor.SetActive (false);
 
 		// interaction settings, rip soon
@@ -236,10 +225,11 @@ public class Tutorial : Quest {
 			Destroy(textSpawn); // for good measure
 
 			// change the text
-			QuestItNoreText.text = "Find the operation platform.";
+			QuestItNoreText.text = "Find and click the observation platform.";
 
 			// stick the note to the screen
-			questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+			questItNote.
+                GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 
 			controls.Mode = ControlMode.ZOOM_OUT_MODE;
 			//platformWriter.WriteAtPoint("Click me to revert to visor mode",platformWriter.transform.position+new Vector3(0,0,1));
@@ -248,14 +238,14 @@ public class Tutorial : Quest {
 	}
 
 	void OnUsePlatform(){
-		mouseControllerNew.writer.WriteAtPoint("Find the operation platform.", mouseControllerNew.textPosition);
+		mouseControllerNew.writer.WriteAtPoint("Find and click the observation platform.", mouseControllerNew.textPosition);
 		if (Input.GetMouseButtonDown(0)){ // if left button pressed...
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit)){
 				if(hit.collider.transform.parent.name.Equals("Viewing Platform")){
 					state = TutorialState.DRAG_NOTE_IN;
-					QuestItNoreText.text = "Drag me in.";
+					QuestItNoreText.text = "Drag me into the visor with your mouse.";
 				}
 				// the object identified by hit.transform was clicked
 				// do whatever you want
@@ -264,37 +254,26 @@ public class Tutorial : Quest {
 	}
 
 	void OnDragNoteIn(){
-		mouseControllerNew.writer.WriteAtPoint("Drag note in", mouseControllerNew.textPosition);
 		if(questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
+		mouseControllerNew.writer.WriteAtPoint("Drag the note into the visor with your mouse.", mouseControllerNew.textPosition);
 			state = TutorialState.THROW_NOTE_OUT;
-			QuestItNoreText.text = "Drag me out.";
+			QuestItNoreText.text = "Drag me out of your visor into the world.";
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();//useless?
 		}
 	}
 
 	void OnThrowNoteOut(){
-		mouseControllerNew.writer.WriteAtPoint("Drag note out", mouseControllerNew.textPosition);
+		mouseControllerNew.writer.WriteAtPoint("Drag note out of your visor into the world.", mouseControllerNew.textPosition);
 		Debug.Log(questItNote.transform.parent);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.PRESS_TAB;
 			Destroy(questItNote);
-			mouseControllerNew.writer.WriteAtPoint("Press TAB 5 times", mouseControllerNew.textPosition);
+			mouseControllerNew.writer.WriteAtPoint("Press TAB 5 times.", mouseControllerNew.textPosition);
 			//text.text = "Press TAB 5 times";
 			// make the questit note
-			Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
 			questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-			questItNote.transform.parent = visorNode.transform;
-			questItNote.transform.localPosition = new Vector3(
-				Random.Range(-2.3f, 5.1f),
-				Random.Range(1f, 4.1f),
-				2.5f);
-
-			questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
-				0f,
-				0f,
-				Random.Range(-1f, 1f)));
 			QuestItNoreText = questItNote.GetComponentInChildren<Text>();
-			QuestItNoreText.text = "Press TAB 5 times";
+			QuestItNoreText.text = "Press TAB 5 times.";
 			questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -303,20 +282,20 @@ public class Tutorial : Quest {
 	}
 
 	void OnPressTab(){
-		mouseControllerNew.writer.WriteAtPoint("Press TAB "+ (5 - numPressTab).ToString() +" times", mouseControllerNew.textPosition);
+		mouseControllerNew.writer.WriteAtPoint("Press TAB "+ (5 - numPressTab).ToString() +" times.", mouseControllerNew.textPosition);
 		if(Input.GetKeyDown(KeyCode.Tab)){
 			numPressTab ++;
 			int rest = 5 - numPressTab;
 			if(rest > 0){
 				
-				QuestItNoreText.text = "Press TAB "+ rest.ToString() +" times";
+				QuestItNoreText.text = "Press TAB "+ rest.ToString() +" times.";
 			}else{
 				state = TutorialState.EQUIP_GUN;//go_AK12 = Resources.Load("Pickups/AK12") as GameObject;
 				go_AK12 = Instantiate(Resources.Load<GameObject>("Pickups/AK12"));
 				go_AK12.transform.position = player.transform.position + player.transform.forward*3;
 				//instantiate gun
 				//mouseControllerNew.writer.WriteAtPoint("Press TAB 5 times", mouseControllerNew.textPosition);
-				QuestItNoreText.text = "Left click to equip the gun in zoom-in mode.";
+				QuestItNoreText.text = "Left click to equip the guns.";
 			}
 
 
@@ -345,8 +324,12 @@ public class Tutorial : Quest {
 		if(!go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
 			Debug.Log("Tutorial is done.");
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
-			//Destroy(questItNote);
-			QuestItNoreText.text = "Be brave to jump off.";
+            GetComponent<QuestManager>().enabled = true;
+            GetComponent<QuestFinderScript>().enabled = true;
+            GetComponent<QuestBuilderScript>().enabled = true;
+            GetComponent<PickupQuest>().enabled = true;
+            //Destroy(questItNote);
+            QuestItNoreText.text = "Be brave to jump off.";
 			this.enabled = false;
 		}
 	}

@@ -6,10 +6,19 @@ public class ChangeSprite : MonoBehaviour {
 
 	public int SpriteIndex;
 
-
-
 	public void OnMouseDown(){
-		GetComponent<SpriteRenderer>().sprite = Services.Prefabs.SPRITES[SpriteIndex][Random.Range(0, Services.Prefabs.SPRITES[SpriteIndex].Length)];
 		GetComponent<SpriteSound> ().PlaySound ();
+	
+	}
+
+	public void OnMouseOver(){
+		
+		if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 20)) {
+			changeSprite ();
+		}
+	}
+
+	public void changeSprite(){
+		GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [SpriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [SpriteIndex].Length)];
 	}
 }

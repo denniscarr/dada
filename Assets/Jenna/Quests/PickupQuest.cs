@@ -46,7 +46,11 @@ public class PickupQuest : Quest {
 	float positionY;
 	float positionZ;
 
+    List<GameObject> myNotes;
+
 	void Start () {
+
+        myNotes = new List<GameObject>();
 
 		// find referenced materials
 		builder = gameObject.GetComponent<QuestBuilderScript> ();
@@ -88,9 +92,6 @@ public class PickupQuest : Quest {
                 }
             }
 		}
-
-		if (fieryGlow != null) fieryGlow.transform.position = parentObject.transform.position;
-		if (radarSound != null) radarSound.transform.position = parentObject.transform.position;
     }
 
 	public void makeTheQuest(Quest type){
@@ -98,19 +99,21 @@ public class PickupQuest : Quest {
 		parentObject = builder.objeto;
 		objectScript = parentObject.GetComponent<QuestObject> ();
 		requiredPickups = Random.Range (2, 6);
-        rewardMoney = 100 * requiredPickups;
+        rewardMoney = parentObject.GetComponentInChildren<InteractionSettings>().price + Random.Range(100, 200);
         //Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
 
         // add the glow
         fieryGlow = Instantiate(Resources.Load ("questobject-fire", typeof (GameObject))) as GameObject;
 		fieryGlow.transform.parent = parentObject.transform;
+        fieryGlow.transform.position = parentObject.transform.position;
 
-		// add the sound
-		radarSound = Instantiate(Resources.Load ("QuestItemChildren/QuestItemSound", typeof (GameObject))) as GameObject;
+        // add the sound
+        radarSound = Instantiate(Resources.Load ("QuestItemChildren/QuestItemSound", typeof (GameObject))) as GameObject;
 		radarSound.transform.parent = parentObject.transform;
+        radarSound.transform.position = parentObject.transform.position;
 
-		// store the transform for later text spawning
-		positionX = parentObject.transform.position.x;
+        // store the transform for later text spawning
+        positionX = parentObject.transform.position.x;
 		positionY = parentObject.transform.position.y + 1;
 		positionZ = parentObject.transform.position.z;
 
@@ -161,18 +164,7 @@ public class PickupQuest : Quest {
 	public void spawnNote(){
 		
         // make the questit note
-        visorNode = GameObject.Find("INROOMOBJECTS").GetComponent<Transform>();
         questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-        questItNote.transform.parent = visorNode.transform;
-        questItNote.transform.localPosition = new Vector3(
-            Random.Range(-2.3f, 5.1f),
-			Random.Range(1f, 4.1f),
-			2.5f);
-
-        questItNote.transform.localRotation = Quaternion.Euler(new Vector3(
-            0f,
-            0f,
-            Random.Range(-1f, 1f)));
 
         // make the actual text appear
         Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
@@ -182,6 +174,8 @@ public class PickupQuest : Quest {
         // Stick em to the wall.
         questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 		questItNote.GetComponentInChildren<QuestItNoteFunction> ().questID = 1;
+
+        myNotes.Add(questItNote);
     }
 
     public void questTextSpawn(){
@@ -210,13 +204,12 @@ public class PickupQuest : Quest {
 		GameObject stars = Instantiate (Resources.Load ("explosion-noforce", typeof(GameObject))) as GameObject; 
 		stars.transform.position = parentObject.transform.position;
 
-		// find the notes and destroy them
-		NoteSpawnerScript notes = GameObject.Find ("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript> ();
-		for (int i = 0; i < notes.id1.Count; i++) {
-			Destroy (notes.id1[i]);
-		}
-
-		notes.id1.Clear ();
+        // find the notes and destroy them (?)
+        //NoteSpawnerScript notes = GameObject.Find ("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript> ();
+        //for (int i = 0; i < notes.id1.Count; i++) {
+        //	Destroy (notes.id1[i]);
+        //}
+        //notes.id1.Clear ();
 
         // Give player money
         Debug.Log("Giving reward: " + rewardMoney);
@@ -235,10 +228,16 @@ public class PickupQuest : Quest {
         }
 
         //Destroy (parentObject);
+        Destroy(fieryGlow);
+        Destroy(radarSound);
         Destroy(parentObject.GetComponent<PickupQuest>());
         Destroy(parentObject.GetComponent<QuestObject>());
-        Destroy(fieryGlow);
-		Destroy (radarSound);
+
+        // Destroy all notes related to this quest.
+        for (int i = 0; i < myNotes.Count; i++)
+        {
+            Destroy(myNotes[i]);
+        }
 
         if (parentObject.GetComponentInChildren<InteractionSettings>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
 

@@ -61,6 +61,23 @@ public class QuestItNoteFunction : D_Function {
 
     public void StickToScreen()
     {
+        Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
+        transform.parent.parent = visorNode.transform;
+        transform.parent.localPosition = new Vector3(
+            Random.Range(-1.3f, 4.1f),
+            Random.Range(1.5f, 3.6f),
+            2.5f);
+
+        transform.parent.localRotation = Quaternion.Euler(new Vector3(
+            0f,
+            0f,
+            Random.Range(-1f, 1f)));
+
+        Freeze();
+    }
+
+    public void Freeze()
+    {
         transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 
         //// Move my position to the preordained position.
