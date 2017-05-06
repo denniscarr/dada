@@ -7,9 +7,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	public static float noiseScale;
 	public static float xOrigin, yOrigin;
-	public float DistanceBetweenTrees = 20;
+	public float DistanceBetweenTrees = Random.Range(10, 100);
 	public float childrenDistance = 1;
-	public float TreeChildrenCount = 10;
+	public float TreeChildrenCount = Random.Range(5, 100);
 	public int PaletteAmount = 10;
 	public float TreeHeightThreshold = 0.75f;
 
@@ -75,9 +75,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
-//			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
+			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
-			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
 		}
 			
 		levelTint = Random.ColorHSV (0, 1, 0, 0.5f, 0.5f, 1);
@@ -397,7 +397,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		switch (propIndex) {
 		case 0:
 			spriteIndex = (int)Services.SPRITES.tall;
-			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 20)) {
+			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 25)) {
 				spriteIndex = 0;
 			}
 			break;
@@ -407,7 +407,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		default:
-			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 100)) {
+			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 75)) {
 				spriteIndex = 0;
 			} else {
 				spriteIndex = spriteType;
@@ -425,6 +425,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				return null;
 			} else {
 				NPCs++;
+				Debug.Log ("Spawning NPC");
 				objectType = npcType;
 			}
 			break;
@@ -490,17 +491,18 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;
 
+		Vector3 targetPosition = normals [(int)index.x * (int)index.y];
+
 		if (newObject.GetComponentInChildren<SpriteRenderer> () == null) {
 			newObject.transform.localScale *= tileScale;
 			newObject.transform.localPosition += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
 		} else {
+			targetPosition.y = newObject.transform.position.y;
 			newObject.transform.localScale *= tileScale;
 			newObject.transform.localPosition -= Vector3.up * (newObject.GetComponent<SpriteRenderer> ().bounds.extents.y / 5);
 			newObject.AddComponent<BoxCollider> ().isTrigger = true;
 		}
-			
-		Vector3 targetPosition = normals [(int)index.x * (int)index.y];
-		targetPosition.y = newObject.transform.position.y;
+
 		newObject.transform.LookAt(targetPosition);
 		newObject.transform.Rotate (0, 180, 0);
 
