@@ -9,6 +9,19 @@ public class IncoherenceEvent : MonoBehaviour {
     public bool instantaneous;  // Whether this event happens in one frame or over time.
     public bool active; // Whether this event is currently doing stuff.
 
+
+    public void Start()
+    {
+
+    }
+
+
+    public void Update()
+    {
+
+    }
+
+
 	public virtual void Initiate()
     {
 
