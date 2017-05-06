@@ -28,6 +28,10 @@ public class IncoherenceManager : MonoBehaviour {
     // A list to hold incoherence events whose threshold has not been passed & whose have been passed.
     List<IncoherenceEvent> dormantEvents;
     List<IncoherenceEvent> activeEvents;
+    IncoherenceEvent nextEvent;
+
+    float timeSinceLastEvent = 0f;
+    float timeUntilNextEvent = 0f;
 
 
     private void Start()
@@ -37,6 +41,43 @@ public class IncoherenceManager : MonoBehaviour {
         dormantEvents.Add(gameObject.AddComponent<GravityShiftEvent>());
 
         activeEvents = new List<IncoherenceEvent>();
+    }
+
+
+    private void Update()
+    {
+        // See if I should apply an incoherence event on the next audio shuffle.
+        if (activeEvents.Count > 0 && nextEvent == null)
+        {
+            float eventChance = MyMath.Map(globalIncoherence, 0f, 1f, 0f, 1f);
+
+            if (Random.value > eventChance)
+            {
+                QueueEvent();
+            }
+        }
+
+        // Wait for the next audio shuffle and apply the event.
+        else if (nextEvent != null)
+        {
+            timeSinceLastEvent += 0.0f;
+            if (timeSinceLastEvent >= timeUntilNextEvent)
+            {
+                Debug.Log("Event.");
+                nextEvent.Initiate();
+            }
+        }
+    }
+
+
+    void QueueEvent()
+    {
+        nextEvent = activeEvents[Random.Range(0, activeEvents.Count)];
+
+        Debug.Log("Queuing: " + nextEvent);
+
+        timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 2f);
+        timeSinceLastEvent = 0.0f;
     }
 
 
@@ -97,7 +138,7 @@ public class IncoherenceManager : MonoBehaviour {
 
         // Get the probability that any item will be replaced.
         float npcChance = MiscFunctions.Map(globalIncoherence, inanimateObjectNPCThreshold, 1f, 0f, 0.7f);
-        float normalChance = MiscFunctions.Map(globalIncoherence, replaceObjectThreshold, 1f, 0f, 1f);
+        float normalChance = MiscFunctions.Map(globalIncoherence, replaceObjectThreshold, 1f, 0f, 0.5f);
         //Debug.Log("global incoherence: " + globalIncoherence + ". chance of replacement: " + normalChance);
         float staticChance = MiscFunctions.Map(globalIncoherence, affectStaticObjectThreshold, 1f, 0f, 0.5f);
 
@@ -137,7 +178,7 @@ public class IncoherenceManager : MonoBehaviour {
             target.transform.position,
             target.transform.rotation);
 
-        Debug.Log("Replacing " + target.name + " with " + newObject.name);
+        //Debug.Log("Replacing " + target.name + " with " + newObject.name);
 
         // Destroy old object.
         Destroy(target);
@@ -167,9 +208,14 @@ public class IncoherenceManager : MonoBehaviour {
         // See if the threshold for any incoherence events has been added.
         if (dormantEvents.Count > 0)
         {
+            Debug.Log("smokeeklf");
             for (int i = 0; i < dormantEvents.Count; i++)
             {
-
+                if (globalIncoherence >= dormantEvents[i].threshold)
+                {
+                    activeEvents.Add(dormantEvents[i]);
+                    dormantEvents.Remove(dormantEvents[i]);
+                }
             }
         }
     }

@@ -17,7 +17,7 @@ public class D_GunFunction: D_Function
     {
         base.Use();
 
-        Debug.Log("Used Gun");
+        //Debug.Log("Used Gun");
 		//Vector3 pos = LOWER_EQUIP_REFERENCE.position + intSet.equipPosition + transform.localPosition;
 		GameObject shoot = Instantiate (projectile[Random.Range (0, projectile.Length-1)], transform.position, Quaternion.identity) as GameObject;
 
