@@ -20,6 +20,7 @@ public class CS_AudioManager : MonoBehaviour {
 	//POPULATE THIS - Audio Clips
 	public AudioClip[] voiceClipPool;
 	public AudioClip NPCOnFire;
+	public AudioClip NPCDie;
 	//private List<int> voiceClipPlaylist = new List<int> ();
 	//int lastVoiceSamplePlayed = int.MaxValue;
 
