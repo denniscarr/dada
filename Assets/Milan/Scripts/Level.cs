@@ -10,7 +10,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public float DistanceBetweenTrees = Random.Range(10, 100);
 	public float childrenDistance = 1;
 	public float TreeChildrenCount = Random.Range(5, 100);
-	public int PaletteAmount = 10;
+	public int PaletteAmount = 8;
 	public float TreeHeightThreshold = 0.75f;
 
 	Terrain levelMesh;
@@ -70,17 +70,19 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
+		levelTint = Random.ColorHSV (0, 1, 0, 0.5f, 0.5f, 1);
+
 		palette = new Color[PaletteAmount];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
 			float lower = Mathf.Clamp(upper - 1/(float)palette.Length, 0, upper - 1/(float)palette.Length);
 			float rand = Random.Range (lower, upper);
-			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
+//			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
 //			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+			palette [i] = Random.ColorHSV(0, 1, 0, 0.5f, lower, upper) * levelTint;
 		}
 			
-		levelTint = Random.ColorHSV (0, 1, 0, 0.5f, 0.5f, 1);
 
 		SetGradient ();
 
@@ -124,6 +126,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		highestPointIndices = new List<int> ();
 		Services.LevelGen.sun.color = levelTint;
 
+		Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
+
 //		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 //			if (c.name != "UpperCamera") {
 ////				c.backgroundColor = Color.black;
@@ -140,7 +144,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	void Update(){
 
-		Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor = Color.Lerp(Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor, levelTint, Time.deltaTime);
+		//Color.Lerp(Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor, levelTint, Time.deltaTime);
 
 		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (highestPoint * 2.5f));
 		float NormalisedToHighestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
@@ -232,23 +236,23 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
 
-				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
-				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
-
-
-                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
-
-                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
-                {
-                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
-                }
-                else
-                {
-                    if (remapIndex > 0 && difference < 0)
-                    {
-                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
-                    }
-                }
+//				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
+//				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
+//
+//
+//                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
+//
+//                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
+//                {
+//                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
+//                }
+//                else
+//                {
+//                    if (remapIndex > 0 && difference < 0)
+//                    {
+//                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
+//                    }
+//                }
 
 				perlinVal = Mathf.Pow (perlinVal, 1f);
 

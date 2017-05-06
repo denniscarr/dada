@@ -134,7 +134,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		maxSprites += 50;
 		radius += 10;
 //		perlinFrequency += 0.020f;
-		height += 1;
+		height += 5;
 		Services.IncoherenceManager.globalIncoherence += 0.05f;
 
         ManagedObjects.Add (l);
