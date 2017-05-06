@@ -169,7 +169,6 @@ public class Tutorial : Quest {
 //				Input.GetKeyDown(KeyCode.D)) && !roomEntered) {
 //			enterRoom ();
 //		}
-
 //		// great, now exit the visor and explore the world
 //		if (thingMoved && roomEntered && !tabPressed) {
 //			if (controls.mode == ControlMode.ZOOM_IN_MODE) {
@@ -254,8 +253,8 @@ public class Tutorial : Quest {
 	}
 
 	void OnDragNoteIn(){
-		if(questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 		mouseControllerNew.writer.WriteAtPoint("Drag the note into the visor with your mouse.", mouseControllerNew.textPosition);
+		if(questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.THROW_NOTE_OUT;
 			QuestItNoreText.text = "Drag me out of your visor into the world.";
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();//useless?
