@@ -33,9 +33,9 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
-		maxNPCs = 1000;
-		maxObjects = 1000;
-		maxSprites = 1000;
+		maxNPCs = 0;
+		maxObjects = 0;
+		maxSprites = 0;
 
 
 		radius = 25;
