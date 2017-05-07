@@ -6,10 +6,47 @@ public class Grail : MonoBehaviour {
 	
     bool dying = false;
 
+    [SerializeField] float pulsateSpeedFast = 5f;
+    Vector3 originalScale;
+    float sine;
 
-	void Update ()
+
+    private void Start()
+    {
+        originalScale = Vector3.one * 5f;
+    }
+
+
+    void Update ()
     {
         if (dying) return;
+
+        // Pulsate at speed based on distance to player.
+        float pulsateSpeed = MyMath.Map(
+            Vector3.Distance(transform.position, Services.Player.transform.position),
+            5f,
+            Services.LevelGen.currentLevel._width*0.5f,
+            1f,
+            pulsateSpeedFast
+            );
+
+        pulsateSpeed = Mathf.Clamp(pulsateSpeed, 0f, pulsateSpeedFast);
+
+        sine += pulsateSpeedFast * Time.deltaTime;
+
+        Vector3 newScale = new Vector3(
+            MyMath.Map(Mathf.Sin(sine), -1f, 1f, originalScale.x * 0.9f, originalScale.x * 1.1f),
+            MyMath.Map(Mathf.Sin(sine), -1f, 1f, originalScale.y * 0.9f, originalScale.y * 1.1f),
+            MyMath.Map(Mathf.Sin(sine), -1f, 1f, originalScale.y * 0.9f, originalScale.z * 1.1f)
+            );
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).name.Contains("Subobject"))
+            {
+                transform.GetChild(i).localScale = newScale;
+            }
+        }
 
 		// Suck all objects towards me.
         foreach(InteractionSettings interactionSettings in GameObject.FindObjectsOfType<InteractionSettings>())

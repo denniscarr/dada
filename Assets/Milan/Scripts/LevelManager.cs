@@ -135,7 +135,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		radius += 5;
 //		perlinFrequency += 0.020f;
 		height += 5;
-        if (levelNum < 0) Services.IncoherenceManager.TallyIncoherence();
+        if (levelNum < -1) Services.IncoherenceManager.TallyIncoherence();
 		Services.IncoherenceManager.globalIncoherence += 0.05f;
 
         ManagedObjects.Add (l);
