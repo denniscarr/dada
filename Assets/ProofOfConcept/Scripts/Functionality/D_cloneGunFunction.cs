@@ -23,7 +23,7 @@ public class D_cloneGunFunction : D_Function {
 
 		if (Physics.Raycast (cloneRay, out hit, 100)) {
 			GameObject cloneHit = hit.collider.gameObject;
-			Instantiate (cloneHit, hit.transform.position, Quaternion.identity);
+			Instantiate (cloneHit, hit.transform.position + Random.insideUnitSphere*2f, Random.rotation);
 			line.SetPosition (1, hit.point);
 		} else {
 			line.SetPosition (1, cloneRay.GetPoint (100));

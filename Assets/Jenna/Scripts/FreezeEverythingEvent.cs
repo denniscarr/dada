@@ -39,6 +39,8 @@ public class FreezeEverythingEvent : IncoherenceEvent {
             {
                 if (intSet.transform.parent.GetComponent<Rigidbody>() != null) intSet.transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             }
+
+            active = false;
         }
     }
 }
