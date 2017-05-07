@@ -25,7 +25,7 @@ public class Grail : MonoBehaviour {
                 }
             }
         }
-
+        
         // Run away from player.
         //if (Vector3.Distance(transform.position, Services.Player.transform.position) < 11f)
         //{
