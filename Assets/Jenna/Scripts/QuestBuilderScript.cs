@@ -81,6 +81,11 @@ public class QuestBuilderScript : MonoBehaviour {
 
 		// add the script if it's part of finder.pickups
 		PickupQuest newQuest = objeto.AddComponent<PickupQuest> ();
+        if (objeto.GetComponents<PickupQuest>().Length > 1)
+        {
+            Destroy(objeto.GetComponents<PickupQuest>()[1]);
+            return;
+        }
 		pickup.makeTheQuest (newQuest);
 		manager.questList.Add (newQuest);
 

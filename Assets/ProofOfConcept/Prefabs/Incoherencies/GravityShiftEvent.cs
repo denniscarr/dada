@@ -63,7 +63,6 @@ public class GravityShiftEvent : IncoherenceEvent {
         // Lerp gravity back to original value.
         Physics.gravity = Vector3.Lerp(newGravity, savedGravity, lerpValue);
 
-        Debug.Log("gravity lerp: " + lerpValue);
         if (lerpValue >= 0.99f)
         {
             Physics.gravity = savedGravity;
