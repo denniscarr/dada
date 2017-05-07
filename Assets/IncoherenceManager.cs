@@ -12,7 +12,7 @@ public class IncoherenceManager : MonoBehaviour {
     // Thresholds.
     [SerializeField] float inanimateObjectNPCThreshold = 0.1f;  // How high global incoherence needs to be before we start turning random objects into NPCS.
     [SerializeField] float replaceObjectThreshold = 0.5f; // How high global incoherence needs to be before we start replacing interactive objects.
-    [SerializeField] float affectStaticObjectThreshold = 0.9f; // How high global incoherence needs to be before we start affecting all game objects (bad things will happen.)
+    [SerializeField] float affectStaticObjectThreshold = 1.1f; // How high global incoherence needs to be before we start affecting all game objects (bad things will happen.)
 
     // Prefab references.
     [SerializeField] GameObject NPCAI;
@@ -102,10 +102,10 @@ public class IncoherenceManager : MonoBehaviour {
         // If the game is ready to break completely, add non interactive game objects to this list.
         if (globalIncoherence >= affectStaticObjectThreshold)
         {
-            foreach (GameObject oops in FindObjectsOfType<GameObject>())
-            {
-                affectedObjects.Add(oops);
-            }
+            //foreach (GameObject oops in FindObjectsOfType<GameObject>())
+            //{
+            //    affectedObjects.Add(oops);
+            //}
         }
 
         ReplaceObjects();
