@@ -42,6 +42,7 @@ public class IncoherenceManager : MonoBehaviour {
         dormantEvents.Add(gameObject.AddComponent<SunRotateEvent>());
         dormantEvents.Add(gameObject.AddComponent<EverythingCombustEvent>());
         dormantEvents.Add(gameObject.AddComponent<MakeSomethingHugeEvent>());
+        dormantEvents.Add(gameObject.AddComponent<FreezeEverythingEvent>());
 
         activeEvents = new List<IncoherenceEvent>();
     }
@@ -207,6 +208,9 @@ public class IncoherenceManager : MonoBehaviour {
             globalIncoherence = totalIncoherence;
 
         //Debug.Log("Global incoherence set to: " + globalIncoherence);
+
+        nextEvent = null;
+        timeUntilNextEvent = 0.0f;
 
         // See if the threshold for any incoherence events has been added.
         if (dormantEvents.Count > 0)
