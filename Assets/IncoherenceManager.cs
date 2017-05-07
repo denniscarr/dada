@@ -39,6 +39,9 @@ public class IncoherenceManager : MonoBehaviour {
         // Instantiate event components.
         dormantEvents = new List<IncoherenceEvent>();
         dormantEvents.Add(gameObject.AddComponent<GravityShiftEvent>());
+        dormantEvents.Add(gameObject.AddComponent<SunRotateEvent>());
+        dormantEvents.Add(gameObject.AddComponent<EverythingCombustEvent>());
+        dormantEvents.Add(gameObject.AddComponent<MakeSomethingHugeEvent>());
 
         activeEvents = new List<IncoherenceEvent>();
     }
@@ -63,6 +66,7 @@ public class IncoherenceManager : MonoBehaviour {
             timeSinceLastEvent += Time.deltaTime;
             if (timeSinceLastEvent >= timeUntilNextEvent)
             {
+                Debug.Log("Initiating: " + nextEvent);
                 nextEvent.Initiate();
                 nextEvent = null;
             }
@@ -74,7 +78,7 @@ public class IncoherenceManager : MonoBehaviour {
     {
         nextEvent = activeEvents[Random.Range(0, activeEvents.Count)];
 
-        timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 2f);
+        timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 1f);
         Debug.Log("Queuing: " + nextEvent + ". " + timeUntilNextEvent + " seconds.");
         timeSinceLastEvent = 0.0f;
     }

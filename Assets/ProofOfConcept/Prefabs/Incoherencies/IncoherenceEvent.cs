@@ -18,7 +18,10 @@ public class IncoherenceEvent : MonoBehaviour {
 
     public void Update()
     {
-
+        if (!instantaneous && active)
+        {
+            Perform();
+        }
     }
 
 

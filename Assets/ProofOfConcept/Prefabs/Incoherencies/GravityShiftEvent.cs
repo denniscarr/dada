@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GravityShiftEvent : IncoherenceEvent {
 
-    float maxMultiplier = 60f;   // The maximum thing that gravity can turn into.
+    float maxMultiplier = 100f;   // The maximum thing that gravity can turn into.
     float returnSpeed = 0f; // How quickly we should return to normal gravity.
 
     Vector3 savedGravity; // The gravity before my last shift.
