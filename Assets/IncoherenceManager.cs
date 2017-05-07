@@ -98,7 +98,11 @@ public class IncoherenceManager : MonoBehaviour {
     {
         nextEvent = activeEvents[Random.Range(0, activeEvents.Count)];
 
-        if (nextEvent.threshold > globalIncoherence) return;
+        if (nextEvent.threshold > globalIncoherence)
+        {
+            nextEvent = null;
+            return;
+        }
 
         timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 1f);
         Debug.Log("Queuing: " + nextEvent + ". " + timeUntilNextEvent + " seconds.");
@@ -212,6 +216,8 @@ public class IncoherenceManager : MonoBehaviour {
 
 	public void TallyIncoherence()
     {
+        if (Services.LevelGen.levelNum > -1) return;
+
         float totalIncoherence = 0f;
         int incoherenceNum = 0;
 

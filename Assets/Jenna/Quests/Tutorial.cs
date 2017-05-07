@@ -107,7 +107,7 @@ public class Tutorial : Quest {
 		float highPoint = level.GetComponent<Level> ().highestPoint + 1.5f;
 
 		visor = Instantiate (Resources.Load ("Visor", typeof(GameObject))) as GameObject;
-		Debug.Log(visor);
+		//Debug.Log(visor);
 		visor.transform.position = new Vector3 (level.transform.position.x, level.transform.position.y + highPoint, level.transform.position.z);
 
 
@@ -171,8 +171,8 @@ public class Tutorial : Quest {
 	}
 
 	void AddNewNote(string notes){
-		//wait to add do tween
-		QuestItNoreText.DOText("",1.5f).OnComplete(()=>OnDisappearComplete(notes));
+        //wait to add do tween
+        QuestItNoreText.DOText("",0.1f).OnComplete(()=>OnDisappearComplete(notes));
 		//MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
 //		foreach(MeshRenderer mr in meshRenderers){
 //			
@@ -332,7 +332,7 @@ public class Tutorial : Quest {
 		GetComponent<QuestBuilderScript>().enabled = true;
 		GetComponent<PickupQuest>().enabled = true;
 		QuestItNoreText.text = "Pursuit the grail.";
-		grail.SetActive(true);
+        GameObject.Find("Bootstrapper").GetComponent<GrailSpawner>().SpawnGrail();
 		this.enabled = false;
 	}
 

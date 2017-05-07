@@ -7,6 +7,8 @@ public class QuestItNoteFunction : D_Function {
 	public int questID;
     public bool useOnStart = false; // Whether I should stick to something as soon as I spawn.
 
+    bool carriedByPlayerInLastFrame;
+
 	// Use this for initialization
 	new void Start () {
 		base.Start();
@@ -32,6 +34,23 @@ public class QuestItNoteFunction : D_Function {
 
 		base.Update ();
 
+        // See if I get dropped.
+        if (carriedByPlayerInLastFrame && intSet.carryingObject != Services.Player.transform)
+        {
+            FacePlayer();
+        }
+
+        if (intSet.carryingObject == Services.Player.transform)
+        {
+            Debug.Log("Note being carried.");
+            carriedByPlayerInLastFrame = true;
+        }
+
+        else
+        {
+            carriedByPlayerInLastFrame = false;
+        }
+
         //If the player is holding me, turn to face the player.
         if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
         {
@@ -43,19 +62,34 @@ public class QuestItNoteFunction : D_Function {
             }
 
             // Face player.
-            if (transform.parent.parent == null) return;
+            //if (transform.parent.parent == null) return;
 
-            Quaternion newRotation = transform.parent.parent.rotation;
+            //Quaternion newRotation = transform.parent.parent.rotation;
+            //transform.parent.rotation = newRotation;
+
+            //if (!intSet.IsInVisor)
+            //{
+            //    newRotation = transform.parent.parent.rotation;
+            //    newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
+            //    transform.parent.rotation = newRotation;
+            //    //transform.parent.localEulerAngles = new Vector3(0f, 80f, 0f);
+            //}
+        }
+    }
+
+    void FacePlayer()
+    {
+        if (intSet.IsInVisor)
+        {
+            return;
+        }
+
+        else
+        {
+            Debug.Log("Turning quest note to face player");
+
+            Quaternion newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
             transform.parent.rotation = newRotation;
-
-            if (!intSet.IsInVisor)
-            {
-                //newRotation = transform.parent.parent.rotation;
-                //newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
-                //transform.parent.rotation = newRotation;
-                transform.parent.localEulerAngles = new Vector3(0f, 80f, 0f);
-            }
-
         }
     }
 

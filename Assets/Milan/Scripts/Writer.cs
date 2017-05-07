@@ -178,7 +178,6 @@ public class Writer : MonoBehaviour {
 			newWord.GetComponent<TextMesh> ().color = textColor;
 			float glitchChance = MiscFunctions.Map (Services.IncoherenceManager.globalIncoherence, GlitchTextThreshold, 1f, 0f, 0.3f);
             glitchChance = Mathf.Clamp01(glitchChance);
-            Debug.Log("glitch chance: " + glitchChance);
 
 			if (Random.value > glitchChance){
 			    newWord.GetComponent<Renderer> ().sharedMaterial = currentFont.material;
