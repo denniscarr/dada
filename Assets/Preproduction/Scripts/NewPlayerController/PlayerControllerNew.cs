@@ -142,7 +142,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomOutMode(){
-		Debug.Log("zoom out");
+		//Debug.Log("zoom out");
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
 		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
 

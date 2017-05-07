@@ -7,11 +7,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	public static float noiseScale;
 	public static float xOrigin, yOrigin;
-	public float DistanceBetweenTrees = 20;
+	public float DistanceBetweenTrees = 40;
 	public float childrenDistance = 1;
-	public float TreeChildrenCount = 10;
-	public int PaletteAmount = 10;
-	public float TreeHeightThreshold = 0.75f;
+	public float TreeChildrenCount = 15;
+	public int PaletteAmount = 8;
+	public float TreeHeightThreshold = 0.5f;
 
 	Terrain levelMesh;
 
@@ -28,6 +28,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	int highestPointIndex;
 	public int NPCs, Pickups, NonPickups, Sprites;
 	int spriteType;
+	int npcType;
 	float distanceOutsideCircle;
 
 	GameObject ground, sky;
@@ -50,6 +51,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
 
+		DistanceBetweenTrees = Random.Range(10, 100);
+			
 		_width = Services.LevelGen.radius;
 		_length = _width;
 		_height = Random.Range (1, Services.LevelGen.height);
@@ -69,6 +72,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	
 		gradient = new Gradient ();
 
+		levelTint = Random.ColorHSV (0, 1, 0, 0.5f, 0.5f, 1);
+
 		palette = new Color[PaletteAmount];
 		for (int i = 0; i < palette.Length; i++) {
 			float upper = (1 / ((float)palette.Length*1.1f)) * (float)i + 0.1f;
@@ -76,10 +81,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			float rand = Random.Range (lower, upper);
 //			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
-			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+			palette [i] = Random.ColorHSV(0, 1, 0, 0.5f, lower, upper);
 		}
 			
-		levelTint = Random.ColorHSV (0, 1, 0, 0.5f, 0.5f, 1);
 
 		SetGradient ();
 
@@ -113,7 +118,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		mapHeight = _height * tileScale;
 		spriteType = Random.Range(1, Services.Prefabs.SPRITES.Length);
-
+		npcType = Random.Range (0, Services.Prefabs.PREFABS [(int)Services.TYPES.NPCs].Length);
+			
 		NPCs = 0;
 		Pickups = 0;
 		NonPickups = 0;
@@ -121,6 +127,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		highestPointIndices = new List<int> ();
 		Services.LevelGen.sun.color = levelTint;
+
+		Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
+		Services.Player.GetComponentInChildren<ColorfulFog> ().ApplyGradientChanges ();
 
 //		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 //			if (c.name != "UpperCamera") {
@@ -138,7 +147,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	void Update(){
 
-		Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor = Color.Lerp(Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor, levelTint, Time.deltaTime);
+		//Color.Lerp(Services.Player.GetComponentInChildren<ColorfulFog> ().equatorColor, levelTint, Time.deltaTime);
 
 		float playerHeightNormalized = ((Services.Player.transform.position.y - transform.position.y) / (highestPoint * 2.5f));
 		float NormalisedToHighestPoint = ((Services.Player.transform.position.y - transform.position.y) / highestPoint);
@@ -230,23 +239,21 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
 
-				int remapIndex = Mathf.RoundToInt(perlinVal * (Services.LevelGen.NoiseRemapping.Length-1));
-				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length-1)) - (float)remapIndex;
+//				if (perlinVal < 0.5f) {
+					int remapIndex = Mathf.RoundToInt (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1));
+					float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1)) - (float)remapIndex;
 
 
-                perlinVal = Services.LevelGen.NoiseRemapping[remapIndex];
+					perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
 
-                if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0)
-                {
-                    perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex + 1], difference);
-                }
-                else
-                {
-                    if (remapIndex > 0 && difference < 0)
-                    {
-                        perlinVal = Mathf.Lerp(perlinVal, Services.LevelGen.NoiseRemapping[remapIndex - 1], Mathf.Abs(difference));
-                    }
-                }
+					if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0) {
+						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
+					} else {
+						if (remapIndex > 0 && difference < 0) {
+							perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs (difference));
+						}
+					}
+//				}
 
 				perlinVal = Mathf.Pow (perlinVal, 1f);
 
@@ -337,24 +344,28 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 
 		foreach (int indice in highestPointIndices) {
-
-			if (Sprites >= Services.LevelGen.maxSprites) {
-				break;
-			}
 				
 			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
 
-			GameObject newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices[indice], index);
+			GameObject newObject;
+
+			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 25)) {
+				newObject = LevelObjectFactory (Random.Range(0.00f, 1.00f), Random.Range(0, Services.Prefabs.PREFABS.Length), vertices [indice], index);
+			} else {
+				newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices [indice], index);
+			}
+
 			if (newObject == null) {
 				break;
 			}
-			newObject.transform.localScale *= 3;
+			newObject.transform.localScale *= 2;
 
-			for (int j = 1; j < TreeChildrenCount; j++) {
+			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
 				
-				Vector3 SpawnCirclePos = (Random.insideUnitSphere.normalized * j * childrenDistance) + newObject.transform.position;
+				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)) + newObject.transform.position;
 
 				RaycastHit hit;
+					
 				if (Physics.Raycast(new Vector3(SpawnCirclePos.x, transform.position.y + mapHeight, SpawnCirclePos.z), -Vector3.up, out hit)) {
 
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
@@ -385,6 +396,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		GameObject newObject = null;
 		Color floorColor = _bitmap.GetPixel ((int)index.x, (int)index.y);
+		int objectType = Random.Range (0, Services.Prefabs.PREFABS [objectVal].Length);
 
 		int propIndex = Mathf.RoundToInt (perlin * (Services.LevelGen.props.Length-1));
 //		int objectType = (int)Services.LevelGen.props [propIndex];
@@ -394,8 +406,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		switch (propIndex) {
 		case 0:
 			spriteIndex = (int)Services.SPRITES.tall;
-			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 20)) {
-				spriteIndex = 0;
+			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 25)) {
+				spriteIndex = Random.Range (0, 3);
 			}
 			break;
 		
@@ -404,7 +416,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			break;
 
 		default:
-			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 100)) {
+			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 75)) {
 				spriteIndex = 0;
 			} else {
 				spriteIndex = spriteType;
@@ -422,11 +434,13 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				return null;
 			} else {
 				NPCs++;
+				//Debug.Log ("Spawning NPC");
+				objectType = npcType;
 			}
 			break;
 
 		case (int)Services.TYPES.Sprite:
-			if (Sprites >= Services.LevelGen.maxSprites) {
+			if (Sprites >= Services.LevelGen.maxSprites && spriteType != (int)Services.SPRITES.tall) {
 				return null;
 			} else {
 				Sprites++;
@@ -463,12 +477,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		}
 
 
-		newObject = Instantiate (Services.Prefabs.PREFABS[objectVal][Random.Range(0, Services.Prefabs.PREFABS[objectVal].Length)], Vector3.zero, Quaternion.identity) as GameObject;
+		newObject = Instantiate (Services.Prefabs.PREFABS[objectVal][objectType], Vector3.zero, Quaternion.identity) as GameObject;
 
 		if (newObject.GetComponentInChildren<SpriteRenderer> () != null) {
 			
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
-			newObject.GetComponent<SpriteRenderer> ().material.color = levelTint;
+			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
 			newObject.tag = tag;
 		}
@@ -486,17 +500,18 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		newObject.transform.parent = transform;
 		newObject.transform.localPosition = pos;
 
+		Vector3 targetPosition = normals [(int)index.x * (int)index.y];
+
 		if (newObject.GetComponentInChildren<SpriteRenderer> () == null) {
 			newObject.transform.localScale *= tileScale;
 			newObject.transform.localPosition += newObject.GetComponentInChildren<Renderer> ().bounds.extents.y * Vector3.up;
 		} else {
+			targetPosition.y = newObject.transform.position.y;
 			newObject.transform.localScale *= tileScale;
 			newObject.transform.localPosition -= Vector3.up * (newObject.GetComponent<SpriteRenderer> ().bounds.extents.y / 5);
 			newObject.AddComponent<BoxCollider> ().isTrigger = true;
 		}
-			
-		Vector3 targetPosition = normals [(int)index.x * (int)index.y];
-		targetPosition.y = newObject.transform.position.y;
+
 		newObject.transform.LookAt(targetPosition);
 		newObject.transform.Rotate (0, 180, 0);
 

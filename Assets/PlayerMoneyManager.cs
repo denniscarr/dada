@@ -13,7 +13,7 @@ public class PlayerMoneyManager : MonoBehaviour {
         {
             if (value < 0) value = 0;
             displayText.text = "$" + value;
-            Debug.Log("changing money");
+            //Debug.Log("changing money");
             _funds = value;
         }
     }

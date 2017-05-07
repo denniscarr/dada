@@ -262,7 +262,7 @@ public class Tutorial : Quest {
 
 	void OnThrowNoteOut(){
 		mouseControllerNew.writer.WriteAtPoint("Drag note out of your visor into the world.", mouseControllerNew.textPosition);
-		Debug.Log(questItNote.transform.parent);
+		//Debug.Log(questItNote.transform.parent);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.DRAG_NOTE_IN;
 			//AddNewNote("Drag the note into the visor with your mouse.");

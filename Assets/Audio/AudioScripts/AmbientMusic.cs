@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Beat;
+using DG.Tweening;
 
 public class AmbientMusic : MonoBehaviour {
 
@@ -13,7 +14,7 @@ public class AmbientMusic : MonoBehaviour {
 
 	public BufferShuffler[] shufflers;
 	BufferShuffler currentShuffler = null;
-	bool shuffleTrigger;
+	public bool shuffleTrigger;
 
 	Clock myClock;
 
@@ -38,6 +39,7 @@ public class AmbientMusic : MonoBehaviour {
 	public void NewShuffle() {
 
 		Debug.Log ("new shuffle");
+		shuffleTrigger = true;
 
 	}
 
@@ -69,42 +71,33 @@ public class AmbientMusic : MonoBehaviour {
 
 		for( int i = 0; i < hiSource.Length; i ++ ) {
 
-			//Set "hue source"
-			float loHueBound = ((float)i * (1f / (float)hiSource.Length));
-			float hiHueBound = ((float)(i + 1f) * (1f / (float)hiSource.Length));
 
-
-			if (lHue >= loHueBound && lHue < hiHueBound) {
-				//Debug.Log("range is greater than: " + loBound + "and less than " + hiBound);
-				hiSource [i].volume = 1.0f;
-				currentHiSource = hiSource [i];
-			} else {
-				hiSource [i].volume = 0.0f;
-			}
+			hiSource [i].volume = 0.0f;
+			currentHiSource = hiSource [i];
 
 		}
 
 		for (int i = 0; i < loSource.Length; i++) {
-			//Set "sat source" -- saturation goes from 0 to 0.5f
-			float loSatBound = ((float)i * (1f / (float)loSource.Length));
-			float hiSatBound = ((float)(i + 1f) * (1f / (float)loSource.Length));
-
-			if (lSat >= loSatBound*0.5f && lSat < hiSatBound*0.5f) {
-				
-				loSource [i].volume = 1.0f;
-			} else {
-				loSource [i].volume = 0.0f;
-			}
+	
+			loSource [i].volume = 0.0f;
+			
 		}
+
+		ambienceSource [0].volume = 1.0f;
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		shuffleTrigger = false;
+		if (shuffleTrigger == true) {
+			shuffleTrigger = false;
+		}
 
-		if (Services.LevelGen.currentLevel.levelTint != currentLevelColor) {
+		if (!Services.LevelGen.isTutorialCompleted) {
+			//TODO: Stem for tutorial
+			ambienceSource [0].volume = 1.0f;
+		} else if (Services.LevelGen.currentLevel.levelTint != currentLevelColor) {
 
 			Color.RGBToHSV( Services.LevelGen.currentLevel.levelTint, out lHue, out lSat, out lVal);
 
@@ -112,10 +105,10 @@ public class AmbientMusic : MonoBehaviour {
 			for( int i = 0; i < hiSource.Length; i ++ ) {
 
 				if (lHue >= ((float)i * (1.0f / (float)hiSource.Length)) && lHue <= ((float)(i + 1f) * (1f / (float)hiSource.Length))) {
-					hiSource [i].volume = 1.0f;
+					hiSource [i].DOFade(1.0f, 3.0f);
 					currentHiSource = hiSource [i];
 				} else {
-					hiSource [i].volume = 0.0f;
+					hiSource [i].DOFade(0.0f, 3.0f);
 				}
 
 			}
@@ -127,15 +120,17 @@ public class AmbientMusic : MonoBehaviour {
 
 				if (lSat >= loSatBound*0.5f && lSat < hiSatBound*0.5f) {
 					
-					loSource [i].volume = 1.0f;
+					loSource [i].DOFade(1.0f, 3.0f);
 				} else {
-					loSource [i].volume = 0.0f;
+					loSource [i].DOFade (0.0f, 3.0f);
 				}
 			}
 
 		}
 
-		
+
+
+		#region buffer shuffler stuff
 		if (Services.IncoherenceManager.globalIncoherence > 0.8f) {
 
 			foreach (BufferShuffler shuffler in shufflers) {
@@ -200,38 +195,14 @@ public class AmbientMusic : MonoBehaviour {
 
 				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
 			}
+		}
+		#endregion
 
 
 			/*
 			pitchShiftingScale = 3.0f * Services.IncoherenceManager.globalIncoherence;
 			pitchShiftingTimer = 2.0f - Services.IncoherenceManager.globalIncoherence;
 			*/
-
-		} else if (Services.IncoherenceManager.globalIncoherence > 0.2f) {
-
-			foreach (BufferShuffler shuffler in shufflers) {
-
-				shuffler.SetBeatsPerShuffle (TickValue.Half);
-				shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
-
-				//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-			}
-
-		} else if (Services.IncoherenceManager.globalIncoherence > 0.4f) {
-
-			foreach (BufferShuffler shuffler in shufflers) {
-
-				shuffler.SetBeatsPerShuffle (TickValue.Quarter);
-				shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
-
-				//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-			}
-
-		} 
 		prevIncoherence = Services.IncoherenceManager.globalIncoherence;
 
 	}

@@ -83,7 +83,7 @@ public class PickupQuest : Quest {
 
             if (parentObject.GetComponentInChildren<InteractionSettings>().IsInVisor)
             {
-                parentObject.AddComponent<CollisionReporter>();
+                if (parentObject.GetComponent<CollisionReporter>() == null) parentObject.AddComponent<CollisionReporter>();
 
                 if (parentObject.GetComponent<CollisionReporter>() != null && parentObject.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player && parentObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
                 {
@@ -212,7 +212,6 @@ public class PickupQuest : Quest {
         //notes.id1.Clear ();
 
         // Give player money
-        Debug.Log("Giving reward: " + rewardMoney);
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
 
         if (manager != null)
