@@ -4,7 +4,20 @@ using UnityEngine;
 
 public class IncoherenceManager : MonoBehaviour {
 
-    public float globalIncoherence = 0.0f;
+    public float _globalIncoherence = 0.0f;
+    public float globalIncoherence
+    {
+        get
+        {
+            return _globalIncoherence;
+        }
+
+        set
+        {
+            value = Mathf.Clamp01(value);
+            _globalIncoherence = value;
+        }
+    }
 
     public float interactionIncrease = 0.05f;  // How much an object's incoherence increases when the player interacts with that object.
     public float questIncrease = 0.1f;
@@ -46,6 +59,8 @@ public class IncoherenceManager : MonoBehaviour {
         dormantEvents.Add(gameObject.AddComponent<GeminiEvent>());
         dormantEvents.Add(gameObject.AddComponent<XRayEvent>());
         dormantEvents.Add(gameObject.AddComponent<ChangeAllMeshes>());
+        dormantEvents.Add(gameObject.AddComponent<PancakeEvent>());
+        dormantEvents.Add(gameObject.AddComponent<WorldTipperEvent>());
 
         activeEvents = new List<IncoherenceEvent>();
     }

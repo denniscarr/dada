@@ -27,7 +27,10 @@ public class XRayEvent : IncoherenceEvent {
 
         foreach (MeshFilter meshFilter in FindObjectsOfType<MeshFilter>())
         {
-            meshFilter.mesh = skelly;
+            if (Random.value < 0.3f)
+            {
+                meshFilter.mesh = skelly;
+            }
         }
     }
 }

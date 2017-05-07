@@ -17,7 +17,7 @@ public class GrailSpawner : MonoBehaviour {
     }
 
 
-    private void SpawnGrail()
+    public void SpawnGrail()
     {
         if (grailHasSpawned) return;
 
