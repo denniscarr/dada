@@ -12,6 +12,9 @@ public class XRayEvent : IncoherenceEvent {
     {
         base.Start();
 
+        threshold = 0.7f;
+        instantaneous = true;
+
         GameObject skel = Instantiate(Resources.Load("NPCs/Skeleton")) as GameObject;
         skelly = skel.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
         DestroyImmediate(skel);

@@ -9,6 +9,7 @@ public class GeminiEvent : IncoherenceEvent {
         base.Start();
 
         instantaneous = true;
+        threshold = 0.8f;
     }
 
 

@@ -45,6 +45,7 @@ public class IncoherenceManager : MonoBehaviour {
         dormantEvents.Add(gameObject.AddComponent<FreezeEverythingEvent>());
         dormantEvents.Add(gameObject.AddComponent<GeminiEvent>());
         dormantEvents.Add(gameObject.AddComponent<XRayEvent>());
+        dormantEvents.Add(gameObject.AddComponent<ChangeAllMeshes>());
 
         activeEvents = new List<IncoherenceEvent>();
     }

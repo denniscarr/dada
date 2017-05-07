@@ -8,6 +8,7 @@ public class EverythingCombustEvent : IncoherenceEvent {
     {
         base.Start();
 
+        threshold = 0.6f;
         instantaneous = true;
     }
 

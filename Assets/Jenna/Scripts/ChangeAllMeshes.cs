@@ -2,15 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeAllMeshes : MonoBehaviour {
+public class ChangeAllMeshes : IncoherenceEvent {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    new void Start()
+    {
+        base.Start();
+
+        threshold = 0.8f;
+        instantaneous = true;
+    }
+
+
+    public override void Initiate()
+    {
+        base.Initiate();
+
+        MeshFilter[] AllThings = Resources.LoadAll<MeshFilter>("");
+        foreach (MeshFilter meshFilter in FindObjectsOfType<MeshFilter>())
+        {
+            Mesh chosenMesh = AllThings[Random.Range(0, AllThings.Length)].sharedMesh;
+            meshFilter.mesh = chosenMesh;
+        }
+    }
 }

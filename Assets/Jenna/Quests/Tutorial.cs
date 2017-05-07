@@ -69,8 +69,8 @@ public class Tutorial : Quest {
 			return;
 		}
 
-		grail = GameObject.Find("Grail");
-		grail.SetActive(false);
+		//grail = GameObject.Find("Grail");
+		//grail.SetActive(false);
 
 		GetComponent<QuestManager>().enabled = false;
 		GetComponent<QuestFinderScript>().enabled = false;

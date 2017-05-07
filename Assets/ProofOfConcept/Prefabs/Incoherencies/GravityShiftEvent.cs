@@ -18,6 +18,7 @@ public class GravityShiftEvent : IncoherenceEvent {
         base.Start();
 
         instantaneous = false;
+        threshold = 0.1f;
     }
 
 
