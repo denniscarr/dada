@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GravityShiftEvent : IncoherenceEvent {
 
-    float maxMultiplier = 60f;   // The maximum thing that gravity can turn into.
+    float maxMultiplier = 100f;   // The maximum thing that gravity can turn into.
     float returnSpeed = 0f; // How quickly we should return to normal gravity.
 
     Vector3 savedGravity; // The gravity before my last shift.
@@ -63,7 +63,6 @@ public class GravityShiftEvent : IncoherenceEvent {
         // Lerp gravity back to original value.
         Physics.gravity = Vector3.Lerp(newGravity, savedGravity, lerpValue);
 
-        Debug.Log("gravity lerp: " + lerpValue);
         if (lerpValue >= 0.99f)
         {
             Physics.gravity = savedGravity;

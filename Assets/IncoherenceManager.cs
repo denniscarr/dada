@@ -12,7 +12,7 @@ public class IncoherenceManager : MonoBehaviour {
     // Thresholds.
     [SerializeField] float inanimateObjectNPCThreshold = 0.1f;  // How high global incoherence needs to be before we start turning random objects into NPCS.
     [SerializeField] float replaceObjectThreshold = 0.5f; // How high global incoherence needs to be before we start replacing interactive objects.
-    [SerializeField] float affectStaticObjectThreshold = 0.9f; // How high global incoherence needs to be before we start affecting all game objects (bad things will happen.)
+    [SerializeField] float affectStaticObjectThreshold = 1.1f; // How high global incoherence needs to be before we start affecting all game objects (bad things will happen.)
 
     // Prefab references.
     [SerializeField] GameObject NPCAI;
@@ -39,6 +39,10 @@ public class IncoherenceManager : MonoBehaviour {
         // Instantiate event components.
         dormantEvents = new List<IncoherenceEvent>();
         dormantEvents.Add(gameObject.AddComponent<GravityShiftEvent>());
+        dormantEvents.Add(gameObject.AddComponent<SunRotateEvent>());
+        dormantEvents.Add(gameObject.AddComponent<EverythingCombustEvent>());
+        dormantEvents.Add(gameObject.AddComponent<MakeSomethingHugeEvent>());
+        dormantEvents.Add(gameObject.AddComponent<FreezeEverythingEvent>());
 
         activeEvents = new List<IncoherenceEvent>();
     }
@@ -63,6 +67,7 @@ public class IncoherenceManager : MonoBehaviour {
             timeSinceLastEvent += Time.deltaTime;
             if (timeSinceLastEvent >= timeUntilNextEvent)
             {
+                Debug.Log("Initiating: " + nextEvent);
                 nextEvent.Initiate();
                 nextEvent = null;
             }
@@ -74,7 +79,7 @@ public class IncoherenceManager : MonoBehaviour {
     {
         nextEvent = activeEvents[Random.Range(0, activeEvents.Count)];
 
-        timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 2f);
+        timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 1f);
         Debug.Log("Queuing: " + nextEvent + ". " + timeUntilNextEvent + " seconds.");
         timeSinceLastEvent = 0.0f;
     }
@@ -97,10 +102,10 @@ public class IncoherenceManager : MonoBehaviour {
         // If the game is ready to break completely, add non interactive game objects to this list.
         if (globalIncoherence >= affectStaticObjectThreshold)
         {
-            foreach (GameObject oops in FindObjectsOfType<GameObject>())
-            {
-                affectedObjects.Add(oops);
-            }
+            //foreach (GameObject oops in FindObjectsOfType<GameObject>())
+            //{
+            //    affectedObjects.Add(oops);
+            //}
         }
 
         ReplaceObjects();
@@ -203,6 +208,9 @@ public class IncoherenceManager : MonoBehaviour {
             globalIncoherence = totalIncoherence;
 
         //Debug.Log("Global incoherence set to: " + globalIncoherence);
+
+        nextEvent = null;
+        timeUntilNextEvent = 0.0f;
 
         // See if the threshold for any incoherence events has been added.
         if (dormantEvents.Count > 0)
