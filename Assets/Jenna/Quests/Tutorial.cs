@@ -107,6 +107,7 @@ public class Tutorial : Quest {
 		float highPoint = level.GetComponent<Level> ().highestPoint + 1.5f;
 
 		visor = Instantiate (Resources.Load ("Visor", typeof(GameObject))) as GameObject;
+		Debug.Log(visor);
 		visor.transform.position = new Vector3 (level.transform.position.x, level.transform.position.y + highPoint, level.transform.position.z);
 
 
