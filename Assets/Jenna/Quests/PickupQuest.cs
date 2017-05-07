@@ -212,7 +212,6 @@ public class PickupQuest : Quest {
         //notes.id1.Clear ();
 
         // Give player money
-        Debug.Log("Giving reward: " + rewardMoney);
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
 
         if (manager != null)

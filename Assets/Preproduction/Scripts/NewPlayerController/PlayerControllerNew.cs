@@ -111,6 +111,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		rigidbodyFirstPersonController.enabled = true;
 		insideVisorMan.enabled = true;
 		headBob.enabled = true;
+        insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
 
 		//inRoomNode.gameObject.SetActive(true);
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
@@ -142,7 +143,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomOutMode(){
-		Debug.Log("zoom out");
+		//Debug.Log("zoom out");
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
 		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
 
@@ -183,7 +184,8 @@ public class PlayerControllerNew : MonoBehaviour {
                 //txtInfo.text = "Platform is calling you...";
                 //Debug.Log(t_hit.parent.name);
                 if (Input.GetMouseButtonDown(0)){
-					Debug.Log(t_hit.parent.name);
+                    insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                    Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
 					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
 					InitZoomOutMode();

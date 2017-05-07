@@ -33,7 +33,7 @@ public class QuestItNoteFunction : D_Function {
 		base.Update ();
 
         //If the player is holding me, turn to face the player.
-        if (intSet.carryingObject == Services.Player.transform)
+        if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
         {
             // Unparent from whatever object I was parented to before.
             if (transform.parent.parent != null && transform.parent.parent.name != "Equip Reference" && !intSet.IsInVisor)

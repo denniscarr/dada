@@ -227,7 +227,9 @@ public class InteractionSettings : MonoBehaviour {
     {
         onFire = true;
 
-        transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+        if (transform.parent.GetComponentInChildren<IncoherenceController>() != null) { 
+            transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
+        }
 
         if (IsNPC)
         {
