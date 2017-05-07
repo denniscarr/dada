@@ -40,7 +40,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		radius = 25;
 		height = 1;
-		tileScale = 2;
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -133,7 +132,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		maxNPCs += 1;
 		maxObjects += 2;
 		maxSprites += 50;
-		radius += 10;
+		radius += 5;
 //		perlinFrequency += 0.020f;
 		height += 5;
         if (levelNum < 0) Services.IncoherenceManager.TallyIncoherence();
