@@ -52,28 +52,35 @@ public class QuestBuilderScript : MonoBehaviour {
 		// CHANGE THIS TO BE A RANDOM ROLL
 		// AND CERTAIN NUMBERS TURN OUT TO BE GENERATING CERTAIN QUEST TYPES
 
-		if (Input.GetKeyDown(KeyCode.Tab)){
-			if (finder.pickups.Count > 0) {
-				if (manager.questList.Count <= (Mathf.Abs (levelman.levelNum + 1))) {
-					if (manager.questList.Count >= 0 && !manager.allQuestsCompleted) {
-						GeneratePickup ();
-					}
-				} else if (manager.questList.Count >= (Mathf.Abs (levelman.levelNum + 1))) {
+		//if (Input.GetKeyDown(KeyCode.Tab)){
+			//if (finder.pickups.Count > 0) {
+            if (manager.questsGeneratedInCurrentLevel < Services.Quests.questsToComplete)
+            {
+                GeneratePickup();
+                manager.questsGeneratedInCurrentLevel++;
+                Debug.Log("Quests genereated in current level: " + manager.questsGeneratedInCurrentLevel);
+                Debug.Log("Quests to complete: " + manager.questsToComplete);
+			}
+                //else if (manager.questList.Count >= (Mathf.Abs (levelman.levelNum + 1))) {
 					//for (int i = 0; i < Random.Range (10, 30); i++) {
 					//	NoteSpawnerScript rain = spawner.GetComponent<NoteSpawnerScript> ();
 					//	rain.MakeItRain ();
 					//}
-				}
-			}
-		}
+				//}
+			//}
+		//}
 	}
 
 	// generates pickup quest
 	public void GeneratePickup() {
 
+        if (Services.LevelGen.levelNum == 0) return;
+        if (finder.pickups.Count <= 0) return;
+
 		// pick an object for it
-		questThing = ranger % length;
-		objeto = finder.pickups [Random.Range (0, finder.pickups.Count) % finder.pickups.Count];
+		//questThing = ranger % length;
+		objeto = finder.pickups [Random.Range (0, finder.pickups.Count)];
+        if (objeto == null) return;
 		objectScript = objeto.GetComponent<QuestObject> ();
 
         if (objeto.GetComponent<PickupQuest>() != null) return;

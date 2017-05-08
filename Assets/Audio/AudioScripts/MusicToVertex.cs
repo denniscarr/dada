@@ -34,9 +34,12 @@ public class MusicToVertex : MonoBehaviour {
 		 
 
 		foreach (Renderer renderer in listOfMeshRenderers) {
-			renderer.material = audioReactiveMaterial;
-			originalLacunarity = audioReactiveMaterial.GetFloat ("_Lacunarity");
-			originalLowColor = audioReactiveMaterial.GetColor ("_LowColor");
+            if (renderer.GetComponent<ParticleSystem>() == null)
+            {
+                renderer.material = audioReactiveMaterial;
+                originalLacunarity = audioReactiveMaterial.GetFloat("_Lacunarity");
+                originalLowColor = audioReactiveMaterial.GetColor("_LowColor");
+            }
 			//Debug.Log (renderer.gameObject.name);
 		}
 		parentTransform = gameObject.transform.parent;

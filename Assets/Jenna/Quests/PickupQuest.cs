@@ -100,7 +100,7 @@ public class PickupQuest : Quest {
 		parentObject = builder.objeto;
 		objectScript = parentObject.GetComponent<QuestObject> ();
 		requiredPickups = Random.Range (2, 6);
-        rewardMoney = parentObject.GetComponentInChildren<InteractionSettings>().price + Random.Range(100, 200);
+        rewardMoney = Mathf.RoundToInt(parentObject.GetComponentInChildren<InteractionSettings>().price * Random.Range(1.1f, 2f));
         //Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
 
         // add the glow
@@ -219,15 +219,15 @@ public class PickupQuest : Quest {
         // Give player money
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
 
-        if (manager != null)
+        if (Services.Quests != null)
         {
-            manager.currentCompletedQuests++;
-
-            if (manager.currentCompletedQuests >= manager.questsToComplete)
+            Services.Quests.currentCompletedQuests++;
+            Debug.Log("Quests completed " + Services.Quests.currentCompletedQuests + ". Quests to complete: " + Services.Quests.questsToComplete);
+            if (Services.Quests.currentCompletedQuests >= Services.Quests.questsToComplete)
             {
                 //Debug.Log("all quests complete!");
                 //Debug.Break();
-                manager.allQuestsCompleted = true;
+                Services.Quests.allQuestsCompleted = true;
             }
         }
 
