@@ -230,11 +230,29 @@ public class PickupQuest : Quest {
             }
         }
 
-        //Destroy (parentObject);
+        //Destroy everything and make sure they stay dead goddamnit.;
         Destroy(fieryGlow);
         Destroy(radarSound);
-        Destroy(parentObject.GetComponent<PickupQuest>());
-        Destroy(parentObject.GetComponent<QuestObject>());
+        for (int i = 0; i < parentObject.transform.childCount; i++)
+        {
+            if (parentObject.transform.GetChild(i).name.Contains("questobject-fire"))
+            {
+                Destroy(parentObject.transform.GetChild(i).gameObject);
+            }
+
+            else if (parentObject.transform.GetChild(i).name.Contains("QuestItemSound"))
+            {
+                Destroy(parentObject.transform.GetChild(i).gameObject);
+            }
+        }
+        foreach (PickupQuest picko in parentObject.GetComponents<PickupQuest>())
+        {
+            Destroy(picko);
+        }
+        foreach(QuestObject questo in parentObject.GetComponents<QuestObject>())
+        {
+            Destroy(questo);
+        }
 
         // Destroy all notes related to this quest.
         for (int i = 0; i < myNotes.Count; i++)
