@@ -23,7 +23,7 @@ public class SunRotateEvent : IncoherenceEvent
     {
         base.Initiate();
 
-        sun.transform.DORotate(Random.rotation.eulerAngles, Random.Range(1f, 10f), RotateMode.Fast);
+        sun.transform.DORotate(new Vector3(sun.transform.rotation.eulerAngles.x, Random.Range(0f, 360f), sun.transform.eulerAngles.z), Random.Range(1f, 10f), RotateMode.Fast);
 
         sun.GetComponent<Light>().DOBlendableColor(Random.ColorHSV(), Random.Range(1f, 10f));
 
