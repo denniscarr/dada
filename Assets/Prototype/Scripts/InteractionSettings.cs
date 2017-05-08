@@ -262,7 +262,7 @@ public class InteractionSettings : MonoBehaviour {
     {
         for (int i = 0; i < associatedNotes.Count; i++)
         {
-            Destroy(associatedNotes[i]);
+            associatedNotes[i].GetComponentInChildren<QuestItNoteFunction>().GetDestroyedFlashy();
             associatedNotes.Remove(associatedNotes[i]);
         }
     }

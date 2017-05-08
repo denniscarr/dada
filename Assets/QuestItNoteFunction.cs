@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class QuestItNoteFunction : D_Function {
 
@@ -8,6 +9,8 @@ public class QuestItNoteFunction : D_Function {
     public bool useOnStart = false; // Whether I should stick to something as soon as I spawn.
 
     bool carriedByPlayerInLastFrame;
+
+    bool waitToDelete;
 
 	// Use this for initialization
 	new void Start () {
@@ -33,6 +36,11 @@ public class QuestItNoteFunction : D_Function {
 	new void Update () {
 
 		base.Update ();
+
+        if (waitToDelete && transform.parent.localScale.y <= 0.0001f)
+        {
+            Destroy(transform.parent.gameObject);
+        }
 
         // See if I get dropped.
         if (carriedByPlayerInLastFrame && intSet.carryingObject != Services.Player.transform)
@@ -146,5 +154,29 @@ public class QuestItNoteFunction : D_Function {
                 transform.parent.rotation = Quaternion.FromToRotation(transform.parent.forward, hit.normal);
             }  
         }
+    }
+
+
+    /// <summary>
+    /// Should be called when the quest is destroyed because the player went to a new level without finishing it.
+    /// </summary>
+    public void GetDestroyedNormal()
+    {
+        transform.parent.DOScale(Vector3.zero, 0.4f);
+
+        waitToDelete = true;
+    }
+
+    
+    /// <summary>
+    /// Should be called when the quest is destroyed because the player completed it.
+    /// </summary>
+    public void GetDestroyedFlashy()
+    {
+        transform.parent.DOScale(Vector3.zero, 0.4f);
+        GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
+        stars.transform.position = transform.parent.position;
+
+        waitToDelete = true;
     }
 }

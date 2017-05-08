@@ -49,6 +49,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	public void OnCreated(){
 
+        // Destroy all notes for uncompleted quests.
+        foreach (QuestItNoteFunction bud in FindObjectsOfType<QuestItNoteFunction>())
+        {
+            bud.GetDestroyedNormal();
+        }
+
 		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
 
 		DistanceBetweenTrees = Random.Range(10, 100);
