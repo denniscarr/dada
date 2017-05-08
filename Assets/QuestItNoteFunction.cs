@@ -95,7 +95,7 @@ public class QuestItNoteFunction : D_Function {
         Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
         transform.parent.parent = visorNode.transform;
         transform.parent.localPosition = new Vector3(
-            Random.Range(-1.3f, 4.1f),
+            Random.Range(-1f, 3.8f),
             Random.Range(1.5f, 3.6f),
             2.5f);
 

@@ -116,8 +116,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		l.OnCreated ();
 
-		//writer.textSize = 0.25f;
-		writer.SetScript (SetLevelText ());
+        //writer.textSize = 0.25f;
+        if (ManagedObjects.Count > 0)
+        {
+            writer.SetScript(SetLevelText());
+        }
 		StartCoroutine (writer.WriteText ());
 
         Services.IncoherenceManager.HandleObjects();

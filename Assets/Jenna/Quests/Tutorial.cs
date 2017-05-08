@@ -89,7 +89,7 @@ public class Tutorial : Quest {
 		controller = GameObject.Find("PlayerInRoom");
 		controller.AddComponent<QuestObject> ();
 
-		OnDisappearComplete("Left click to buy the visor. That grey thing over there.");
+		OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
 //		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 //
 //		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();

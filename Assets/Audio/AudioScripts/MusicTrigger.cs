@@ -87,7 +87,6 @@ public class MusicTrigger: MonoBehaviour {
 		Services.AudioManager.EqualizeStems (inkSprites, imageSprites, npcs, nonPickups, totalObjects);
 
 
-
 		//find all toneSources, find out if they're playing
 		foreach (AudioSource source in objectSources) {
 			if (source.isPlaying) {

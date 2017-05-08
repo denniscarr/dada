@@ -136,20 +136,20 @@ public class PickupQuest : Quest {
 
 		questTextSpawn ();
 
-		spawnNote ();
-
         // put it on the parent object
         CopyComponent(this, parentObject);
 
-		//for (int i = 0; i < 20; i++) {
-		//	NoteSpawnerScript noteSpawn = GameObject.Find("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript>();
-		//	noteSpawn.MakeItRain (id);
-		//}
-	}
+        spawnNote();
 
-	// method to copy alla this shit on the pickupquest on the quest object generated
-	// in questbuilderscript
-	Component CopyComponent (Component original, GameObject destination)
+        //for (int i = 0; i < 20; i++) {
+        //	NoteSpawnerScript noteSpawn = GameObject.Find("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript>();
+        //	noteSpawn.MakeItRain (id);
+        //}
+    }
+
+    // method to copy alla this shit on the pickupquest on the quest object generated
+    // in questbuilderscript
+    Component CopyComponent (Component original, GameObject destination)
     {
 		System.Type type = original.GetType ();
 		Component copy = destination.AddComponent(type);
@@ -179,7 +179,8 @@ public class PickupQuest : Quest {
         questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 		questItNote.GetComponentInChildren<QuestItNoteFunction> ().questID = 1;
 
-        myNotes.Add(questItNote);
+        parentObject.GetComponentInChildren<InteractionSettings>().associatedNotes.Add(questItNote);
+        Debug.Log("Notes: " + myNotes.Count);
     }
 
     public void questTextSpawn(){
@@ -254,14 +255,21 @@ public class PickupQuest : Quest {
             Destroy(questo);
         }
 
-        // Destroy all notes related to this quest.
-        for (int i = 0; i < myNotes.Count; i++)
-        {
-            Destroy(myNotes[i]);
-        }
+        parentObject.GetComponentInChildren<InteractionSettings>().DestroyAssociatedNotes();
 
         if (parentObject.GetComponentInChildren<InteractionSettings>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
 
         completed = true;
     }
+
+
+    //public void DestroyNotes()
+    //{
+    //    Debug.Log("notes belonging to me: " + myNotes.Count);
+    //    // Destroy all notes related to this quest.
+    //    for (int i = 0; i < myNotes.Count; i++)
+    //    {
+    //        Destroy(myNotes[i]);
+    //    }
+    //}
 }

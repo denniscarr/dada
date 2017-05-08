@@ -101,6 +101,7 @@ public class Writer : MonoBehaviour {
 		lineIndex = 0;
 		wordIndex = 0;
 
+        if (_script == null) yield break;
 		foreach (string[] s in _script) {
 			foreach (string w in s) {
 				CreateWord (spawnPosition2);
