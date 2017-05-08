@@ -182,7 +182,7 @@ public class AmbientMusic : MonoBehaviour {
 		} else if (Services.IncoherenceManager.globalIncoherence > 0.1f) {
 
 			foreach (BufferShuffler shuffler in shufflers) {
-				if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume == 1f) {
+				if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume >= 0.5f) {
 					shuffler.enabled = true;
 					shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
 				
