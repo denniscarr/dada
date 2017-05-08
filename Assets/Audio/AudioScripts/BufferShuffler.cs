@@ -293,12 +293,12 @@ public class BufferShuffler : MonoBehaviour
 				int progressIndex = clipIndex + _fadeIndex;
 				float currentClipPercent = Mathf.Sin ((0.5f * progressIndex * Mathf.PI) / _crossFadeSamples);
 				float lastClipPercent = Mathf.Cos ((0.5f * progressIndex * Mathf.PI) / _crossFadeSamples);
-				data [i] = (_clipDataL [currentClipIndex] * currentClipPercent) + (_clipDataL [lastClipIndex] * lastClipPercent);
+				data [i] = (_clipDataL [currentClipIndex % _clipDataL.Length] * currentClipPercent) + (_clipDataL [lastClipIndex] * lastClipPercent);
 				if (channels == 2 && _stereo)
-					data [i + 1] = (_clipDataR [currentClipIndex] * currentClipPercent) +
+					data [i + 1] = (_clipDataR [currentClipIndex % _clipDataR.Length] * currentClipPercent) +
 					(_clipDataR [lastClipIndex] * lastClipPercent);
 				else if (channels == 2)
-					data [i + 1] = (_clipDataL [currentClipIndex + 1] * currentClipPercent) +
+					data [i + 1] = (_clipDataL [currentClipIndex + 1 % _clipDataL.Length] * currentClipPercent) +
 					(_clipDataL [lastClipIndex] * lastClipPercent);
 			} 
 			else if ((_fadeIndex + clipIndex) == _crossFadeSamples) 
@@ -308,8 +308,8 @@ public class BufferShuffler : MonoBehaviour
 			}
             else
             {
-                data[i] = _clipDataL[theStartIndex + clipIndex];
-                if (channels == 2 && _stereo) data[i + 1] = _clipDataR[theStartIndex + clipIndex];
+				data[i] = _clipDataL[theStartIndex + clipIndex];
+				if (channels == 2 && _stereo) data[i + 1] = _clipDataR[theStartIndex + clipIndex];
                 else if (channels == 2) data[i + 1] = _clipDataL[theStartIndex + clipIndex];
 
             }
@@ -319,9 +319,7 @@ public class BufferShuffler : MonoBehaviour
         _theLastStartIndex += clipIndex;
     }
 
-	void NewShuffle() {
 
-	}
 
 //	public AudioClip CrossFadeClip(float[] clipData) { 
 //
