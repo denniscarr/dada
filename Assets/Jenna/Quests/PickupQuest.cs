@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 // LOCATION: QUEST MANAGER
 // LOCATION: QUEST GAMEOBJECT (description serves as "giving of quest")
@@ -140,11 +141,10 @@ public class PickupQuest : Quest {
         // put it on the parent object
         CopyComponent(this, parentObject);
 
-		for (int i = 0; i < 20; i++) {
-			NoteSpawnerScript noteSpawn = GameObject.Find("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript>();
-			noteSpawn.MakeItRain ();
-			noteSpawn.AssignID (1);
-		}
+		//for (int i = 0; i < 20; i++) {
+		//	NoteSpawnerScript noteSpawn = GameObject.Find("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript>();
+		//	noteSpawn.MakeItRain (id);
+		//}
 	}
 
 	// method to copy alla this shit on the pickupquest on the quest object generated
@@ -161,8 +161,8 @@ public class PickupQuest : Quest {
 		return copy;
 	}
 
-	public void spawnNote(){
-		
+	public void spawnNote()
+    {	
         // make the questit note
         questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 
@@ -170,6 +170,10 @@ public class PickupQuest : Quest {
         Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
 		questText.text = description;
+
+        questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
+        questItNote.transform.DOScale(Vector3.one, 0.4f);
+        questText.DOText(description, 1f);
 
         // Stick em to the wall.
         questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();

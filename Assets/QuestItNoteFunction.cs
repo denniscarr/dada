@@ -42,7 +42,6 @@ public class QuestItNoteFunction : D_Function {
 
         if (intSet.carryingObject == Services.Player.transform)
         {
-            Debug.Log("Note being carried.");
             carriedByPlayerInLastFrame = true;
         }
 
@@ -86,8 +85,6 @@ public class QuestItNoteFunction : D_Function {
 
         else
         {
-            Debug.Log("Turning quest note to face player");
-
             Quaternion newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
             transform.parent.rotation = newRotation;
         }

@@ -127,6 +127,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		highestPointIndices = new List<int> ();
 		Services.LevelGen.sun.color = levelTint;
+        Services.LevelGen.sun.intensity = 1f;
 
         Services.Player.GetComponentInChildren<ColorfulFog>().coloringMode = ColorfulFog.ColoringMode.Gradient;
         Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
