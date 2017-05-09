@@ -32,12 +32,16 @@ public class EquippableFinder : MonoBehaviour {
     public float speed = 1;
     public float ASpeed = 10;
 
+    // Whether I do anything:
+    public bool active = true;
+
     Vector3 originalScale;
 
 	List<Renderer> renderList;
 	List<string> shaderList;
 
     MouseControllerNew mouse;
+
 
     void Start()
     {
@@ -65,6 +69,8 @@ public class EquippableFinder : MonoBehaviour {
 
     void Update()
     {
+        if (!active) return;
+
         //Debug.DrawRay(transform.position + transform.forward, transform.forward * equipRange, Color.cyan);
 
         // Don't do anything if the player is in zoom out mode.
@@ -261,10 +267,6 @@ public class EquippableFinder : MonoBehaviour {
         originalScale = equipTarget.transform.localScale;
         equipTarget.transform.SetParent(equipReference, true);
        
-		equipTarget.GetComponent<Collider>().isTrigger = true;
-		if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
-		if (equipTarget.GetComponent<Rigidbody>() != null) equipTarget.GetComponent<Rigidbody>().isKinematic = true;
-
 		//play equip sound effect
 		Services.AudioManager.PlaySFX (Services.AudioManager.equipSound);
 
@@ -375,6 +377,12 @@ public class EquippableFinder : MonoBehaviour {
     {
         if (equippedObjects.Count <= 0) return;
 
+        if (!active && gameObject.name == "Player Camera")
+        {
+            GameObject.Find("UpperCamera").BroadcastMessage("AbandonItem");
+            return;
+        }
+
         Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
 
         for (int i = 0; i < equippedObjects.Count; i++)
@@ -389,6 +397,7 @@ public class EquippableFinder : MonoBehaviour {
                 if (equippedObjects[i].GetComponent<Rigidbody>() != null)
                 {
                     equippedObjects[i].GetComponent<Rigidbody>().isKinematic = false;
+                    equippedObjects[i].GetComponent<Rigidbody>().useGravity = true;
                     equippedObjects[i].GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
                 }
 

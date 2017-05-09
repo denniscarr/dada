@@ -185,6 +185,8 @@ public class PlayerControllerNew : MonoBehaviour {
                 //Debug.Log(t_hit.parent.name);
                 if (Input.GetMouseButtonDown(0)){
                     insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                    GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = true;
+                    GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = false;
                     Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
 					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
@@ -243,6 +245,8 @@ public class PlayerControllerNew : MonoBehaviour {
 			InitZoomInMode();
 
 		}else if(Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)){
+            GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = false;
+            GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = true;
             writer.DeleteTextBox();
             writer.WriteAtPoint("Welcome home.", textPosition);
             mode = ControlMode.IN_ROOM_MODE;
@@ -258,7 +262,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit) && !hit.collider.tag.Equals("Visor")){
 			
-			if(!hit.collider.name.Equals("ground")){
+			if (!hit.collider.name.Equals("ground")){
 
 				return hit.transform;
 			}
