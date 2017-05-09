@@ -75,7 +75,7 @@ public class QuestBuilderScript : MonoBehaviour {
 	public void GeneratePickup() {
 
         if (Services.LevelGen.levelNum == 0) return;
-        if (finder.pickups.Count <= 0) return;
+        //if (finder.pickups.Count <= 0) return;
 
 		// pick an object for it
 		//questThing = ranger % length;

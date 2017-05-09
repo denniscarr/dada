@@ -227,18 +227,30 @@ public class Tutorial : Quest {
 
 		if (intSet._carryingObject == player) {
 			// yay! step one done
-			state = TutorialState.USE_PLATFORM;
-
-			// destroy it bc its now useless
-			Destroy(visor);
-			Destroy(textSpawn); // for good measure
-
-			AddNewNote("Now find and click the observation platform.");
-
-			controls.Mode = ControlMode.ZOOM_OUT_MODE;
+//			state = TutorialState.USE_PLATFORM;
+//
+//			// destroy it bc its now useless
+//			Destroy(visor);
+//			Destroy(textSpawn); // for good measure
+//
+//			AddNewNote("Now find and click the observation platform.");
+//
+//			controls.Mode = ControlMode.ZOOM_OUT_MODE;
 			//platformWriter.WriteAtPoint("Click me to revert to visor mode",platformWriter.transform.position+new Vector3(0,0,1));
 
 		}
+	}
+
+	void TurnUpZoomOutMode(){
+		state = TutorialState.USE_PLATFORM;
+
+		// destroy it bc its now useless
+		Destroy(visor);
+		Destroy(textSpawn); // for good measure
+
+		AddNewNote("Now find and click the observation platform.");
+
+		controls.Mode = ControlMode.ZOOM_OUT_MODE;
 	}
 
 	void OnUsePlatform(){

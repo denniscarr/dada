@@ -270,8 +270,28 @@ public class EquippableFinder : MonoBehaviour {
 		}
 	}
 
+	void VisorMoveComplete(){
+		GameObject.FindObjectOfType<Tutorial>().SendMessage("TurnUpZoomOutMode");
+	}
+
     void MoveToCamera ()
     {
+		Debug.Log(equipTarget.name + "move to camera");
+		if(equipTarget.name.Equals("visor")){
+			GameObject playerCamera = GameObject.Find("Player Camera");
+			equipTarget.SetParent(playerCamera.transform);
+			equipTarget.DOScale(100*Vector3.one,2.0f);
+			equipTarget.DOLocalMove(new Vector3(-2.7f,0,22.32f),1.0f);
+			equipTarget.DOLocalMove(new Vector3(-2.7f,-4.49f,22.32f),1.0f).SetDelay(1.0f);
+			equipTarget.DOLocalRotate(new Vector3(0,180,0),1.0f);
+			equipTarget.DOLocalMoveY(-4.49f,1.0f);
+			equipTarget.DOLocalMoveZ(2.3f,1.0f).SetDelay(1.0f).OnComplete(VisorMoveComplete);
+			//equipTarget.DORotate(new Vector3(0,180,0),1.5f);
+
+			return;
+		}
+
+
         if (equipTarget.GetComponentInChildren<GrailFunction>() != null)
         {
             equipTarget.GetComponentInChildren<GrailFunction>().Use();
@@ -377,8 +397,8 @@ public class EquippableFinder : MonoBehaviour {
     }
 
 	IEnumerator complete(Transform _equipTarget){
-		//Debug.Log("complete "+equippedObject.name);
-		yield return new WaitForSeconds(1.5f);
+        Debug.Log("complete " + _equipTarget.name);
+        yield return new WaitForSeconds(1.5f);
         if (_equipTarget != null)
         {
             //Debug.Log("Coroutine finished");
@@ -410,7 +430,15 @@ public class EquippableFinder : MonoBehaviour {
         {
             if (equippedObjects[i] != null)
             {
-                equippedObjects[i].SetParent(null);
+                if (gameObject.name == "UpperCamera")
+                {
+                    equippedObjects[i].SetParent(GameObject.Find("INROOMOBJECTS").transform);
+                }
+
+                else
+                {
+                    equippedObjects[i].SetParent(null);
+                }
 
                 // Re-enable collision & stuff.
                 equippedObjects[i].GetComponent<Collider>().isTrigger = false;
@@ -424,7 +452,10 @@ public class EquippableFinder : MonoBehaviour {
 
                 equippedObjects[i].transform.localScale = originalScale;
 
-                equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                if (gameObject.name != "UpperCamera")
+                {
+                    equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                }
 
                 equippedObjects.Remove(equippedObjects[i]);
             }

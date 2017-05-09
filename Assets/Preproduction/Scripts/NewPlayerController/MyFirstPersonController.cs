@@ -47,7 +47,7 @@ public class MyFirstPersonController : MonoBehaviour
 
 	//private bool m_isFPSMode;
 	public PlayerControllerNew playercontroller;
-	bool isFirstLanding = true;
+	public bool isFirstLanding = true;
 
 	// Use this for initialization
 	private void Start()
@@ -300,10 +300,15 @@ public class MyFirstPersonController : MonoBehaviour
 		if(isFirstLanding && hit.collider.name.Equals("GROUND")){
 			Debug.Log("FirstNoteTrigger:"+hit.collider.name);
 			isFirstLanding = false;
-            FindObjectOfType<Tutorial>().SendMessage("InitFirstNode");
-		}
+            if (Services.LevelGen.levelNum == -1) FindObjectOfType<Tutorial>().SendMessage("InitFirstNode");
+            else
+            {
+                Debug.Log("findfquestls");
+                Services.Quests.MakeAllTheQuests();
+            }
+        }
 
-		Rigidbody body = hit.collider.attachedRigidbody;
+        Rigidbody body = hit.collider.attachedRigidbody;
 		//dont move the rigidbody if the character is on top of it
 		if (m_CollisionFlags == CollisionFlags.Below)
 		{
