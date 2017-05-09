@@ -402,13 +402,17 @@ public class EquippableFinder : MonoBehaviour {
             //equipTarget.transform.position = equipReference.position;
         }
 
-        equipTarget.transform.DOScale(equipScale, 1.5f);
+		equipTarget.transform.DOScale(equipScale, 1.5f).OnStart(StopPickUpAction);
         //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
 
         StartCoroutine("complete", equipTarget);
 
 		equipTarget = null;
     }
+
+	void StopPickUpAction(){
+		GameObject.FindObjectOfType<MouseControllerNew>().isTweening = true;
+	}
 
 	IEnumerator complete(Transform _equipTarget){
         Debug.Log("complete " + _equipTarget.name);
@@ -417,6 +421,7 @@ public class EquippableFinder : MonoBehaviour {
         {
             //Debug.Log("Coroutine finished");
 		    equippedObjects.Add(_equipTarget);
+			GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
         }
 	}
