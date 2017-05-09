@@ -109,7 +109,7 @@ public class EquippableFinder : MonoBehaviour {
                 float distance = Vector3.Distance(hit.point, transform.position);
 
                 // If the nearest object has not yet been set, then save this object as the nearest object.
-                if (nearestObject == null)
+                if (nearestObject == null && (gameObject.name == "UpperCamera" && !hit.transform.name.Contains("QuestItNote")))
                 {
                     nearestObject = hit.transform;
                     nearestObjectDistance = Vector3.Distance(hit.point, transform.position);
@@ -271,6 +271,7 @@ public class EquippableFinder : MonoBehaviour {
 
         // Save object's scale.
         originalScale = equipTarget.transform.localScale;
+
         equipTarget.transform.SetParent(equipReference, true);
        
 		//play equip sound effect

@@ -299,9 +299,7 @@ public class MyFirstPersonController : MonoBehaviour
 		//Debug.Log("FirstNoteTrigger:"+hit.collider.name);
 		if(isFirstLanding && hit.collider.name.Equals("GROUND")){
 			isFirstLanding = false;
-
 		}
-
 
 		Rigidbody body = hit.collider.attachedRigidbody;
 		//dont move the rigidbody if the character is on top of it
