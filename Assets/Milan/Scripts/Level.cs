@@ -321,7 +321,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				
 			_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
-				if (Vector3.Distance (vertices [i], vertices [localMaxIndex]) < DistanceBetweenTrees && x < _width) {
+				if (Vector3.Distance (vertices [i], vertices [localMaxIndex]) < DistanceBetweenTrees && Vector3.Distance (vertices [i], centre) < ((_width * tileScale) /2 ) * 0.8f) {
 					if (perlinVal > localMaximum) {
 						localMaximum = perlinVal;
 						localMaxIndex = i;

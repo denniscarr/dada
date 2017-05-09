@@ -57,6 +57,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		if (isTutorialCompleted && Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
+            if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
             //			if (currentLevel != null) currentLevel.enabled = false;
 //            Services.IncoherenceManager.TallyIncoherence();
             Create();
@@ -128,19 +129,14 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		levelNum--;
 
         GetComponent<GrailSpawner>().grailHasSpawned = false;
-        Services.Quests.allQuestsCompleted = false;
-        Services.Quests.questsGeneratedInCurrentLevel = 0;
-        Services.Quests.currentCompletedQuests = 0;
-        Services.Quests.questList.Clear();
-        Services.Quests.questsToComplete = Random.Range(1, 3);
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
-		maxNPCs += 1;
-		maxObjects += 2;
-		maxSprites += 50;
+		maxNPCs += 1000;
+		maxObjects += 1000;
+		maxSprites += 1000;
 		radius += 5;
 //		perlinFrequency += 0.020f;
-		height += 5;
+		height += 3;
         if (levelNum < -1) Services.IncoherenceManager.TallyIncoherence();
 		Services.IncoherenceManager.globalIncoherence += 0.05f;
 

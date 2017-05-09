@@ -57,7 +57,6 @@ public class QuestBuilderScript : MonoBehaviour {
             if (manager.questsGeneratedInCurrentLevel < Services.Quests.questsToComplete)
             {
                 GeneratePickup();
-                manager.questsGeneratedInCurrentLevel++;
                 Debug.Log("Quests genereated in current level: " + manager.questsGeneratedInCurrentLevel);
                 Debug.Log("Quests to complete: " + manager.questsToComplete);
 			}
@@ -75,7 +74,7 @@ public class QuestBuilderScript : MonoBehaviour {
 	public void GeneratePickup() {
 
         if (Services.LevelGen.levelNum == 0) return;
-        if (finder.pickups.Count <= 0) return;
+        //if (finder.pickups.Count <= 0) return;
 
 		// pick an object for it
 		//questThing = ranger % length;
@@ -105,5 +104,7 @@ public class QuestBuilderScript : MonoBehaviour {
 		if (newQuest.progress == Quest.QuestProgress.ACCEPTED) {
 			manager.currentQuestList.Add (newQuest);
 		}
-	}
+
+        manager.questsGeneratedInCurrentLevel++;
+    }
 }
