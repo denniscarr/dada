@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 public enum TutorialState{
+	BEFORE_LAND		= -1,
 	PICKUP_NOTE 	= 0,
 	PICKUP_VISOR	= 1,
 	USE_PLATFORM	= 2,
@@ -20,7 +21,7 @@ public enum TutorialState{
 
 public class Tutorial : Quest {
 
-	public TutorialState state = TutorialState.PICKUP_NOTE;
+	public TutorialState state = TutorialState.BEFORE_LAND;
 
 	Writer platformWriter;
 	// NOTE: WHEN ALL QUESTS DONE, REMOVE THIS QUEST FROM MANAGER AND ALL OBJECTS
@@ -89,7 +90,7 @@ public class Tutorial : Quest {
 		controller = GameObject.Find("PlayerInRoom");
 		controller.AddComponent<QuestObject> ();
 
-		OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
+
 //		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 //
 //		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -120,6 +121,7 @@ public class Tutorial : Quest {
 
 	void Update() {
 		switch(state){
+		case TutorialState.BEFORE_LAND:break;
 		case TutorialState.PICKUP_NOTE:OnPickUpNote();break;
 		case TutorialState.PICKUP_VISOR:OnPickUpVisor();break;
 		case TutorialState.USE_PLATFORM:OnUsePlatform();break;
@@ -168,6 +170,11 @@ public class Tutorial : Quest {
 //				}
 //			}
 //		}
+	}
+
+	void InitFirstNode(){
+		OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
+		state = TutorialState.PICKUP_NOTE;
 	}
 
 	void AddNewNote(string notes){
