@@ -368,9 +368,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				break;
 			}
 			newObject.transform.localScale *= 2;
-
+		
 			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
-				
+
+
+				if (Services.LevelGen.levelNum < -1) {
+					break;
+				}
+
 				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)/2f) + newObject.transform.position;
 
 				GameObject newChild = null;
