@@ -758,6 +758,8 @@ public class NPC : MonoBehaviour {
 
         // Destroy NPC AI prefab
         gameObject.SetActive(false);
+		speakSource.clip = Services.AudioManager.NPCDie;
+		speakSource.Play ();
     }
 
 
