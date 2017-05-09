@@ -171,7 +171,7 @@ public class Tutorial : Quest {
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
 			VisorGenerate();
-			OnDisappearComplete("Welcome. Left click on the Visor to purchase it. That grey thing over there.");
+			OnDisappearComplete("Welcome. Left click on the Visor to purchase it. It's that gray thing over there.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
 
