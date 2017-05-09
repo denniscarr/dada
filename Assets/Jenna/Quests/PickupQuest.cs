@@ -180,7 +180,7 @@ public class PickupQuest : Quest {
 		questItNote.GetComponentInChildren<QuestItNoteFunction> ().questID = 1;
 
         parentObject.GetComponentInChildren<InteractionSettings>().associatedNotes.Add(questItNote);
-        Debug.Log("Notes: " + myNotes.Count);
+//        Debug.Log("Notes: " + myNotes.Count);
     }
 
     public void questTextSpawn(){

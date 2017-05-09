@@ -55,7 +55,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
             bud.GetDestroyedNormal();
         }
 
-		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
+//		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
 			
 		_width = Services.LevelGen.radius;
 		_length = _width;

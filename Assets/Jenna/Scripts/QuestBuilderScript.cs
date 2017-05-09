@@ -57,8 +57,8 @@ public class QuestBuilderScript : MonoBehaviour {
             if (manager.questsGeneratedInCurrentLevel < Services.Quests.questsToComplete)
             {
                 GeneratePickup();
-                Debug.Log("Quests genereated in current level: " + manager.questsGeneratedInCurrentLevel);
-                Debug.Log("Quests to complete: " + manager.questsToComplete);
+//                Debug.Log("Quests genereated in current level: " + manager.questsGeneratedInCurrentLevel);
+//                Debug.Log("Quests to complete: " + manager.questsToComplete);
 			}
                 //else if (manager.questList.Count >= (Mathf.Abs (levelman.levelNum + 1))) {
 					//for (int i = 0; i < Random.Range (10, 30); i++) {
