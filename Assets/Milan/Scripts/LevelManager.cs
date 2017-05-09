@@ -57,7 +57,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		if (isTutorialCompleted && Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
-            FindObjectOfType<Grail>().GetReadyToDie();
+            if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
             //			if (currentLevel != null) currentLevel.enabled = false;
 //            Services.IncoherenceManager.TallyIncoherence();
             Create();
