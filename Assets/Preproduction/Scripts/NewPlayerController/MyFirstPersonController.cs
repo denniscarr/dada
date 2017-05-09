@@ -47,10 +47,12 @@ public class MyFirstPersonController : MonoBehaviour
 
 	//private bool m_isFPSMode;
 	public PlayerControllerNew playercontroller;
+	bool isFirstLanding = true;
 
 	// Use this for initialization
 	private void Start()
 	{
+		isFirstLanding = true;
 		//m_isFPSMode = false;
 		m_CharacterController = GetComponent<CharacterController>();
 		//m_Camera = Camera.main;
@@ -294,6 +296,12 @@ public class MyFirstPersonController : MonoBehaviour
 
 	private void OnControllerColliderHit(ControllerColliderHit hit)
 	{
+		//Debug.Log("FirstNoteTrigger:"+hit.collider.name);
+		if(isFirstLanding && hit.collider.name.Equals("GROUND")){
+			isFirstLanding = false;
+
+		}
+
 
 		Rigidbody body = hit.collider.attachedRigidbody;
 		//dont move the rigidbody if the character is on top of it
