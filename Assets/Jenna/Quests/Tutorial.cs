@@ -211,7 +211,7 @@ public class Tutorial : Quest {
 		}
 
 		if (visor.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer) {
-			AddNewNote("Good. Now left click again to pick it up.");
+			AddNewNote("Good. Now left click again to put it on.");
 			//QuestItNoreText.text = "Pick up your visor.";		// lmao silly and redundant
 			state = TutorialState.PICKUP_VISOR;
 		}
