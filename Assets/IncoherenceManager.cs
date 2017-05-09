@@ -16,7 +16,6 @@ public class IncoherenceManager : MonoBehaviour {
         {
             _globalIncoherence = value;
             _globalIncoherence = Mathf.Clamp01(_globalIncoherence);
-            Debug.Log(_globalIncoherence);
         }
     }
 

@@ -11,7 +11,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public float childrenDistance = 1;
 	public float TreeChildrenCount = 15;
 	public int PaletteAmount = 8;
-	public float TreeHeightThreshold = 0.25f;
+	public float TreeHeightThreshold = 0.75f;
 
 	Terrain levelMesh;
 
@@ -56,14 +56,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
         }
 
 		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
-
-		DistanceBetweenTrees = Random.Range(10, 100);
 			
 		_width = Services.LevelGen.radius;
 		_length = _width;
 		_height = Random.Range (1, Services.LevelGen.height);
 
 		tileScale = Services.LevelGen.tileScale;
+
+		DistanceBetweenTrees = Random.Range(10, _width * tileScale);
 
 		ground = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
