@@ -256,7 +256,7 @@ public class Tutorial : Quest {
 	void OnUsePlatform(){
 		mouseControllerNew.writer.WriteAtPoint("Find and click the observation platform.", mouseControllerNew.textPosition);
 		if (Input.GetMouseButtonDown(0)){ // if left button pressed...
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			Ray ray = GameObject.Find("UpperCamera").GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit)){
 				if(hit.collider.transform.parent.name.Equals("Viewing Platform")){
