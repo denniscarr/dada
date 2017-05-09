@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+using DG.Tweening;
 
 public enum InteractionMode{
 	GRAB_MODE = 0,
@@ -49,6 +49,8 @@ public class MouseControllerNew : MonoBehaviour {
 	List<string> shaderList;
 
 	public bool isTweening;
+	float equipRange = 5f;   // How close the player needs to be to equip an object.
+	float equipSize = 1f;    // The radius of the capsule used to find objects the player is looking at.
 	// Use this for initialization
 	void Start () {
 		isTweening =false;
@@ -103,20 +105,18 @@ public class MouseControllerNew : MonoBehaviour {
 					selectedObject = null;
 					//change state back
 				}
-
+//				Ray ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
+//				//Debug.DrawRay(ray.origin,ray.direction);
+//				RaycastHit hit;
+//				if (Physics.Raycast (ray, out hit)) {
+//					//if()
+//					//CheckPointedObject(hit.transform);
+//				}
 
 
 			}
 
-//			foreach (RaycastHit hit in Physics.CapsuleCastAll(
-//				transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange))
-//			{
-//				if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
-//					!hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
-//				{
-//					
-//				}
-//			}
+
 		}
 
 			
@@ -149,6 +149,7 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 
 	void DeoutlineTargetObject(){
+		//GetComponent<Image>().DOFade(0.2f,0.5f);
 		//Debug.Log("DeoutlineTargetObject");
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
@@ -166,7 +167,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-
+		//GetComponent<Image>().DOFade(1f,0.5f);
         if (t_hit.name.Contains("Grail")) return;
 
 		renderList = new List<Renderer>();
