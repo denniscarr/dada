@@ -86,16 +86,18 @@ public class QuestItNoteFunction : D_Function {
 
     void FacePlayer()
     {
+        Quaternion newRotation = Quaternion.identity;
         if (intSet.IsInVisor)
         {
-            return;
+            newRotation = Quaternion.LookRotation(transform.parent.position - GameObject.Find("UpperCamera").GetComponent<Camera>().transform.position);
         }
 
         else
         {
-            Quaternion newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
-            transform.parent.rotation = newRotation;
+            newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
         }
+
+        transform.parent.rotation = newRotation;
     }
 
     public void StickToScreen()

@@ -192,7 +192,6 @@ public class PlayerControllerNew : MonoBehaviour {
 					mode = ControlMode.ZOOM_OUT_MODE;
 					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
 					InitZoomOutMode();
-
 				}
 			}
 
