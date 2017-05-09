@@ -21,7 +21,7 @@ public enum TutorialState{
 
 public class Tutorial : Quest {
 
-	public TutorialState state = TutorialState.BEFORE_LAND;
+	private TutorialState state = TutorialState.BEFORE_LAND;
 
 	Writer platformWriter;
 	// NOTE: WHEN ALL QUESTS DONE, REMOVE THIS QUEST FROM MANAGER AND ALL OBJECTS
@@ -64,14 +64,6 @@ public class Tutorial : Quest {
 	int numPressTab = 0;
 
 	void Start () {
-		if(state == TutorialState.SKIP_TUTORIAL){
-			this.enabled = false;
-			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
-			return;
-		}
-
-		//grail = GameObject.Find("Grail");
-		//grail.SetActive(false);
 
 		GetComponent<QuestManager>().enabled = false;
 		GetComponent<QuestFinderScript>().enabled = false;
@@ -89,15 +81,6 @@ public class Tutorial : Quest {
 		// player controller
 		controller = GameObject.Find("PlayerInRoom");
 		controller.AddComponent<QuestObject> ();
-
-
-//		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
-//
-//		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
-//
-//		// put the words on the note
-//		QuestItNoreText = questItNote.GetComponentInChildren<Text> ();
-//		QuestItNoreText.text = "Buy the visor. That gray thing over there.";		// lmao silly and redundant
 
 		// quest info itself
 		title = ("Tutorial");
@@ -174,6 +157,7 @@ public class Tutorial : Quest {
 
 	void InitFirstNode(){
 		if(state == TutorialState.BEFORE_LAND){
+			Debug.Log("first node init");
 			OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
@@ -343,7 +327,7 @@ public class Tutorial : Quest {
 	}
 
 	void OnDragGun(){
-		if(go_AK12.transform.parent && go_AK12.transform.parent.name.Equals("INROOMOBJECTS")){
+		if(Input.GetMouseButtonUp(0) && go_AK12.transform.parent && go_AK12.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.GRAIl_SPAWN;
 			AddNewNote("Try to equip the grail.");	
 			//QuestItNoreText.text = "Try to store the gun in your visor.";
