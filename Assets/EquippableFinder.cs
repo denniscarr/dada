@@ -294,7 +294,8 @@ public class EquippableFinder : MonoBehaviour {
 			GameObject playerCamera = GameObject.Find("Player Camera");
 			equipTarget.SetParent(playerCamera.transform);
 			equipTarget.DOScale(100*Vector3.one,2.0f);
-			equipTarget.DOLocalMove(new Vector3(-2.7f,0,22.32f),1.0f);
+			equipTarget.DOLocalMoveY(2,0.5f);
+			equipTarget.DOLocalMove(new Vector3(-2.7f,2,22.32f),0.5f).SetDelay(0.5f);
 			equipTarget.DOLocalMove(new Vector3(-2.7f,-4.49f,22.32f),1.0f).SetDelay(1.0f);
 			equipTarget.DOLocalRotate(new Vector3(0,180,0),1.0f);
 			equipTarget.DOLocalMoveY(-4.49f,1.0f);

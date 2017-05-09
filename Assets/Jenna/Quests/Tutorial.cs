@@ -87,16 +87,12 @@ public class Tutorial : Quest {
 		id = (666);
 		description = ("Get through the tutorial.");
 
-		GameObject level = GameObject.Find ("Level 0");
-		float highPoint = level.GetComponent<Level> ().highestPoint + 3f;
-
-		visor = Instantiate (Resources.Load ("Visor", typeof(GameObject))) as GameObject;
-		//Debug.Log(visor);
-		visor.transform.position = new Vector3 (level.transform.position.x, level.transform.position.y + highPoint, level.transform.position.z);
 
 
-		// interaction settings, rip soon
-		intSet = visor.GetComponentInChildren<InteractionSettings> ();
+
+		//VisorGenerate();
+
+
 
 		controls = controller.GetComponent<PlayerControllerNew> ();
 
@@ -155,11 +151,22 @@ public class Tutorial : Quest {
 //		}
 	}
 
+	void VisorGenerate(){
+		GameObject level = GameObject.Find ("Level 0");
+		//float highPoint = level.GetComponent<Level> ().highestPoint + 3f;
+		visor = Instantiate (Resources.Load ("Visor", typeof(GameObject))) as GameObject;
+		visor.transform.localScale = Vector3.zero;
+		visor.transform.DOScale(Vector3.one*15f,2.0f);
+		//Debug.Log(visor);
+		visor.transform.position = new Vector3 (player.transform.position.x + player.transform.forward.x*8f, player.transform.position.y-2f, player.transform.position.z + player.transform.forward.z*8f);
+			// interaction settings, rip soon);
+		intSet = visor.GetComponentInChildren<InteractionSettings> ();
+	}
+
 	void InitFirstNode(){
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
-
-
+			VisorGenerate();
 			OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
@@ -209,10 +216,14 @@ public class Tutorial : Quest {
 	bool CheckTabPressingToSkipTutorial(){
 		if(Input.GetKeyDown(KeyCode.Tab)){
 			state = TutorialState.SKIP_TUTORIAL;
-
+			if(visor){
+				Destroy(visor);
+			}
 			// destroy it bc its now useless
-			Destroy(visor);
-			Destroy(textSpawn); // for good measure
+			if(textSpawn){
+				Destroy(textSpawn); // for good measure
+			}
+
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 
 			Debug.Log("Skip tutorial");
