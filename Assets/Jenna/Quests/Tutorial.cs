@@ -156,7 +156,7 @@ public class Tutorial : Quest {
 		//float highPoint = level.GetComponent<Level> ().highestPoint + 3f;
 		visor = Instantiate (Resources.Load ("Visor", typeof(GameObject))) as GameObject;
 		visor.transform.localScale = Vector3.zero;
-		visor.transform.DOScale(Vector3.one*15f,2.0f);
+		visor.transform.DOScale(Vector3.one*15f,1.5f);
 		//Debug.Log(visor);
 		visor.transform.position = new Vector3 (player.transform.position.x + player.transform.forward.x*8f, player.transform.position.y-2f, player.transform.position.z + player.transform.forward.z*8f);
 			// interaction settings, rip soon);
