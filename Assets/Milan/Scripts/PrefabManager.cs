@@ -11,12 +11,14 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject PARTICLESYSTEM;
 	public GameObject[][] PREFABS;
 	public Sprite[][] SPRITES;
+	public GameObject MONEY;
 
 //	public 
 //	public PROPS props;
 
 	void Awake(){
-		
+
+		MONEY = Resources.Load ("Pickups/Stack of Money") as GameObject;
 		PREFABS = new GameObject[Enum.GetValues(typeof(Services.TYPES)).Length][];
 		SPRITES = new Sprite[Enum.GetValues(typeof(Services.SPRITES)).Length][];
 		int i = 0;
