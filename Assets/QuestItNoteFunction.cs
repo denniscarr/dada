@@ -61,12 +61,14 @@ public class QuestItNoteFunction : D_Function {
         //If the player is holding me, turn to face the player.
         if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
         {
+            FacePlayer();
+
             // Unparent from whatever object I was parented to before.
-            if (transform.parent.parent != null && transform.parent.parent.name != "Equip Reference" && !intSet.IsInVisor)
-            {
-                transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-                transform.parent.parent = null;
-            }
+            //if (transform.parent.parent != null && transform.parent.parent.name != "Equip Reference" && !intSet.IsInVisor)
+            //{
+            //    transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            //    transform.parent.parent = null;
+            //}
 
             // Face player.
             //if (transform.parent.parent == null) return;
@@ -89,6 +91,7 @@ public class QuestItNoteFunction : D_Function {
         Quaternion newRotation = Quaternion.identity;
         if (intSet.IsInVisor)
         {
+            Debug.Log("Facing in visor");
             newRotation = Quaternion.LookRotation(transform.parent.position - GameObject.Find("UpperCamera").GetComponent<Camera>().transform.position);
         }
 

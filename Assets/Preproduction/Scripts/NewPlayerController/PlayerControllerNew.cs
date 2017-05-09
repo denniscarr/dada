@@ -115,7 +115,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		//inRoomNode.gameObject.SetActive(true);
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
-		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
+		UpperCamera.DOFieldOfView(60f,1.5f);
 //		m_Camera.fieldOfView = ZoomOutMainCameraFoV;
 //		UpperCamera.fieldOfView = ZoomOutUpperCameraFoV;
 
@@ -188,6 +188,7 @@ public class PlayerControllerNew : MonoBehaviour {
                     insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                     GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = true;
                     GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = false;
+                    UpperCamera.DOFieldOfView(33f, 1.5f);
                     Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
 					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
@@ -247,6 +248,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		}else if(Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)){
             GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = false;
             GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = true;
+            UpperCamera.GetComponent<Camera>().DOFieldOfView(60f, 1.5f);
             writer.DeleteTextBox();
             writer.WriteAtPoint("Welcome home.", textPosition);
             mode = ControlMode.IN_ROOM_MODE;

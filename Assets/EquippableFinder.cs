@@ -397,8 +397,8 @@ public class EquippableFinder : MonoBehaviour {
     }
 
 	IEnumerator complete(Transform _equipTarget){
-		//Debug.Log("complete "+equippedObject.name);
-		yield return new WaitForSeconds(1.5f);
+        Debug.Log("complete " + _equipTarget.name);
+        yield return new WaitForSeconds(1.5f);
         if (_equipTarget != null)
         {
             //Debug.Log("Coroutine finished");
@@ -430,7 +430,15 @@ public class EquippableFinder : MonoBehaviour {
         {
             if (equippedObjects[i] != null)
             {
-                equippedObjects[i].SetParent(null);
+                if (gameObject.name == "UpperCamera")
+                {
+                    equippedObjects[i].SetParent(GameObject.Find("INROOMOBJECTS").transform);
+                }
+
+                else
+                {
+                    equippedObjects[i].SetParent(null);
+                }
 
                 // Re-enable collision & stuff.
                 equippedObjects[i].GetComponent<Collider>().isTrigger = false;
@@ -444,7 +452,10 @@ public class EquippableFinder : MonoBehaviour {
 
                 equippedObjects[i].transform.localScale = originalScale;
 
-                equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                if (gameObject.name != "UpperCamera")
+                {
+                    equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                }
 
                 equippedObjects.Remove(equippedObjects[i]);
             }

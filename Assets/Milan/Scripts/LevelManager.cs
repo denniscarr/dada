@@ -133,7 +133,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
         Services.Quests.currentCompletedQuests = 0;
         Services.Quests.questList.Clear();
         Services.Quests.questsToComplete = Random.Range(1, 3);
-        GameObject.Find("QuestManager").GetComponent<QuestFinderScript>().FindQuests();
+        FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
 		maxNPCs += 1;
 		maxObjects += 2;
