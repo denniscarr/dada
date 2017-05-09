@@ -211,9 +211,9 @@ public class Writer : MonoBehaviour {
         // Rotate the text containter towards the player.
         if (!dontFacePlayer)
         {
-            if (transform.parent.GetComponentInChildren<InteractionSettings>() != null && transform.parent.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            if (gameObject.name == "UpperCamera")
             {
-                textContainer.transform.LookAt(GameObject.Find("PlayerInRoom").transform);
+                textContainer.transform.LookAt(GameObject.Find("UpperCamera").transform);
             }
             else
             {
