@@ -19,7 +19,7 @@ public class EquippableFinder : MonoBehaviour {
     Transform lastObjectInspected;  // The last object that was looked at using the mouse.
 
     Writer writer;
-    Vector3 textPosition;   // Where equip text is written.
+    public Vector3 textPosition;   // Where equip text is written.
 
     KeyCode equipKey = KeyCode.Mouse0;
     KeyCode abandonKey = KeyCode.G;
@@ -45,6 +45,16 @@ public class EquippableFinder : MonoBehaviour {
 
     void Start()
     {
+        if (gameObject.name == "UpperCamera")
+        {
+            active = false;
+        }
+
+        else
+        {
+            active = true;
+        }
+
         mouse = GameObject.Find("Mouse").GetComponent<MouseControllerNew>();
 
 		renderList = new List<Renderer>();
@@ -69,7 +79,10 @@ public class EquippableFinder : MonoBehaviour {
 
     void Update()
     {
-        if (!active) return;
+        if (!active)
+        {
+            return;
+        }
 
         //Debug.DrawRay(transform.position + transform.forward, transform.forward * equipRange, Color.cyan);
 
@@ -90,6 +103,7 @@ public class EquippableFinder : MonoBehaviour {
         // A variable to save the closest object.
         Transform nearestObject = null;
         float nearestObjectDistance = 0f;
+        bool sawPlatform = false;
 
         foreach (RaycastHit hit in Physics.CapsuleCastAll(
             transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange
@@ -110,6 +124,7 @@ public class EquippableFinder : MonoBehaviour {
                 // If the nearest object has not yet been set, then save this object as the nearest object.
                 if (nearestObject == null)
                 {
+                    if (gameObject.name == "UpperCamera" && hit.transform.name.Contains("QuestItNote")) return;
                     nearestObject = hit.transform;
                     nearestObjectDistance = Vector3.Distance(hit.point, transform.position);
                 }
@@ -124,9 +139,14 @@ public class EquippableFinder : MonoBehaviour {
                     }
                 }
             }
+
+            else if (hit.collider.transform.parent.name == "Viewing Platform")
+            {
+                sawPlatform = true;
+            }
         }
 
-        if (nearestObject == null || (lastObjectInspected != null && nearestObject != lastObjectInspected))
+        if (!sawPlatform && nearestObject == null || (lastObjectInspected != null && nearestObject != lastObjectInspected))
         {
             writer.DeleteTextBox();
         }
@@ -142,7 +162,7 @@ public class EquippableFinder : MonoBehaviour {
             {
                 mouse.ChangeCursor("equip");
                 Debug.Log(mouse);
-                writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
+                writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name + ".", textPosition);
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
             }
@@ -265,6 +285,7 @@ public class EquippableFinder : MonoBehaviour {
 
         // Save object's scale.
         originalScale = equipTarget.transform.localScale;
+
         equipTarget.transform.SetParent(equipReference, true);
        
 		//play equip sound effect

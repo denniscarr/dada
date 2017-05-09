@@ -181,6 +181,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		if(t_hit && t_hit.parent){
 			//Debug.Log(t_hit.name);
 			if(t_hit.parent.name.Equals("Viewing Platform")){
+                GameObject.Find("UpperCamera").GetComponent<Writer>().WriteAtPoint("Press Left Mouse Button to mount Observation Platform", GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().textPosition);
                 //txtInfo.text = "Platform is calling you...";
                 //Debug.Log(t_hit.parent.name);
                 if (Input.GetMouseButtonDown(0)){
@@ -191,7 +192,6 @@ public class PlayerControllerNew : MonoBehaviour {
 					mode = ControlMode.ZOOM_OUT_MODE;
 					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
 					InitZoomOutMode();
-
 				}
 			}
 

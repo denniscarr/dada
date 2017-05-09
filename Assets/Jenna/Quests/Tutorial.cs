@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 public enum TutorialState{
-	PICKUP_NOTE 	= 0,
+	BEFORE_LAND		= -1,
+	PURCHASE_VISOR 	= 0,
 	PICKUP_VISOR	= 1,
 	USE_PLATFORM	= 2,
 	DRAG_NOTE_IN	= 3,
@@ -20,7 +21,7 @@ public enum TutorialState{
 
 public class Tutorial : Quest {
 
-	public TutorialState state = TutorialState.PICKUP_NOTE;
+	public TutorialState state = TutorialState.BEFORE_LAND;
 
 	Writer platformWriter;
 	// NOTE: WHEN ALL QUESTS DONE, REMOVE THIS QUEST FROM MANAGER AND ALL OBJECTS
@@ -89,7 +90,7 @@ public class Tutorial : Quest {
 		controller = GameObject.Find("PlayerInRoom");
 		controller.AddComponent<QuestObject> ();
 
-		OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
+
 //		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 //
 //		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -120,7 +121,8 @@ public class Tutorial : Quest {
 
 	void Update() {
 		switch(state){
-		case TutorialState.PICKUP_NOTE:OnPickUpNote();break;
+		case TutorialState.BEFORE_LAND:CheckTabPressingToSkipTutorial();break;
+		case TutorialState.PURCHASE_VISOR:OnPurchaseVisor();break;
 		case TutorialState.PICKUP_VISOR:OnPickUpVisor();break;
 		case TutorialState.USE_PLATFORM:OnUsePlatform();break;
 		case TutorialState.DRAG_NOTE_IN:OnDragNoteIn();break;
@@ -170,6 +172,14 @@ public class Tutorial : Quest {
 //		}
 	}
 
+	void InitFirstNode(){
+		if(state == TutorialState.BEFORE_LAND){
+			OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
+			state = TutorialState.PURCHASE_VISOR;
+		}
+
+	}
+
 	void AddNewNote(string notes){
         //wait to add do tween
         QuestItNoreText.DOText("",0.1f).OnComplete(()=>OnDisappearComplete(notes));
@@ -197,7 +207,11 @@ public class Tutorial : Quest {
 
 	}
 
-	void OnPickUpNote(){//buy
+	void OnPurchaseVisor(){//buy
+		if(CheckTabPressingToSkipTutorial()){
+			return;
+		}
+
 		if (visor.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer) {
 			AddNewNote("Good. Now left click again to pick it up.");
 			//QuestItNoreText.text = "Pick up your visor.";		// lmao silly and redundant
@@ -205,7 +219,7 @@ public class Tutorial : Quest {
 		}
 	}
 
-	void OnPickUpVisor(){
+	bool CheckTabPressingToSkipTutorial(){
 		if(Input.GetKeyDown(KeyCode.Tab)){
 			state = TutorialState.SKIP_TUTORIAL;
 
@@ -214,11 +228,15 @@ public class Tutorial : Quest {
 			Destroy(textSpawn); // for good measure
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 
-			AddNewNote("Be brave to jump off.");
-			//QuestItNoreText.text = "Be brave to jump off.";
+			Debug.Log("Skip tutorial");
+			OnDisappearComplete("You skiped the tutorial. Let's jump to the next stage.");
 			this.enabled = false;
-			return;
+			return true;
 		}
+		return false;
+	}
+
+	void OnPickUpVisor(){
 
 		if (intSet._carryingObject == player) {
 			// yay! step one done
@@ -255,7 +273,7 @@ public class Tutorial : Quest {
 
 	void OnDragNoteIn(){
 		mouseControllerNew.writer.WriteAtPoint("Now drag this note back into your visor with the mouse.", mouseControllerNew.textPosition);
-		if(questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
+		if(Input.GetMouseButtonUp(0) && questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.PRESS_TAB;
 			//QuestItNoreText.text = "Press Tab 5 times";
 			AddNewNote("Press Tab 5 times");
@@ -268,6 +286,7 @@ public class Tutorial : Quest {
 		//Debug.Log(questItNote.transform.parent);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.DRAG_NOTE_IN;
+			//AddNewNote("Drag the note into your visor with the mouse.");
 			//AddNewNote("Drag the note into the visor with your mouse.");
 			QuestItNoreText.text = "Drag the note into your visor with the mouse.";
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
@@ -287,7 +306,8 @@ public class Tutorial : Quest {
 				state = TutorialState.EQUIP_GUN;//go_AK12 = Resources.Load("Pickups/AK12") as GameObject;
 				go_AK12 = Instantiate(Resources.Load<GameObject>("Pickups/AK12"));
 				go_AK12.transform.position = player.transform.position + player.transform.forward*3 + Vector3.up*2f;
-				QuestItNoreText.text = "Left click on the gun to equip it.";
+				AddNewNote("Purchase and equip the gun.");
+				//QuestItNoreText.text = "Purchase and equip the gun.";
 			}
 
 		}
@@ -297,7 +317,8 @@ public class Tutorial : Quest {
 	void OnEquipGun(){
 		if(go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
 			state = TutorialState.USE_GUN;
-			QuestItNoreText.text = "Right click on the gun to use it.";
+			AddNewNote("Right click on the gun to use it.");
+			//QuestItNoreText.text = "Right click on the gun to use it.";
 		}
 
 	}
@@ -306,13 +327,15 @@ public class Tutorial : Quest {
 		if(go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped
 			&& Input.GetMouseButtonDown(1)){
 			state = TutorialState.DROP_GUN;
-			QuestItNoreText.text = "Press G to drop the gun.";
+			AddNewNote("Press G to drop the gun.");
+			//QuestItNoreText.text = "Press G to drop the gun.";
 		}
 	}
 
 	void OnDropGun(){
 		if(!go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
-			QuestItNoreText.text = "Try to store the gun in your visor.";
+			AddNewNote("Try to store the gun in your visor.");			
+			//QuestItNoreText.text = "Try to store the gun in your visor.";
 			state = TutorialState.DRAG_GUN_IN;
             //Destroy(questItNote);
            
@@ -322,7 +345,8 @@ public class Tutorial : Quest {
 	void OnDragGun(){
 		if(go_AK12.transform.parent && go_AK12.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.GRAIl_SPAWN;
-			QuestItNoreText.text = "Try to store the gun in your visor.";
+			AddNewNote("Try to equip the grail.");	
+			//QuestItNoreText.text = "Try to store the gun in your visor.";
 		}
 	}
 
@@ -333,7 +357,7 @@ public class Tutorial : Quest {
 		GetComponent<QuestFinderScript>().enabled = true;
 		GetComponent<QuestBuilderScript>().enabled = true;
 		GetComponent<PickupQuest>().enabled = true;
-		QuestItNoreText.text = "Pursue the grail.";
+		//QuestItNoreText.text = "Pursue the grail.";
         GameObject.Find("Bootstrapper").GetComponent<GrailSpawner>().SpawnGrail();
 		this.enabled = false;
 	}
