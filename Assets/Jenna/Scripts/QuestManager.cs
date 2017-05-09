@@ -153,8 +153,7 @@ public class QuestManager : MonoBehaviour {
         currentCompletedQuests = 0;
         questList.Clear();
 
-        if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
-        GetComponent<GrailSpawner>().grailHasSpawned = false;
+        FindObjectOfType<GrailSpawner>().grailHasSpawned = false;
     }
 
     // ADD ITEMS
