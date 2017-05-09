@@ -298,6 +298,7 @@ public class MyFirstPersonController : MonoBehaviour
 	{
 		//Debug.Log("FirstNoteTrigger:"+hit.collider.name);
 		if(isFirstLanding && hit.collider.name.Equals("GROUND")){
+			Debug.Log("FirstNoteTrigger:"+hit.collider.name);
 			isFirstLanding = false;
             FindObjectOfType<Tutorial>().SendMessage("InitFirstNode");
 		}
