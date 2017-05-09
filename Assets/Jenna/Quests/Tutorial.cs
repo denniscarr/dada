@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 public enum TutorialState{
 	BEFORE_LAND		= -1,
-	PICKUP_NOTE 	= 0,
+	PURCHASE_VISOR 	= 0,
 	PICKUP_VISOR	= 1,
 	USE_PLATFORM	= 2,
 	DRAG_NOTE_IN	= 3,
@@ -121,8 +121,8 @@ public class Tutorial : Quest {
 
 	void Update() {
 		switch(state){
-		case TutorialState.BEFORE_LAND:break;
-		case TutorialState.PICKUP_NOTE:OnPickUpNote();break;
+		case TutorialState.BEFORE_LAND:CheckTabPressingToSkipTutorial();break;
+		case TutorialState.PURCHASE_VISOR:OnPurchaseVisor();break;
 		case TutorialState.PICKUP_VISOR:OnPickUpVisor();break;
 		case TutorialState.USE_PLATFORM:OnUsePlatform();break;
 		case TutorialState.DRAG_NOTE_IN:OnDragNoteIn();break;
@@ -173,8 +173,11 @@ public class Tutorial : Quest {
 	}
 
 	void InitFirstNode(){
-		OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
-		state = TutorialState.PICKUP_NOTE;
+		if(state == TutorialState.BEFORE_LAND){
+			OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
+			state = TutorialState.PURCHASE_VISOR;
+		}
+
 	}
 
 	void AddNewNote(string notes){
@@ -204,7 +207,11 @@ public class Tutorial : Quest {
 
 	}
 
-	void OnPickUpNote(){//buy
+	void OnPurchaseVisor(){//buy
+		if(CheckTabPressingToSkipTutorial()){
+			return;
+		}
+
 		if (visor.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer) {
 			AddNewNote("Good. Now left click again to pick it up.");
 			//QuestItNoreText.text = "Pick up your visor.";		// lmao silly and redundant
@@ -212,7 +219,7 @@ public class Tutorial : Quest {
 		}
 	}
 
-	void OnPickUpVisor(){
+	bool CheckTabPressingToSkipTutorial(){
 		if(Input.GetKeyDown(KeyCode.Tab)){
 			state = TutorialState.SKIP_TUTORIAL;
 
@@ -221,11 +228,15 @@ public class Tutorial : Quest {
 			Destroy(textSpawn); // for good measure
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 
-			AddNewNote("Be brave to jump off.");
-			//QuestItNoreText.text = "Be brave to jump off.";
+			Debug.Log("Skip tutorial");
+			OnDisappearComplete("You skiped the tutorial. Let's jump to the next stage.");
 			this.enabled = false;
-			return;
+			return true;
 		}
+		return false;
+	}
+
+	void OnPickUpVisor(){
 
 		if (intSet._carryingObject == player) {
 			// yay! step one done
@@ -275,9 +286,9 @@ public class Tutorial : Quest {
 		//Debug.Log(questItNote.transform.parent);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.DRAG_NOTE_IN;
-			AddNewNote("Drag the note into your visor with the mouse.");
+			//AddNewNote("Drag the note into your visor with the mouse.");
 			//AddNewNote("Drag the note into the visor with your mouse.");
-			//QuestItNoreText.text = "Drag the note into your visor with the mouse.";
+			QuestItNoreText.text = "Drag the note into your visor with the mouse.";
 			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 
 		}
