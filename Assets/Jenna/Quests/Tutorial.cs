@@ -228,7 +228,14 @@ public class Tutorial : Quest {
 
 			Debug.Log("Skip tutorial");
 			OnDisappearComplete("You skiped the tutorial. Let's jump to the next stage.");
-			this.enabled = false;
+
+            GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
+            GetComponent<QuestManager>().enabled = true;
+            GetComponent<QuestFinderScript>().enabled = true;
+            GetComponent<QuestBuilderScript>().enabled = true;
+            GetComponent<PickupQuest>().enabled = true;
+
+            this.enabled = false;
 			return true;
 		}
 		return false;

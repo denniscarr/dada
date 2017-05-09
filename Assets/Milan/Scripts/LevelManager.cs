@@ -129,7 +129,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		levelNum--;
 
         if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
-        GetComponent<GrailSpawner>().grailHasSpawned = false;
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
 		maxNPCs += 1000;
