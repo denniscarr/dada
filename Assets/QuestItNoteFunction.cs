@@ -67,7 +67,7 @@ public class QuestItNoteFunction : D_Function {
             //if (transform.parent.parent != null && transform.parent.parent.name != "Equip Reference" && !intSet.IsInVisor)
             //{
             //    transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-            //    transform.parent.parent = null;
+            //    transform.parent.parent = null;s
             //}
 
             // Face player.
@@ -91,7 +91,6 @@ public class QuestItNoteFunction : D_Function {
         Quaternion newRotation = Quaternion.identity;
         if (intSet.IsInVisor)
         {
-            Debug.Log("Facing in visor");
             newRotation = Quaternion.LookRotation(transform.parent.position - GameObject.Find("UpperCamera").GetComponent<Camera>().transform.position);
         }
 

@@ -146,12 +146,12 @@ public class QuestManager : MonoBehaviour {
 
     public void MakeAllTheQuests()
     {
+        GetComponent<QuestFinderScript>().FindQuests();
         allQuestsCompleted = false;
+        questsToComplete = Random.Range(1, 3);
         questsGeneratedInCurrentLevel = 0;
         currentCompletedQuests = 0;
         questList.Clear();
-        questsToComplete = Random.Range(1, 3);
-        GetComponent<QuestFinderScript>().FindQuests();
     }
 
     // ADD ITEMS
