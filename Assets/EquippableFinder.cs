@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class EquippableFinder : MonoBehaviour {
@@ -132,11 +133,23 @@ public class EquippableFinder : MonoBehaviour {
                 // If the nearest object has been saved then see if this object is closer.
                 else
                 {
+					Image mouse = GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>();
+					Debug.Log(mouse.name);
+					Color c = mouse.color;
                     if (distance < nearestObjectDistance)
                     {
+						c.a = 1;
                         nearestObject = hit.transform;
                         nearestObjectDistance = Vector3.Distance(hit.point, transform.position);
-                    }
+
+					}else if(distance - nearestObjectDistance < 5f){
+						
+						c.a = 1 - (distance - nearestObjectDistance)*0.2f;
+
+					}else{
+						c.a = 0;
+					}
+					mouse.color = c;
                 }
             }
 
