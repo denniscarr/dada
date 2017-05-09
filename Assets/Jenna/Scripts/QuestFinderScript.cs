@@ -75,7 +75,7 @@ public class QuestFinderScript : MonoBehaviour
 							}
 
                             // can it be picked up? Add it to the list!
-							if (iset.ableToBeCarried == true && go.GetComponent<PickupQuest>() == null && go.GetComponent<QuestObject>() == null && !go.name.Contains("QuestItNote")){
+							if (iset.ableToBeCarried == true && go.GetComponent<PickupQuest>() == null && go.GetComponent<QuestObject>() == null && !go.name.Contains("QuestItNote") && !go.name.Contains("$") && !go.name.Contains("Money")){
 								if (!pickups.Contains (go)) {
                                     //Debug.Log(go.name);
 									pickups.Add (go);

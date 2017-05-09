@@ -211,8 +211,10 @@ public class Writer : MonoBehaviour {
         // Rotate the text containter towards the player.
         if (!dontFacePlayer)
         {
-            if (gameObject.name == "UpperCamera")
+            if (gameObject.name == "UpperCamera" || textContainer.transform.position.y >= 150f)
             {
+                Debug.Log("way pu high");
+                textContainer.transform.position = new Vector3(textContainer.transform.position.x, textContainer.transform.position.y - 2.5f, textContainer.transform.position.z);
                 textContainer.transform.LookAt(GameObject.Find("UpperCamera").transform);
             }
             else
