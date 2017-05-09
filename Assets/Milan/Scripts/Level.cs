@@ -133,7 +133,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		highestPointIndices = new List<int> ();
 		Services.LevelGen.sun.color = levelTint;
-        Services.LevelGen.sun.intensity = 1f;
+//        Services.LevelGen.sun.intensity = 1f;
 
         Services.Player.GetComponentInChildren<ColorfulFog>().coloringMode = ColorfulFog.ColoringMode.Gradient;
         Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
@@ -499,6 +499,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
+//			newObject.layer = 8;
 			newObject.tag = tag;
 		}
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {

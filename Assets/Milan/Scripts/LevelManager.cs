@@ -131,8 +131,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
         if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
-		maxNPCs += 1000;
-		maxObjects += 1000;
+		maxNPCs += 1;
+		maxObjects += 10;
 		maxSprites += 1000;
 		radius += 5;
 //		perlinFrequency += 0.020f;
