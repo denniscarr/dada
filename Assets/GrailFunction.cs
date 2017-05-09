@@ -34,6 +34,8 @@ public class GrailFunction : D_Function {
 
 		Services.AudioManager.PlaySFX (Services.AudioManager.grailRejectionClip);
 
+        FindObjectOfType<Tutorial>().OnGrabGrail();
+
         //if (Vector3.Distance(transform.position, Services.Player.transform.position) < 10f)
         //{
         //    Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;
