@@ -131,12 +131,12 @@ public class LevelManager : SimpleManager.Manager<Level> {
         GetComponent<GrailSpawner>().grailHasSpawned = false;
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
-		maxNPCs += 1;
-		maxObjects += 2;
-		maxSprites += 50;
+		maxNPCs += 1000;
+		maxObjects += 1000;
+		maxSprites += 1000;
 		radius += 5;
 //		perlinFrequency += 0.020f;
-		height += 5;
+		height += 3;
         if (levelNum < -1) Services.IncoherenceManager.TallyIncoherence();
 		Services.IncoherenceManager.globalIncoherence += 0.05f;
 
