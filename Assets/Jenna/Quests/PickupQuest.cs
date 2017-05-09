@@ -257,7 +257,7 @@ public class PickupQuest : Quest {
 
         parentObject.GetComponentInChildren<InteractionSettings>().DestroyAssociatedNotes();
 
-        if (parentObject.GetComponentInChildren<InteractionSettings>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
+        if (parentObject.GetComponentInChildren<IncoherenceController>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
 
         completed = true;
     }

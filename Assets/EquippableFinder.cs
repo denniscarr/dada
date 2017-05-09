@@ -294,11 +294,12 @@ public class EquippableFinder : MonoBehaviour {
 			GameObject playerCamera = GameObject.Find("Player Camera");
 			equipTarget.SetParent(playerCamera.transform);
 			equipTarget.DOScale(100*Vector3.one,2.0f);
-			equipTarget.DOLocalMove(new Vector3(-2.7f,0,22.32f),1.0f);
-			equipTarget.DOLocalMove(new Vector3(-2.7f,-4.49f,22.32f),1.0f).SetDelay(1.0f);
+			equipTarget.DOLocalMoveY(2,0.5f);
+			equipTarget.DOLocalMove(new Vector3(-2.7f,2,22.32f),0.5f).SetDelay(0.5f);
+			//equipTarget.DOLocalMove(new Vector3(-2.7f,-4.49f,12.32f),1.0f).SetDelay(0.5f);
 			equipTarget.DOLocalRotate(new Vector3(0,180,0),1.0f);
-			equipTarget.DOLocalMoveY(-4.49f,1.0f);
-			equipTarget.DOLocalMoveZ(2.3f,1.0f).SetDelay(1.0f).OnComplete(VisorMoveComplete);
+			equipTarget.DOLocalMoveY(-4.49f,1.0f).SetDelay(1.0f);
+			equipTarget.DOLocalMoveZ(4.3f,1.0f).SetDelay(1.0f).OnComplete(VisorMoveComplete);
 			//equipTarget.DORotate(new Vector3(0,180,0),1.5f);
 
 			return;
@@ -401,13 +402,17 @@ public class EquippableFinder : MonoBehaviour {
             //equipTarget.transform.position = equipReference.position;
         }
 
-        equipTarget.transform.DOScale(equipScale, 1.5f);
+		equipTarget.transform.DOScale(equipScale, 1.5f).OnStart(StopPickUpAction);
         //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
 
         StartCoroutine("complete", equipTarget);
 
 		equipTarget = null;
     }
+
+	void StopPickUpAction(){
+		GameObject.FindObjectOfType<MouseControllerNew>().isTweening = true;
+	}
 
 	IEnumerator complete(Transform _equipTarget){
         Debug.Log("complete " + _equipTarget.name);
@@ -416,6 +421,7 @@ public class EquippableFinder : MonoBehaviour {
         {
             //Debug.Log("Coroutine finished");
 		    equippedObjects.Add(_equipTarget);
+			GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
         }
 	}
