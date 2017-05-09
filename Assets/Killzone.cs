@@ -19,7 +19,7 @@ public class Killzone : MonoBehaviour {
             //Debug.Log(other.name);
             float currentLevelRadius = Services.LevelGen.currentLevel._width * Services.LevelGen.tileScale;
             other.transform.position = Services.LevelGen.currentLevel.transform.position;
-            other.transform.position += new Vector3(Random.Range(-currentLevelRadius * 0.4f, currentLevelRadius * 0.4f), 75f, Random.Range(-currentLevelRadius*0.4f, currentLevelRadius*0.4f));
+            other.transform.position += new Vector3(Random.Range(-currentLevelRadius * 0.4f, currentLevelRadius * 0.4f), 150f, Random.Range(-currentLevelRadius*0.4f, currentLevelRadius*0.4f));
             if (other.GetComponent<Rigidbody>() != null) other.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
     }
