@@ -158,6 +158,8 @@ public class Tutorial : Quest {
 	void InitFirstNode(){
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
+
+
 			OnDisappearComplete("Left click to purchase the visor. That grey thing over there.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
@@ -182,6 +184,7 @@ public class Tutorial : Quest {
 		}
 		questItNote = null;
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
+		Services.AudioManager.PlaySFX (Services.AudioManager.tutorialTones [Random.Range (0, Services.AudioManager.tutorialTones.Length)]);
 		QuestItNoreText = questItNote.GetComponentInChildren<Text>();
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
         questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
@@ -224,18 +227,30 @@ public class Tutorial : Quest {
 
 		if (intSet._carryingObject == player) {
 			// yay! step one done
-			state = TutorialState.USE_PLATFORM;
-
-			// destroy it bc its now useless
-			Destroy(visor);
-			Destroy(textSpawn); // for good measure
-
-			AddNewNote("Now find and click the observation platform.");
-
-			controls.Mode = ControlMode.ZOOM_OUT_MODE;
+//			state = TutorialState.USE_PLATFORM;
+//
+//			// destroy it bc its now useless
+//			Destroy(visor);
+//			Destroy(textSpawn); // for good measure
+//
+//			AddNewNote("Now find and click the observation platform.");
+//
+//			controls.Mode = ControlMode.ZOOM_OUT_MODE;
 			//platformWriter.WriteAtPoint("Click me to revert to visor mode",platformWriter.transform.position+new Vector3(0,0,1));
 
 		}
+	}
+
+	void TurnUpZoomOutMode(){
+		state = TutorialState.USE_PLATFORM;
+
+		// destroy it bc its now useless
+		Destroy(visor);
+		Destroy(textSpawn); // for good measure
+
+		AddNewNote("Now find and click the observation platform.");
+
+		controls.Mode = ControlMode.ZOOM_OUT_MODE;
 	}
 
 	void OnUsePlatform(){

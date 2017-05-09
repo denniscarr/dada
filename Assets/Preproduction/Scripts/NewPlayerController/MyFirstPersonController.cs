@@ -301,7 +301,11 @@ public class MyFirstPersonController : MonoBehaviour
 			Debug.Log("FirstNoteTrigger:"+hit.collider.name);
 			isFirstLanding = false;
             if (Services.LevelGen.levelNum == -1) FindObjectOfType<Tutorial>().SendMessage("InitFirstNode");
-            else GameObject.Find("QuestManager").GetComponent<QuestFinderScript>().FindQuests();
+            else
+            {
+                Debug.Log("findfquestls");
+                Services.Quests.MakeAllTheQuests();
+            }
         }
 
         Rigidbody body = hit.collider.attachedRigidbody;

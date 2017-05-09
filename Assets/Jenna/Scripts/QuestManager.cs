@@ -144,10 +144,20 @@ public class QuestManager : MonoBehaviour {
 		}
 	}
 
-	// ADD ITEMS
-	// here it's a string because the tutorial I'm following kept objectives as item name
-	// strings, but this is manipulable as long as it's changed in the Quest Class script.
-	public void AddQuestItem(string questObjective, int itemAmount){
+    public void MakeAllTheQuests()
+    {
+        GetComponent<QuestFinderScript>().FindQuests();
+        allQuestsCompleted = false;
+        questsToComplete = Random.Range(1, 3);
+        questsGeneratedInCurrentLevel = 0;
+        currentCompletedQuests = 0;
+        questList.Clear();
+    }
+
+    // ADD ITEMS
+    // here it's a string because the tutorial I'm following kept objectives as item name
+    // strings, but this is manipulable as long as it's changed in the Quest Class script.
+    public void AddQuestItem(string questObjective, int itemAmount){
 		
 		for (int i = 0; i < currentQuestList.Count; i++) {
 			if (currentQuestList [i].questObjective == questObjective && currentQuestList [i].progress == Quest.QuestProgress.ACCEPTED) {
