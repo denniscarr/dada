@@ -39,6 +39,11 @@ public class NPC : MonoBehaviour {
     bool saidHello; // Whether we already displayed out hello text during the current wave.
     float helloTimer = 0.0f;
 
+    // Used to make sure certain phrases aren't said too often.
+    float speakCooldown = 5f;
+    float speakingTimer = 0f;
+    float timeSinceLastSpeak = 5f;
+
     // USED FOR THROWING OBJECTS
     public float throwProbability = 0.2f;  // How likely I am to throw an object at a nearby object.
     float throwForce = 20f;     
@@ -92,6 +97,8 @@ public class NPC : MonoBehaviour {
 
     // GENERAL USE
     float generalTimer;  // Primarily used to determine how long an action takes if this NPC does not use an animator.
+    bool reactedToBeingPurchased;
+    bool reactedToBeingPickedUp;
 
     // FOR PERLIN NOISE
     float noiseSpeed = 1f;
@@ -105,6 +112,7 @@ public class NPC : MonoBehaviour {
     NPCAnimation npcAnimation;
     Writer writer;
 	AudioSource speakSource;
+    InteractionSettings interactionSettings;
 
 
 
@@ -131,6 +139,8 @@ public class NPC : MonoBehaviour {
         }
 
         writer = GetComponent<Writer>();
+
+        interactionSettings = transform.parent.GetComponentInChildren<InteractionSettings>();
 
         // If I have no hand position assigned, create one.
         if (handTransform == null)
@@ -169,6 +179,35 @@ public class NPC : MonoBehaviour {
     void Update()
     {
         updateAnimation = false;
+
+        speakingTimer += Time.deltaTime;
+
+        // Comment on various things.
+        if (transform.parent.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer && !reactedToBeingPurchased)
+        {
+            float rand = Random.value;
+            if (rand <= 0.2f) writer.WriteSpecifiedString("I welcome you as my new master, Player.");
+            else if (rand <= 0.4f) writer.WriteSpecifiedString("I don't know how I feel about being purchased.");
+            else if (rand <= 0.6f) writer.WriteSpecifiedString("Wow, is that all I'm worth?");
+            else if (rand <= 0.8f) writer.WriteSpecifiedString("I am prepared to die for you, my Lord.");
+            else writer.WriteSpecifiedString("Ooh, what are you going to do with me?");
+
+            reactedToBeingPurchased = true;
+        }
+
+        if (interactionSettings.carryingObject != null && !reactedToBeingPickedUp)
+        {
+            float rand = Random.value;
+            if (rand <= 0.2f) writer.WriteSpecifiedString("Oh! That tickles, " + interactionSettings.carryingObject.name + "!");
+            else if (rand <= 0.4f) writer.WriteSpecifiedString("Oh, " + interactionSettings.carryingObject.name + ". You have such soft hands.");
+            else if (rand <= 0.6f) writer.WriteSpecifiedString("Hey! Put me down you disgusting " + interactionSettings.carryingObject.name + "!");
+            else if (rand <= 0.8f) writer.WriteSpecifiedString("Ouch! Don't grab me there, " + interactionSettings.carryingObject.name + ".");
+            else writer.WriteSpecifiedString("Thanks for the lift, " + interactionSettings.carryingObject.name + ".");
+
+            reactedToBeingPickedUp = true;
+        }
+
+        if (interactionSettings.carryingObject == null) reactedToBeingPickedUp = false;
 
         if (lookForwardRange < transform.parent.GetComponent<Collider>().bounds.extents.z)
         {
@@ -271,16 +310,18 @@ public class NPC : MonoBehaviour {
                 // See if I hate the object I'm looking at.
                 foreach (string name in hatedObjects)
                 {
-                    if (hit.collider.gameObject.name.Contains(name))
+                    if (hit.collider.gameObject.name.Contains(name) && speakingTimer >= speakCooldown)
                     {
                         writer.WriteSpecifiedString("Oh no! I hate " + name + "s! I'm out of here!");
                         baseDirection *= -1;
+                        speakingTimer = 0f;
                     }
                 }
 
                 // See if the object we're looking at is a player or another NPC. (For waving hello.)
                 if ((hit.collider.GetComponentInChildren<NPC>() != null ||
-                     hit.collider.name == "Player") && hit.collider.transform != transform.parent)
+                     hit.collider.name == "Player") && hit.collider.transform != transform.parent
+                     && speakingTimer > speakCooldown)
                 {
                     // If we're saying hello to ourself, acknowledge it.
                     //if (hit.collider.transform == transform.parent)
@@ -295,6 +336,7 @@ public class NPC : MonoBehaviour {
                     // Get prepare to switch to 'saying hello' mode.
                     if (npcAnimation != null) npcAnimation.WaveHello();
                     generalTimer = 0f;
+                    speakingTimer = 0f;
                     currentState = BehaviorState.SayingHello;
                 }
             }

@@ -171,7 +171,7 @@ public class Tutorial : Quest {
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
 			VisorGenerate();
-			OnDisappearComplete("Welcome. Left click on the Visor to purchase it. It's that gray thing over there.");
+			OnDisappearComplete("Welcome. Left click on the Visor to purchase it. It's that gray thing.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
 
@@ -231,7 +231,7 @@ public class Tutorial : Quest {
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 
 			Debug.Log("Skip tutorial");
-			OnDisappearComplete("Looks like you've been here before. Feel free to jump off the edge to get started.");
+			OnDisappearComplete("Looks like you've been here before. Feel free to jump off at any time.");
 
             GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
             GetComponent<QuestManager>().enabled = true;
