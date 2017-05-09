@@ -29,6 +29,7 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public AudioClip[] tonesClipPool;
 	public AudioClip[] confirmationTones;
+	public AudioClip[] tutorialTones;
 	public List<AudioClip> instClipPool;
 
 	public AudioClip equipSound;
@@ -90,6 +91,7 @@ public class CS_AudioManager : MonoBehaviour {
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
 		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
 		confirmationTones = Resources.LoadAll<AudioClip> ("ConfirmationTones");
+		tutorialTones = Resources.LoadAll<AudioClip> ("TutorialTones");
 
 		dadaMixer.SetFloat("ImageSpriteVol", -50f);
 		dadaMixer.SetFloat("InkSpriteVol", -50f);
