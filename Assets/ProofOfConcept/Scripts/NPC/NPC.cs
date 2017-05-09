@@ -517,7 +517,7 @@ public class NPC : MonoBehaviour {
     void EvaluateSurroundings()
     {
         // Decide whether to use my carried object.
-        if (carriedObject != null && Random.value >= useProbability)
+        if (GetComponentInChildren<D_Function>() != null && Random.value >= useProbability)
         {
             transform.BroadcastMessage("Use", SendMessageOptions.DontRequireReceiver);
         }

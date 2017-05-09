@@ -29,6 +29,7 @@ public class GrailSpawner : MonoBehaviour {
         GameObject grail = Instantiate(grailPrefab);
         grail.transform.position = Services.LevelGen.currentLevel.transform.position;
         grail.transform.position += Vector3.up * 100f;
+
         grailHasSpawned = true;
     }
 }

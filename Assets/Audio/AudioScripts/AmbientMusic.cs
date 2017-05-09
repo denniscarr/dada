@@ -40,7 +40,7 @@ public class AmbientMusic : MonoBehaviour {
 
 	public void NewShuffle() {
 
-		Debug.Log ("new shuffle");
+		//Debug.Log ("new shuffle");
 		shuffleTrigger = true;
 
 	}

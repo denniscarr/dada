@@ -48,9 +48,10 @@ public class MouseControllerNew : MonoBehaviour {
 	List<Renderer> renderList;
 	List<string> shaderList;
 
+	public bool isTweening;
 	// Use this for initialization
 	void Start () {
-
+		isTweening =false;
 		UpperCamera = playercontroller.UpperCamera;
         //txtInfo = transform.parent.FindChild("txtInfo").GetComponent<Text>();
 
@@ -102,7 +103,20 @@ public class MouseControllerNew : MonoBehaviour {
 					selectedObject = null;
 					//change state back
 				}
+
+
+
 			}
+
+//			foreach (RaycastHit hit in Physics.CapsuleCastAll(
+//				transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange))
+//			{
+//				if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
+//					!hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
+//				{
+//					
+//				}
+//			}
 		}
 
 			
@@ -115,7 +129,7 @@ public class MouseControllerNew : MonoBehaviour {
 			//Debug.Log("select "+selectedObject.name);
 			UpdateDraggedObjectPosition(selectedObject);
 			DetectPlacing(selectedObject);
-		}else{
+		}else if(isTweening == false){
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 			//Debug.DrawRay(ray.origin,ray.direction);
 			RaycastHit hit;
@@ -184,7 +198,7 @@ public class MouseControllerNew : MonoBehaviour {
 		InteractionSettings inSets = pointedObject.GetComponentInChildren<InteractionSettings>();
 
         // HELPER TEXT STUFF:
-        if (inSets != null)
+		if (inSets != null)
         {
 
 			DeoutlineTargetObject();
