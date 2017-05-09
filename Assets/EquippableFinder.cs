@@ -45,6 +45,16 @@ public class EquippableFinder : MonoBehaviour {
 
     void Start()
     {
+        if (gameObject.name == "UpperCamera")
+        {
+            active = false;
+        }
+
+        else
+        {
+            active = true;
+        }
+
         mouse = GameObject.Find("Mouse").GetComponent<MouseControllerNew>();
 
 		renderList = new List<Renderer>();
@@ -69,7 +79,10 @@ public class EquippableFinder : MonoBehaviour {
 
     void Update()
     {
-        if (!active) return;
+        if (!active)
+        {
+            return;
+        }
 
         //Debug.DrawRay(transform.position + transform.forward, transform.forward * equipRange, Color.cyan);
 
@@ -109,8 +122,9 @@ public class EquippableFinder : MonoBehaviour {
                 float distance = Vector3.Distance(hit.point, transform.position);
 
                 // If the nearest object has not yet been set, then save this object as the nearest object.
-                if (nearestObject == null && (gameObject.name == "UpperCamera" && !hit.transform.name.Contains("QuestItNote")))
+                if (nearestObject == null)
                 {
+                    if (gameObject.name == "UpperCamera" && hit.transform.name.Contains("QuestItNote")) return;
                     nearestObject = hit.transform;
                     nearestObjectDistance = Vector3.Distance(hit.point, transform.position);
                 }
