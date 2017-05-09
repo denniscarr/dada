@@ -5,7 +5,7 @@ public class Writer : MonoBehaviour {
 
 	public Color textColor = Color.white;
 	public float lineLength = 3f;
-	public float GlitchTextThreshold = 0.3f;
+	public float GlitchTextThreshold = 0.5f;
     float lineSpacing = 1f;
     public float textSize = 0.1f;
 	public float tracking = 0.1f;
@@ -101,6 +101,7 @@ public class Writer : MonoBehaviour {
 		lineIndex = 0;
 		wordIndex = 0;
 
+        if (_script == null) yield break;
 		foreach (string[] s in _script) {
 			foreach (string w in s) {
 				CreateWord (spawnPosition2);
@@ -176,10 +177,11 @@ public class Writer : MonoBehaviour {
 
 			newWord.GetComponent<TextMesh> ().font = currentFont;
 			newWord.GetComponent<TextMesh> ().color = textColor;
-			float glitchChance = MiscFunctions.Map (Services.IncoherenceManager.globalIncoherence, GlitchTextThreshold, 1f, 0f, 1f); 
-			if (glitchChance >= GlitchTextThreshold){
-				}else{
-			newWord.GetComponent<Renderer> ().sharedMaterial = currentFont.material;
+			float glitchChance = MiscFunctions.Map (Services.IncoherenceManager.globalIncoherence, GlitchTextThreshold, 1f, 0f, 0.3f);
+            glitchChance = Mathf.Clamp01(glitchChance);
+
+			if (Random.value > glitchChance){
+			    newWord.GetComponent<Renderer> ().sharedMaterial = currentFont.material;
                 newWord.GetComponent<Renderer>().sharedMaterial.renderQueue = 4000;
             }
 			
@@ -209,9 +211,9 @@ public class Writer : MonoBehaviour {
         // Rotate the text containter towards the player.
         if (!dontFacePlayer)
         {
-            if (transform.parent.GetComponentInChildren<InteractionSettings>() != null && transform.parent.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            if (gameObject.name == "UpperCamera")
             {
-                textContainer.transform.LookAt(GameObject.Find("PlayerInRoom").transform);
+                textContainer.transform.LookAt(GameObject.Find("UpperCamera").transform);
             }
             else
             {

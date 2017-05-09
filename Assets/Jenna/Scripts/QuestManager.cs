@@ -26,6 +26,8 @@ public class QuestManager : MonoBehaviour {
 	// quests completed
 	public bool allQuestsCompleted;
 
+    public int questsGeneratedInCurrentLevel;
+
 	//private variables for QuestObject for later
 
 	void Awake() {

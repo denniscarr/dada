@@ -11,7 +11,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public float childrenDistance = 1;
 	public float TreeChildrenCount = 15;
 	public int PaletteAmount = 8;
-	public float TreeHeightThreshold = 0.5f;
+	public float TreeHeightThreshold = 0.25f;
 
 	Terrain levelMesh;
 
@@ -48,6 +48,12 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	float normalizedPerlinHeight;
 
 	public void OnCreated(){
+
+        // Destroy all notes for uncompleted quests.
+        foreach (QuestItNoteFunction bud in FindObjectsOfType<QuestItNoteFunction>())
+        {
+            bud.GetDestroyedNormal();
+        }
 
 		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
 
@@ -127,8 +133,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		highestPointIndices = new List<int> ();
 		Services.LevelGen.sun.color = levelTint;
+        Services.LevelGen.sun.intensity = 1f;
 
-		Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
+        Services.Player.GetComponentInChildren<ColorfulFog>().coloringMode = ColorfulFog.ColoringMode.Gradient;
+        Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
 		Services.Player.GetComponentInChildren<ColorfulFog> ().ApplyGradientChanges ();
 
 //		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
@@ -290,6 +298,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		killzone.transform.localScale += Vector3.right * _width * tileScale * 100;
 		killzone.transform.localScale += Vector3.forward * _length * tileScale * 100;
 		killzone.transform.localPosition = Vector3.zero + (Vector3.up *( mapHeight/10));
+		killzone.GetComponent<Renderer> ().material.color = palette [2];
 	}
 
 	void PopulateMap(){
@@ -362,8 +371,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
 				
-				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)) + newObject.transform.position;
+				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)/2f) + newObject.transform.position;
 
+				GameObject newChild = null;
 				RaycastHit hit;
 					
 				if (Physics.Raycast(new Vector3(SpawnCirclePos.x, transform.position.y + mapHeight, SpawnCirclePos.z), -Vector3.up, out hit)) {
@@ -371,20 +381,25 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
 
 					if (j % 3 == 0) {
-						LevelObjectFactory (perlin, Random.Range (0, Services.Prefabs.PREFABS.Length), hit.point - transform.position, index);
+						newChild = LevelObjectFactory (perlin, Random.Range (0, Services.Prefabs.PREFABS.Length), hit.point - transform.position, index);
 					} else {
-						GameObject newSprite = LevelObjectFactory (perlin, (int)Services.TYPES.Sprite, hit.point - transform.position, index);
-						if (newSprite != null) {
+						newChild = LevelObjectFactory (perlin, (int)Services.TYPES.Sprite, hit.point - transform.position, index);
+						if (newChild != null) {
 							Vector3 targetPosition = newObject.transform.position;
-							targetPosition.y = newSprite.transform.position.y;
-							newSprite.transform.LookAt (targetPosition);
-							newSprite.transform.Rotate (0, 180, 0);
+							targetPosition.y = newChild.transform.position.y;
+							newChild.transform.LookAt (targetPosition);
+							newChild.transform.Rotate (0, 180, 0);
+							_bitmap.SetPixel (Mathf.RoundToInt((newChild.transform.localPosition.x + _width/2)/tileScale), Mathf.RoundToInt((newChild.transform.localPosition.z + _length/2)/tileScale), _bitmap.GetPixel((int)index.x, (int)index.y));
+//							newChild.GetComponent<Renderer>().material.color = _bitmap.GetPixel(Mathf.RoundToInt((newChild.transform.localPosition.x + (_width/2))/tileScale), Mathf.RoundToInt((newChild.transform.localPosition.z + (_length/2))/tileScale));
 						}
 					}
+						
 				} 
 
 			}
 		}
+
+		_bitmap.Apply ();
 	}
 		
 		

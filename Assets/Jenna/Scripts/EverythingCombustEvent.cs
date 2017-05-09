@@ -8,6 +8,7 @@ public class EverythingCombustEvent : IncoherenceEvent {
     {
         base.Start();
 
+        threshold = 0.6f;
         instantaneous = true;
     }
 
@@ -17,7 +18,10 @@ public class EverythingCombustEvent : IncoherenceEvent {
         // Find all game objects.
         foreach (InteractionSettings intSet in FindObjectsOfType<InteractionSettings>())
         {
-            intSet.heat += 100;
+            if (Random.value > 0.5f)
+            {
+                intSet.heat += 100;
+            }
         }
     }
 }

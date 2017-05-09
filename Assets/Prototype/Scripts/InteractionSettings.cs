@@ -150,6 +150,9 @@ public class InteractionSettings : MonoBehaviour {
     public Vector3 equipPosition;
     public Vector3 equipRotation;
 
+    // USED FOR QUESTS:
+    public List<GameObject> associatedNotes;
+
     [HideInInspector] public Vector3 savedScale;
 
 	[HideInInspector] public Transform originalParent;
@@ -201,6 +204,8 @@ public class InteractionSettings : MonoBehaviour {
             Transform saved = transform.parent.parent;
             savedScale = new Vector3(1, 1, 1);
         }
+
+        associatedNotes = new List<GameObject>();
     }
 
 
@@ -250,5 +255,15 @@ public class InteractionSettings : MonoBehaviour {
         }
         Instantiate(Resources.Load("Buy Particles"), transform.parent.position, Quaternion.Euler(270f, 0f, 0f));
         isOwnedByPlayer = true;
+    }
+
+
+    public void DestroyAssociatedNotes()
+    {
+        for (int i = 0; i < associatedNotes.Count; i++)
+        {
+            associatedNotes[i].GetComponentInChildren<QuestItNoteFunction>().GetDestroyedFlashy();
+            associatedNotes.Remove(associatedNotes[i]);
+        }
     }
 }

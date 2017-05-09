@@ -60,6 +60,7 @@ Shader "Sprites/Glitch"
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 3.0
+			#pragma multi_compile_fog // Fog
 			#pragma multi_compile DUMMY PIXELSNAP_ON
 			#include "UnityCG.cginc"
 			
@@ -75,6 +76,7 @@ Shader "Sprites/Glitch"
 				float4 vertex   : SV_POSITION;
 				fixed4 color    : COLOR;
 				half2 texcoord  : TEXCOORD0;
+				UNITY_FOG_COORDS(1) // Fog
 			};
 			
 			fixed4 _Color;
@@ -89,6 +91,9 @@ Shader "Sprites/Glitch"
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap (OUT.vertex);
 				#endif
+
+				UNITY_TRANSFER_FOG(OUT,OUT.vertex); // Fog
+
 				return OUT;
 			}
 
@@ -169,8 +174,14 @@ Shader "Sprites/Glitch"
 					c = normalC;
 				}
 				//Apply tint and tint color alpha
+
 				c.rgb *= IN.color;
 				c.a *= IN.color.a;
+
+				if(c.a < 0.1)
+                    discard;
+
+				UNITY_APPLY_FOG(IN.fogCoord, c); // Fog
 				c.rgb *= c.a;
 				return c;
 			}

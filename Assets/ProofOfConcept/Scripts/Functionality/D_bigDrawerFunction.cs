@@ -19,7 +19,7 @@ public class D_bigDrawerFunction : D_Function {
 		Vector3 pos = transform.position;
 
 		float meteorScale = Random.Range (meteorSizeMin, meteorSizeMax);
-		for (int i = 1; i<10; i++) 
+		for (int i = 1; i<2; i++) 
 		{
 			GameObject newMeteor = Instantiate (meteor, pos, Quaternion.identity);
 			newMeteor.transform.localScale = new Vector3 (meteorScale, meteorScale, meteorScale);

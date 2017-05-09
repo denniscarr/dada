@@ -4,7 +4,21 @@ using UnityEngine;
 
 public class IncoherenceManager : MonoBehaviour {
 
-    public float globalIncoherence = 0.0f;
+    public float _globalIncoherence = 0.0f;
+    public float globalIncoherence
+    {
+        get
+        {
+            return _globalIncoherence;
+        }
+
+        set
+        {
+            _globalIncoherence = value;
+            _globalIncoherence = Mathf.Clamp01(_globalIncoherence);
+            Debug.Log(_globalIncoherence);
+        }
+    }
 
     public float interactionIncrease = 0.05f;  // How much an object's incoherence increases when the player interacts with that object.
     public float questIncrease = 0.1f;
@@ -43,6 +57,11 @@ public class IncoherenceManager : MonoBehaviour {
         dormantEvents.Add(gameObject.AddComponent<EverythingCombustEvent>());
         dormantEvents.Add(gameObject.AddComponent<MakeSomethingHugeEvent>());
         dormantEvents.Add(gameObject.AddComponent<FreezeEverythingEvent>());
+        dormantEvents.Add(gameObject.AddComponent<GeminiEvent>());
+        dormantEvents.Add(gameObject.AddComponent<XRayEvent>());
+        dormantEvents.Add(gameObject.AddComponent<ChangeAllMeshes>());
+        dormantEvents.Add(gameObject.AddComponent<PancakeEvent>());
+        dormantEvents.Add(gameObject.AddComponent<WorldTipperEvent>());
 
         activeEvents = new List<IncoherenceEvent>();
     }
@@ -78,6 +97,12 @@ public class IncoherenceManager : MonoBehaviour {
     void QueueEvent()
     {
         nextEvent = activeEvents[Random.Range(0, activeEvents.Count)];
+
+        if (nextEvent.threshold > globalIncoherence)
+        {
+            nextEvent = null;
+            return;
+        }
 
         timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 1f);
         Debug.Log("Queuing: " + nextEvent + ". " + timeUntilNextEvent + " seconds.");
@@ -191,6 +216,8 @@ public class IncoherenceManager : MonoBehaviour {
 
 	public void TallyIncoherence()
     {
+        if (Services.LevelGen.levelNum > -1) return;
+
         float totalIncoherence = 0f;
         int incoherenceNum = 0;
 
@@ -217,9 +244,8 @@ public class IncoherenceManager : MonoBehaviour {
         {
             for (int i = 0; i < dormantEvents.Count; i++)
             {
-                if (globalIncoherence >= dormantEvents[i].threshold)
+                if (globalIncoherence > dormantEvents[i].threshold)
                 {
-                    Debug.Log("adding event.");
                     activeEvents.Add(dormantEvents[i]);
                     dormantEvents.Remove(dormantEvents[i]);
                 }

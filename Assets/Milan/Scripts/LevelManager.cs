@@ -40,7 +40,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		radius = 25;
 		height = 1;
-		tileScale = 2;
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -117,8 +116,11 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		l.OnCreated ();
 
-		//writer.textSize = 0.25f;
-		writer.SetScript (SetLevelText ());
+        //writer.textSize = 0.25f;
+        if (ManagedObjects.Count > 0)
+        {
+            writer.SetScript(SetLevelText());
+        }
 		StartCoroutine (writer.WriteText ());
 
         Services.IncoherenceManager.HandleObjects();
@@ -127,16 +129,19 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         GetComponent<GrailSpawner>().grailHasSpawned = false;
         Services.Quests.allQuestsCompleted = false;
-        Services.Quests.questsToComplete = levelNum + 2;
+        Services.Quests.questsGeneratedInCurrentLevel = 0;
+        Services.Quests.currentCompletedQuests = 0;
+        Services.Quests.questList.Clear();
+        Services.Quests.questsToComplete = Random.Range(1, 3);
         GameObject.Find("QuestManager").GetComponent<QuestFinderScript>().FindQuests();
 
 		maxNPCs += 1;
 		maxObjects += 2;
 		maxSprites += 50;
-		radius += 10;
+		radius += 5;
 //		perlinFrequency += 0.020f;
 		height += 5;
-        if (levelNum < 0) Services.IncoherenceManager.TallyIncoherence();
+        if (levelNum < -1) Services.IncoherenceManager.TallyIncoherence();
 		Services.IncoherenceManager.globalIncoherence += 0.05f;
 
         ManagedObjects.Add (l);

@@ -47,7 +47,16 @@ public class EquippableFinder : MonoBehaviour {
 		shaderList = new List<string>();
         // Get references to my buddies.
         writer = GetComponent<Writer>();
-        equipReference = GameObject.Find("Equip Reference").transform;
+
+        if (gameObject.name == "UpperCamera")
+        {
+            equipReference = GameObject.Find("Upper Equip Reference").transform;
+        }
+
+        else
+        {
+            equipReference = GameObject.Find("Equip Reference").transform;
+        }
 
         writer.textSize = 0.1f;
         textPosition = transform.position + transform.forward * 20f;
@@ -126,6 +135,7 @@ public class EquippableFinder : MonoBehaviour {
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
                 mouse.ChangeCursor("equip");
+                Debug.Log(mouse);
                 writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);

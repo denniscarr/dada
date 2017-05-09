@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class QuestItNoteFunction : D_Function {
 
 	public int questID;
     public bool useOnStart = false; // Whether I should stick to something as soon as I spawn.
+
+    bool carriedByPlayerInLastFrame;
+
+    bool waitToDelete;
 
 	// Use this for initialization
 	new void Start () {
@@ -32,6 +37,27 @@ public class QuestItNoteFunction : D_Function {
 
 		base.Update ();
 
+        if (waitToDelete && transform.parent.localScale.y <= 0.0001f)
+        {
+            Destroy(transform.parent.gameObject);
+        }
+
+        // See if I get dropped.
+        if (carriedByPlayerInLastFrame && intSet.carryingObject != Services.Player.transform)
+        {
+            FacePlayer();
+        }
+
+        if (intSet.carryingObject == Services.Player.transform)
+        {
+            carriedByPlayerInLastFrame = true;
+        }
+
+        else
+        {
+            carriedByPlayerInLastFrame = false;
+        }
+
         //If the player is holding me, turn to face the player.
         if (intSet.carryingObject != null && intSet.carryingObject == Services.Player.transform)
         {
@@ -43,19 +69,32 @@ public class QuestItNoteFunction : D_Function {
             }
 
             // Face player.
-            if (transform.parent.parent == null) return;
+            //if (transform.parent.parent == null) return;
 
-            Quaternion newRotation = transform.parent.parent.rotation;
+            //Quaternion newRotation = transform.parent.parent.rotation;
+            //transform.parent.rotation = newRotation;
+
+            //if (!intSet.IsInVisor)
+            //{
+            //    newRotation = transform.parent.parent.rotation;
+            //    newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
+            //    transform.parent.rotation = newRotation;
+            //    //transform.parent.localEulerAngles = new Vector3(0f, 80f, 0f);
+            //}
+        }
+    }
+
+    void FacePlayer()
+    {
+        if (intSet.IsInVisor)
+        {
+            return;
+        }
+
+        else
+        {
+            Quaternion newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
             transform.parent.rotation = newRotation;
-
-            if (!intSet.IsInVisor)
-            {
-                //newRotation = transform.parent.parent.rotation;
-                //newRotation = Quaternion.LookRotation(transform.parent.position - Services.Player.GetComponentInChildren<Camera>().transform.position);
-                //transform.parent.rotation = newRotation;
-                transform.parent.localEulerAngles = new Vector3(0f, 80f, 0f);
-            }
-
         }
     }
 
@@ -64,7 +103,7 @@ public class QuestItNoteFunction : D_Function {
         Transform visorNode = GameObject.Find("INROOMOBJECTS").transform;
         transform.parent.parent = visorNode.transform;
         transform.parent.localPosition = new Vector3(
-            Random.Range(-1.3f, 4.1f),
+            Random.Range(-1f, 3.8f),
             Random.Range(1.5f, 3.6f),
             2.5f);
 
@@ -115,5 +154,29 @@ public class QuestItNoteFunction : D_Function {
                 transform.parent.rotation = Quaternion.FromToRotation(transform.parent.forward, hit.normal);
             }  
         }
+    }
+
+
+    /// <summary>
+    /// Should be called when the quest is destroyed because the player went to a new level without finishing it.
+    /// </summary>
+    public void GetDestroyedNormal()
+    {
+        transform.parent.DOScale(Vector3.zero, 0.4f);
+
+        waitToDelete = true;
+    }
+
+    
+    /// <summary>
+    /// Should be called when the quest is destroyed because the player completed it.
+    /// </summary>
+    public void GetDestroyedFlashy()
+    {
+        transform.parent.DOScale(Vector3.zero, 0.4f);
+        GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
+        stars.transform.position = transform.parent.position;
+
+        waitToDelete = true;
     }
 }

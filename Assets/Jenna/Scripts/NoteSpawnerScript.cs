@@ -36,7 +36,7 @@ public class NoteSpawnerScript : MonoBehaviour {
 		}
 	}
 
-	public void MakeItRain(){ 
+	public void MakeItRain(int id){ 
 		// make the questit note 
 		ranger = Random.Range(0, 150);
 		QuestManager manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();

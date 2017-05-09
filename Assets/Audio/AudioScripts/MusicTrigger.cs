@@ -25,6 +25,7 @@ public class MusicTrigger: MonoBehaviour {
 	public float imageSprites = 0f;
 	public float npcs = 0f;
 
+
 	// Use this for initialization
 	void Start () {
 
@@ -57,13 +58,13 @@ public class MusicTrigger: MonoBehaviour {
 			} else if (collider.gameObject.tag == "InkSprite") {
 				inkSprites++;
 			} else if (collider.gameObject.GetComponentInChildren<InteractionSettings> () != null &&
-				collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried == false && 
-				collider.gameObject.GetComponentInChildren<NPC>() == null) {
+			           collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried == false &&
+			           collider.gameObject.GetComponentInChildren<NPC> () == null) {
 				//Debug.Log ("nonpickup object");
 				nonPickups++;
 			} else if (collider.gameObject.GetComponentInChildren<NPC> () != null) {
-				npcs ++;
-			}
+				npcs++;
+			} 
 
 
 			if (collider.gameObject.tag == "ToneTrigger") {
@@ -85,7 +86,6 @@ public class MusicTrigger: MonoBehaviour {
 
 
 		Services.AudioManager.EqualizeStems (inkSprites, imageSprites, npcs, nonPickups, totalObjects);
-
 
 
 		//find all toneSources, find out if they're playing

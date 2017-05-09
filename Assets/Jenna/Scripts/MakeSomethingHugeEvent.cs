@@ -8,6 +8,7 @@ public class MakeSomethingHugeEvent : IncoherenceEvent {
 	new void Start()
     {
         instantaneous = true;
+        threshold = 0.3f;
     }
 
 
