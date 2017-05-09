@@ -100,7 +100,7 @@ public class PickupQuest : Quest {
 		parentObject = builder.objeto;
 		objectScript = parentObject.GetComponent<QuestObject> ();
 		requiredPickups = Random.Range (2, 6);
-        rewardMoney = Mathf.RoundToInt(parentObject.GetComponentInChildren<InteractionSettings>().price * Random.Range(1.1f, 2f));
+        rewardMoney = Mathf.RoundToInt(parentObject.GetComponentInChildren<InteractionSettings>().price * Random.Range(2f, 3f));
         //Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
 
         // add the glow
