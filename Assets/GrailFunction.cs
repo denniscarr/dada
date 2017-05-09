@@ -32,6 +32,8 @@ public class GrailFunction : D_Function {
 
         GetComponentInParent<Rigidbody>().AddForce(directionFromPlayer * 20000f, ForceMode.Impulse);
 
+		Services.AudioManager.PlaySFX (Services.AudioManager.grailRejectionClip);
+
         //if (Vector3.Distance(transform.position, Services.Player.transform.position) < 10f)
         //{
         //    Vector3 directionFromPlayer = transform.position - Services.Player.transform.position;

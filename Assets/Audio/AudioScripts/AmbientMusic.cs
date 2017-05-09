@@ -107,15 +107,14 @@ public class AmbientMusic : MonoBehaviour {
 			for( int i = 0; i < hiSource.Length; i ++ ) {
 
 				if (lHue >= ((float)i * (1.0f / (float)hiSource.Length)) && lHue <= ((float)(i + 1f) * (1f / (float)hiSource.Length))) {
-
-					Debug.Log ("level hue = " + lHue);
-					Debug.Log ("parameter lo = " + ((float)i * (1.0f / (float)hiSource.Length)));
-					Debug.Log ("parameter hi = " + ((float)(i + 1f) * (1f / (float)hiSource.Length)));
 					hiSource [i].DOFade (1.0f, 3.0f);
 					currentHiSource = hiSource [i];
-				} else {
-					hiSource [i].DOFade(0.0f, 3.0f);
-				}
+				} else if (hiSource [i].volume < 0.1f) {
+					hiSource [i].DOKill ();
+					hiSource [i].volume = 0f;
+				} else if (hiSource [i].volume > 0f) {
+					hiSource [i].DOFade (0.0f, 3.0f);
+				} 
 
 			}
 
@@ -124,12 +123,15 @@ public class AmbientMusic : MonoBehaviour {
 				float loSatBound = ((float)i * (1f / (float)loSource.Length));
 				float hiSatBound = ((float)(i + 1f) * (1f / (float)loSource.Length));
 
-				if (lSat >= loSatBound*0.5f && lSat < hiSatBound*0.5f) {
+				if (lSat >= loSatBound * 0.5f && lSat < hiSatBound * 0.5f) {
 					
-					loSource [i].DOFade(1.0f, 3.0f);
-				} else {
+					loSource [i].DOFade (1.0f, 3.0f);
+				} else if (loSource [i].volume < 0.1f) {
+					loSource [i].DOKill ();
+					loSource [i].volume = 0f;
+				} else if (loSource [i].volume > 0f) {
 					loSource [i].DOFade (0.0f, 3.0f);
-				}
+				} 
 			}
 
 		}

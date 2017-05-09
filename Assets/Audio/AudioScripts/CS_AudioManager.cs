@@ -39,6 +39,8 @@ public class CS_AudioManager : MonoBehaviour {
 	public AudioClip buySound;
 	public AudioClip getMoney;
 
+	public AudioClip grailRejectionClip;
+
 
 
 
