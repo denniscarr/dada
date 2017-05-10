@@ -143,6 +143,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomOutMode(){
+		//GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1.0f,0.5f);
 		//Debug.Log("zoom out");
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
 		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
@@ -155,10 +156,10 @@ public class PlayerControllerNew : MonoBehaviour {
 //		UpperCamera.transform.rotation = initCameraRotation;
 
 		Cursor.lockState = CursorLockMode.None;
+        FindObjectOfType<MouseControllerNew>().ChangeCursor("idle");
 		rigidbodyFirstPersonController.enabled = false;
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
-
 
 		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, 0.7f);
 	}

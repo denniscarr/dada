@@ -134,7 +134,7 @@ public class EquippableFinder : MonoBehaviour {
                 else
                 {
 					Image mouse = GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>();
-					Debug.Log(mouse.name);
+					//Debug.Log(mouse.name);
 					Color c = mouse.color;
                     if (distance < nearestObjectDistance)
                     {
@@ -173,9 +173,19 @@ public class EquippableFinder : MonoBehaviour {
 
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
+                // If we're looking at money, display a special message.
+                if (nearestObject.name.Contains("$"))
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to obtain " + nearestObject.name + ".", textPosition);
+                }
+
+                else
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name + ".", textPosition);
+                }
+
+                //Debug.Log(mouse);
                 mouse.ChangeCursor("equip");
-                Debug.Log(mouse);
-                writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name + ".", textPosition);
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
             }
@@ -240,7 +250,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void DeoutlineTargetObject(){
-		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(0f,1.0f);
+		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(0.2f,0.5f);
 		//Debug.Log("DeoutlineTargetObject");
 		for(int i = 0; i < renderList.Count;i++){
             if (renderList[i] != null)
@@ -257,7 +267,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1f,1.0f);
+		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1f,0.5f);
         //Debug.Log("OutlineTargetObject");
 
         lastObjectInspected = t_hit;
@@ -307,7 +317,7 @@ public class EquippableFinder : MonoBehaviour {
 			return;
 		}
 
-
+        // Special case for trying to equip the grail.
         if (equipTarget.GetComponentInChildren<GrailFunction>() != null)
         {
             equipTarget.GetComponentInChildren<GrailFunction>().Use();
@@ -322,7 +332,8 @@ public class EquippableFinder : MonoBehaviour {
         // Save object's scale.
         originalScale = equipTarget.transform.localScale;
 
-        equipTarget.transform.SetParent(equipReference, true);
+        // Set equip target as child of equip reference.
+        equipTarget.SetParent(equipReference, true);
        
 		//play equip sound effect
 		Services.AudioManager.PlaySFX (Services.AudioManager.equipSound);

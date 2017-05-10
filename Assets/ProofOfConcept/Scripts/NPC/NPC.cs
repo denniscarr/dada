@@ -29,7 +29,7 @@ public class NPC : MonoBehaviour {
     [SerializeField] float objectPickupRange = 3f;  // How close this NPC has to be to an object in order to pick it up.
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
     [SerializeField] float pickupProbability = 0.2f;
-    [SerializeField] float useProbability = 0.2f;   // The probability that I will use an object I'm holding.
+    [SerializeField] float useProbability = 0.75f;   // The probability that I will use an object I'm holding.
     [SerializeField] float giveUpTime = 10f; // How long it takes for this NPC to give up when they are unable to reach their targeted object.
     float giveUpTimer = 0f; // Used for keeping track of when to give up.
 

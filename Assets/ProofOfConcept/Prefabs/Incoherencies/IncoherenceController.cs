@@ -44,6 +44,13 @@ public class IncoherenceController : MonoBehaviour {
 
 	void Update() {
 
+        // Make sure incoherence doesn't rise during the tutorial.
+        if (Services.LevelGen.levelNum == -1)
+        {
+            incoherenceMagnitude = 0f;
+            incoherenceProbability = 0f;
+        }
+
 		// Clamp incoherence probability and magnitude to between 0 and 1
 		incoherenceProbability = Mathf.Clamp(incoherenceProbability, 0f, 1f);
 		incoherenceMagnitude = Mathf.Clamp(incoherenceMagnitude, 0f, 1f);

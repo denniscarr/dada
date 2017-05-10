@@ -50,7 +50,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 	public bool isTweening;
 	float equipRange = 5f;   // How close the player needs to be to equip an object.
-	float equipSize = 1f;    // The radius of the capsule used to find objects the player is looking at.
+	float equipSize = 0.1f;    // The radius of the capsule used to find objects the player is looking at.
 	// Use this for initialization
 	void Start () {
 		isTweening =false;
@@ -149,7 +149,7 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 
 	void DeoutlineTargetObject(){
-		//GetComponent<Image>().DOFade(0.2f,0.5f);
+		GetComponent<Image>().DOFade(0.2f,0.5f);
 		//Debug.Log("DeoutlineTargetObject");
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
@@ -167,7 +167,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		//GetComponent<Image>().DOFade(1f,0.5f);
+		GetComponent<Image>().DOFade(1f,0.5f);
         if (t_hit.name.Contains("Grail")) return;
 
 		renderList = new List<Renderer>();
@@ -210,8 +210,18 @@ public class MouseControllerNew : MonoBehaviour {
             {
                 if (inSets.ableToBeCarried)
                 {
+                    // If the mouse is pointed at money, display a special message.
+                    if (pointedObject.name.Contains("$"))
+                    {
+                        writer.WriteAtPoint("Click Left Mouse Button to obtain " + pointedObject.name + ".", textPosition);
+                    }
+
+                    else
+                    {
+                        writer.WriteAtPoint("Hold Left Mouse Button to pick up " + pointedObject.name + ".", textPosition);
+                    }
+
                     ChangeCursor("openHand");
-                    writer.WriteAtPoint("Hold Left Mouse Button to pick up " + pointedObject.name + ".", textPosition);
                 }
             }
 
@@ -235,6 +245,7 @@ public class MouseControllerNew : MonoBehaviour {
 
         else
         {
+			//Debug.Log(pointedObject.name);
 			DeoutlineTargetObject();
             writer.DeleteTextBox();
             ChangeCursor("idle");
