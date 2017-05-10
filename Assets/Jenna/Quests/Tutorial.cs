@@ -230,7 +230,7 @@ public class Tutorial : Quest {
 
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 
-			Debug.Log("Skip tutorial");
+//			Debug.Log("Skip tutorial");
 			OnDisappearComplete("Looks like you've been here before. Feel free to jump off at any time.");
 
             GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;

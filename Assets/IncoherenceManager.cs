@@ -104,7 +104,7 @@ public class IncoherenceManager : MonoBehaviour {
         }
 
         timeUntilNextEvent = MyMath.Map(globalIncoherence, 0f, 1f, 60f, 1f);
-        Debug.Log("Queuing: " + nextEvent + ". " + timeUntilNextEvent + " seconds.");
+//        Debug.Log("Queuing: " + nextEvent + ". " + timeUntilNextEvent + " seconds.");
         timeSinceLastEvent = 0.0f;
     }
 

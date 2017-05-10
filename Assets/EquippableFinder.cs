@@ -240,7 +240,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void DeoutlineTargetObject(){
-		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(0f,1.0f);
+		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(0.2f,0.5f);
 		//Debug.Log("DeoutlineTargetObject");
 		for(int i = 0; i < renderList.Count;i++){
             if (renderList[i] != null)
@@ -257,7 +257,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1f,1.0f);
+		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1f,0.5f);
         //Debug.Log("OutlineTargetObject");
 
         lastObjectInspected = t_hit;
