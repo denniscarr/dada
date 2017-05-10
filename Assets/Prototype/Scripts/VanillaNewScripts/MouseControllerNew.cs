@@ -210,8 +210,18 @@ public class MouseControllerNew : MonoBehaviour {
             {
                 if (inSets.ableToBeCarried)
                 {
+                    // If the mouse is pointed at money, display a special message.
+                    if (pointedObject.name.Contains("$"))
+                    {
+                        writer.WriteAtPoint("Click Left Mouse Button to obtain " + pointedObject.name + ".", textPosition);
+                    }
+
+                    else
+                    {
+                        writer.WriteAtPoint("Hold Left Mouse Button to pick up " + pointedObject.name + ".", textPosition);
+                    }
+
                     ChangeCursor("openHand");
-                    writer.WriteAtPoint("Hold Left Mouse Button to pick up " + pointedObject.name + ".", textPosition);
                 }
             }
 

@@ -173,9 +173,18 @@ public class EquippableFinder : MonoBehaviour {
 
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
-                mouse.ChangeCursor("equip");
+                // If we're looking at money, display a special message.
+                if (nearestObject.name.Contains("$"))
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to obtain " + nearestObject.name + ".", textPosition);
+                }
+
+                else
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name + ".", textPosition);
+                }
+
                 //Debug.Log(mouse);
-                writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name + ".", textPosition);
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
             }
