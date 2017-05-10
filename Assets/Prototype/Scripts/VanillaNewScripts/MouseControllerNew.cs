@@ -149,7 +149,7 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 
 	void DeoutlineTargetObject(){
-		//GetComponent<Image>().DOFade(0.2f,0.5f);
+		GetComponent<Image>().DOFade(0.2f,0.5f);
 		//Debug.Log("DeoutlineTargetObject");
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
@@ -167,7 +167,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
-		//GetComponent<Image>().DOFade(1f,0.5f);
+		GetComponent<Image>().DOFade(1f,0.5f);
         if (t_hit.name.Contains("Grail")) return;
 
 		renderList = new List<Renderer>();
@@ -235,6 +235,7 @@ public class MouseControllerNew : MonoBehaviour {
 
         else
         {
+			//Debug.Log(pointedObject.name);
 			DeoutlineTargetObject();
             writer.DeleteTextBox();
             ChangeCursor("idle");

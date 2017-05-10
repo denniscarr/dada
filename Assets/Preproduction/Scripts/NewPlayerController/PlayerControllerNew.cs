@@ -143,6 +143,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomOutMode(){
+		//GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1.0f,0.5f);
 		//Debug.Log("zoom out");
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
 		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
@@ -213,6 +214,7 @@ public class PlayerControllerNew : MonoBehaviour {
             writer.DeleteTextBox();
             InitZoomOutMode();
 			mode = ControlMode.ZOOM_OUT_MODE;
+
 		}
 //		else if (Input.GetMouseButtonDown(0)){
 //			//left click to equip/drop
