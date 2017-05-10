@@ -134,7 +134,7 @@ public class EquippableFinder : MonoBehaviour {
                 else
                 {
 					Image mouse = GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>();
-					Debug.Log(mouse.name);
+					//Debug.Log(mouse.name);
 					Color c = mouse.color;
                     if (distance < nearestObjectDistance)
                     {
@@ -174,7 +174,7 @@ public class EquippableFinder : MonoBehaviour {
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
                 mouse.ChangeCursor("equip");
-                Debug.Log(mouse);
+                //Debug.Log(mouse);
                 writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name + ".", textPosition);
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
