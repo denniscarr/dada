@@ -385,8 +385,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
 
-					if (j % 2 == 0) {
-						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Vector3.up * 5) + (Random.insideUnitSphere * 3), Quaternion.identity) as GameObject;
+					if (j % 10 == 0) {
+						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Vector3.up * 5) + (Random.insideUnitSphere * 5), Quaternion.identity) as GameObject;
 					}
 
 					if (j % 3 == 0) {
