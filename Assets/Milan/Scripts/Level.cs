@@ -55,7 +55,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
             bud.GetDestroyedNormal();
         }
 
-		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
+//		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
 			
 		_width = Services.LevelGen.radius;
 		_length = _width;
@@ -368,9 +368,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				break;
 			}
 			newObject.transform.localScale *= 2;
-
+		
 			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
-				
+
+
+				if (Services.LevelGen.levelNum < -1) {
+					break;
+				}
+
 				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)/2f) + newObject.transform.position;
 
 				GameObject newChild = null;
@@ -379,6 +384,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				if (Physics.Raycast(new Vector3(SpawnCirclePos.x, transform.position.y + mapHeight, SpawnCirclePos.z), -Vector3.up, out hit)) {
 
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
+
+					if (j % 2 == 0) {
+						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Vector3.up * 5) + (Random.insideUnitSphere * 3), Quaternion.identity) as GameObject;
+					}
 
 					if (j % 3 == 0) {
 						newChild = LevelObjectFactory (perlin, Random.Range (0, Services.Prefabs.PREFABS.Length), hit.point - transform.position, index);
