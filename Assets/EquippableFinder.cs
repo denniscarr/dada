@@ -185,6 +185,7 @@ public class EquippableFinder : MonoBehaviour {
                 }
 
                 //Debug.Log(mouse);
+                mouse.ChangeCursor("equip");
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
             }

@@ -50,7 +50,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 	public bool isTweening;
 	float equipRange = 5f;   // How close the player needs to be to equip an object.
-	float equipSize = 1f;    // The radius of the capsule used to find objects the player is looking at.
+	float equipSize = 0.1f;    // The radius of the capsule used to find objects the player is looking at.
 	// Use this for initialization
 	void Start () {
 		isTweening =false;

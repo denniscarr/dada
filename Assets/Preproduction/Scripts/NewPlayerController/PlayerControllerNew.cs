@@ -156,10 +156,10 @@ public class PlayerControllerNew : MonoBehaviour {
 //		UpperCamera.transform.rotation = initCameraRotation;
 
 		Cursor.lockState = CursorLockMode.None;
+        FindObjectOfType<MouseControllerNew>().ChangeCursor("idle");
 		rigidbodyFirstPersonController.enabled = false;
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
-
 
 		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, 0.7f);
 	}
@@ -214,7 +214,6 @@ public class PlayerControllerNew : MonoBehaviour {
             writer.DeleteTextBox();
             InitZoomOutMode();
 			mode = ControlMode.ZOOM_OUT_MODE;
-
 		}
 //		else if (Input.GetMouseButtonDown(0)){
 //			//left click to equip/drop
