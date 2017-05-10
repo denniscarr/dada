@@ -317,7 +317,7 @@ public class EquippableFinder : MonoBehaviour {
 			return;
 		}
 
-
+        // Special case for trying to equip the grail.
         if (equipTarget.GetComponentInChildren<GrailFunction>() != null)
         {
             equipTarget.GetComponentInChildren<GrailFunction>().Use();
@@ -332,7 +332,8 @@ public class EquippableFinder : MonoBehaviour {
         // Save object's scale.
         originalScale = equipTarget.transform.localScale;
 
-        equipTarget.transform.SetParent(equipReference, true);
+        // Set equip target as child of equip reference.
+        equipTarget.SetParent(equipReference, true);
        
 		//play equip sound effect
 		Services.AudioManager.PlaySFX (Services.AudioManager.equipSound);
