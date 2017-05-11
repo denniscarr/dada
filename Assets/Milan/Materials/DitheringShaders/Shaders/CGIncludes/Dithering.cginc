@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 #ifndef DITHERING_INCLUDED
 #define DITHERING_INCLUDED
 
@@ -5,7 +7,7 @@
 
 inline float4 GetDitherPos(float4 vertex, float ditherSize) {
 	// Get the dither pixel position from the screen coordinates.
-	float4 screenPos = ComputeScreenPos(mul(UNITY_MATRIX_MVP, vertex));
+	float4 screenPos = ComputeScreenPos(UnityObjectToClipPos(vertex));
 	return float4(screenPos.xy * _ScreenParams.xy / ditherSize, 0, screenPos.w);
 }
 

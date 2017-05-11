@@ -17,6 +17,7 @@ public class D_bathtubFunction : D_Function {
 		while (transform.parent.GetComponent<Rigidbody> ().isKinematic == true) {
 			transform.parent.SetParent (null);
             GetDropped();
+			GetComponentInParent<Rigidbody> ().velocity = transform.forward * bathtubSpeed;
 		}
 
 		GetComponentInParent<Rigidbody>().AddForce(transform.right * bathtubSpeed);
