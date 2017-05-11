@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Dithering Shaders/Normal/Unlit" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
@@ -41,7 +43,7 @@ Shader "Dithering Shaders/Normal/Unlit" {
 
 			FragmentInput vert(VertexInput i) {
 				FragmentInput o;
-				o.position = mul(UNITY_MATRIX_MVP, i.position);
+				o.position = UnityObjectToClipPos(i.position);
 				o.uv = i.uv;
 				o.ditherPos = GetDitherPos(i.position, _DitherSize);
 				return o;
