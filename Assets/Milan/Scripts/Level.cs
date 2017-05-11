@@ -358,7 +358,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 			GameObject newObject;
 
-			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 25)) {
+			if (Random.Range (0, 100) > (100 - (Services.IncoherenceManager.globalIncoherence * 25))) {
 				newObject = LevelObjectFactory (Random.Range(0.00f, 1.00f), Random.Range(0, Services.Prefabs.PREFABS.Length), vertices [indice], index);
 			} else {
 				newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices [indice], index);
@@ -372,7 +372,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
 
 
-				if (Services.LevelGen.levelNum < -1) {
+				if (Services.LevelGen.levelNum >= -1) {
 					break;
 				}
 
@@ -385,8 +385,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
 
-					if (j % 2 == 0) {
-						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Vector3.up * 5) + (Random.insideUnitSphere * 3), Quaternion.identity) as GameObject;
+					if (j % 6 == 0) {
+						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Vector3.up * 5) + (Random.insideUnitSphere * 5), Quaternion.identity) as GameObject;
 					}
 
 					if (j % 3 == 0) {
