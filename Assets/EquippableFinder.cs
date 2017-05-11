@@ -153,7 +153,7 @@ public class EquippableFinder : MonoBehaviour {
                 }
             }
 
-            else if (hit.collider.transform.parent.name == "Viewing Platform")
+            else if (hit.collider.transform.parent != null && hit.collider.transform.parent.name == "Viewing Platform")
             {
                 sawPlatform = true;
             }

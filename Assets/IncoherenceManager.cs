@@ -20,7 +20,8 @@ public class IncoherenceManager : MonoBehaviour {
     }
 
     public float interactionIncrease = 0.05f;  // How much an object's incoherence increases when the player interacts with that object.
-    public float questIncrease = 0.1f;
+    public float questIncrease = 0.1f;  
+    public float flatIncrease = 0.75f;  // How much incoherence increases by default every level.
 
     // Thresholds.
     [SerializeField] float inanimateObjectNPCThreshold = 0.1f;  // How high global incoherence needs to be before we start turning random objects into NPCS.
@@ -232,6 +233,8 @@ public class IncoherenceManager : MonoBehaviour {
 
         if (totalIncoherence > globalIncoherence)
             globalIncoherence = totalIncoherence;
+
+        globalIncoherence += flatIncrease;
 
         //Debug.Log("Global incoherence set to: " + globalIncoherence);
 
