@@ -25,6 +25,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public bool isTutorialCompleted = false;
 
+	void Awake(){
+		maxNPCs = 0;
+		maxObjects = 0;
+		maxSprites = 0;
+		radius = 25;
+		height = 1;
+	}
 	void Start()
 	{
 		isTutorialCompleted = false;
@@ -33,13 +40,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
-		maxNPCs = 0;
-		maxObjects = 0;
-		maxSprites = 0;
 
-
-		radius = 25;
-		height = 1;
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -65,6 +66,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
     }
 
 	public override Level Create(){
+
+		levelNum--;
 
 		NoiseRemapping [0] = 0.5f;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
@@ -126,7 +129,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         Services.IncoherenceManager.HandleObjects();
 	
-		levelNum--;
 
         if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
