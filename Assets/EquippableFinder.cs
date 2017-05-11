@@ -493,4 +493,53 @@ public class EquippableFinder : MonoBehaviour {
             }
         }
     }
+
+
+    public void AbandonAllItems()
+    {
+        if (equippedObjects.Count <= 0) return;
+
+        if (!active && gameObject.name == "Player Camera")
+        {
+            GameObject.Find("UpperCamera").BroadcastMessage("AbandonItem");
+            return;
+        }
+
+        Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
+
+        for (int i = 0; i < equippedObjects.Count; i++)
+        {
+            if (equippedObjects[i] != null)
+            {
+                if (gameObject.name == "UpperCamera")
+                {
+                    equippedObjects[i].SetParent(GameObject.Find("INROOMOBJECTS").transform);
+                }
+
+                else
+                {
+                    equippedObjects[i].SetParent(null);
+                }
+
+                // Re-enable collision & stuff.
+                equippedObjects[i].GetComponent<Collider>().isTrigger = false;
+                if (equippedObjects[i].GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObjects[i].GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
+                if (equippedObjects[i].GetComponent<Rigidbody>() != null)
+                {
+                    equippedObjects[i].GetComponent<Rigidbody>().isKinematic = false;
+                    equippedObjects[i].GetComponent<Rigidbody>().useGravity = true;
+                    equippedObjects[i].GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
+                }
+
+                equippedObjects[i].transform.localScale = originalScale;
+
+                if (gameObject.name != "UpperCamera")
+                {
+                    equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                }
+
+                equippedObjects.Remove(equippedObjects[i]);
+            }
+        }
+    }
 }
