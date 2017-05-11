@@ -17,10 +17,18 @@ Shader "KRZ" {
 	}
 	
 	SubShader {
-   	 	Tags {"IgnoreProjector"="True" "RenderType"="Transparent"}
+   	 	Tags
+		{ 
+			"IgnoreProjector"="True" 
+			"RenderType"="Transparent" 
+			"CanUseSpriteAtlas"="True"
+		}
     	LOD 300
  
 		Cull Off
+		Lighting Off
+		ZWrite Off
+		Blend One OneMinusSrcAlpha
     
         
 		CGPROGRAM

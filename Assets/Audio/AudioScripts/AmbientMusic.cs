@@ -16,6 +16,8 @@ public class AmbientMusic : MonoBehaviour {
 	BufferShuffler currentShuffler = null;
 	public bool shuffleTrigger;
 
+	Transform playerTransform, grailTransform;
+
 	Clock myClock;
 
 
@@ -38,12 +40,13 @@ public class AmbientMusic : MonoBehaviour {
 
 	public void NewShuffle() {
 
-		Debug.Log ("new shuffle");
+		//Debug.Log ("new shuffle");
 		shuffleTrigger = true;
 
 	}
 
 	void Awake() {
+
 		myClock = GetComponent<Clock> ();
 		
 		shufflers = GetComponentsInChildren<BufferShuffler> ();
@@ -61,7 +64,6 @@ public class AmbientMusic : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		
 
 		currentLevelColor = Services.LevelGen.currentLevel.levelTint;
 
@@ -95,7 +97,7 @@ public class AmbientMusic : MonoBehaviour {
 		}
 
 		if (!Services.LevelGen.isTutorialCompleted) {
-			//TODO: Stem for tutorial
+			//Only have ambience for tutorial
 			ambienceSource [0].volume = 1.0f;
 		} else if (Services.LevelGen.currentLevel.levelTint != currentLevelColor) {
 
@@ -105,11 +107,14 @@ public class AmbientMusic : MonoBehaviour {
 			for( int i = 0; i < hiSource.Length; i ++ ) {
 
 				if (lHue >= ((float)i * (1.0f / (float)hiSource.Length)) && lHue <= ((float)(i + 1f) * (1f / (float)hiSource.Length))) {
-					hiSource [i].DOFade(1.0f, 3.0f);
+					hiSource [i].DOFade (1.0f, 3.0f);
 					currentHiSource = hiSource [i];
-				} else {
-					hiSource [i].DOFade(0.0f, 3.0f);
-				}
+				} else if (hiSource [i].volume < 0.1f) {
+					hiSource [i].DOKill ();
+					hiSource [i].volume = 0f;
+				} else if (hiSource [i].volume > 0f) {
+					hiSource [i].DOFade (0.0f, 3.0f);
+				} 
 
 			}
 
@@ -118,12 +123,15 @@ public class AmbientMusic : MonoBehaviour {
 				float loSatBound = ((float)i * (1f / (float)loSource.Length));
 				float hiSatBound = ((float)(i + 1f) * (1f / (float)loSource.Length));
 
-				if (lSat >= loSatBound*0.5f && lSat < hiSatBound*0.5f) {
+				if (lSat >= loSatBound * 0.5f && lSat < hiSatBound * 0.5f) {
 					
-					loSource [i].DOFade(1.0f, 3.0f);
-				} else {
+					loSource [i].DOFade (1.0f, 3.0f);
+				} else if (loSource [i].volume < 0.1f) {
+					loSource [i].DOKill ();
+					loSource [i].volume = 0f;
+				} else if (loSource [i].volume > 0f) {
 					loSource [i].DOFade (0.0f, 3.0f);
-				}
+				} 
 			}
 
 		}
@@ -182,7 +190,7 @@ public class AmbientMusic : MonoBehaviour {
 		} else if (Services.IncoherenceManager.globalIncoherence > 0.1f) {
 
 			foreach (BufferShuffler shuffler in shufflers) {
-				if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume == 1f) {
+				if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume >= 0.5f) {
 					shuffler.enabled = true;
 					shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
 				

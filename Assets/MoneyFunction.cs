@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoneyFunction : D_Function {
-
+    
+    // How much I'm worth.
     int _value;
     public int value
     {
@@ -18,6 +19,9 @@ public class MoneyFunction : D_Function {
             _value = value;
         }
     }
+
+    bool collisionWithPlayer;   // Set to true when I collide with the player.
+
     [SerializeField] GameObject gainParticles;
 
 
@@ -47,10 +51,8 @@ public class MoneyFunction : D_Function {
         base.Use();
 
         // If I was used by the player
-        if (intSet.carryingObject.name == "Player")
+        if ((intSet.carryingObject != null && intSet.carryingObject.name == "Player") || collisionWithPlayer)
         {
-            // Play cha-ching sound....
-
             // Give player money
             GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += value;
         }
@@ -65,5 +67,16 @@ public class MoneyFunction : D_Function {
         GameObject.Find("Money Display").GetComponent<Animator>().SetTrigger("FlashGreen");
 
         Destroy(transform.parent.gameObject);
+    }
+
+
+    void OnTriggerEnterParent(Collider other)
+    {
+        if (other.transform == Services.Player.transform)
+        {
+            Debug.Log("Money collided with player");
+            collisionWithPlayer = true;
+            Use();
+        }
     }
 }

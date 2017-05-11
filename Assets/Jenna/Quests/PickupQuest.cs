@@ -100,7 +100,7 @@ public class PickupQuest : Quest {
 		parentObject = builder.objeto;
 		objectScript = parentObject.GetComponent<QuestObject> ();
 		requiredPickups = Random.Range (2, 6);
-        rewardMoney = Mathf.RoundToInt(parentObject.GetComponentInChildren<InteractionSettings>().price * Random.Range(1.1f, 2f));
+        rewardMoney = Mathf.RoundToInt(parentObject.GetComponentInChildren<InteractionSettings>().price * Random.Range(2f, 3f));
         //Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
 
         // add the glow
@@ -180,7 +180,7 @@ public class PickupQuest : Quest {
 		questItNote.GetComponentInChildren<QuestItNoteFunction> ().questID = 1;
 
         parentObject.GetComponentInChildren<InteractionSettings>().associatedNotes.Add(questItNote);
-        Debug.Log("Notes: " + myNotes.Count);
+//        Debug.Log("Notes: " + myNotes.Count);
     }
 
     public void questTextSpawn(){
@@ -257,7 +257,7 @@ public class PickupQuest : Quest {
 
         parentObject.GetComponentInChildren<InteractionSettings>().DestroyAssociatedNotes();
 
-        if (parentObject.GetComponentInChildren<InteractionSettings>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
+        if (parentObject.GetComponentInChildren<IncoherenceController>() != null) parentObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
 
         completed = true;
     }

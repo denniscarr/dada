@@ -25,6 +25,13 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public bool isTutorialCompleted = false;
 
+	void Awake(){
+		maxNPCs = 0;
+		maxObjects = 0;
+		maxSprites = 0;
+		radius = 25;
+		height = 1;
+	}
 	void Start()
 	{
 		isTutorialCompleted = false;
@@ -33,13 +40,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
-		maxNPCs = 0;
-		maxObjects = 0;
-		maxSprites = 0;
 
-
-		radius = 25;
-		height = 1;
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -57,6 +58,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		if (isTutorialCompleted && Services.Player.transform.position.y - currentLevel.transform.position.y < - 10){
             
 			Services.Player = GameObject.Find ("Player");
+            if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
             //			if (currentLevel != null) currentLevel.enabled = false;
 //            Services.IncoherenceManager.TallyIncoherence();
             Create();
@@ -64,6 +66,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
     }
 
 	public override Level Create(){
+
+		levelNum--;
 
 		NoiseRemapping [0] = 0.5f;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
@@ -125,24 +129,17 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         Services.IncoherenceManager.HandleObjects();
 	
-		levelNum--;
 
-        GetComponent<GrailSpawner>().grailHasSpawned = false;
-        Services.Quests.allQuestsCompleted = false;
-        Services.Quests.questsGeneratedInCurrentLevel = 0;
-        Services.Quests.currentCompletedQuests = 0;
-        Services.Quests.questList.Clear();
-        Services.Quests.questsToComplete = Random.Range(1, 3);
-        GameObject.Find("QuestManager").GetComponent<QuestFinderScript>().FindQuests();
+        if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
+        FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
 		maxNPCs += 1;
-		maxObjects += 2;
-		maxSprites += 50;
+		maxObjects += 10;
+		maxSprites += 1000;
 		radius += 5;
 //		perlinFrequency += 0.020f;
-		height += 5;
+		height += 3;
         if (levelNum < -1) Services.IncoherenceManager.TallyIncoherence();
-		Services.IncoherenceManager.globalIncoherence += 0.05f;
 
         ManagedObjects.Add (l);
 		return l;

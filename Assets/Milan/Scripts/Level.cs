@@ -11,7 +11,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public float childrenDistance = 1;
 	public float TreeChildrenCount = 15;
 	public int PaletteAmount = 8;
-	public float TreeHeightThreshold = 0.25f;
+	public float TreeHeightThreshold = 0.75f;
 
 	Terrain levelMesh;
 
@@ -55,15 +55,15 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
             bud.GetDestroyedNormal();
         }
 
-		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
-
-		DistanceBetweenTrees = Random.Range(10, 100);
+//		Debug.Log ("Incoherence = " + Services.IncoherenceManager.globalIncoherence);
 			
 		_width = Services.LevelGen.radius;
 		_length = _width;
 		_height = Random.Range (1, Services.LevelGen.height);
 
 		tileScale = Services.LevelGen.tileScale;
+
+		DistanceBetweenTrees = Random.Range(10, _width * tileScale);
 
 		ground = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
 		ground.transform.parent = transform;
@@ -133,7 +133,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		highestPointIndices = new List<int> ();
 		Services.LevelGen.sun.color = levelTint;
-        Services.LevelGen.sun.intensity = 1f;
+        Services.LevelGen.sun.intensity = 1.5f;
 
         Services.Player.GetComponentInChildren<ColorfulFog>().coloringMode = ColorfulFog.ColoringMode.Gradient;
         Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
@@ -321,7 +321,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				
 			_bitmap.SetPixel (x, y, palette[Mathf.RoundToInt(perlinVal * (palette.Length-1))]);
 
-				if (Vector3.Distance (vertices [i], vertices [localMaxIndex]) < DistanceBetweenTrees && x < _width) {
+				if (Vector3.Distance (vertices [i], vertices [localMaxIndex]) < DistanceBetweenTrees && Vector3.Distance (vertices [i], centre) < ((_width * tileScale) /2 ) * 0.8f) {
 					if (perlinVal > localMaximum) {
 						localMaximum = perlinVal;
 						localMaxIndex = i;
@@ -358,7 +358,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 			GameObject newObject;
 
-			if (Random.Range (0, 100) > (100 - Services.IncoherenceManager.globalIncoherence * 25)) {
+			if (Random.Range (0, 100) > (100 - (Services.IncoherenceManager.globalIncoherence * 25))) {
 				newObject = LevelObjectFactory (Random.Range(0.00f, 1.00f), Random.Range(0, Services.Prefabs.PREFABS.Length), vertices [indice], index);
 			} else {
 				newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices [indice], index);
@@ -368,9 +368,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				break;
 			}
 			newObject.transform.localScale *= 2;
-
+		
 			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
-				
+
+
+				if (Services.LevelGen.levelNum >= -1) {
+					break;
+				}
+
 				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)/2f) + newObject.transform.position;
 
 				GameObject newChild = null;
@@ -379,6 +384,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				if (Physics.Raycast(new Vector3(SpawnCirclePos.x, transform.position.y + mapHeight, SpawnCirclePos.z), -Vector3.up, out hit)) {
 
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
+
+					if (j % 6 == 0) {
+						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Vector3.up * 5) + (Random.insideUnitSphere * 5), Quaternion.identity) as GameObject;
+					}
 
 					if (j % 3 == 0) {
 						newChild = LevelObjectFactory (perlin, Random.Range (0, Services.Prefabs.PREFABS.Length), hit.point - transform.position, index);
@@ -499,6 +508,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			newObject.GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [spriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [spriteIndex].Length)];
 			newObject.GetComponent<SpriteRenderer> ().material.color = floorColor;
 			newObject.GetComponent<ChangeSprite> ().SpriteIndex = spriteIndex;
+//			newObject.layer = 8;
 			newObject.tag = tag;
 		}
 //			foreach (Renderer r in newObject.GetComponentsInChildren<Renderer>()) {

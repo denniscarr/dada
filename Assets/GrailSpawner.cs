@@ -22,13 +22,14 @@ public class GrailSpawner : MonoBehaviour {
     {
         if (grailHasSpawned) return;
 
-        GameObject.Find("Sun").GetComponent<Light>().DOIntensity(0.1f, 1f);
+        GameObject.Find("Sun").GetComponent<Light>().DOIntensity(0.4f, 1f);
         Services.Player.GetComponentInChildren<ColorfulFog>().coloringMode = ColorfulFog.ColoringMode.Solid;
         Services.Player.GetComponentInChildren<ColorfulFog>().solidColor = Color.black;
 
         GameObject grail = Instantiate(grailPrefab);
         grail.transform.position = Services.LevelGen.currentLevel.transform.position;
         grail.transform.position += Vector3.up * 100f;
+
         grailHasSpawned = true;
     }
 }

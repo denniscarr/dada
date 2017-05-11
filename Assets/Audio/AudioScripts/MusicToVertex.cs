@@ -60,12 +60,14 @@ public class MusicToVertex : MonoBehaviour {
 		float spectrumPointThree = thisAnalyzer.bandBuffer [4];
 
 		foreach (Renderer thisRenderer in listOfMeshRenderers) {
-			thisRenderer.material.SetFloat ("_Lacunarity", originalLacunarity + spectrumPointOne * displacementStrength);
-			thisRenderer.material.SetColor ("_Offset", new Color (spectrumPointOne * displacementStrength * 0.25f, spectrumPointOne * displacementStrength * 0.25f, 
-				spectrumPointTwo * displacementStrength * 0.5f, 0f));
-			thisRenderer.material.SetColor ("_LowColor", new Color(originalLowColor.r + spectrumPointOne, originalLowColor.g + spectrumPointTwo,
-				originalLowColor.b + spectrumPointThree, 1.0f));
-			thisRenderer.material.SetFloat ("_Displacement", spectrumPointTwo * displacementStrength * 0.1f);
+			if (thisRenderer != null) {
+				thisRenderer.material.SetFloat ("_Lacunarity", originalLacunarity + spectrumPointOne * displacementStrength);
+				thisRenderer.material.SetColor ("_Offset", new Color (spectrumPointOne * displacementStrength * 0.25f, spectrumPointOne * displacementStrength * 0.25f, 
+					spectrumPointTwo * displacementStrength * 0.5f, 0f));
+				thisRenderer.material.SetColor ("_LowColor", new Color (originalLowColor.r + spectrumPointOne, originalLowColor.g + spectrumPointTwo,
+					originalLowColor.b + spectrumPointThree, 1.0f));
+				thisRenderer.material.SetFloat ("_Displacement", spectrumPointTwo * displacementStrength * 0.1f);
+			}
 		}
 
 	}

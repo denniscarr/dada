@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class EquippableFinder : MonoBehaviour {
@@ -19,7 +20,7 @@ public class EquippableFinder : MonoBehaviour {
     Transform lastObjectInspected;  // The last object that was looked at using the mouse.
 
     Writer writer;
-    Vector3 textPosition;   // Where equip text is written.
+    public Vector3 textPosition;   // Where equip text is written.
 
     KeyCode equipKey = KeyCode.Mouse0;
     KeyCode abandonKey = KeyCode.G;
@@ -32,6 +33,9 @@ public class EquippableFinder : MonoBehaviour {
     public float speed = 1;
     public float ASpeed = 10;
 
+    // Whether I do anything:
+    public bool active = true;
+
     Vector3 originalScale;
 
 	List<Renderer> renderList;
@@ -39,15 +43,35 @@ public class EquippableFinder : MonoBehaviour {
 
     MouseControllerNew mouse;
 
+
     void Start()
     {
+        if (gameObject.name == "UpperCamera")
+        {
+            active = false;
+        }
+
+        else
+        {
+            active = true;
+        }
+
         mouse = GameObject.Find("Mouse").GetComponent<MouseControllerNew>();
 
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
         // Get references to my buddies.
         writer = GetComponent<Writer>();
-        equipReference = GameObject.Find("Equip Reference").transform;
+
+        if (gameObject.name == "UpperCamera")
+        {
+            equipReference = GameObject.Find("Upper Equip Reference").transform;
+        }
+
+        else
+        {
+            equipReference = GameObject.Find("Equip Reference").transform;
+        }
 
         writer.textSize = 0.1f;
         textPosition = transform.position + transform.forward * 20f;
@@ -56,6 +80,11 @@ public class EquippableFinder : MonoBehaviour {
 
     void Update()
     {
+        if (!active)
+        {
+            return;
+        }
+
         //Debug.DrawRay(transform.position + transform.forward, transform.forward * equipRange, Color.cyan);
 
         // Don't do anything if the player is in zoom out mode.
@@ -75,6 +104,7 @@ public class EquippableFinder : MonoBehaviour {
         // A variable to save the closest object.
         Transform nearestObject = null;
         float nearestObjectDistance = 0f;
+        bool sawPlatform = false;
 
         foreach (RaycastHit hit in Physics.CapsuleCastAll(
             transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange
@@ -95,6 +125,7 @@ public class EquippableFinder : MonoBehaviour {
                 // If the nearest object has not yet been set, then save this object as the nearest object.
                 if (nearestObject == null)
                 {
+                    if (gameObject.name == "UpperCamera" && hit.transform.name.Contains("QuestItNote")) return;
                     nearestObject = hit.transform;
                     nearestObjectDistance = Vector3.Distance(hit.point, transform.position);
                 }
@@ -102,16 +133,33 @@ public class EquippableFinder : MonoBehaviour {
                 // If the nearest object has been saved then see if this object is closer.
                 else
                 {
+					Image mouse = GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>();
+					//Debug.Log(mouse.name);
+					Color c = mouse.color;
                     if (distance < nearestObjectDistance)
                     {
+						c.a = 1;
                         nearestObject = hit.transform;
                         nearestObjectDistance = Vector3.Distance(hit.point, transform.position);
-                    }
+
+					}else if(distance - nearestObjectDistance < 5f){
+						
+						c.a = 1 - (distance - nearestObjectDistance)*0.2f;
+
+					}else{
+						c.a = 0;
+					}
+					mouse.color = c;
                 }
+            }
+
+            else if (hit.collider.transform.parent != null && hit.collider.transform.parent.name == "Viewing Platform")
+            {
+                sawPlatform = true;
             }
         }
 
-        if (nearestObject == null || (lastObjectInspected != null && nearestObject != lastObjectInspected))
+        if (!sawPlatform && nearestObject == null || (lastObjectInspected != null && nearestObject != lastObjectInspected))
         {
             writer.DeleteTextBox();
         }
@@ -125,8 +173,19 @@ public class EquippableFinder : MonoBehaviour {
 
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
+                // If we're looking at money, display a special message.
+                if (nearestObject.name.Contains("$"))
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to obtain " + nearestObject.name + ".", textPosition);
+                }
+
+                else
+                {
+                    writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name + ".", textPosition);
+                }
+
+                //Debug.Log(mouse);
                 mouse.ChangeCursor("equip");
-                writer.WriteAtPoint("Press Left Mouse Button to equip " + nearestObject.name, textPosition);
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
             }
@@ -191,6 +250,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void DeoutlineTargetObject(){
+		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(0.2f,0.5f);
 		//Debug.Log("DeoutlineTargetObject");
 		for(int i = 0; i < renderList.Count;i++){
             if (renderList[i] != null)
@@ -207,6 +267,7 @@ public class EquippableFinder : MonoBehaviour {
 
 
 	void OutlineTargetObject(Transform t_hit){
+		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1f,0.5f);
         //Debug.Log("OutlineTargetObject");
 
         lastObjectInspected = t_hit;
@@ -234,8 +295,29 @@ public class EquippableFinder : MonoBehaviour {
 		}
 	}
 
+	void VisorMoveComplete(){
+		GameObject.FindObjectOfType<Tutorial>().SendMessage("TurnUpZoomOutMode");
+	}
+
     void MoveToCamera ()
     {
+		Debug.Log(equipTarget.name + "move to camera");
+		if(equipTarget.name.Equals("visor")){
+			GameObject playerCamera = GameObject.Find("Player Camera");
+			equipTarget.SetParent(playerCamera.transform);
+			equipTarget.DOScale(100*Vector3.one,2.0f);
+			equipTarget.DOLocalMoveY(2,0.5f);
+			equipTarget.DOLocalMove(new Vector3(-2.7f,2,22.32f),0.5f).SetDelay(0.5f);
+			//equipTarget.DOLocalMove(new Vector3(-2.7f,-4.49f,12.32f),1.0f).SetDelay(0.5f);
+			equipTarget.DOLocalRotate(new Vector3(0,180,0),1.0f);
+			equipTarget.DOLocalMoveY(-4.49f,1.0f).SetDelay(1.0f);
+			equipTarget.DOLocalMoveZ(4.3f,1.0f).SetDelay(1.0f).OnComplete(VisorMoveComplete);
+			//equipTarget.DORotate(new Vector3(0,180,0),1.5f);
+
+			return;
+		}
+
+        // Special case for trying to equip the grail.
         if (equipTarget.GetComponentInChildren<GrailFunction>() != null)
         {
             equipTarget.GetComponentInChildren<GrailFunction>().Use();
@@ -249,12 +331,10 @@ public class EquippableFinder : MonoBehaviour {
 
         // Save object's scale.
         originalScale = equipTarget.transform.localScale;
-        equipTarget.transform.SetParent(equipReference, true);
-       
-		equipTarget.GetComponent<Collider>().isTrigger = true;
-		if (equipTarget.GetComponent<Collider>() != null) Physics.IgnoreCollision(equipTarget.GetComponent<Collider>(), transform.parent.GetComponent<Collider>());
-		if (equipTarget.GetComponent<Rigidbody>() != null) equipTarget.GetComponent<Rigidbody>().isKinematic = true;
 
+        // Set equip target as child of equip reference.
+        equipTarget.SetParent(equipReference, true);
+       
 		//play equip sound effect
 		Services.AudioManager.PlaySFX (Services.AudioManager.equipSound);
 
@@ -335,7 +415,7 @@ public class EquippableFinder : MonoBehaviour {
             //equipTarget.transform.position = equipReference.position;
         }
 
-        equipTarget.transform.DOScale(equipScale, 1.5f);
+		equipTarget.transform.DOScale(equipScale, 1.5f).OnStart(StopPickUpAction);
         //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
 
         StartCoroutine("complete", equipTarget);
@@ -343,13 +423,18 @@ public class EquippableFinder : MonoBehaviour {
 		equipTarget = null;
     }
 
+	void StopPickUpAction(){
+		GameObject.FindObjectOfType<MouseControllerNew>().isTweening = true;
+	}
+
 	IEnumerator complete(Transform _equipTarget){
-		//Debug.Log("complete "+equippedObject.name);
-		yield return new WaitForSeconds(1.5f);
+        Debug.Log("complete " + _equipTarget.name);
+        yield return new WaitForSeconds(1.5f);
         if (_equipTarget != null)
         {
             //Debug.Log("Coroutine finished");
 		    equippedObjects.Add(_equipTarget);
+			GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
         }
 	}
@@ -365,13 +450,27 @@ public class EquippableFinder : MonoBehaviour {
     {
         if (equippedObjects.Count <= 0) return;
 
+        if (!active && gameObject.name == "Player Camera")
+        {
+            GameObject.Find("UpperCamera").BroadcastMessage("AbandonItem");
+            return;
+        }
+
         Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
 
         for (int i = 0; i < equippedObjects.Count; i++)
         {
             if (equippedObjects[i] != null)
             {
-                equippedObjects[i].SetParent(null);
+                if (gameObject.name == "UpperCamera")
+                {
+                    equippedObjects[i].SetParent(GameObject.Find("INROOMOBJECTS").transform);
+                }
+
+                else
+                {
+                    equippedObjects[i].SetParent(null);
+                }
 
                 // Re-enable collision & stuff.
                 equippedObjects[i].GetComponent<Collider>().isTrigger = false;
@@ -379,12 +478,16 @@ public class EquippableFinder : MonoBehaviour {
                 if (equippedObjects[i].GetComponent<Rigidbody>() != null)
                 {
                     equippedObjects[i].GetComponent<Rigidbody>().isKinematic = false;
+                    equippedObjects[i].GetComponent<Rigidbody>().useGravity = true;
                     equippedObjects[i].GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
                 }
 
                 equippedObjects[i].transform.localScale = originalScale;
 
-                equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                if (gameObject.name != "UpperCamera")
+                {
+                    equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
+                }
 
                 equippedObjects.Remove(equippedObjects[i]);
             }

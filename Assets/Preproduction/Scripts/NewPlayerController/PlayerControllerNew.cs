@@ -115,7 +115,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		//inRoomNode.gameObject.SetActive(true);
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
-		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
+		UpperCamera.DOFieldOfView(60f,1.5f);
 //		m_Camera.fieldOfView = ZoomOutMainCameraFoV;
 //		UpperCamera.fieldOfView = ZoomOutUpperCameraFoV;
 
@@ -143,6 +143,7 @@ public class PlayerControllerNew : MonoBehaviour {
 	}
 
 	public void InitZoomOutMode(){
+		//GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1.0f,0.5f);
 		//Debug.Log("zoom out");
 		m_Camera.DOFieldOfView(ZoomOutMainCameraFoV,1.5f);
 		UpperCamera.DOFieldOfView(ZoomOutUpperCameraFoV,1.5f);
@@ -155,10 +156,10 @@ public class PlayerControllerNew : MonoBehaviour {
 //		UpperCamera.transform.rotation = initCameraRotation;
 
 		Cursor.lockState = CursorLockMode.None;
+        FindObjectOfType<MouseControllerNew>().ChangeCursor("idle");
 		rigidbodyFirstPersonController.enabled = false;
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
-
 
 		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, 0.7f);
 	}
@@ -181,15 +182,18 @@ public class PlayerControllerNew : MonoBehaviour {
 		if(t_hit && t_hit.parent){
 			//Debug.Log(t_hit.name);
 			if(t_hit.parent.name.Equals("Viewing Platform")){
+                GameObject.Find("UpperCamera").GetComponent<Writer>().WriteAtPoint("Press Left Mouse Button to mount Observation Platform", GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().textPosition);
                 //txtInfo.text = "Platform is calling you...";
                 //Debug.Log(t_hit.parent.name);
                 if (Input.GetMouseButtonDown(0)){
                     insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                    GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = true;
+                    GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = false;
+                    UpperCamera.DOFieldOfView(33f, 1.5f);
                     Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
 					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
 					InitZoomOutMode();
-
 				}
 			}
 
@@ -243,6 +247,9 @@ public class PlayerControllerNew : MonoBehaviour {
 			InitZoomInMode();
 
 		}else if(Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)){
+            GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = false;
+            GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = true;
+            UpperCamera.GetComponent<Camera>().DOFieldOfView(60f, 1.5f);
             writer.DeleteTextBox();
             writer.WriteAtPoint("Welcome home.", textPosition);
             mode = ControlMode.IN_ROOM_MODE;
@@ -258,7 +265,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit) && !hit.collider.tag.Equals("Visor")){
 			
-			if(!hit.collider.name.Equals("ground")){
+			if (!hit.collider.name.Equals("ground")){
 
 				return hit.transform;
 			}
