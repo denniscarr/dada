@@ -303,7 +303,7 @@ public class MyFirstPersonController : MonoBehaviour
             if (Services.LevelGen.levelNum == -1) FindObjectOfType<Tutorial>().SendMessage("InitFirstNode");
             else
             {
-                Debug.Log("findfquestls");
+                //Debug.Log("findfquestls");
                 Services.Quests.MakeAllTheQuests();
             }
         }

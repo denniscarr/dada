@@ -73,6 +73,8 @@ public class EquippableFinder : MonoBehaviour {
             equipReference = GameObject.Find("Equip Reference").transform;
         }
 
+        equippedObjects = new List<Transform>();
+
         writer.textSize = 0.1f;
         textPosition = transform.position + transform.forward * 20f;
     }
@@ -242,8 +244,9 @@ public class EquippableFinder : MonoBehaviour {
         }
 			
         // Abandoning equipped items.
-        if (equippedObjects.Count > 0 && Input.GetKeyDown(abandonKey))
+        if (equippedObjects.Count >= 0 && Input.GetKeyDown(abandonKey))
         {
+            Debug.Log("equipped object count " + equippedObjects.Count);
             AbandonItem();
         }
     }
@@ -301,7 +304,7 @@ public class EquippableFinder : MonoBehaviour {
 
     void MoveToCamera ()
     {
-		Debug.Log(equipTarget.name + "move to camera");
+		//Debug.Log(equipTarget.name + "move to camera");
 		if(equipTarget.name.Equals("visor")){
 			GameObject playerCamera = GameObject.Find("Player Camera");
 			equipTarget.SetParent(playerCamera.transform);
@@ -428,12 +431,13 @@ public class EquippableFinder : MonoBehaviour {
 	}
 
 	IEnumerator complete(Transform _equipTarget){
-        Debug.Log("complete " + _equipTarget.name);
         yield return new WaitForSeconds(1.5f);
         if (_equipTarget != null)
         {
+            //Debug.Log("complete " + _equipTarget.name);
             //Debug.Log("Coroutine finished");
-		    equippedObjects.Add(_equipTarget);
+            equippedObjects.Add(_equipTarget);
+            Debug.Log("Added " + _equipTarget + " to list. Count: " + equippedObjects.Count);
 			GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
         }
@@ -450,6 +454,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         if (equippedObjects.Count <= 0) return;
 
+
         if (!active && gameObject.name == "Player Camera")
         {
             GameObject.Find("UpperCamera").BroadcastMessage("AbandonItem");
@@ -458,10 +463,14 @@ public class EquippableFinder : MonoBehaviour {
 
         Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
 
+        Debug.Log("Started AbandonItem(). Count: " + equippedObjects.Count);
+
         for (int i = 0; i < equippedObjects.Count; i++)
         {
             if (equippedObjects[i] != null)
             {
+                Debug.Log(equippedObjects[i].name + " examined. Index: " + i);
+
                 if (gameObject.name == "UpperCamera")
                 {
                     equippedObjects[i].SetParent(GameObject.Find("INROOMOBJECTS").transform);
@@ -488,58 +497,16 @@ public class EquippableFinder : MonoBehaviour {
                 {
                     equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
                 }
-
-                equippedObjects.Remove(equippedObjects[i]);
             }
-        }
-    }
 
-
-    public void AbandonAllItems()
-    {
-        if (equippedObjects.Count <= 0) return;
-
-        if (!active && gameObject.name == "Player Camera")
-        {
-            GameObject.Find("UpperCamera").BroadcastMessage("AbandonItem");
-            return;
-        }
-
-        Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
-
-        for (int i = 0; i < equippedObjects.Count; i++)
-        {
-            if (equippedObjects[i] != null)
+            else
             {
-                if (gameObject.name == "UpperCamera")
-                {
-                    equippedObjects[i].SetParent(GameObject.Find("INROOMOBJECTS").transform);
-                }
-
-                else
-                {
-                    equippedObjects[i].SetParent(null);
-                }
-
-                // Re-enable collision & stuff.
-                equippedObjects[i].GetComponent<Collider>().isTrigger = false;
-                if (equippedObjects[i].GetComponent<Collider>() != null) Physics.IgnoreCollision(equippedObjects[i].GetComponent<Collider>(), transform.parent.GetComponent<Collider>(), false);
-                if (equippedObjects[i].GetComponent<Rigidbody>() != null)
-                {
-                    equippedObjects[i].GetComponent<Rigidbody>().isKinematic = false;
-                    equippedObjects[i].GetComponent<Rigidbody>().useGravity = true;
-                    equippedObjects[i].GetComponent<Rigidbody>().AddForce(transform.forward * ASpeed);
-                }
-
-                equippedObjects[i].transform.localScale = originalScale;
-
-                if (gameObject.name != "UpperCamera")
-                {
-                    equippedObjects[i].GetComponentInChildren<InteractionSettings>().carryingObject = null;
-                }
-
-                equippedObjects.Remove(equippedObjects[i]);
+                Debug.Log("equipped object was null. Index: " + i);
             }
+
+            //equippedObjects.Remove(equippedObjects[i]);
         }
+
+        equippedObjects.Clear();
     }
 }
