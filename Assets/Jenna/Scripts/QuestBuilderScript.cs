@@ -107,4 +107,8 @@ public class QuestBuilderScript : MonoBehaviour {
 
         manager.questsGeneratedInCurrentLevel++;
     }
+
+	public void GenerateElimination(){
+		
+	}
 }
