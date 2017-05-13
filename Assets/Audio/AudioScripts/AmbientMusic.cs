@@ -109,9 +109,11 @@ public class AmbientMusic : MonoBehaviour {
 				if (lHue >= ((float)i * (1.0f / (float)hiSource.Length)) && lHue <= ((float)(i + 1f) * (1f / (float)hiSource.Length))) {
 					hiSource [i].DOFade (1.0f, 3.0f);
 					currentHiSource = hiSource [i];
+					//hiSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = true;
 				} else if (hiSource [i].volume < 0.1f) {
 					hiSource [i].DOKill ();
 					hiSource [i].volume = 0f;
+					hiSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = false;
 				} else if (hiSource [i].volume > 0f) {
 					hiSource [i].DOFade (0.0f, 3.0f);
 				} 
@@ -126,9 +128,11 @@ public class AmbientMusic : MonoBehaviour {
 				if (lSat >= loSatBound * 0.5f && lSat < hiSatBound * 0.5f) {
 					
 					loSource [i].DOFade (1.0f, 3.0f);
+					//loSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = true;
 				} else if (loSource [i].volume < 0.1f) {
 					loSource [i].DOKill ();
 					loSource [i].volume = 0f;
+					loSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = false;
 				} else if (loSource [i].volume > 0f) {
 					loSource [i].DOFade (0.0f, 3.0f);
 				} 
