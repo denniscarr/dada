@@ -59,6 +59,7 @@ public class NPC : MonoBehaviour {
 
     // USED FOR PAIN & DEATH
     float _health = 100f;
+	public bool died = false;
     public float health
     {
         get { return _health; }
@@ -69,6 +70,7 @@ public class NPC : MonoBehaviour {
             if (value <= 0f)
             {
                 Die();
+				died = true;
             }
 
             else
