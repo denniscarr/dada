@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 // making the Quest class for the Quest system
 // commenting thoroughly for learning purposes
@@ -17,6 +19,17 @@ public class Quest: MonoBehaviour {
 	// flexibility for us!
 	public enum QuestProgress {NOT_AVAILABLE, AVAILABLE, ACCEPTED, COMPLETE, DONE}
 
+	// finding object used for quest
+	public GameObject targetObject;
+
+	// scripts
+	[HideInInspector]
+	public QuestFinderScript qfs;
+	[HideInInspector]
+	public QuestBuilderScript builder;
+	[HideInInspector]
+	public QuestManager manager;
+
 	// self-explanatory
 	public string title;
 
@@ -30,17 +43,6 @@ public class Quest: MonoBehaviour {
 	// quest description -- I gather that this will store text that will be accessible
 	// to the player, what appears on screen and such the like
 	public string description;
-
-	// I'm not sure if we'll want this (lol it seems not relevant to our game)
-	// but it's good to make just in case
-	public string hint;
-
-	// text that lets us know we've "completed" the quest. Again, maybe not relevant,
-	// but probably worth making space for, just in case.
-	public string congratulation;
-
-	// same idea
-	public string summary;
 
 	// it'll be fun and probably not too hard to figure out how to randomize this
 	// i love a challenge!
@@ -64,13 +66,151 @@ public class Quest: MonoBehaviour {
 	// maybe we should call this "bleedReward"
 	public int expReward;
 
-	// lol we can rename this too
-	public int goldReward;
-
 	// this one we can maybe keep since we do have an inventory system eventually i think
 	public int itemReward;
 
+	public D_starryExpolsion stars;
+	public int rewardMoney;
+	protected bool completed;
+	protected List<GameObject> myNotes; //The list is here in case if we want to bring back more than 1 note per quest
+
+	// for the questit note
+	public GameObject questItNote;
+	protected Transform visorNode;
+
+	// glow
+	protected GameObject fieryGlow;
+
+	//sound
+	protected GameObject radarSound;
+	public QuestObject objectScript;
+
 	public virtual void CheckStatus()
 	{
+	}
+
+	public virtual void makeTheQuest()
+	{
+		targetObject = builder.objeto;
+
+		objectScript = targetObject.GetComponent<QuestObject> ();
+
+		// set the ID based on what point in the queue it is
+		// note: there's probably a more efficient way to do this, pls lmk if so
+		id = (QuestManager.questManager.questList.Count);
+
+
+		// add the glow
+		fieryGlow = Instantiate(Resources.Load ("questobject-fire", typeof (GameObject))) as GameObject;
+		fieryGlow.transform.parent = targetObject.transform;
+		fieryGlow.transform.position = targetObject.transform.position;
+
+		// add the sound
+		radarSound = Instantiate(Resources.Load ("QuestItemChildren/QuestItemSound", typeof (GameObject))) as GameObject;
+		radarSound.transform.parent = targetObject.transform;
+		radarSound.transform.position = targetObject.transform.position;
+
+		// set the ID based on what point in the queue it is
+		// note: there's probably a more efficient way to do this, pls lmk if so
+		id = (QuestManager.questManager.questList.Count);
+
+
+	}
+
+
+	public virtual void Start(){
+		// find referenced materials
+		builder = Services.Quests.GetComponent<QuestBuilderScript> ();
+		qfs = Services.Quests.GetComponent<QuestFinderScript> ();
+		manager = Services.Quests.GetComponent<QuestManager> ();
+		myNotes = new List<GameObject>();
+	}
+
+	public void spawnNote()
+	{	
+		// make the questit note
+		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
+
+		// make the actual text appear
+		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
+		Text questText = questCanvas.GetComponentInChildren<Text> ();
+		questText.text = description;
+
+		questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
+		questItNote.transform.DOScale(Vector3.one, 0.4f);
+		questText.DOText(description, 1f);
+
+		// Stick em to the wall.
+		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+		questItNote.GetComponentInChildren<QuestItNoteFunction> ().questID = 1;
+
+		targetObject.GetComponentInChildren<InteractionSettings>().associatedNotes.Add(questItNote);
+		//        Debug.Log("Notes: " + myNotes.Count);
+	}
+
+	public virtual void FinishQuest(){
+		if (completed) return;
+		// explode it
+		GameObject stars = Instantiate (Resources.Load ("explosion-noforce", typeof(GameObject))) as GameObject; 
+		stars.transform.position = targetObject.transform.position;
+
+		// find the notes and destroy them (?)
+		//NoteSpawnerScript notes = GameObject.Find ("NoteSpawner(Clone)").GetComponent<NoteSpawnerScript> ();
+		//for (int i = 0; i < notes.id1.Count; i++) {
+		//	Destroy (notes.id1[i]);
+		//}
+		//notes.id1.Clear ();
+
+		// Give player money
+		GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
+
+		if (Services.Quests != null)
+		{
+			Services.Quests.currentCompletedQuests++;
+			Debug.Log("Quests completed " + Services.Quests.currentCompletedQuests + ". Quests to complete: " + Services.Quests.questsToComplete);
+			if (Services.Quests.currentCompletedQuests >= Services.Quests.questsToComplete)
+			{
+				//Debug.Log("all quests complete!");
+				//Debug.Break();
+				Services.Quests.allQuestsCompleted = true;
+			}
+		}
+
+		// mark it done
+		//text.text = ("donezo");
+		progress = Quest.QuestProgress.COMPLETE;
+
+
+		//Destroy everything and make sure they stay dead goddamnit.;
+		Destroy(fieryGlow);
+		Destroy(radarSound);
+		for (int i = 0; i < targetObject.transform.childCount; i++)
+		{
+			if (targetObject.transform.GetChild(i).name.Contains("questobject-fire"))
+			{
+				Destroy(targetObject.transform.GetChild(i).gameObject);
+			}
+
+			else if (targetObject.transform.GetChild(i).name.Contains("QuestItemSound"))
+			{
+				Destroy(targetObject.transform.GetChild(i).gameObject);
+			}
+		}
+		foreach (PickupQuest picko in targetObject.GetComponents<PickupQuest>())
+		{
+			Destroy(picko);
+		}
+		foreach(QuestObject questo in targetObject.GetComponents<QuestObject>())
+		{
+			Destroy(questo);
+		}
+
+		targetObject.GetComponentInChildren<InteractionSettings>().DestroyAssociatedNotes();
+
+		if (targetObject.GetComponentInChildren<IncoherenceController>() != null) targetObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
+
+		completed = true;
+
+
 	}
 }

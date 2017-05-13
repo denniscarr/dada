@@ -92,7 +92,7 @@ public class QuestBuilderScript : MonoBehaviour {
             Destroy(objeto.GetComponents<PickupQuest>()[1]);
             return;
         }
-		pickup.makeTheQuest (newQuest);
+		pickup.makeTheQuest ();
 		manager.questList.Add (newQuest);
 
 		if (newQuest.progress == Quest.QuestProgress.AVAILABLE) {
