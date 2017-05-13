@@ -784,7 +784,11 @@ public class NPC : MonoBehaviour {
 
         transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
 
-        // Drop money
+		//scream
+		speakSource.clip = Services.AudioManager.NPCDie;
+		speakSource.Play ();
+        
+		// Drop money
         GameObject moneyPrefab = Resources.Load("Pickups/Stack of Money") as GameObject;
         while (funds > 10)
         {
@@ -800,8 +804,7 @@ public class NPC : MonoBehaviour {
 
         // Destroy NPC AI prefab
         gameObject.SetActive(false);
-		speakSource.clip = Services.AudioManager.NPCDie;
-		speakSource.Play ();
+
     }
 
 
