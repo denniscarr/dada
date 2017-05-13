@@ -27,13 +27,13 @@ public class Tutorial : Quest {
 	// NOTE: WHEN ALL QUESTS DONE, REMOVE THIS QUEST FROM MANAGER AND ALL OBJECTS
 
 	// quest manager
-	QuestManager manager;
+	//QuestManager manager;
 
 	// player
 	GameObject controller;
 
 	// object script
-	QuestObject objectScript;
+	//QuestObject objectScript;
 
 	// interaction settings
 	InteractionSettings intSet;
@@ -42,7 +42,7 @@ public class Tutorial : Quest {
 	PlayerControllerNew controls;
 
 	// quest it note
-	GameObject questItNote;
+	//GameObject questItNote;
 	Text QuestItNoreText;
 
 	// temporary items
@@ -76,7 +76,7 @@ public class Tutorial : Quest {
 		player = GameObject.Find("Player").transform;
 		platformWriter = GameObject.Find("Viewing Platform").AddComponent<Writer>();
 		// finding the quest manager
-		manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
+		//manager = GameObject.Find ("QuestManager").GetComponent<QuestManager> ();
 
 		// player controller
 		controller = GameObject.Find("PlayerInRoom");
