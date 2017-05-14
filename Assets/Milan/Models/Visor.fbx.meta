@@ -1,0 +1,714 @@
+fileFormatVersion: 2
+guid: cf1a1565c94e244bfa11936326fa020f
+timeCreated: 1494728802
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: BackLegs
+    100002: BackLegs 1
+    100004: BackLegs 2
+    100006: BackLegs 3
+    100008: BackLegs 4
+    100010: BackLegs 5
+    100012: BackLegs 6
+    100014: BackLegs 7
+    100016: Bar
+    100018: Bar 1
+    100020: Bar 2
+    100022: Bar 3
+    100024: Bar 4
+    100026: Bar 5
+    100028: Bar 6
+    100030: Bar 7
+    100032: Bookshelf1
+    100034: Bookshelf:Book
+    100036: Bookshelf:Book1
+    100038: Bookshelf:Book10
+    100040: Bookshelf:Book11
+    100042: Bookshelf:Book13
+    100044: Bookshelf:Book14
+    100046: Bookshelf:Book15
+    100048: Bookshelf:Book16
+    100050: Bookshelf:Book17
+    100052: Bookshelf:Book18
+    100054: Bookshelf:Book19
+    100056: Bookshelf:Book2
+    100058: Bookshelf:Book20
+    100060: Bookshelf:Book21
+    100062: Bookshelf:Book22
+    100064: Bookshelf:Book23
+    100066: Bookshelf:Book24
+    100068: Bookshelf:Book26
+    100070: Bookshelf:Book27
+    100072: Bookshelf:Book28
+    100074: Bookshelf:Book29
+    100076: Bookshelf:Book30
+    100078: Bookshelf:Book4
+    100080: Bookshelf:Book5
+    100082: Bookshelf:Book6
+    100084: Bookshelf:Book7
+    100086: Bookshelf:Book8
+    100088: Bookshelf:Book9
+    100090: Bookshelf:Bookshelf
+    100092: chair
+    100094: chair 1
+    100096: chair 2
+    100098: chair 3
+    100100: chair 4
+    100102: chair 5
+    100104: chair 6
+    100106: chair 7
+    100108: Chair1
+    100110: Chair1 1
+    100112: Chair1 10
+    100114: Chair1 11
+    100116: Chair1 2
+    100118: Chair1 3
+    100120: Chair1 4
+    100122: Chair1 5
+    100124: Chair1 6
+    100126: Chair1 7
+    100128: Chair1 8
+    100130: Chair1 9
+    100132: Class
+    100134: Desk
+    100136: Desk 1
+    100138: Desk 10
+    100140: Desk 11
+    100142: Desk 12
+    100144: Desk 13
+    100146: Desk 14
+    100148: Desk 2
+    100150: Desk 3
+    100152: Desk 4
+    100154: Desk 5
+    100156: Desk 6
+    100158: Desk 7
+    100160: Desk 8
+    100162: Desk 9
+    100164: Desk1
+    100166: desk1
+    100168: Desk1 1
+    100170: desk1 1
+    100172: Desk1 2
+    100174: desk1 2
+    100176: desk1 3
+    100178: desk1 4
+    100180: desk1 5
+    100182: desk1 6
+    100184: desk1 7
+    100186: Desk2
+    100188: Desk2 1
+    100190: Desk2 2
+    100192: Desk3
+    100194: Desk3 1
+    100196: Desk3 2
+    100198: desk:BackLegs
+    100200: desk:BackLegs 1
+    100202: desk:BackLegs 2
+    100204: desk:BackLegs 3
+    100206: desk:Bar
+    100208: desk:Bar 1
+    100210: desk:Bar 2
+    100212: desk:Bar 3
+    100214: desk:desk
+    100216: desk:desk 1
+    100218: desk:desk 2
+    100220: desk:desk 3
+    100222: desk:frontLegs
+    100224: desk:frontLegs 1
+    100226: desk:frontLegs 2
+    100228: desk:frontLegs 3
+    100230: deskChair:polySurface1
+    100232: deskChair:polySurface1 1
+    100234: deskChair:polySurface1 2
+    100236: deskChair:polySurface1 3
+    100238: deskChair:unsmoothedChair:chair
+    100240: deskChair:unsmoothedChair:chair 1
+    100242: deskChair:unsmoothedChair:chair 2
+    100244: deskChair:unsmoothedChair:chair 3
+    100246: frontLegs
+    100248: frontLegs 1
+    100250: frontLegs 2
+    100252: frontLegs 3
+    100254: frontLegs 4
+    100256: frontLegs 5
+    100258: frontLegs 6
+    100260: frontLegs 7
+    100262: Globe1
+    100264: Globe:pasted__polySurface3
+    100266: Globe:pSphere1
+    100268: Locker1
+    100270: Locker2
+    100272: Locker4
+    100274: Locker6
+    100276: Locker7
+    100278: Locker8
+    100280: Lockers
+    100282: polySurface1
+    100284: polySurface1 1
+    100286: polySurface1 2
+    100288: polySurface1 3
+    100290: polySurface1 4
+    100292: polySurface1 5
+    100294: polySurface1 6
+    100296: polySurface1 7
+    100298: Row
+    100300: Row1
+    100302: Row2
+    100304: Visor
+    100306: //RootNode
+    400000: BackLegs
+    400002: BackLegs 1
+    400004: BackLegs 2
+    400006: BackLegs 3
+    400008: BackLegs 4
+    400010: BackLegs 5
+    400012: BackLegs 6
+    400014: BackLegs 7
+    400016: Bar
+    400018: Bar 1
+    400020: Bar 2
+    400022: Bar 3
+    400024: Bar 4
+    400026: Bar 5
+    400028: Bar 6
+    400030: Bar 7
+    400032: Bookshelf1
+    400034: Bookshelf:Book
+    400036: Bookshelf:Book1
+    400038: Bookshelf:Book10
+    400040: Bookshelf:Book11
+    400042: Bookshelf:Book13
+    400044: Bookshelf:Book14
+    400046: Bookshelf:Book15
+    400048: Bookshelf:Book16
+    400050: Bookshelf:Book17
+    400052: Bookshelf:Book18
+    400054: Bookshelf:Book19
+    400056: Bookshelf:Book2
+    400058: Bookshelf:Book20
+    400060: Bookshelf:Book21
+    400062: Bookshelf:Book22
+    400064: Bookshelf:Book23
+    400066: Bookshelf:Book24
+    400068: Bookshelf:Book26
+    400070: Bookshelf:Book27
+    400072: Bookshelf:Book28
+    400074: Bookshelf:Book29
+    400076: Bookshelf:Book30
+    400078: Bookshelf:Book4
+    400080: Bookshelf:Book5
+    400082: Bookshelf:Book6
+    400084: Bookshelf:Book7
+    400086: Bookshelf:Book8
+    400088: Bookshelf:Book9
+    400090: Bookshelf:Bookshelf
+    400092: chair
+    400094: chair 1
+    400096: chair 2
+    400098: chair 3
+    400100: chair 4
+    400102: chair 5
+    400104: chair 6
+    400106: chair 7
+    400108: Chair1
+    400110: Chair1 1
+    400112: Chair1 10
+    400114: Chair1 11
+    400116: Chair1 2
+    400118: Chair1 3
+    400120: Chair1 4
+    400122: Chair1 5
+    400124: Chair1 6
+    400126: Chair1 7
+    400128: Chair1 8
+    400130: Chair1 9
+    400132: Class
+    400134: Desk
+    400136: Desk 1
+    400138: Desk 10
+    400140: Desk 11
+    400142: Desk 12
+    400144: Desk 13
+    400146: Desk 14
+    400148: Desk 2
+    400150: Desk 3
+    400152: Desk 4
+    400154: Desk 5
+    400156: Desk 6
+    400158: Desk 7
+    400160: Desk 8
+    400162: Desk 9
+    400164: Desk1
+    400166: desk1
+    400168: Desk1 1
+    400170: desk1 1
+    400172: Desk1 2
+    400174: desk1 2
+    400176: desk1 3
+    400178: desk1 4
+    400180: desk1 5
+    400182: desk1 6
+    400184: desk1 7
+    400186: Desk2
+    400188: Desk2 1
+    400190: Desk2 2
+    400192: Desk3
+    400194: Desk3 1
+    400196: Desk3 2
+    400198: desk:BackLegs
+    400200: desk:BackLegs 1
+    400202: desk:BackLegs 2
+    400204: desk:BackLegs 3
+    400206: desk:Bar
+    400208: desk:Bar 1
+    400210: desk:Bar 2
+    400212: desk:Bar 3
+    400214: desk:desk
+    400216: desk:desk 1
+    400218: desk:desk 2
+    400220: desk:desk 3
+    400222: desk:frontLegs
+    400224: desk:frontLegs 1
+    400226: desk:frontLegs 2
+    400228: desk:frontLegs 3
+    400230: deskChair:polySurface1
+    400232: deskChair:polySurface1 1
+    400234: deskChair:polySurface1 2
+    400236: deskChair:polySurface1 3
+    400238: deskChair:unsmoothedChair:chair
+    400240: deskChair:unsmoothedChair:chair 1
+    400242: deskChair:unsmoothedChair:chair 2
+    400244: deskChair:unsmoothedChair:chair 3
+    400246: frontLegs
+    400248: frontLegs 1
+    400250: frontLegs 2
+    400252: frontLegs 3
+    400254: frontLegs 4
+    400256: frontLegs 5
+    400258: frontLegs 6
+    400260: frontLegs 7
+    400262: Globe1
+    400264: Globe:pasted__polySurface3
+    400266: Globe:pSphere1
+    400268: Locker1
+    400270: Locker2
+    400272: Locker4
+    400274: Locker6
+    400276: Locker7
+    400278: Locker8
+    400280: Lockers
+    400282: polySurface1
+    400284: polySurface1 1
+    400286: polySurface1 2
+    400288: polySurface1 3
+    400290: polySurface1 4
+    400292: polySurface1 5
+    400294: polySurface1 6
+    400296: polySurface1 7
+    400298: Row
+    400300: Row1
+    400302: Row2
+    400304: Visor
+    400306: //RootNode
+    2300000: BackLegs
+    2300002: BackLegs 1
+    2300004: BackLegs 2
+    2300006: BackLegs 3
+    2300008: BackLegs 4
+    2300010: BackLegs 5
+    2300012: BackLegs 6
+    2300014: BackLegs 7
+    2300016: Bar
+    2300018: Bar 1
+    2300020: Bar 2
+    2300022: Bar 3
+    2300024: Bar 4
+    2300026: Bar 5
+    2300028: Bar 6
+    2300030: Bar 7
+    2300032: Bookshelf:Book
+    2300034: Bookshelf:Book1
+    2300036: Bookshelf:Book10
+    2300038: Bookshelf:Book11
+    2300040: Bookshelf:Book13
+    2300042: Bookshelf:Book14
+    2300044: Bookshelf:Book15
+    2300046: Bookshelf:Book16
+    2300048: Bookshelf:Book17
+    2300050: Bookshelf:Book18
+    2300052: Bookshelf:Book19
+    2300054: Bookshelf:Book2
+    2300056: Bookshelf:Book20
+    2300058: Bookshelf:Book21
+    2300060: Bookshelf:Book22
+    2300062: Bookshelf:Book23
+    2300064: Bookshelf:Book24
+    2300066: Bookshelf:Book26
+    2300068: Bookshelf:Book27
+    2300070: Bookshelf:Book28
+    2300072: Bookshelf:Book29
+    2300074: Bookshelf:Book30
+    2300076: Bookshelf:Book4
+    2300078: Bookshelf:Book5
+    2300080: Bookshelf:Book6
+    2300082: Bookshelf:Book7
+    2300084: Bookshelf:Book8
+    2300086: Bookshelf:Book9
+    2300088: Bookshelf:Bookshelf
+    2300090: chair
+    2300092: chair 1
+    2300094: chair 2
+    2300096: chair 3
+    2300098: chair 4
+    2300100: chair 5
+    2300102: chair 6
+    2300104: chair 7
+    2300106: desk1
+    2300108: desk1 1
+    2300110: desk1 2
+    2300112: desk1 3
+    2300114: desk1 4
+    2300116: desk1 5
+    2300118: desk1 6
+    2300120: desk1 7
+    2300122: desk:BackLegs
+    2300124: desk:BackLegs 1
+    2300126: desk:BackLegs 2
+    2300128: desk:BackLegs 3
+    2300130: desk:Bar
+    2300132: desk:Bar 1
+    2300134: desk:Bar 2
+    2300136: desk:Bar 3
+    2300138: desk:desk
+    2300140: desk:desk 1
+    2300142: desk:desk 2
+    2300144: desk:desk 3
+    2300146: desk:frontLegs
+    2300148: desk:frontLegs 1
+    2300150: desk:frontLegs 2
+    2300152: desk:frontLegs 3
+    2300154: deskChair:polySurface1
+    2300156: deskChair:polySurface1 1
+    2300158: deskChair:polySurface1 2
+    2300160: deskChair:polySurface1 3
+    2300162: deskChair:unsmoothedChair:chair
+    2300164: deskChair:unsmoothedChair:chair 1
+    2300166: deskChair:unsmoothedChair:chair 2
+    2300168: deskChair:unsmoothedChair:chair 3
+    2300170: frontLegs
+    2300172: frontLegs 1
+    2300174: frontLegs 2
+    2300176: frontLegs 3
+    2300178: frontLegs 4
+    2300180: frontLegs 5
+    2300182: frontLegs 6
+    2300184: frontLegs 7
+    2300186: Globe:pasted__polySurface3
+    2300188: Globe:pSphere1
+    2300190: Locker1
+    2300192: Locker2
+    2300194: Locker4
+    2300196: Locker6
+    2300198: Locker7
+    2300200: Locker8
+    2300202: polySurface1
+    2300204: polySurface1 1
+    2300206: polySurface1 2
+    2300208: polySurface1 3
+    2300210: polySurface1 4
+    2300212: polySurface1 5
+    2300214: polySurface1 6
+    2300216: polySurface1 7
+    2300218: Visor
+    3300000: BackLegs
+    3300002: BackLegs 1
+    3300004: BackLegs 2
+    3300006: BackLegs 3
+    3300008: BackLegs 4
+    3300010: BackLegs 5
+    3300012: BackLegs 6
+    3300014: BackLegs 7
+    3300016: Bar
+    3300018: Bar 1
+    3300020: Bar 2
+    3300022: Bar 3
+    3300024: Bar 4
+    3300026: Bar 5
+    3300028: Bar 6
+    3300030: Bar 7
+    3300032: Bookshelf:Book
+    3300034: Bookshelf:Book1
+    3300036: Bookshelf:Book10
+    3300038: Bookshelf:Book11
+    3300040: Bookshelf:Book13
+    3300042: Bookshelf:Book14
+    3300044: Bookshelf:Book15
+    3300046: Bookshelf:Book16
+    3300048: Bookshelf:Book17
+    3300050: Bookshelf:Book18
+    3300052: Bookshelf:Book19
+    3300054: Bookshelf:Book2
+    3300056: Bookshelf:Book20
+    3300058: Bookshelf:Book21
+    3300060: Bookshelf:Book22
+    3300062: Bookshelf:Book23
+    3300064: Bookshelf:Book24
+    3300066: Bookshelf:Book26
+    3300068: Bookshelf:Book27
+    3300070: Bookshelf:Book28
+    3300072: Bookshelf:Book29
+    3300074: Bookshelf:Book30
+    3300076: Bookshelf:Book4
+    3300078: Bookshelf:Book5
+    3300080: Bookshelf:Book6
+    3300082: Bookshelf:Book7
+    3300084: Bookshelf:Book8
+    3300086: Bookshelf:Book9
+    3300088: Bookshelf:Bookshelf
+    3300090: chair
+    3300092: chair 1
+    3300094: chair 2
+    3300096: chair 3
+    3300098: chair 4
+    3300100: chair 5
+    3300102: chair 6
+    3300104: chair 7
+    3300106: desk1
+    3300108: desk1 1
+    3300110: desk1 2
+    3300112: desk1 3
+    3300114: desk1 4
+    3300116: desk1 5
+    3300118: desk1 6
+    3300120: desk1 7
+    3300122: desk:BackLegs
+    3300124: desk:BackLegs 1
+    3300126: desk:BackLegs 2
+    3300128: desk:BackLegs 3
+    3300130: desk:Bar
+    3300132: desk:Bar 1
+    3300134: desk:Bar 2
+    3300136: desk:Bar 3
+    3300138: desk:desk
+    3300140: desk:desk 1
+    3300142: desk:desk 2
+    3300144: desk:desk 3
+    3300146: desk:frontLegs
+    3300148: desk:frontLegs 1
+    3300150: desk:frontLegs 2
+    3300152: desk:frontLegs 3
+    3300154: deskChair:polySurface1
+    3300156: deskChair:polySurface1 1
+    3300158: deskChair:polySurface1 2
+    3300160: deskChair:polySurface1 3
+    3300162: deskChair:unsmoothedChair:chair
+    3300164: deskChair:unsmoothedChair:chair 1
+    3300166: deskChair:unsmoothedChair:chair 2
+    3300168: deskChair:unsmoothedChair:chair 3
+    3300170: frontLegs
+    3300172: frontLegs 1
+    3300174: frontLegs 2
+    3300176: frontLegs 3
+    3300178: frontLegs 4
+    3300180: frontLegs 5
+    3300182: frontLegs 6
+    3300184: frontLegs 7
+    3300186: Globe:pasted__polySurface3
+    3300188: Globe:pSphere1
+    3300190: Locker1
+    3300192: Locker2
+    3300194: Locker4
+    3300196: Locker6
+    3300198: Locker7
+    3300200: Locker8
+    3300202: polySurface1
+    3300204: polySurface1 1
+    3300206: polySurface1 2
+    3300208: polySurface1 3
+    3300210: polySurface1 4
+    3300212: polySurface1 5
+    3300214: polySurface1 6
+    3300216: polySurface1 7
+    3300218: Visor
+    4300000: Visor
+    4300002: Locker1
+    4300004: Locker2
+    4300006: Locker4
+    4300008: Locker6
+    4300010: Locker7
+    4300012: Locker8
+    4300014: Globe:pasted__polySurface3
+    4300016: Globe:pSphere1
+    4300018: Bookshelf:Bookshelf
+    4300020: Bookshelf:Book
+    4300022: Bookshelf:Book1
+    4300024: Bookshelf:Book2
+    4300026: Bookshelf:Book4
+    4300028: Bookshelf:Book5
+    4300030: Bookshelf:Book6
+    4300032: Bookshelf:Book7
+    4300034: Bookshelf:Book8
+    4300036: Bookshelf:Book9
+    4300038: Bookshelf:Book10
+    4300040: Bookshelf:Book11
+    4300042: Bookshelf:Book13
+    4300044: Bookshelf:Book14
+    4300046: Bookshelf:Book15
+    4300048: Bookshelf:Book16
+    4300050: Bookshelf:Book17
+    4300052: Bookshelf:Book18
+    4300054: Bookshelf:Book19
+    4300056: Bookshelf:Book20
+    4300058: Bookshelf:Book21
+    4300060: Bookshelf:Book22
+    4300062: Bookshelf:Book23
+    4300064: Bookshelf:Book24
+    4300066: Bookshelf:Book26
+    4300068: Bookshelf:Book27
+    4300070: Bookshelf:Book28
+    4300072: Bookshelf:Book29
+    4300074: Bookshelf:Book30
+    4300076: desk:desk
+    4300078: desk:frontLegs
+    4300080: desk:BackLegs
+    4300082: desk:Bar
+    4300084: deskChair:polySurface1
+    4300086: deskChair:unsmoothedChair:chair
+    4300088: desk:desk
+    4300090: desk:frontLegs
+    4300092: desk:BackLegs
+    4300094: desk:Bar
+    4300096: deskChair:polySurface1
+    4300098: deskChair:unsmoothedChair:chair
+    4300100: desk:desk
+    4300102: desk:frontLegs
+    4300104: desk:BackLegs
+    4300106: desk:Bar
+    4300108: deskChair:polySurface1
+    4300110: deskChair:unsmoothedChair:chair
+    4300112: desk:desk
+    4300114: desk:frontLegs
+    4300116: desk:BackLegs
+    4300118: desk:Bar
+    4300120: deskChair:polySurface1
+    4300122: deskChair:unsmoothedChair:chair
+    4300124: desk1
+    4300126: frontLegs
+    4300128: BackLegs
+    4300130: Bar
+    4300132: polySurface1
+    4300134: chair
+    4300136: desk1
+    4300138: frontLegs
+    4300140: BackLegs
+    4300142: Bar
+    4300144: polySurface1
+    4300146: chair
+    4300148: desk1
+    4300150: frontLegs
+    4300152: BackLegs
+    4300154: Bar
+    4300156: polySurface1
+    4300158: chair
+    4300160: desk1
+    4300162: frontLegs
+    4300164: BackLegs
+    4300166: Bar
+    4300168: polySurface1
+    4300170: chair
+    4300172: desk1
+    4300174: frontLegs
+    4300176: BackLegs
+    4300178: Bar
+    4300180: polySurface1
+    4300182: chair
+    4300184: desk1
+    4300186: frontLegs
+    4300188: BackLegs
+    4300190: Bar
+    4300192: polySurface1
+    4300194: chair
+    4300196: desk1
+    4300198: frontLegs
+    4300200: BackLegs
+    4300202: Bar
+    4300204: polySurface1
+    4300206: chair
+    4300208: desk1
+    4300210: frontLegs
+    4300212: BackLegs
+    4300214: Bar
+    4300216: polySurface1
+    4300218: chair
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1000
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

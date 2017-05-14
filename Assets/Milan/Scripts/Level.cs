@@ -10,7 +10,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 	public float DistanceBetweenTrees = 20;
 	public float childrenDistance = 1;
 	public float TreeChildrenCount = 15;
-	public int PaletteAmount = 5;
+	public int PaletteAmount = 8;
 	public float TreeHeightThreshold = 0.75f;
 
 	Terrain levelMesh;
@@ -87,8 +87,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			float rand = Random.Range (lower, upper);
 //			palette [i] = new Color (Random.Range (lower, upper),Random.Range (lower, upper),Random.Range (lower, upper));
 //			palette [i] = new Color (rand, rand, rand);
-//			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
-			palette [i] = Random.ColorHSV(0, 1, 0, 0.5f, lower, upper);
+			palette [i] = Random.ColorHSV(lower, upper, (1- lower) * 0.5f, (1-upper) * 0.5f, lower, upper);
+//			palette [i] = Random.ColorHSV(0, 1, 0, 0.5f, lower, upper);
 		}
 			
 
@@ -113,9 +113,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		sky.GetComponent<Renderer> ().receiveShadows = false;
 		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
-		if (!Services.LevelGen.showSky) {
-			sky.GetComponent<Renderer> ().enabled = false;
-		}
 
 		centre = Vector3.zero;
 
@@ -183,14 +180,14 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			xCoord = xOrigin;
 
 			for (int x = 0; x <= _width; x++, i++, xCoord++) {
-				float perlinVal = OctavePerlin (xCoord * (noiseScale + Services.IncoherenceManager.globalIncoherence/2) * 5, yCoord *  (noiseScale + Services.IncoherenceManager.globalIncoherence/2) * 5, 1, 0.5f);
+				float perlinVal = OctavePerlin (xCoord * (noiseScale + (Services.IncoherenceManager.globalIncoherence/5)), yCoord *  (noiseScale + (Services.IncoherenceManager.globalIncoherence/5)), 1, 0.5f);
 				perlinVal = Mathf.Pow (perlinVal, 0.75f);
 				verts [i] = new Vector3 (x, perlinVal * 10, y) * tileScale;
 				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
-				groundVerts [i] += Vector3.up * Mathf.Sin(Time.time/  Services.IncoherenceManager.globalIncoherence + i) * Time.deltaTime * Services.IncoherenceManager.globalIncoherence;
+				groundVerts [i] += Vector3.up * Mathf.Sin(Time.time/Services.IncoherenceManager.globalIncoherence + i + Random.Range(0, Services.IncoherenceManager.globalIncoherence)) * Time.deltaTime * Services.IncoherenceManager.globalIncoherence;
 				float skyCoefficient = Mathf.Pow(perlinVal, 3);
 
-				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
+//				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
 				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
 				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
 				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x, y) + Grayscale);
@@ -389,7 +386,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 					float perlin = (hit.point.y - transform.position.y)/tileScale;
 
 					if (j % 6 == 0) {
-						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Vector3.up * 5) + (Random.insideUnitSphere * 5), Quaternion.identity) as GameObject;
+						GameObject MoneyPile = Instantiate (Services.Prefabs.MONEY, newObject.transform.position + (Random.insideUnitSphere * TreeChildrenCount * tileScale), Quaternion.identity) as GameObject;
 					}
 
 					if (j % 3 == 0) {
