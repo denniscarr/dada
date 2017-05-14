@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 //Copyright (c) 2014 Tilman Schmidt (@KeyMaster_)
 
 //Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -84,7 +86,7 @@ Shader "Sprites/Glitch"
 			v2f vert(appdata_t IN)
 			{
 				v2f OUT;
-				OUT.vertex = mul(UNITY_MATRIX_MVP, IN.vertex);
+				OUT.vertex = UnityObjectToClipPos(IN.vertex);
 				OUT.texcoord = IN.texcoord;
 				
 				OUT.color = IN.color * _Color;
@@ -232,7 +234,7 @@ Shader "Sprites/Glitch"
 			v2f vert(appdata_t IN)
 			{
 				v2f OUT;
-				OUT.vertex = mul(UNITY_MATRIX_MVP, IN.vertex);
+				OUT.vertex = UnityObjectToClipPos(IN.vertex);
 				OUT.texcoord = IN.texcoord;
 				
 				OUT.color = IN.color * _Color;

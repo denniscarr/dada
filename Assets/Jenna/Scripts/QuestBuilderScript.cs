@@ -30,6 +30,9 @@ public class QuestBuilderScript : MonoBehaviour {
 	public int questThing, ranger, length;
 	public GameObject objeto;
 
+	//Store all game objects with NPC.cs attached in this list
+	private NPC[] enemies;
+
 
 	void Start () {
 
@@ -57,6 +60,7 @@ public class QuestBuilderScript : MonoBehaviour {
             if (manager.questsGeneratedInCurrentLevel < Services.Quests.questsToComplete)
             {
                 GeneratePickup();
+			GenerateElimination ();
 //                Debug.Log("Quests genereated in current level: " + manager.questsGeneratedInCurrentLevel);
 //                Debug.Log("Quests to complete: " + manager.questsToComplete);
 			}
@@ -92,7 +96,7 @@ public class QuestBuilderScript : MonoBehaviour {
             Destroy(objeto.GetComponents<PickupQuest>()[1]);
             return;
         }
-		pickup.makeTheQuest (newQuest);
+		pickup.makeTheQuest ();
 		manager.questList.Add (newQuest);
 
 		if (newQuest.progress == Quest.QuestProgress.AVAILABLE) {
@@ -107,4 +111,30 @@ public class QuestBuilderScript : MonoBehaviour {
 
         manager.questsGeneratedInCurrentLevel++;
     }
+
+	public void GenerateElimination(){
+		if (Services.LevelGen.levelNum == 0) return;
+		enemies = GameObject.FindObjectsOfType<NPC> ();
+		GameObject enemy = enemies[Random.Range (0, enemies.Length)].gameObject;
+		if (enemy.GetComponent<NPCEliminationQuest> () != null)
+			return;
+		NPCEliminationQuest newQuest = enemy.AddComponent<NPCEliminationQuest> ();
+		if (enemy.GetComponents<NPCEliminationQuest> ().Length > 1) {
+			Destroy (enemy.GetComponents<NPCEliminationQuest> () [1]);
+			return;
+		}
+		this.gameObject.GetComponent<NPCEliminationQuest> ().makeTheQuest ();
+		manager.questList.Add (newQuest);
+
+		if (newQuest.progress == Quest.QuestProgress.AVAILABLE) {
+			manager.QuestRequest(objectScript);
+			//Debug.Log ("quest added to list");
+			this.gameObject.GetComponent<NPCEliminationQuest> ().spawnNote ();
+		}
+
+		if (newQuest.progress == Quest.QuestProgress.ACCEPTED) {
+			manager.currentQuestList.Add (newQuest);
+		}
+		manager.questsGeneratedInCurrentLevel++;
+	}
 }

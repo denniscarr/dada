@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Dithering Shaders/Cutout/Unlit Simple" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
@@ -38,7 +40,7 @@ Shader "Dithering Shaders/Cutout/Unlit Simple" {
 
 			FragmentInput vert(VertexInput i) {
 				FragmentInput o;
-				o.position = mul(UNITY_MATRIX_MVP, i.position);
+				o.position = UnityObjectToClipPos(i.position);
 				o.uv = i.uv;
 				o.screenPos = ComputeScreenPos(o.position);
 				return o;

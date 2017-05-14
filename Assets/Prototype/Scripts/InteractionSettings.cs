@@ -225,6 +225,12 @@ public class InteractionSettings : MonoBehaviour {
         {
             heat -= 0.01f * Time.deltaTime;
         }
+
+        if (IsInVisor)
+        {
+            price = 0;
+            isOwnedByPlayer = true;
+        }
     }
 
 

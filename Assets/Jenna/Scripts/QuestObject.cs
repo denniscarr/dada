@@ -55,7 +55,7 @@ public class QuestObject : MonoBehaviour {
 	//}
 	
 	// Update is called once per frame
-	public void Update () {
+	/*public void Update () {
 
         if (Camera.main != null)
         {
@@ -85,7 +85,7 @@ public class QuestObject : MonoBehaviour {
             }
         }
 
-	}
+	}*/
 
 	// these can all be changed, i guess, like the tag and stuff, once we have a uniform
 	// nomenclature scheme. again, this is just a frame I'm learning from some guy on the

@@ -59,6 +59,7 @@ public class NPC : MonoBehaviour {
 
     // USED FOR PAIN & DEATH
     float _health = 100f;
+	public bool died = false;
     public float health
     {
         get { return _health; }
@@ -69,6 +70,7 @@ public class NPC : MonoBehaviour {
             if (value <= 0f)
             {
                 Die();
+				died = true;
             }
 
             else
@@ -784,7 +786,11 @@ public class NPC : MonoBehaviour {
 
         transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
 
-        // Drop money
+		//scream
+		speakSource.clip = Services.AudioManager.NPCDie;
+		speakSource.Play ();
+        
+		// Drop money
         GameObject moneyPrefab = Resources.Load("Pickups/Stack of Money") as GameObject;
         while (funds > 10)
         {
@@ -800,8 +806,7 @@ public class NPC : MonoBehaviour {
 
         // Destroy NPC AI prefab
         gameObject.SetActive(false);
-		speakSource.clip = Services.AudioManager.NPCDie;
-		speakSource.Play ();
+
     }
 
 
