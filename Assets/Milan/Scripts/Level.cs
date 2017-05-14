@@ -7,10 +7,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 	public static float noiseScale;
 	public static float xOrigin, yOrigin;
-	public float DistanceBetweenTrees = 40;
+	public float DistanceBetweenTrees = 20;
 	public float childrenDistance = 1;
 	public float TreeChildrenCount = 15;
-	public int PaletteAmount = 8;
+	public int PaletteAmount = 5;
 	public float TreeHeightThreshold = 0.75f;
 
 	Terrain levelMesh;
@@ -70,11 +70,11 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		ground.transform.localPosition = Vector3.zero;
 		ground.name = "GROUND";
 		ground.isStatic = true;
-//
-//		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
-//		sky.transform.parent = transform;
-//		sky.transform.localPosition = Vector3.zero;
-//		sky.name = "SKY";
+
+		sky = Instantiate (Services.Prefabs.TILE, new Vector3(_width/2, 0, _length/2) * tileScale, Quaternion.identity) as GameObject;
+		sky.transform.parent = transform;
+		sky.transform.localPosition = Vector3.zero;
+		sky.name = "SKY";
 	
 		gradient = new Gradient ();
 
@@ -95,8 +95,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		SetGradient ();
 
 		_bitmap = new Texture2D (_width + 1, _length + 1);
-
-//		skyColor = new Texture2D (_width + 1, _length + 1);
+		groundLerpedColour = new Texture2D (_width + 1, _length + 1);
+		skyColor = new Texture2D (_width + 1, _length + 1);
 
 		terrain = new Mesh ();
 		clouds = new Mesh ();
@@ -106,16 +106,16 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		groundTriangles = new int[_width * _length * 6];
 
 		ground.GetComponent<MeshFilter> ().mesh = terrain;
-		ground.GetComponent<Renderer> ().material.mainTexture = _bitmap;
+		ground.GetComponent<Renderer> ().material.mainTexture = groundLerpedColour;
 
 
-//		sky.GetComponent<MeshFilter> ().mesh = clouds;
-//		sky.GetComponent<Renderer> ().receiveShadows = false;
-//		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-//		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
-//		if (!Services.LevelGen.showSky) {
-//			sky.GetComponent<Renderer> ().enabled = false;
-//		}
+		sky.GetComponent<MeshFilter> ().mesh = clouds;
+		sky.GetComponent<Renderer> ().receiveShadows = false;
+		sky.GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+		sky.GetComponent<Renderer> ().material.mainTexture = skyColor;
+		if (!Services.LevelGen.showSky) {
+			sky.GetComponent<Renderer> ().enabled = false;
+		}
 
 		centre = Vector3.zero;
 
@@ -146,10 +146,6 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 //			}
 //		}
 
-
-
-//		levelMesh = Instantiate (Resources.Load<Terrain> ("Terrain"), Vector3.zero, Quaternion.identity).GetComponent<Terrain>();
-
 		GenerateChunk();
 	}
 
@@ -163,58 +159,62 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			playerHeightNormalized = Mathf.Abs(playerHeightNormalized);
 		}
 
-//		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.white, Color.black, playerHeightNormalized);
+		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, NormalisedToHighestPoint);
+
+		Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
+		Services.Player.GetComponentInChildren<ColorfulFog> ().ApplyGradientChanges ();
+
 //		foreach (Camera c in Services.Player.transform.parent.GetComponentsInChildren<Camera>()) {
 //			if(c.name != "UpperCamera" && c){
 //				c.backgroundColor = Color.Lerp (c.backgroundColor, Color.Lerp (levelTint, levelTint, playerHeightNormalized), Time.deltaTime * 3);
 //			}
 //		}
 //
-//
-//		RenderSettings.fogColor = Services.Player.GetComponentInChildren<Camera> ().backgroundColor;
-//		RenderSettings.fogEndDistance = Mathf.Lerp (100, 100, 1- playerHeightNormalized);
-//
-//
-//		float xCoord = xOrigin;
-//		float yCoord = yOrigin;
-//
-//		Mesh mesh = sky.GetComponent<MeshFilter>().mesh;
-//		Vector3[] verts = mesh.vertices;
-//
-//		for (int i = 0, y = 0; y <= _length; y++, yCoord++) {
-//
-//			xCoord = xOrigin;
-//
-//			for (int x = 0; x <= _width; x++, i++, xCoord++) {
-//				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 1, 0.5f);
-//				perlinVal = Mathf.Pow (perlinVal, 0.75f);
-//				verts [i] = new Vector3 (x, perlinVal * _height, y) * tileScale;
-//				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
-//
-//				float skyCoefficient = Mathf.Pow(perlinVal, 3);
-//				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
-//				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
-//				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
-//				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x, y) + Grayscale);
-//	
-//				verts [i] -= (Vector3.up * Vector3.Distance (verts [i], centre)) * Mathf.Pow(Vector3.Distance (verts [i], centre)/hypotenuse, 0.5f);
-//			}
-//		}
 
-//
-//		skyColor.Apply();
-//		groundLerpedColour.Apply();
-//
-//		xOrigin += Time.deltaTime;
-//		yOrigin += Time.deltaTime;
-//
+		float xCoord = xOrigin;
+		float yCoord = yOrigin;
+
+//		Mesh mesh = sky.GetComponent<MeshFilter>().mesh;
+		Vector3[] verts = clouds.vertices;
+		Vector3[] groundVerts = terrain.vertices;
+
+		for (int i = 0, y = 0; y <= _length; y++, yCoord++) {
+
+			xCoord = xOrigin;
+
+			for (int x = 0; x <= _width; x++, i++, xCoord++) {
+				float perlinVal = OctavePerlin (xCoord * (noiseScale + Services.IncoherenceManager.globalIncoherence/2) * 5, yCoord *  (noiseScale + Services.IncoherenceManager.globalIncoherence/2) * 5, 1, 0.5f);
+				perlinVal = Mathf.Pow (perlinVal, 0.75f);
+				verts [i] = new Vector3 (x, perlinVal * 10, y) * tileScale;
+				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
+				groundVerts [i] += Vector3.up * Mathf.Sin(Time.time/  Services.IncoherenceManager.globalIncoherence + i) * Time.deltaTime * Services.IncoherenceManager.globalIncoherence;
+				float skyCoefficient = Mathf.Pow(perlinVal, 3);
+
+				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));
+				skyColor.SetPixel (x, y, Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, skyCoefficient));
+				Color Grayscale = new Color (skyCoefficient, skyCoefficient, skyCoefficient);
+				groundLerpedColour.SetPixel (x, y, _bitmap.GetPixel(x, y) + Grayscale);
+	
+				verts [i] += (Vector3.up * Vector3.Distance (verts [i], centre)) * Mathf.Pow(Vector3.Distance (verts [i], centre)/hypotenuse, 0.75f);
+			}
+		}
+
+		terrain.vertices = groundVerts;
+		clouds.vertices = verts;
+		clouds.RecalculateBounds ();
+		skyColor.Apply();
+		groundLerpedColour.Apply();
+
+		xOrigin += Time.deltaTime;
+		yOrigin += Time.deltaTime;
+
 	}
 
 	void SetGradient(){
 		GradientColorKey[] gck;
 		GradientAlphaKey[] gak;
 
-		gck = new GradientColorKey[8];
+		gck = new GradientColorKey[PaletteAmount];
 		gak = new GradientAlphaKey[2];
 		gak[0].alpha = 1.0F;
 		gak[0].time = 0.0F;
@@ -350,31 +350,34 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 		_bitmap.Apply ();
 		terrain.vertices = vertices;
+		terrain.RecalculateBounds ();
 		ground.GetComponent<MeshCollider> ().sharedMesh = terrain;
 
 		foreach (int indice in highestPointIndices) {
 				
-			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
+			if (Services.LevelGen.levelNum >= -1) {
+				break;
+			}
 
+			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
 			GameObject newObject;
 
 			if (Random.Range (0, 100) > (100 - (Services.IncoherenceManager.globalIncoherence * 25))) {
 				newObject = LevelObjectFactory (Random.Range(0.00f, 1.00f), Random.Range(0, Services.Prefabs.PREFABS.Length), vertices [indice], index);
 			} else {
-				newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices [indice], index);
+				newObject = Instantiate (Services.Prefabs.KeyAssets [Random.Range (0, Services.Prefabs.KeyAssets.Length)], Vector3.zero, Quaternion.identity) as GameObject;
+				newObject.transform.parent = transform;
+				newObject.transform.localPosition = vertices [indice];
+//				newObject.transform.localScale *= 2;
+				newObject.transform.localPosition += newObject.GetComponent<Renderer> ().bounds.extents.y * Vector3.up;
+				newObject.transform.Rotate (0, Random.Range(0, 180), 0);
 			}
 
 			if (newObject == null) {
 				break;
 			}
-			newObject.transform.localScale *= 2;
 		
 			for (int j = 1; j < (int)DistanceBetweenTrees; j++) {
-
-
-				if (Services.LevelGen.levelNum >= -1) {
-					break;
-				}
 
 				Vector3 SpawnCirclePos = Random.insideUnitSphere.normalized * j * (childrenDistance - ((float)j / (float)DistanceBetweenTrees)/2f) + newObject.transform.position;
 
@@ -614,18 +617,17 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		terrain.RecalculateNormals ();
 		normals = terrain.normals;
 		ground.GetComponent<MeshFilter> ().mesh = terrain;
-//		ground.GetComponent<Renderer> ().enabled = false;
 
-		_bitmap.filterMode = FilterMode.Point;
+//		_bitmap.filterMode = FilterMode.Point;
+//		groundLerpedColour.filterMode = FilterMode.Point;
 
 		clouds.vertices = vertices;
 		clouds.uv = uvs;
 		clouds.triangles = groundTriangles;
 
-//		sky.GetComponent<MeshFilter> ().mesh = clouds;
-//		sky.transform.position += Vector3.up * (highestPoint + 100);
-//		sky.transform.localScale *= 2;
-
+		sky.GetComponent<MeshFilter> ().mesh = clouds;
+		sky.transform.localScale *= -2;
+		sky.transform.position += (Vector3.up * (highestPoint + sky.transform.localScale.y + 125));
 	}
 
 	public TerrainData ConvertTexToHeight(Texture2D tex)
