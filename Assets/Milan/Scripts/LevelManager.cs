@@ -134,7 +134,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
 		maxNPCs += 1;
-		maxObjects += 10;
+		maxObjects += 3;
 		maxSprites += 1000;
 		radius += 5;
 //		perlinFrequency += 0.020f;

@@ -12,12 +12,14 @@ public class PrefabManager : MonoBehaviour {
 	public GameObject[][] PREFABS;
 	public Sprite[][] SPRITES;
 	public GameObject MONEY;
+	public GameObject[] KeyAssets;
 
 //	public 
 //	public PROPS props;
 
 	void Awake(){
-
+		
+		KeyAssets = Resources.LoadAll<GameObject> ("KeyAssets");
 		MONEY = Resources.Load ("Pickups/Stack of Money") as GameObject;
 		PREFABS = new GameObject[Enum.GetValues(typeof(Services.TYPES)).Length][];
 		SPRITES = new Sprite[Enum.GetValues(typeof(Services.SPRITES)).Length][];
