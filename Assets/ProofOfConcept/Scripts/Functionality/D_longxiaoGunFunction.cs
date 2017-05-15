@@ -6,6 +6,7 @@ using DG.Tweening;
 public class D_longxiaoGunFunction : D_Function {
 	private LineRenderer line;
 	private Vector3 zero;
+	public AudioClip shrinkSound;
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
@@ -26,6 +27,7 @@ public class D_longxiaoGunFunction : D_Function {
 
 		if (Physics.Raycast (eliminationRay, out Hit, 100f)) {
 			line.SetPosition (1, Hit.point);
+			Services.AudioManager.Play3DSFX (shrinkSound, Hit.point, 1f, 1f);
 			Hit.transform.DOScale(zero, 1f);
 			Destroy (Hit.transform.gameObject, 5f);
 		}
