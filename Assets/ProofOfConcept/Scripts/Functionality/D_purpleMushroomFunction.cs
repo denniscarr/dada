@@ -33,6 +33,7 @@ public class D_purpleMushroomFunction : D_Function {
 			if (transform.parent.GetComponentInChildren<InteractionSettings> ().carryingObject == Services.Player.transform) {
 				beingUsed = true;
 				colorCorrection.enabled = !colorCorrection.enabled;
+				colorCorrection.saturation = 0f;
 				transform.parent.GetComponent<Collider> ().enabled = false;
 				transform.parent.GetComponent<Renderer> ().enabled = false;
 				FadeBack (timeToReset);
