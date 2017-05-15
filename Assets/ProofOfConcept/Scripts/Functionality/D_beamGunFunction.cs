@@ -5,6 +5,8 @@ using UnityEngine;
 public class D_beamGunFunction : D_Function {
 	LineRenderer line;
 	public GameObject spark;
+	public AudioClip TreeGrowSound;
+
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
@@ -37,6 +39,7 @@ public class D_beamGunFunction : D_Function {
             }
 
 			Instantiate (spark, Hit.point, Quaternion.identity);
+			Services.AudioManager.Play3DSFX(TreeGrowSound, Hit.point, 1f, Random.Range(0.9f, 1.1f));
 
 
         }
