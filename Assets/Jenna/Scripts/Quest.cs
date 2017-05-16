@@ -89,10 +89,10 @@ public class Quest: MonoBehaviour {
 	{
 	}
 
-	public virtual void makeTheQuest()
+	public virtual void makeTheQuest(GameObject _targetObject)
 	{
-		targetObject = builder.objeto;
-
+		//targetObject = builder.objeto;
+		targetObject = _targetObject;
 		objectScript = targetObject.GetComponent<QuestObject> ();
 
 		// set the ID based on what point in the queue it is
