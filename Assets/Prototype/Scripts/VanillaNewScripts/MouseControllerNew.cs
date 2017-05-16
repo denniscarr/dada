@@ -148,9 +148,9 @@ public class MouseControllerNew : MonoBehaviour {
 		}
 	}
 
-	void DeoutlineTargetObject(){
-		GetComponent<Image>().DOFade(0.2f,0.5f);
-		//Debug.Log("DeoutlineTargetObject");
+	public void DeoutlineTargetObject(){
+		//GetComponent<Image>().DOFade(0.2f,0.5f);
+		//Debug.Log("DeoutlineTargetObject in zoom out");
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
 				if(renderList[i]){
@@ -162,14 +162,18 @@ public class MouseControllerNew : MonoBehaviour {
 			renderList.Clear();
 			shaderList.Clear();
 		}
+		renderList = null;
+		shaderList = null;
 
 	}
 
 
-	void OutlineTargetObject(Transform t_hit){
+	public void OutlineTargetObject(Transform t_hit){
+		DeoutlineTargetObject();
 		GetComponent<Image>().DOFade(1f,0.5f);
         if (t_hit.name.Contains("Grail")) return;
 
+		//Debug.Log("OutlineTargetObject in zoom out");
 		renderList = new List<Renderer>();
 		shaderList = new List<string>();
 		Renderer renderer = t_hit.GetComponent<Renderer>();
@@ -201,8 +205,8 @@ public class MouseControllerNew : MonoBehaviour {
         // HELPER TEXT STUFF:
 		if (inSets != null)
         {
-
-			DeoutlineTargetObject();
+			GetComponent<Image>().DOFade(1f,0.5f);
+			//DeoutlineTargetObject();
 			OutlineTargetObject(pointedObject);
 
             // If the player already owns this item:
@@ -224,7 +228,6 @@ public class MouseControllerNew : MonoBehaviour {
                     ChangeCursor("openHand");
                 }
             }
-
             // If the player does not own this item:
             else
             {
@@ -242,9 +245,9 @@ public class MouseControllerNew : MonoBehaviour {
                 }
             }
         }
-
         else
         {
+			GetComponent<Image>().DOFade(0.2f,0.5f);
 			//Debug.Log(pointedObject.name);
 			DeoutlineTargetObject();
             writer.DeleteTextBox();

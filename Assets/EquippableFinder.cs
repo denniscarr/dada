@@ -112,11 +112,7 @@ public class EquippableFinder : MonoBehaviour {
             transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange
             ))
         {
-
-//			if(hit.transform.parent && hit.transform.parent.name.Equals("Viewing Platform")){
-//				writer.WriteAtPoint("Click to stand on " + nearestObject.name, textPosition);
-//			}
-
+			
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
                 !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
             {
@@ -170,8 +166,9 @@ public class EquippableFinder : MonoBehaviour {
         if (nearestObject != null)
         {
 			//Debug.Log("Found object: "+nearestObject);
-			DeoutlineTargetObject();
-			OutlineTargetObject(nearestObject);
+			//DeoutlineTargetObject();
+			GameObject.FindObjectOfType<MouseControllerNew>().OutlineTargetObject(nearestObject);
+			//OutlineTargetObject(nearestObject);
 
             if (nearestObject.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer)
             {
@@ -191,7 +188,6 @@ public class EquippableFinder : MonoBehaviour {
                 equipTarget = nearestObject;
                 //Debug.Log(equipTarget.name);
             }
-
             // If the player does not own this item:
             else
             {
@@ -211,11 +207,11 @@ public class EquippableFinder : MonoBehaviour {
                 }
             }
         }
-
-        else if (nearestObject == null)
+        else 
         {
-			DeoutlineTargetObject();
-            mouse.ChangeCursor("idle");
+			GameObject.FindObjectOfType<MouseControllerNew>().DeoutlineTargetObject();
+			mouse.ChangeCursor("idle");
+
         }
 
         // PLAYER INPUT
@@ -250,53 +246,6 @@ public class EquippableFinder : MonoBehaviour {
             AbandonItem();
         }
     }
-
-
-	void DeoutlineTargetObject(){
-		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(0.2f,0.5f);
-		//Debug.Log("DeoutlineTargetObject");
-		for(int i = 0; i < renderList.Count;i++){
-            if (renderList[i] != null)
-            {
-                renderList[i].material.shader = Shader.Find(shaderList[i]);
-            }
-			//Debug.Log(shaderList[i]);
-		}
-
-        //lastObjectInspected = null;
-		renderList.Clear();
-		shaderList.Clear();
-	}
-
-
-	void OutlineTargetObject(Transform t_hit){
-		GameObject.FindObjectOfType<MouseControllerNew>().GetComponent<Image>().DOFade(1f,0.5f);
-        //Debug.Log("OutlineTargetObject");
-
-        lastObjectInspected = t_hit;
-
-        if (t_hit.GetComponent<Renderer>() == null || t_hit.name.Contains("Grail")) return;
-
-        renderList = new List<Renderer>();
-		shaderList = new List<string>();
-		Renderer renderer = t_hit.GetComponent<Renderer>();
-		if(renderer){
-			shaderList.Add(renderer.material.shader.name);
-			//Debug.Log(renderer.material.shader.name);
-			renderList.Add(renderer);
-			renderer.material.shader = Shader.Find("Mistral/Outline");
-		}else{
-			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
-			for(int i = 0;i<renderers.Length;i++){
-				if(renderers[i] && renderers[i].GetComponent<ParticleSystem>() == null){
-					renderList.Add(renderers[i]);
-					//Debug.Log(renderers[i].material.shader.name);
-					shaderList.Add(renderers[i].material.shader.name);
-					renderers[i].material.shader = Shader.Find("Mistral/Outline");
-				}
-			}
-		}
-	}
 
 	void VisorMoveComplete(){
 		GameObject.FindObjectOfType<Tutorial>().SendMessage("TurnUpZoomOutMode");
