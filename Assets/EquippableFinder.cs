@@ -318,7 +318,8 @@ public class EquippableFinder : MonoBehaviour {
                 {
                     //Debug.Log("resized my thing");
                     equipTarget.localPosition = new Vector3(
-                        equipTarget.localPosition.x,
+                        //equipTarget.localPosition.x,
+                        0f,
                         equipTarget.localPosition.y - 0.1f,
                         equipTarget.localPosition.z - 0.1f
                         );

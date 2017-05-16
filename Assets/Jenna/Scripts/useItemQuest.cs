@@ -2,34 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCEliminationQuest : Quest {
-
+public class useItemQuest : Quest {
+	public int timeToUse;
 	// Use this for initialization
 	void Start () {
 		base.Start ();
+		timeToUse = Random.Range (1, 20);
 	}
 	
 	// Update is called once per frame
 	public void FixedUpdate () {
-		if (targetObject != null && targetObject.GetComponentInChildren<NPC> () != null && targetObject.GetComponentInChildren<NPC> ().health < 1) {
-			print ("Mission accomplished");
-			FinishQuest();
+		if (targetObject != null && targetObject.GetComponentInChildren<D_Function> () && targetObject.GetComponentInChildren<D_Function> ().timeUsed > timeToUse) {
+			FinishQuest ();
 		}
-
 	}
 
 	public override void makeTheQuest(GameObject _targetObject){
 		base.makeTheQuest (_targetObject);
-		rewardMoney = Mathf.RoundToInt (Random.Range(1, 10000));
-		title = ("Eliminate the glowing " + targetObject.name + " ");
+		rewardMoney = Mathf.RoundToInt (Random.Range (1, 10000));
+		title = ("Use this " + targetObject.name + " " + timeToUse + " times. ");
 		progress = Quest.QuestProgress.AVAILABLE;
-		description = (title + " by any means possible. Reward: $" + rewardMoney);
+		description = (title + "Reward: $" + rewardMoney);
 		CopyComponent(this, targetObject);
 		spawnNote ();
 	}
 
-	// method to copy alla this shit on the pickupquest on the quest object generated
-	// in questbuilderscript
 	Component CopyComponent (Component original, GameObject destination)
 	{
 		System.Type type = original.GetType ();
