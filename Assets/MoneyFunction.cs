@@ -30,7 +30,7 @@ public class MoneyFunction : D_Function {
         base.Start();
 
         // Name game.
-        value = Random.Range(10, 50);
+        value = Random.Range(10, 500);
         transform.parent.name = "$" + value;
 
         intSet.isOwnedByPlayer = true;
