@@ -190,7 +190,7 @@ public class PlayerControllerNew : MonoBehaviour {
                 {
                     insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                     GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = true;
-                    GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().AbandonItem();
+                    GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().MoveEquippedItemsOutside();
                     GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = false;
                     UpperCamera.DOFieldOfView(33f, 1.5f);
                     Debug.Log(t_hit.parent.name);
