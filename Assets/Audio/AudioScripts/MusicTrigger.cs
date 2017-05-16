@@ -79,7 +79,7 @@ public class MusicTrigger: MonoBehaviour {
 			}
 		}
 
-		totalObjects = imageSprites + inkSprites + nonPickups + npcs;
+		totalObjects = imageSprites + inkSprites + nonPickups + pickups + npcs;
 
 		//Debug.Log (nonPickups);
 
