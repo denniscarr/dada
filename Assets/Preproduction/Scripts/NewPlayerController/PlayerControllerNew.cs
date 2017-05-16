@@ -214,6 +214,7 @@ public class PlayerControllerNew : MonoBehaviour {
             //switch to zoom out mode
             writer.DeleteTextBox();
             InitZoomOutMode();
+			GameObject.FindObjectOfType<MouseControllerNew>().DeoutlineTargetObject();
 			mode = ControlMode.ZOOM_OUT_MODE;
 		}
 //		else if (Input.GetMouseButtonDown(0)){
@@ -242,7 +243,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		}else if(Input.GetKeyDown(KeyCode.Tab)){
 			//txtInfo.text = "Zoom in";
-
+			GameObject.FindObjectOfType<MouseControllerNew>().DeoutlineTargetObject();
 			//switch to zoom in mode
 			mode = ControlMode.ZOOM_IN_MODE;
 			InitZoomInMode();
