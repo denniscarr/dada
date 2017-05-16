@@ -254,6 +254,8 @@ public class EquippableFinder : MonoBehaviour {
     void MoveToCamera ()
     {
 		//Debug.Log(equipTarget.name + "move to camera");
+
+        // SPECIAL CASE FOR EQUIPPING VISOR DURING TUTORIAL
 		if(equipTarget.name.Equals("visor")){
 			GameObject playerCamera = GameObject.Find("Player Camera");
 			equipTarget.SetParent(playerCamera.transform);
@@ -269,7 +271,7 @@ public class EquippableFinder : MonoBehaviour {
 			return;
 		}
 
-        // Special case for trying to equip the grail.
+        // SPECIAL CASE FOR TRYING TO EQUIP GRAIL
         if (equipTarget.GetComponentInChildren<GrailFunction>() != null)
         {
             equipTarget.GetComponentInChildren<GrailFunction>().Use();
@@ -331,9 +333,6 @@ public class EquippableFinder : MonoBehaviour {
                 equipPosition = equipTarget.transform.localPosition;
                 equipScale = equipTarget.localScale;
 
-                equipTarget.localPosition = savedPosition;
-                equipTarget.localScale = savedScale;
-                equipTarget.localRotation = savedRotation;
                 niceSize = true;
             }
 
@@ -343,6 +342,10 @@ public class EquippableFinder : MonoBehaviour {
                 break;
             }
         }
+
+        equipTarget.localPosition = savedPosition;
+        equipTarget.localScale = savedScale;
+        equipTarget.localRotation = savedRotation;
 
         // Tween object to correct position.
         if (equipRotation != Vector3.zero)
@@ -376,6 +379,7 @@ public class EquippableFinder : MonoBehaviour {
 		equipTarget = null;
     }
 
+
 	void StopPickUpAction(){
 		GameObject.FindObjectOfType<MouseControllerNew>().isTweening = true;
 	}
@@ -400,6 +404,11 @@ public class EquippableFinder : MonoBehaviour {
 	//	//return new TweenCallback();
 	//}
 
+    public void MoveEquippedItemsOutside()
+    {
+
+    }
+
     public void AbandonItem()
     {
         if (equippedObjects.Count <= 0) return;
@@ -413,7 +422,7 @@ public class EquippableFinder : MonoBehaviour {
 
         Services.AudioManager.PlaySFX(Services.AudioManager.dropSound);
 
-        Debug.Log("Started AbandonItem(). Count: " + equippedObjects.Count);
+        //Debug.Log("Started AbandonItem(). Count: " + equippedObjects.Count);
 
         for (int i = 0; i < equippedObjects.Count; i++)
         {
@@ -451,7 +460,7 @@ public class EquippableFinder : MonoBehaviour {
 
             else
             {
-                Debug.Log("equipped object was null. Index: " + i);
+                //Debug.Log("equipped object was null. Index: " + i);
             }
 
             //equippedObjects.Remove(equippedObjects[i]);

@@ -95,7 +95,7 @@ public class InteractionSettings : MonoBehaviour {
     {
         get
         {
-            if (transform.parent.parent != null && transform.parent.parent.name == "INROOMOBJECTS")
+            if ((transform.parent.parent != null && transform.parent.parent.name == "INROOMOBJECTS") || transform.parent.position.y > 100f)
             {
                 return true;
             }
@@ -200,6 +200,8 @@ public class InteractionSettings : MonoBehaviour {
         // If I'm in my visor, then do different things to make sure bugs don't happen.
         if (IsInVisor)
         {
+            price = 0;
+            isOwnedByPlayer = true;
             originalParent = null;
             Transform saved = transform.parent.parent;
             savedScale = new Vector3(1, 1, 1);
@@ -226,7 +228,7 @@ public class InteractionSettings : MonoBehaviour {
             heat -= 0.01f * Time.deltaTime;
         }
 
-        if (IsInVisor)
+        if (IsInVisor && !isOwnedByPlayer)
         {
             price = 0;
             isOwnedByPlayer = true;
@@ -271,5 +273,10 @@ public class InteractionSettings : MonoBehaviour {
             associatedNotes[i].GetComponentInChildren<QuestItNoteFunction>().GetDestroyedFlashy();
             associatedNotes.Remove(associatedNotes[i]);
         }
+    }
+
+    public void GetSpitOutOfVisor()
+    {
+        //transform.parent.position 
     }
 }

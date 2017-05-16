@@ -179,13 +179,15 @@ public class PlayerControllerNew : MonoBehaviour {
 		//change back to zoom out when click
 		Transform t_hit = CameraRayCast(UpperCamera);
 
-		if(t_hit && t_hit.parent){
-			//Debug.Log(t_hit.name);
-			if(t_hit.parent.name.Equals("Viewing Platform")){
+		if(t_hit && t_hit.parent)
+        {
+            // MOUNTING OBSREVATION PLATFORM
+			if (t_hit.parent.name.Equals("Viewing Platform"))
+            {
                 GameObject.Find("UpperCamera").GetComponent<Writer>().WriteAtPoint("Press Left Mouse Button to mount Observation Platform", GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().textPosition);
-                //txtInfo.text = "Platform is calling you...";
-                //Debug.Log(t_hit.parent.name);
-                if (Input.GetMouseButtonDown(0)){
+
+                if (Input.GetMouseButtonDown(0))
+                {
                     insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                     GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = true;
                     GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().AbandonItem();
