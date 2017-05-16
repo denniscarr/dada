@@ -11,10 +11,13 @@ public class AmbientMusic : MonoBehaviour {
 	public AudioSource[] loSource;
 	AudioSource currentLoSource;
 	public AudioSource[] ambienceSource;
+	public AudioSource incoherenceSource;
 
 	public BufferShuffler[] shufflers;
 	BufferShuffler currentShuffler = null;
 	public bool shuffleTrigger;
+
+	Level prevLevel;
 
 	Transform playerTransform, grailTransform;
 
@@ -66,6 +69,7 @@ public class AmbientMusic : MonoBehaviour {
 
 
 		currentLevelColor = Services.LevelGen.currentLevel.levelTint;
+		prevLevel = Services.LevelGen.currentLevel;
 
 		Color.RGBToHSV( currentLevelColor,out lHue, out lSat,out lVal);
 
@@ -99,7 +103,11 @@ public class AmbientMusic : MonoBehaviour {
 		if (!Services.LevelGen.isTutorialCompleted) {
 			//Only have ambience for tutorial
 			ambienceSource [0].volume = 1.0f;
-		} else if (Services.LevelGen.currentLevel.levelTint != currentLevelColor) {
+		} else if (Services.LevelGen.currentLevel != prevLevel) {
+			
+			//NEW LEVEL
+
+			prevLevel = Services.LevelGen.currentLevel;
 
 			Color.RGBToHSV( Services.LevelGen.currentLevel.levelTint, out lHue, out lSat, out lVal);
 
@@ -107,13 +115,13 @@ public class AmbientMusic : MonoBehaviour {
 			for( int i = 0; i < hiSource.Length; i ++ ) {
 
 				if (lHue >= ((float)i * (1.0f / (float)hiSource.Length)) && lHue <= ((float)(i + 1f) * (1f / (float)hiSource.Length))) {
-					hiSource [i].DOFade (1.0f, 3.0f);
+					hiSource [i].DOFade (1.0f - incoherenceSource.volume, 3.0f);
 					currentHiSource = hiSource [i];
 					//hiSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = true;
 				} else if (hiSource [i].volume < 0.1f) {
 					hiSource [i].DOKill ();
 					hiSource [i].volume = 0f;
-					hiSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = false;
+					//hiSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = false;
 				} else if (hiSource [i].volume > 0f) {
 					hiSource [i].DOFade (0.0f, 3.0f);
 				} 
@@ -132,83 +140,90 @@ public class AmbientMusic : MonoBehaviour {
 				} else if (loSource [i].volume < 0.1f) {
 					loSource [i].DOKill ();
 					loSource [i].volume = 0f;
-					loSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = false;
+					//loSource [i].gameObject.GetComponent<BufferShuffler> ().enabled = false;
 				} else if (loSource [i].volume > 0f) {
 					loSource [i].DOFade (0.0f, 3.0f);
 				} 
 			}
 
-		}
 
 
+			#region buffer shuffler stuff
 
-		#region buffer shuffler stuff
-		if (Services.IncoherenceManager.globalIncoherence > 0.8f) {
+			if (Services.IncoherenceManager.globalIncoherence > 0.1f && !shufflers[0].enabled) {
 
-			foreach (BufferShuffler shuffler in shufflers) {
+				foreach (BufferShuffler shuffler in shufflers) {
+					if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume >= 0.1f) {
+						shuffler.enabled = true;
+						shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
 
-				shuffler.SetBeatsPerShuffle (TickValue.Sixteenth);
-				shuffler.SetBeatsPerCrossfade( TickValue.ThirtySecond);
+					}
 
-				//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+					shuffler.SetBeatsPerShuffle( TickValue.Measure);
+					shuffler.SetBeatsPerCrossfade(TickValue.Eighth);
 
-				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-			}
+					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
 
-		} else if (Services.IncoherenceManager.globalIncoherence > 0.6f) {
+					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+				}
+			} else if (Services.IncoherenceManager.globalIncoherence > 0.8f) {
 
-			foreach (BufferShuffler shuffler in shufflers) {
+				foreach (BufferShuffler shuffler in shufflers) {
 
-				shuffler.SetBeatsPerShuffle (TickValue.Eighth);
-				shuffler.SetBeatsPerCrossfade( TickValue.Sixteenth);
+					shuffler.SetBeatsPerShuffle (TickValue.Sixteenth);
+					shuffler.SetBeatsPerCrossfade( TickValue.ThirtySecond);
 
-				//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
 
-				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-			}
-
-		} else if (Services.IncoherenceManager.globalIncoherence > 0.4f) {
-
-			foreach (BufferShuffler shuffler in shufflers) {
-
-				shuffler.SetBeatsPerShuffle (TickValue.Quarter);
-				shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
-
-				//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-			}
-
-		} else if (Services.IncoherenceManager.globalIncoherence > 0.2f) {
-
-			foreach (BufferShuffler shuffler in shufflers) {
-
-				shuffler.SetBeatsPerShuffle (TickValue.Half);
-				shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
-
-				//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-			}
-
-		} else if (Services.IncoherenceManager.globalIncoherence > 0.1f) {
-
-			foreach (BufferShuffler shuffler in shufflers) {
-				if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume >= 0.5f) {
-					shuffler.enabled = true;
-					shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
-				
+					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
 				}
 
-				shuffler.SetBeatsPerShuffle( TickValue.Measure);
-				shuffler.SetBeatsPerCrossfade(TickValue.Eighth);
+			} else if (Services.IncoherenceManager.globalIncoherence > 0.6f) {
 
-				//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+				foreach (BufferShuffler shuffler in shufflers) {
 
-				//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-			}
+					shuffler.SetBeatsPerShuffle (TickValue.Eighth);
+					shuffler.SetBeatsPerCrossfade( TickValue.Sixteenth);
+
+					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+
+					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+				}
+
+			} else if (Services.IncoherenceManager.globalIncoherence > 0.4f) {
+
+				foreach (BufferShuffler shuffler in shufflers) {
+
+					shuffler.SetBeatsPerShuffle (TickValue.Quarter);
+					shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
+
+					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+
+					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+				}
+
+			} else if (Services.IncoherenceManager.globalIncoherence > 0.2f) {
+
+				foreach (BufferShuffler shuffler in shufflers) {
+
+					shuffler.SetBeatsPerShuffle (TickValue.Half);
+					shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
+
+					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+
+					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+				}
+
+			} 
+			#endregion
+
+			incoherenceSource.volume = Services.IncoherenceManager.globalIncoherence;
+
 		}
-		#endregion
+
+
+
+
 
 
 			/*
