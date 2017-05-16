@@ -410,6 +410,7 @@ public class EquippableFinder : MonoBehaviour {
         {
             if (equippedObjects[i] != null)
             {
+                equippedObjects[i].localScale = equippedObjects[i].GetComponentInChildren<InteractionSettings>().savedScale;
                 MoveToCamera(equippedObjects[i], GameObject.Find("Equip Reference").transform);
             }
         }
@@ -436,7 +437,7 @@ public class EquippableFinder : MonoBehaviour {
         {
             if (equippedObjects[i] != null)
             {
-                Debug.Log(equippedObjects[i].name + " examined. Index: " + i);
+                //Debug.Log(equippedObjects[i].name + " examined. Index: " + i);
 
                 if (gameObject.name == "UpperCamera")
                 {
