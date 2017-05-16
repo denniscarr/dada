@@ -734,7 +734,7 @@ public class NPC : MonoBehaviour {
 		{
 
 
-			speakSource.clip = Services.AudioManager.voiceClipPool [Random.Range (0, Services.AudioManager.voiceClipPool.Length - 1)];
+			speakSource.clip = Services.AudioManager.voiceClipPool [Random.Range (0, Services.AudioManager.voiceClipPool.Length)];
 
 			speakSource.Play ();
 		}
@@ -748,6 +748,9 @@ public class NPC : MonoBehaviour {
         {
             //Debug.Log("Ouch! That " + collision.gameObject.name + " hurt me!");
             writer.WriteSpecifiedString("Ouch! That " + collision.gameObject.name + " hurt me!");
+
+			//PunchSound
+			speakSource.clip = Services.AudioManager.NPCHitPool [Random.Range (0, Services.AudioManager.NPCHitPool.Length)];
 
             // See if we should start hating this object.s
             if (!hatedObjects.Contains(collision.gameObject.name))
