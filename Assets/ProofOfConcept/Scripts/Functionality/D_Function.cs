@@ -10,6 +10,7 @@ public class D_Function : MonoBehaviour {
 	public float audioJitter = 0f;
     float cooldownTimer = 0.2f;
     float currentCooldown = 0.2f;
+	public int timeUsed = 0;
 
     public void Start()
     {
@@ -50,6 +51,8 @@ public class D_Function : MonoBehaviour {
         {
 			Services.AudioManager.PlaySFX(useSFX[Random.Range(0, useSFX.Length)], 1.0f, pitchJitter);
         }
+		timeUsed += 1;
+		//print (timeUsed);
     }
 
     protected void GetDropped()
