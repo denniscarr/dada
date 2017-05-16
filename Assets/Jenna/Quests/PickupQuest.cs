@@ -60,8 +60,8 @@ public class PickupQuest : Quest {
 		}
     }
 
-	public override void makeTheQuest(){
-		base.makeTheQuest ();
+	public override void makeTheQuest(GameObject _targetObject){
+		base.makeTheQuest (_targetObject);
 		requiredPickups = Random.Range (2, 6);
         rewardMoney = Mathf.RoundToInt(targetObject.GetComponentInChildren<InteractionSettings>().price * Random.Range(2f, 3f));
         //Debug.Log("Required pickups: " + requiredPickups + ", Reward money: " + rewardMoney);
