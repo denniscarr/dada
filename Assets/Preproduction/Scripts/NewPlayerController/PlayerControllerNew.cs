@@ -121,7 +121,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		Debug.Log(mode);
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 0.2f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, sfxVolume);
 		//Debug.Log ("playing fucking sfx");
 
 	}
@@ -138,7 +138,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, sfxVolume);
 
 	}
 
@@ -161,7 +161,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, 0.7f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, sfxVolume);
 	}
 
 
@@ -193,7 +193,7 @@ public class PlayerControllerNew : MonoBehaviour {
                     UpperCamera.DOFieldOfView(33f, 1.5f);
                     Debug.Log(t_hit.parent.name);
 					mode = ControlMode.ZOOM_OUT_MODE;
-					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
+					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, sfxVolume);
 					InitZoomOutMode();
 				}
 			}
