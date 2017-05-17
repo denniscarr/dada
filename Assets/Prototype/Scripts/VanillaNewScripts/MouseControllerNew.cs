@@ -129,7 +129,9 @@ public class MouseControllerNew : MonoBehaviour {
 			//Debug.Log("select "+selectedObject.name);
 			UpdateDraggedObjectPosition(selectedObject);
 			DetectPlacing(selectedObject);
-		}else if(isTweening == false){
+		}
+        else if(isTweening == false)
+        {
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 			//Debug.DrawRay(ray.origin,ray.direction);
 			RaycastHit hit;
@@ -171,7 +173,11 @@ public class MouseControllerNew : MonoBehaviour {
 	public void OutlineTargetObject(Transform t_hit){
 		DeoutlineTargetObject();
 		GetComponent<Image>().DOFade(1f,0.5f);
-        if (t_hit.name.Contains("Grail")) return;
+        if (t_hit.name.Contains("Grail"))
+        {
+            t_hit.GetComponentInChildren<GrailFunction>().ReadyToRunAway();
+            return;
+        }
 
 		//Debug.Log("OutlineTargetObject in zoom out");
 		renderList = new List<Renderer>();

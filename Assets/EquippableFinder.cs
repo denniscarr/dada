@@ -120,6 +120,12 @@ public class EquippableFinder : MonoBehaviour {
                 // Get the distance of this object and, if it's the closest to the player then save it.
                 float distance = Vector3.Distance(hit.point, transform.position);
 
+                // Special case for looking at grail.
+                if (hit.transform.GetComponentInChildren<GrailFunction>() != null)
+                {
+                    hit.transform.GetComponentInChildren<GrailFunction>().ReadyToRunAway();
+                }
+
                 // If the nearest object has not yet been set, then save this object as the nearest object.
                 if (nearestObject == null)
                 {

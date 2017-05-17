@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class GrailFunction : D_Function {
 
+    bool readyToRunAway;
 
     new void Start()
     {
         base.Start();
-
-        intSet.isOwnedByPlayer = true;
 
         if (intSet.carryingObject == Services.Player)
         {
@@ -18,10 +17,17 @@ public class GrailFunction : D_Function {
     }
 
 
-    public override void Use()
+    public void ReadyToRunAway()
     {
-        base.Use();
+        if (readyToRunAway) return;
 
+        Invoke("RunAway", 2f);
+        readyToRunAway = true;
+    }
+
+
+    void RunAway()
+    {
         GetDropped();
 
         //Run away from player.
@@ -30,11 +36,17 @@ public class GrailFunction : D_Function {
         Vector3 directionFromPlayer = transform.parent.position - Services.Player.transform.position;
         directionFromPlayer = directionFromPlayer.normalized;
 
-        GetComponentInParent<Rigidbody>().AddForce(directionFromPlayer * 20000f, ForceMode.Impulse);
+        GetComponentInParent<Rigidbody>().AddForce(directionFromPlayer * 30000f, ForceMode.Impulse);
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.grailRejectionClip);
+        Services.AudioManager.PlaySFX(Services.AudioManager.grailRejectionClip);
 
         if (Services.LevelGen.levelNum == -1) FindObjectOfType<Tutorial>().OnGrabGrail();
+    }
+
+
+    public override void Use()
+    {
+        base.Use();
 
         //if (Vector3.Distance(transform.position, Services.Player.transform.position) < 10f)
         //{
