@@ -293,7 +293,7 @@ public class Tutorial : Quest {
 		mouseControllerNew.writer.WriteAtPoint("Now drag this note back into your visor with the mouse.", mouseControllerNew.textPosition);
 		if(Input.GetMouseButtonUp(0) && questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.PRESS_TAB;
-			AddNewNote("Press Tab 5 times");
+			AddNewNote("Press Tab to Zoom visor in or out. Now try it 5 times");
 		}
 	}
 
@@ -316,7 +316,7 @@ public class Tutorial : Quest {
 			int rest = 5 - numPressTab;
 			if(rest > 0){
 				
-				QuestItNoteText.text = "Press Tab "+ rest.ToString() +" times.";
+				QuestItNoteText.text = "Press Tab to Zoom visor in or out. Now try it "+ rest.ToString() +" times.";
 			}else{
 				state = TutorialState.EQUIP_GUN;//go_AK12 = Resources.Load("Pickups/AK12") as GameObject;
 				go_AK12 = Instantiate(Resources.Load<GameObject>("Pickups/AK12"));

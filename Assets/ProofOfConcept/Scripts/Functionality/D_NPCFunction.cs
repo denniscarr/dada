@@ -8,6 +8,7 @@ public class D_NPCFunction : D_Function {
 	new void Start () {
 		base.Start();
 		base.useSFX = scream;
+		base.soundFXVol = 0.2f;
 	}
 	
 	// Update is called once per frame

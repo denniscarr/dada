@@ -7,6 +7,7 @@ public class D_Function : MonoBehaviour {
 	protected InteractionSettings intSet;
     KeyCode useKey = KeyCode.Mouse1;
 	public AudioClip[] useSFX;
+	public float soundFXVol = 1.0f;
 	public float audioJitter = 0f;
     float cooldownTimer = 0.2f;
     float currentCooldown = 0.2f;
@@ -49,7 +50,7 @@ public class D_Function : MonoBehaviour {
         float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
         if (useSFX.Length > 0)
         {
-			Services.AudioManager.Play3DSFX(useSFX[Random.Range(0, useSFX.Length)], transform.position, 1f, pitchJitter);
+			Services.AudioManager.Play3DSFX(useSFX[Random.Range(0, useSFX.Length)], transform.position, soundFXVol, pitchJitter);
         }
 		timeUsed += 1;
 		//print (timeUsed);
