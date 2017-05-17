@@ -149,75 +149,75 @@ public class AmbientMusic : MonoBehaviour {
 
 
 			#region buffer shuffler stuff
-
-			if (Services.IncoherenceManager.globalIncoherence > 0.1f && !shufflers[0].enabled) {
-
-				foreach (BufferShuffler shuffler in shufflers) {
-					if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume >= 0.1f) {
-						shuffler.enabled = true;
-						shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
-
-					}
-
-					shuffler.SetBeatsPerShuffle( TickValue.Measure);
-					shuffler.SetBeatsPerCrossfade(TickValue.Eighth);
-
-					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-				}
-			} else if (Services.IncoherenceManager.globalIncoherence > 0.8f) {
-
-				foreach (BufferShuffler shuffler in shufflers) {
-
-					shuffler.SetBeatsPerShuffle (TickValue.Sixteenth);
-					shuffler.SetBeatsPerCrossfade( TickValue.ThirtySecond);
-
-					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-				}
-
-			} else if (Services.IncoherenceManager.globalIncoherence > 0.6f) {
-
-				foreach (BufferShuffler shuffler in shufflers) {
-
-					shuffler.SetBeatsPerShuffle (TickValue.Eighth);
-					shuffler.SetBeatsPerCrossfade( TickValue.Sixteenth);
-
-					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-				}
-
-			} else if (Services.IncoherenceManager.globalIncoherence > 0.4f) {
-
-				foreach (BufferShuffler shuffler in shufflers) {
-
-					shuffler.SetBeatsPerShuffle (TickValue.Quarter);
-					shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
-
-					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-				}
-
-			} else if (Services.IncoherenceManager.globalIncoherence > 0.2f) {
-
-				foreach (BufferShuffler shuffler in shufflers) {
-
-					shuffler.SetBeatsPerShuffle (TickValue.Half);
-					shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
-
-					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
-
-					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
-				}
-
-			} 
+//
+//			if (Services.IncoherenceManager.globalIncoherence > 0.1f && !shufflers[0].enabled) {
+//
+//				foreach (BufferShuffler shuffler in shufflers) {
+//					if (!shuffler.enabled && shuffler.gameObject.GetComponent<AudioSource> ().volume >= 0.1f) {
+//						shuffler.enabled = true;
+//						shuffler.ClipToShuffle = shuffler.gameObject.GetComponent<AudioSource> ().clip;
+//
+//					}
+//
+//					shuffler.SetBeatsPerShuffle( TickValue.Measure);
+//					shuffler.SetBeatsPerCrossfade(TickValue.Eighth);
+//
+//					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+//
+//					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+//				}
+//			} else if (Services.IncoherenceManager.globalIncoherence > 0.8f) {
+//
+//				foreach (BufferShuffler shuffler in shufflers) {
+//
+//					shuffler.SetBeatsPerShuffle (TickValue.Sixteenth);
+//					shuffler.SetBeatsPerCrossfade( TickValue.ThirtySecond);
+//
+//					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+//
+//					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+//				}
+//
+//			} else if (Services.IncoherenceManager.globalIncoherence > 0.6f) {
+//
+//				foreach (BufferShuffler shuffler in shufflers) {
+//
+//					shuffler.SetBeatsPerShuffle (TickValue.Eighth);
+//					shuffler.SetBeatsPerCrossfade( TickValue.Sixteenth);
+//
+//					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+//
+//					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+//				}
+//
+//			} else if (Services.IncoherenceManager.globalIncoherence > 0.4f) {
+//
+//				foreach (BufferShuffler shuffler in shufflers) {
+//
+//					shuffler.SetBeatsPerShuffle (TickValue.Quarter);
+//					shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
+//
+//					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+//
+//					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+//				}
+//
+//			} else if (Services.IncoherenceManager.globalIncoherence > 0.2f) {
+//
+//				foreach (BufferShuffler shuffler in shufflers) {
+//
+//					shuffler.SetBeatsPerShuffle (TickValue.Half);
+//					shuffler.SetBeatsPerCrossfade( TickValue.Eighth);
+//
+//					//shufflerTime = CS_AudioManager.remapRange (Services.IncoherenceManager.globalIncoherence, 0.25f, 1.0f, 0.1f, 2.9f);
+//
+//					//shuffler.SecondsPerShuffle = 3.0f - (shufflerTime);
+//				}
+//
+//			} 
 			#endregion
 
-			incoherenceSource.volume = Services.IncoherenceManager.globalIncoherence;
+			incoherenceSource.volume = Services.IncoherenceManager.globalIncoherence / 3f;
 
 		}
 
