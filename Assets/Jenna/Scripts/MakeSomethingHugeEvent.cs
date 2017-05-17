@@ -16,7 +16,18 @@ public class MakeSomethingHugeEvent : IncoherenceEvent {
     {
         base.Initiate();
 
-        InteractionSettings chosenOne = FindObjectsOfType<InteractionSettings>()[Random.Range(0, FindObjectsOfType<InteractionSettings>().Length)];
-        chosenOne.transform.parent.DOScale(chosenOne.transform.parent.localScale * 100f, Random.Range(1f, 10f));
+        bool chosenOneChosen = false;
+        InteractionSettings chosenOne;
+
+        while (!chosenOneChosen)
+        {
+            chosenOne = FindObjectsOfType<InteractionSettings>()[Random.Range(0, FindObjectsOfType<InteractionSettings>().Length)];
+            if (!chosenOne.transform.parent.name.Contains("QuestItNote"))
+            {
+                Destroy(chosenOne.GetComponent<Collider>());
+                chosenOne.transform.parent.DOScale(chosenOne.transform.parent.localScale * 100f, Random.Range(1f, 10f));
+                chosenOneChosen = true;
+            }
+        }
     }
 }

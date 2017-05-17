@@ -20,7 +20,7 @@ public class NPCEliminationQuest : Quest {
 
 	public override void makeTheQuest(GameObject _targetObject){
 		base.makeTheQuest (_targetObject);
-		rewardMoney = Mathf.RoundToInt (Random.Range(1, 10000));
+		rewardMoney = Mathf.RoundToInt (Random.Range(2000, 10000));
 		title = ("Eliminate the glowing " + targetObject.name + " ");
 		progress = Quest.QuestProgress.AVAILABLE;
 		description = (title + " by any means possible. Reward: $" + rewardMoney);

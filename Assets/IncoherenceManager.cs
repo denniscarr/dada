@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class IncoherenceManager : MonoBehaviour {
 
@@ -47,6 +48,11 @@ public class IncoherenceManager : MonoBehaviour {
     float timeSinceLastEvent = 0f;
     float timeUntilNextEvent = 0f;
 
+    float timeInLevel = 0f;
+    float timeUntilLevelShrinks = 90f;
+    float levelShrinkDuration = 90f;
+    bool levelShrinking;
+
 
     private void Start()
     {
@@ -69,6 +75,16 @@ public class IncoherenceManager : MonoBehaviour {
 
     private void Update()
     {
+        if (Services.LevelGen.levelNum != -1)
+        {
+            timeInLevel += Time.deltaTime;
+            if (timeInLevel >= timeUntilLevelShrinks && !levelShrinking)
+            {
+                GameObject.Find("GROUND").transform.DOScale(0.001f, levelShrinkDuration);
+                levelShrinking = true;
+            }
+        }
+
         // See if I should apply an incoherence event on the next audio shuffle.
         if (activeEvents.Count > 0 && nextEvent == null)
         {
@@ -240,6 +256,9 @@ public class IncoherenceManager : MonoBehaviour {
 
         nextEvent = null;
         timeUntilNextEvent = 0.0f;
+
+        timeInLevel = 0.0f;
+        levelShrinking = false;
 
         // See if the threshold for any incoherence events has been added.
         if (dormantEvents.Count > 0)
