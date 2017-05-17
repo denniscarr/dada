@@ -16,6 +16,7 @@ public class PlayerMoneyManager : MonoBehaviour {
 			string notes = "$" + value;
 			displayText.transform.DOSpiral(2, Vector3.forward, SpiralMode.ExpandThenContract, 100, 100);
 			//displayText.transform.DOShakeScale(1.0f,new Vector3(0.1f,0.1f,0.1f),10,90,false);;
+			//displayText.DOColor(new Color(,,,1.0),1.0f);
 			displayText.DOText(notes,1.0f,true,ScrambleMode.Numerals);
             //displayText.text = "$" + value
             //Debug.Log("changing money");
