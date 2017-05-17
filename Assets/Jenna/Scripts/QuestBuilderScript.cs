@@ -144,8 +144,8 @@ public class QuestBuilderScript : MonoBehaviour {
 
 	public void GenerateUse() {
 		if (Services.LevelGen.levelNum == 0) return;
-		usableItems = GameObject.FindObjectsOfType<InteractionSettings> ();
-		GameObject usableItem = usableItems [Random.Range (0, usableItems.Length)].transform.parent.gameObject;
+		//usableItems = GameObject.FindObjectsOfType<InteractionSettings> ();
+		GameObject usableItem = finder.pickups [Random.Range (0, finder.pickups.Count)];
 		//print (usableItem);
 
 		if (usableItem.GetComponent<useItemQuest> () != null)
