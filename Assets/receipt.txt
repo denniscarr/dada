@@ -55,26 +55,5 @@ AUG A3 $899
 "Pull the trigger", says Longxiao $5999
 Gohei of reverse exorcism $0
 Tree Grenade $579
-Boxshelf $79
-Long bread $5
-Long bread $5
-Long bread $5
-Hamburger $12
-Hamburger $12
-Bread $3
-Bread $3
-Long bread $5
-Bread $3
-Long bread $5
-Cup cake $7
-Abner Richter $1000
-Kuzman Rains $1000
-Макаров (Prefab) (1) $999
-Макаров (Prefab) $999
-Макаров (Prefab) $999
-Макаров (Prefab) $999
-Microwave $749
-Microwave $749
-Microwave $749
-Clone gun $4079
-Clone gun $4079
+visor $9499
+AK12 $99
