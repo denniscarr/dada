@@ -114,41 +114,6 @@ public class Tutorial : Quest {
 		case TutorialState.GRAIl_SPAWN:OnSpawnGrail();break;
 		}
 
-
-		//questItNote.transform.position = 
-		//questItNote.transform.LookAt(controller.transform,Vector3.forward);
-		// if visor is equipped, then...you know, destroy everything and move to the next thing
-		//EquippableFinder finder = GameObject.Find("FindEquip").GetComponent<EquippableFinder>();
-		//Transform player = GameObject.Find("Player").GetComponent<Transform>();
-//		// if it's equipped and you walk around, do the thing
-//		if (visorEquipped &&
-//			(Input.GetKeyDown(KeyCode.W) ||
-//				Input.GetKeyDown(KeyCode.A) ||
-//				Input.GetKeyDown(KeyCode.S) ||
-//				Input.GetKeyDown(KeyCode.D)) && !roomEntered) {
-//			enterRoom ();
-//		}
-//		// great, now exit the visor and explore the world
-//		if (thingMoved && roomEntered && !tabPressed) {
-//			if (controls.mode == ControlMode.ZOOM_IN_MODE) {
-//				if (Input.GetKeyDown (KeyCode.Tab)) {
-//					interactWithAThing ();
-//				}
-//			}
-//		}
-//
-//		// this nullifies the chance that tab has been pressed early because, like,
-//		//tabpressed can only be true if you've interacted with a thing
-//		if (tabPressed) {
-//			if (!worldItem == null) {
-//				text.text = ("Now add" + " " + worldItem.name + " " + "to your inventory. Grab it, press tab, and drop.");
-//
-//				if (worldItem.GetComponentInChildren<InteractionSettings> ().IsEquipped) {
-//					manager.allQuestsCompleted = true;
-//					text.text = "You've learned the basics. Now jump off the world. Go on.";
-//				}
-//			}
-//		}
 	}
 
 	void VisorGenerate(){
@@ -171,7 +136,7 @@ public class Tutorial : Quest {
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
 			VisorGenerate();
-			TaskFinished("Welcome. Left click on the Visor to purchase it. It's that gray thing.");
+			TaskFinished("Welcome. Go close to the visor there so that you can left click on it to purchase.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
 
