@@ -151,7 +151,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	string SetLevelText() {
 		string line = "";
-		line += "Circle " +  ManagedObjects.Count + "\n" + "\n";
+		line += "Circle " + ManagedObjects.Count + "\n" + "\n";
 		line += LevelDescriptions[Random.Range(0, LevelDescriptions.Length)];
 
 		return line;
