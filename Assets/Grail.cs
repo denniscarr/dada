@@ -86,7 +86,8 @@ public class Grail : MonoBehaviour {
     public void GetReadyToDie()
     {
         GetComponent<Collider>().enabled = false;
-        Destroy(gameObject, 10f);
+        FindObjectOfType<GrailSpawner>().TurnOnTheLights();
+        Destroy(gameObject, 1f);
         dying = true;
     }
 }

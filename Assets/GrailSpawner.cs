@@ -32,4 +32,11 @@ public class GrailSpawner : MonoBehaviour {
 
         grailHasSpawned = true;
     }
+
+
+    public void TurnOnTheLights()
+    {
+        GameObject.Find("Sun").GetComponent<Light>().DOIntensity(1f, 1f);
+        Services.Player.GetComponentInChildren<ColorfulFog>().coloringMode = ColorfulFog.ColoringMode.Gradient;
+    }
 }
