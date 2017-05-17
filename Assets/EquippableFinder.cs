@@ -310,8 +310,13 @@ public class EquippableFinder : MonoBehaviour {
         // Resize & reposition object so that it doesn't block the 
         _equipTarget.localPosition = equipPosition;
         _equipTarget.localRotation = Quaternion.Euler(equipRotation);
-        _equipTarget.localScale = equipScale;
+		if(Resources.Load<GameObject>("Pickups/"+_equipTarget.name)){
+			_equipTarget.localScale = Resources.Load<GameObject>("Pickups/"+_equipTarget.name).transform.localScale;//equipScale;
+		}else{
+			_equipTarget.localScale = equipScale;
+		}
 
+		//equipScale
         int infinityPrevention = 0;
         bool niceSize = false;
         Camera myCamera = GetComponent<Camera>();
