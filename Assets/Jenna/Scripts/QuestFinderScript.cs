@@ -126,13 +126,14 @@ public class QuestFinderScript : MonoBehaviour
 				equipsToRemove.Add (equippable);
 			}
 		}
-			
 
-		foreach (Quest questy in QuestManager.questManager.questList) {
-			if (questy == null) {
-				questsToRemove.Add(questy);
-			}
-		}
+        foreach (Quest questy in Services.Quests.questList)
+        {
+            if (questy == null)
+            {
+                questsToRemove.Add(questy);
+            }
+        }
 			
 		ClearNullListItems ();
 	}

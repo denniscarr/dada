@@ -97,7 +97,7 @@ public class Quest: MonoBehaviour {
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
-		id = (QuestManager.questManager.questList.Count);
+		id = (Services.Quests.questList.Count);
 
 
 		// add the glow
@@ -112,7 +112,7 @@ public class Quest: MonoBehaviour {
 
 		// set the ID based on what point in the queue it is
 		// note: there's probably a more efficient way to do this, pls lmk if so
-		id = (QuestManager.questManager.questList.Count);
+		id = (Services.Quests.questList.Count);
 
 
 	}
