@@ -29,7 +29,7 @@ public class NPC : MonoBehaviour {
     [SerializeField] float objectPickupRange = 3f;  // How close this NPC has to be to an object in order to pick it up.
     [SerializeField] Transform handTransform;   // The transform of this npc's 'hand'.
     [SerializeField] float pickupProbability = 0.2f;
-    [SerializeField] float useProbability = 0.75f;   // The probability that I will use an object I'm holding.
+    float useProbability = 0.2f;   // The probability that I will use an object I'm holding.
     [SerializeField] float giveUpTime = 10f; // How long it takes for this NPC to give up when they are unable to reach their targeted object.
     float giveUpTimer = 0f; // Used for keeping track of when to give up.
 
@@ -66,6 +66,7 @@ public class NPC : MonoBehaviour {
         set
         {
             //Debug.Log("Current health: " + value);
+            writer.WriteSpecifiedString("Ow!");
 
             if (value <= 0f)
             {
@@ -185,7 +186,7 @@ public class NPC : MonoBehaviour {
         speakingTimer += Time.deltaTime;
 
         // Comment on various things.
-        if (transform.parent.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer && !reactedToBeingPurchased)
+        if (transform.parent.GetComponentInChildren<InteractionSettings>() != null && transform.parent.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer && !reactedToBeingPurchased)
         {
             float rand = Random.value;
             if (rand <= 0.2f) writer.WriteSpecifiedString("I welcome you as my new master, Player.");
@@ -197,7 +198,7 @@ public class NPC : MonoBehaviour {
             reactedToBeingPurchased = true;
         }
 
-        if (interactionSettings.carryingObject != null && !reactedToBeingPickedUp)
+        if (interactionSettings != null && interactionSettings.carryingObject != null && !reactedToBeingPickedUp)
         {
             float rand = Random.value;
             if (rand <= 0.2f) writer.WriteSpecifiedString("Oh! That tickles, " + interactionSettings.carryingObject.name + "!");
@@ -209,7 +210,7 @@ public class NPC : MonoBehaviour {
             reactedToBeingPickedUp = true;
         }
 
-        if (interactionSettings.carryingObject == null) reactedToBeingPickedUp = false;
+        if (interactionSettings != null && interactionSettings.carryingObject == null) reactedToBeingPickedUp = false;
 
         if (lookForwardRange < transform.parent.GetComponent<Collider>().bounds.extents.z)
         {
@@ -561,9 +562,10 @@ public class NPC : MonoBehaviour {
     void EvaluateSurroundings()
     {
         // Decide whether to use my carried object.
-        if (GetComponentInChildren<D_Function>() != null && Random.value >= useProbability)
+        if (transform.parent.GetComponentInChildren<D_Function>() != null && Random.value <= useProbability)
         {
-            transform.BroadcastMessage("Use", SendMessageOptions.DontRequireReceiver);
+            Debug.Log("NPC USING SELF");
+            transform.parent.BroadcastMessage("Use", SendMessageOptions.DontRequireReceiver);
         }
 
         // Evaluate nearby objects.
@@ -808,8 +810,7 @@ public class NPC : MonoBehaviour {
         }
 
         // Destroy NPC AI prefab
-        gameObject.SetActive(false);
-
+        Destroy(gameObject);
     }
 
 

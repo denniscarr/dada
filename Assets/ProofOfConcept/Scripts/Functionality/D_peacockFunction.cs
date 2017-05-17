@@ -14,7 +14,7 @@ public class D_peacockFunction : D_Function {
 
 		Vector3 parentPos = transform.parent.position;
 
-		foreach(Collider collider in Physics.OverlapSphere(parentPos, 10f))
+		foreach(Collider collider in Physics.OverlapSphere(parentPos, 15f))
         {
             if (collider.GetComponent<MyFirstPersonController>() != null)
             {
@@ -23,10 +23,10 @@ public class D_peacockFunction : D_Function {
 
             else if (collider.GetComponent<Rigidbody>() != null)
             {
-                collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 100f, ForceMode.Impulse);
+                collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 25f, ForceMode.Impulse);
             }
         }
 
-        GetComponent<Rigidbody>().AddForce(Vector3.up * 100f, ForceMode.Impulse);
+        transform.parent.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 25f, ForceMode.Impulse);
     }
 }
