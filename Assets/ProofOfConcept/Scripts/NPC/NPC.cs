@@ -58,7 +58,7 @@ public class NPC : MonoBehaviour {
     string[] surnames = { "Hummel", "Tirrell", "San Nicolas", "Wallis", "Thorn", "Buonarroti", "MacIntyre", "Lowe", "Dahl", "Hughes", "Thompson", "Gilbert", "Slane", "Jordan", "Babatunde", "Mosconi", "Payton", "Chen", "Jin", "Liu", "Li", "Han", "Zhang", "Zeng", "Boyd", "Babineaux", "Mitchell", "Rose", "Humphrey", "Carlsen", "McLain", "Little", "Waller", "Safrata", "Kim", "Park", "Jeon", "Williams", "Aranee", "Kwan", "Petersell", "Macri", "Lantz", "Foddy", "Yang", "Summers", "Lacey", "Salucci", "Richter", "Tos", "Braband", "Dohman", "Lambert", "Borisov", "Eklund", "Nemec", "Rains", "Bronson", "Patel", "Kurosawa", "Miyamoto", "Mindwipe", "Kuti", "Koray", "Veloso", "Gilberto", "Bethania", "Carlos", "Costa", "Jobim", "Kuti", "Ramirez", "Ellington", "Lawal", "Cale", "Coltrane", "Eno"};
 
     // USED FOR PAIN & DEATH
-    public float _health = 100f;
+    float _health = 100f;
 	public bool died = false;
     public float health
     {
@@ -71,7 +71,7 @@ public class NPC : MonoBehaviour {
             if (value <= 0f)
             {
                 Die();
-				print (gameObject.transform.parent.name + " is dead.");
+				//print (gameObject.transform.parent.name + " is dead.");
             }
 
             else

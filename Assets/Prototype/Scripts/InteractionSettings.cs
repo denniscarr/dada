@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class InteractionSettings : MonoBehaviour {
 
     public int price;    // How much this item costs.
     public bool isOwnedByPlayer = false;   // Whether the player owns this item.
+	private string fileName = "receipt.txt";
 
 	public bool ableToBeCarried
     {
@@ -258,6 +260,12 @@ public class InteractionSettings : MonoBehaviour {
     public void GetPurchased()
     {
         GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds -= price;
+		print (transform.parent.gameObject.name + " $" + price);
+
+		StreamWriter sw = new StreamWriter (Application.dataPath + "/" + fileName,true);
+		sw.WriteLine (transform.parent.gameObject.name + " $" + price);
+		sw.Close ();
+
         if (transform.parent.GetComponentInChildren<IncoherenceController>() != null) {
             transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.interactionIncrease;
         }

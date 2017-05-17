@@ -4,6 +4,7 @@ using System.Collections;
 public class Demo : MonoBehaviour {
 
 	public Texture2D texture;
+	//public string slogan;
 
 	// Use this for initialization
 	void Start () {
