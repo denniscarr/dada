@@ -68,3 +68,13 @@ Bread $3
 Long bread $5
 Cup cake $7
 Abner Richter $1000
+Kuzman Rains $1000
+Макаров (Prefab) (1) $999
+Макаров (Prefab) $999
+Макаров (Prefab) $999
+Макаров (Prefab) $999
+Microwave $749
+Microwave $749
+Microwave $749
+Clone gun $4079
+Clone gun $4079

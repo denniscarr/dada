@@ -60,12 +60,28 @@ public class NPC : MonoBehaviour {
     // USED FOR PAIN & DEATH
     float _health = 100f;
 	public bool died = false;
-    public float health
+
+	public bool isOnFire {
+		get {
+			if (transform.parent.GetComponentInChildren<ContagiousFire> () != null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	public float health
     {
         get { return _health; }
         set
         {
             //Debug.Log("Current health: " + value);
+			if (!isOnFire) {
+				Services.AudioManager.Play3DSFX (Services.AudioManager.NPCHitPool [Random.Range (0, Services.AudioManager.NPCHitPool.Length - 1)], 
+					transform.parent.position,
+					1f, 1f);
+			}
             writer.WriteSpecifiedString("Ow!");
 
             if (value <= 0f)
@@ -751,8 +767,7 @@ public class NPC : MonoBehaviour {
             //Debug.Log("Ouch! That " + collision.gameObject.name + " hurt me!");
             writer.WriteSpecifiedString("Ouch! That " + collision.gameObject.name + " hurt me!");
 
-			//PunchSound
-			speakSource.clip = Services.AudioManager.NPCHitPool [Random.Range (0, Services.AudioManager.NPCHitPool.Length)];
+
 
             // See if we should start hating this object.s
             if (!hatedObjects.Contains(collision.gameObject.name))
@@ -792,8 +807,8 @@ public class NPC : MonoBehaviour {
         transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
 
 		//scream
-		speakSource.clip = Services.AudioManager.NPCDie;
-		speakSource.Play ();
+		Services.AudioManager.Play3DSFX(Services.AudioManager.NPCDie, transform.parent.position);
+		
         
 		// Drop money
         GameObject moneyPrefab = Resources.Load("Pickups/Stack of Money") as GameObject;
@@ -817,7 +832,6 @@ public class NPC : MonoBehaviour {
     public void CatchOnFire()
     {
         writer.WriteSpecifiedString("Argh! I'm on fire!");
-		speakSource.clip = Services.AudioManager.NPCOnFire;
-		speakSource.Play ();
+		Services.AudioManager.Play3DSFX(Services.AudioManager.NPCOnFire, transform.parent.position);
     }
 }
