@@ -179,7 +179,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			xCoord = xOrigin;
 
 			for (int x = 0; x <= _width; x++, i++, xCoord++) {
-				float perlinVal = OctavePerlin (xCoord * (noiseScale + (Services.IncoherenceManager.globalIncoherence/5)), yCoord *  (noiseScale + (Services.IncoherenceManager.globalIncoherence/5)), 1, 0.5f);
+				float perlinVal = OctavePerlin (xCoord * (noiseScale + (Services.IncoherenceManager.globalIncoherence/3)), yCoord *  (noiseScale + (Services.IncoherenceManager.globalIncoherence/5)), 1, 0.5f);
 				perlinVal = Mathf.Pow (perlinVal, 0.75f);
 				verts [i] = new Vector3 (x, perlinVal * 10, y) * tileScale;
 				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
@@ -360,15 +360,10 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 			Vector2 index = (new Vector2 (vertices [indice].x, vertices [indice].z) / tileScale) + new Vector2 (_width / 2, _length / 2);
 			GameObject newObject;
 
-			if (Random.Range (0, 100) > (100 - (Services.IncoherenceManager.globalIncoherence * 25))) {
+			if (Random.Range (0, 100) > (100 - (Services.IncoherenceManager.globalIncoherence * 100))) {
 				newObject = LevelObjectFactory (Random.Range(0.00f, 1.00f), Random.Range(0, Services.Prefabs.PREFABS.Length), vertices [indice], index);
 			} else {
-				newObject = Instantiate (Services.Prefabs.KeyAssets [Random.Range (0, Services.Prefabs.KeyAssets.Length)], Vector3.zero, Quaternion.identity) as GameObject;
-				newObject.transform.parent = transform;
-				newObject.transform.localPosition = vertices [indice];
-//				newObject.transform.localScale *= 2;
-				newObject.transform.localPosition += newObject.GetComponent<Renderer> ().bounds.extents.y * Vector3.up;
-				newObject.transform.Rotate (0, Random.Range(0, 180), 0);
+				newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices [indice], index);
 			}
 
 			if (newObject == null) {
