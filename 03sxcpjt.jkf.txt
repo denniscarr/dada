@@ -1,0 +1,104 @@
+﻿Merge branch 'master' of https://github.com/denniscarr/dada
+
+# Conflicts:
+#	Assets/receipt.txt
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 7 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   Assets/Asset Packs/KriptoFX/Materials/3DSmoke/Explosion3D_3.mat
+#	modified:   Assets/Asset Packs/KriptoFX/Materials/3DSmoke/Explosion3D_5.mat
+#	modified:   Assets/Asset Packs/KriptoFX/Materials/3DSmoke/Explosion3D_6.mat
+#	modified:   Assets/Asset Packs/KriptoFX/Materials/3DSmoke/Explosion3D_7.mat
+#	modified:   Assets/Asset Packs/KriptoFX/Materials/3DSmoke/Explosion3D_9.mat
+#	modified:   Assets/Asset Packs/KriptoFX/Materials/Details/Distortion.mat
+#	modified:   Assets/Audio/AudioPrefabs/MusicSources.prefab
+#	modified:   Assets/Audio/AudioScripts/AmbientMusic.cs
+#	new file:   Assets/Audio/MusicClips/GrailStem1.wav.asd
+#	new file:   Assets/Audio/MusicClips/GrailStem1.wav.asd.meta
+#	modified:   Assets/Audio/MusicClips/HiLandsLong2.wav
+#	modified:   Assets/Audio/MusicClips/HiLandsLong3.wav
+#	new file:   Assets/Audio/MusicClips/IncoherentMusic2.wav
+#	new file:   Assets/Audio/MusicClips/IncoherentMusic2.wav.meta
+#	new file:   Assets/Audio/MusicClips/LoLandsLong1.wav
+#	new file:   Assets/Audio/MusicClips/LoLandsLong1.wav.meta
+#	new file:   Assets/Audio/MusicClips/LoLandsLong2.wav
+#	new file:   Assets/Audio/MusicClips/LoLandsLong2.wav.meta
+#	new file:   Assets/Audio/MusicClips/LoLandsLong3.wav
+#	new file:   Assets/Audio/MusicClips/LoLandsLong3.wav.meta
+#	new file:   Assets/Audio/SFX/C96 gunshot.wav.asd
+#	new file:   Assets/Audio/SFX/C96 gunshot.wav.asd.meta
+#	new file:   Assets/Audio/SFX/ConfirmationSounds/ConfirmationSound2.wav.asd
+#	new file:   Assets/Audio/SFX/ConfirmationSounds/ConfirmationSound2.wav.asd.meta
+#	new file:   Assets/Audio/SFX/ConfirmationSounds/ConfirmationSound3.wav.asd
+#	new file:   Assets/Audio/SFX/ConfirmationSounds/ConfirmationSound3.wav.asd.meta
+#	new file:   Assets/Audio/SFX/FeedbackSounds/CashGrab.wav.asd
+#	new file:   Assets/Audio/SFX/FeedbackSounds/CashGrab.wav.asd.meta
+#	new file:   Assets/Audio/SFX/FeedbackSounds/EquipSound1.wav.asd
+#	new file:   Assets/Audio/SFX/FeedbackSounds/EquipSound1.wav.asd.meta
+#	new file:   Assets/Audio/SFX/FeedbackSounds/ExitRoom.wav.asd
+#	new file:   Assets/Audio/SFX/FeedbackSounds/ExitRoom.wav.asd.meta
+#	new file:   Assets/Audio/SFX/FeedbackSounds/OnFireSound.wav.asd
+#	new file:   Assets/Audio/SFX/FeedbackSounds/OnFireSound.wav.asd.meta
+#	new file:   Assets/Audio/SFX/FeedbackSounds/PickupObject1.wav.asd
+#	new file:   Assets/Audio/SFX/FeedbackSounds/PickupObject1.wav.asd.meta
+#	new file:   Assets/Audio/SFX/FeedbackSounds/SpendMoney.wav.asd
+#	new file:   Assets/Audio/SFX/FeedbackSounds/SpendMoney.wav.asd.meta
+#	new file:   Assets/Audio/SFX/GrailRejection.wav.asd
+#	new file:   Assets/Audio/SFX/GrailRejection.wav.asd.meta
+#	new file:   Assets/Audio/SFX/Punch3.wav.asd
+#	new file:   Assets/Audio/SFX/Punch3.wav.asd.meta
+#	new file:   Assets/Audio/SFX/QuestItemSound.wav.asd
+#	new file:   Assets/Audio/SFX/QuestItemSound.wav.asd.meta
+#	new file:   Assets/Audio/SFX/Tune FM Radio 05.wav.asd
+#	new file:   Assets/Audio/SFX/Tune FM Radio 05.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/BathtubFly.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/BathtubFly.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/Canon4.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/Canon4.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/CoreyGun2.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/CoreyGun2.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/HammerSound.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/HammerSound.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/JannarSound3.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/JannarSound3.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/JannarSound4.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/JannarSound4.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/TreeExplosionSound.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/TreeExplosionSound.wav.asd.meta
+#	new file:   Assets/Audio/SFX/UseAudio/TreeGrowSound.wav.asd
+#	new file:   Assets/Audio/SFX/UseAudio/TreeGrowSound.wav.asd.meta
+#	new file:   Assets/Audio/Voice/Scream1.wav.asd
+#	new file:   Assets/Audio/Voice/Scream1.wav.asd.meta
+#	modified:   Assets/Audio/dadaMixer.mixer
+#	modified:   Assets/receipt.txt.meta
+#
+# Changes not staged for commit:
+#	modified:   Assets/Jenna/Scripts/useItemQuest.cs
+#	modified:   Assets/Milan/Prefabs/MenuGrail.prefab
+#	modified:   Assets/Milan/Scripts/GameStartScript.cs
+#	modified:   Assets/Prefabs/Grail.prefab
+#	modified:   Assets/ProofOfConcept/ProofOfConcept.unity
+#	modified:   Assets/ProofOfConcept/ProofOfConceptSoundTest.unity
+#	modified:   Assets/Resources/Pickups/_Pull the trigger_, says Longxiao.prefab
+#	modified:   ProjectSettings/EditorBuildSettings.asset
+#	modified:   ProjectSettings/ProjectSettings.asset
+#
+# Untracked files:
+#	Assets/Prefabs/FakeGrail.prefab
+#	Assets/Prefabs/FakeGrail.prefab.meta
+#
+

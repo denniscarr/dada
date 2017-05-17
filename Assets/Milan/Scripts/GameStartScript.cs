@@ -26,6 +26,7 @@ public class GameStartScript : MonoBehaviour {
 
 		while (t < 4) {
 			t += Time.deltaTime;
+			fakeGrail.GetComponentInChildren<AudioSource>().volume = (4f - t) / 4f;
 			yield return null;
 		}
 
