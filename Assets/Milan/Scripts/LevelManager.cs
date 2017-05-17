@@ -71,7 +71,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		NoiseRemapping [0] = 0.5f;
 		for(int i = 1; i < NoiseRemapping.Length; i++) {
-//			NoiseRemapping [i] = NoiseRemapping [i-1] + Random.Range (-Services.IncoherenceManager.globalIncoherence, Services.IncoherenceManager.globalIncoherence);
 			NoiseRemapping [i] = Random.Range (0.00f, Services.IncoherenceManager.globalIncoherence + 0.1f);
 			NoiseRemapping [i] = Mathf.Clamp01 (NoiseRemapping [i]);
 		}
@@ -152,7 +151,7 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	string SetLevelText() {
 		string line = "";
-		line += ManagedObjects.Count + " floors down" + "\n" + "\n";
+		line += "Circle " + ManagedObjects.Count + "\n" + "\n";
 		line += LevelDescriptions[Random.Range(0, LevelDescriptions.Length)];
 
 		return line;
