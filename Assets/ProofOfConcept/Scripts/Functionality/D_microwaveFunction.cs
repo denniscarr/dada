@@ -29,7 +29,7 @@ public class D_microwaveFunction : D_Function {
             foreach (RaycastHit hit in hits)
             {
                 //Debug.Log(hit.collider.gameObject.name);
-                if (hit.collider.GetComponentInChildren<InteractionSettings>() != null)
+                if (hit.collider.gameObject != gameObject && hit.collider.GetComponentInChildren<InteractionSettings>() != null)
                 {
                     //Debug.Log("heating up: " + hit.collider.gameObject.name);
                     hit.collider.GetComponentInChildren<InteractionSettings>().heat += 0.6f * Time.deltaTime;
