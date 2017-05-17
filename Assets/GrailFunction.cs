@@ -38,10 +38,11 @@ public class GrailFunction : D_Function {
         directionFromPlayer = directionFromPlayer.normalized;
 
         GetComponentInParent<Rigidbody>().AddForce(directionFromPlayer * 30000f, ForceMode.Impulse);
+        GetComponentInParent<Collider>().enabled = false;
 
         Services.AudioManager.PlaySFX(Services.AudioManager.grailRejectionClip);
 
-        readyToRunAway = false;
+        //readyToRunAway = false;
 
         if (Services.LevelGen.levelNum == -1)
         {
