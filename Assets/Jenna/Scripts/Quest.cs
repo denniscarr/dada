@@ -134,7 +134,7 @@ public class Quest: MonoBehaviour {
 		// make the actual text appear
 		Canvas questCanvas = questItNote.GetComponentInChildren<Canvas>();
 		Text questText = questCanvas.GetComponentInChildren<Text> ();
-		questText.text = description;
+		//questText.text = description;
 
 		questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
 		questItNote.transform.DOScale(Vector3.one, 0.4f);

@@ -48,7 +48,7 @@ public class PickupQuest : Quest {
             //	pickedUp = false;
             //}
 
-            if (Input.GetMouseButtonUp(0) && targetObject.transform.parent.name.Equals("INROOMOBJECTS"))
+			if (Input.GetMouseButtonUp(0) && targetObject.transform.parent && targetObject.transform.parent.name.Equals("INROOMOBJECTS"))
             {
                 FinishQuest();
             }

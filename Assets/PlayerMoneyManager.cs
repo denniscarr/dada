@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerMoneyManager : MonoBehaviour {
 
@@ -12,7 +13,11 @@ public class PlayerMoneyManager : MonoBehaviour {
         set
         {
             if (value < 0) value = 0;
-            displayText.text = "$" + value;
+			string notes = "$" + value;
+			displayText.transform.DOSpiral(2, Vector3.forward, SpiralMode.ExpandThenContract, 100, 100);
+			//displayText.transform.DOShakeScale(1.0f,new Vector3(0.1f,0.1f,0.1f),10,90,false);;
+			displayText.DOText(notes,1.0f,true,ScrambleMode.Numerals);
+            //displayText.text = "$" + value
             //Debug.Log("changing money");
             _funds = value;
         }

@@ -35,7 +35,7 @@ public class D_beamGunFunction : D_Function {
 
             if (Hit.collider.GetComponentInChildren<NPC>() != null)
             {
-                Hit.collider.GetComponentInChildren<NPC>().health -= 5f;
+                Hit.collider.GetComponentInChildren<NPC>().health -= 10f;
             }
 
 			Instantiate (spark, Hit.point, Quaternion.identity);

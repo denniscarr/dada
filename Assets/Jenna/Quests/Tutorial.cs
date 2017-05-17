@@ -171,36 +171,32 @@ public class Tutorial : Quest {
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
 			VisorGenerate();
-			OnDisappearComplete("Welcome. Left click on the Visor to purchase it. It's that gray thing.");
+			TaskFinished("Welcome. Left click on the Visor to purchase it. It's that gray thing.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
 
 	}
 
-	void TaskFinished(){
+	void TaskFinished(string notes){
 		if(questItNote){
-			questItNote.transform.DOScale(Vector3.zero, 0.4f);
+			questItNote.transform.DOScale(Vector3.zero, 0.4f).OnComplete(()=>OnDisappearComplete(notes));
 			GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
 			stars.transform.position = questItNote.transform.position;
 			GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
+		}else{
+			OnDisappearComplete(notes);
 		}
 
 	}
 
 	void AddNewNote(string notes){
         //wait to add do tween
-        QuestItNoreText.DOText("",0.1f).OnComplete(()=>OnDisappearComplete(notes));
-		//MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
-//		foreach(MeshRenderer mr in meshRenderers){
-//			
-//			mr.material.DOFade(0f,1.0f);// DOFade(0,1f).SetDelay(1f);
-//		}
-		//questItNote.GetComponent<s>
+		QuestItNoreText.DOText("",0.1f).OnComplete(()=>TaskFinished(notes));
 
 	}
 
 	void OnDisappearComplete(string notes){
-		TaskFinished();
+		//TaskFinished();
 		if(questItNote){
 			Destroy(questItNote);
 		}
@@ -212,7 +208,8 @@ public class Tutorial : Quest {
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
         questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
         questItNote.transform.DOScale(Vector3.one, 0.4f);
-		QuestItNoreText.DOText(notes,1f);
+		notes = notes + " Reward:$25";
+		QuestItNoreText.DOText(notes,1f).SetDelay(0.5f);;
 		//QuestItNoreText.text = notes;
 
 	}
@@ -244,7 +241,7 @@ public class Tutorial : Quest {
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 
 //			Debug.Log("Skip tutorial");
-			OnDisappearComplete("Looks like you've been here before. Feel free to jump off at any time.");
+			TaskFinished("Looks like you've been here before. Feel free to jump off at any time.");
 
             GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
             GetComponent<QuestManager>().enabled = true;
@@ -305,10 +302,11 @@ public class Tutorial : Quest {
 		mouseControllerNew.writer.WriteAtPoint("Drag this note into your visor with the mouse.", mouseControllerNew.textPosition);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.DRAG_NOTE_IN;
-			TaskFinished();
-			questItNote.transform.DOScale(Vector3.one, 0.4f).SetDelay(0.4f);
-			QuestItNoreText.text = "Drag the note into your visor with the mouse.";
 
+			questItNote.transform.DOScale(Vector3.one, 0.4f).SetDelay(0.4f);
+			string description = "Drag the note into your visor with the mouse.";
+			TaskFinished(description);
+			//QuestItNoreText.DOText(description, 1f);
 		}
 	}
 
