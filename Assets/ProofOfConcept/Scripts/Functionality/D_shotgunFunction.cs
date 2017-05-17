@@ -5,7 +5,7 @@ using UnityEngine;
 public class D_shotgunFunction : D_Function {
 	public GameObject[] pelletPrefab;
 	public int pelletCount = 8;
-	public float pelletVelocity = 150f;
+	float pelletVelocity = 75f;
 	public float spreadFactor = 0.1f;
 	//public float fireRate;
 	// Use this for initialization

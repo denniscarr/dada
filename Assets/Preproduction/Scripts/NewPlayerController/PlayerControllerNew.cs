@@ -121,7 +121,7 @@ public class PlayerControllerNew : MonoBehaviour {
 
 		Debug.Log(mode);
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, 0.2f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.enterRoomClip, sfxVolume);
 		//Debug.Log ("playing fucking sfx");
 
 	}
@@ -138,7 +138,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, sfxVolume);
 
 	}
 
@@ -161,7 +161,7 @@ public class PlayerControllerNew : MonoBehaviour {
 		insideVisorMan.enabled = false;
 		headBob.enabled = false;
 
-		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, 0.7f);
+		Services.AudioManager.PlaySFX (Services.AudioManager.toggleVisor, sfxVolume);
 	}
 
 
@@ -175,30 +175,29 @@ public class PlayerControllerNew : MonoBehaviour {
 		}
 	}
 
-	void InRoomUpdate(){
+	void InRoomUpdate()
+    {
 		//change back to zoom out when click
 		Transform t_hit = CameraRayCast(UpperCamera);
 
-		if(t_hit && t_hit.parent){
-			//Debug.Log(t_hit.name);
-			if(t_hit.parent.name.Equals("Viewing Platform")){
+		if(t_hit && t_hit.parent)
+        {
+            // MOUNTING OBSREVATION PLATFORM
+			if (t_hit.parent.name.Equals("Viewing Platform") || Input.GetKeyDown(KeyCode.Tab))
+            {
                 GameObject.Find("UpperCamera").GetComponent<Writer>().WriteAtPoint("Press Left Mouse Button to mount Observation Platform", GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().textPosition);
-                //txtInfo.text = "Platform is calling you...";
-                //Debug.Log(t_hit.parent.name);
-                if (Input.GetMouseButtonDown(0)){
-                    insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-                    GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = true;
-                    GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().AbandonItem();
-                    GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = false;
-                    UpperCamera.DOFieldOfView(33f, 1.5f);
-                    Debug.Log(t_hit.parent.name);
-					mode = ControlMode.ZOOM_OUT_MODE;
-					Services.AudioManager.PlaySFX (Services.AudioManager.exitRoomClip, 0.2f);
-					InitZoomOutMode();
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    MountPlatform();
 				}
 			}
-
 		}
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            MountPlatform();
+        }
 
 		//fps control
 		//rigidbodyfirstperson.cs
@@ -257,9 +256,19 @@ public class PlayerControllerNew : MonoBehaviour {
             mode = ControlMode.IN_ROOM_MODE;
 			InitInRoomMode();
 		}
-
-
 	}
+
+    void MountPlatform()
+    {
+        insideVisorMan.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        GameObject.Find("Player Camera").GetComponent<EquippableFinder>().active = true;
+        GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().MoveEquippedItemsOutside();
+        GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = false;
+        UpperCamera.DOFieldOfView(33f, 1.5f);
+        mode = ControlMode.ZOOM_OUT_MODE;
+        Services.AudioManager.PlaySFX(Services.AudioManager.exitRoomClip, sfxVolume);
+        InitZoomOutMode();
+    }
 
 	Transform CameraRayCast(Camera camera){
 		Ray ray = camera.ScreenPointToRay(Input.mousePosition);

@@ -32,6 +32,7 @@ public class QuestBuilderScript : MonoBehaviour {
 
 	//Store all game objects with NPC.cs attached in this list
 	private NPC[] enemies;
+	private InteractionSettings[] usableItems;
 
 
 	void Start () {
@@ -60,7 +61,8 @@ public class QuestBuilderScript : MonoBehaviour {
             if (manager.questsGeneratedInCurrentLevel < Services.Quests.questsToComplete)
             {
                 GeneratePickup();
-			GenerateElimination ();
+				GenerateElimination ();
+				GenerateUse ();
 //                Debug.Log("Quests genereated in current level: " + manager.questsGeneratedInCurrentLevel);
 //                Debug.Log("Quests to complete: " + manager.questsToComplete);
 			}
@@ -83,6 +85,7 @@ public class QuestBuilderScript : MonoBehaviour {
 		// pick an object for it
 		//questThing = ranger % length;
 		objeto = finder.pickups [Random.Range (0, finder.pickups.Count)];
+		print (objeto);
         if (objeto == null) return;
 		objectScript = objeto.GetComponent<QuestObject> ();
 
@@ -96,7 +99,7 @@ public class QuestBuilderScript : MonoBehaviour {
             Destroy(objeto.GetComponents<PickupQuest>()[1]);
             return;
         }
-		pickup.makeTheQuest ();
+		pickup.makeTheQuest (objeto);
 		manager.questList.Add (newQuest);
 
 		if (newQuest.progress == Quest.QuestProgress.AVAILABLE) {
@@ -115,7 +118,8 @@ public class QuestBuilderScript : MonoBehaviour {
 	public void GenerateElimination(){
 		if (Services.LevelGen.levelNum == 0) return;
 		enemies = GameObject.FindObjectsOfType<NPC> ();
-		GameObject enemy = enemies[Random.Range (0, enemies.Length)].gameObject;
+		GameObject enemy = enemies[Random.Range (0, enemies.Length)].transform.parent.gameObject;
+		print (enemy);
 		if (enemy.GetComponent<NPCEliminationQuest> () != null)
 			return;
 		NPCEliminationQuest newQuest = enemy.AddComponent<NPCEliminationQuest> ();
@@ -123,13 +127,41 @@ public class QuestBuilderScript : MonoBehaviour {
 			Destroy (enemy.GetComponents<NPCEliminationQuest> () [1]);
 			return;
 		}
-		this.gameObject.GetComponent<NPCEliminationQuest> ().makeTheQuest ();
+		this.gameObject.GetComponent<NPCEliminationQuest> ().makeTheQuest (enemy);
 		manager.questList.Add (newQuest);
 
 		if (newQuest.progress == Quest.QuestProgress.AVAILABLE) {
 			manager.QuestRequest(objectScript);
 			//Debug.Log ("quest added to list");
 			this.gameObject.GetComponent<NPCEliminationQuest> ().spawnNote ();
+		}
+
+		if (newQuest.progress == Quest.QuestProgress.ACCEPTED) {
+			manager.currentQuestList.Add (newQuest);
+		}
+		manager.questsGeneratedInCurrentLevel++;
+	}
+
+	public void GenerateUse() {
+		if (Services.LevelGen.levelNum == 0) return;
+		usableItems = GameObject.FindObjectsOfType<InteractionSettings> ();
+		GameObject usableItem = usableItems [Random.Range (0, usableItems.Length)].transform.parent.gameObject;
+		print (usableItem);
+
+		if (usableItem.GetComponent<useItemQuest> () != null)
+			return;
+		useItemQuest newQuest = usableItem.AddComponent<useItemQuest> ();
+		if (usableItem.GetComponents<useItemQuest> ().Length > 1) {
+			Destroy (usableItem.GetComponents<useItemQuest> () [1]);
+			return;
+		}
+		this.gameObject.GetComponent<useItemQuest> ().makeTheQuest (usableItem);
+		manager.questList.Add (newQuest);
+
+		if (newQuest.progress == Quest.QuestProgress.AVAILABLE) {
+			manager.QuestRequest(objectScript);
+			//Debug.Log ("quest added to list");
+			this.gameObject.GetComponent<useItemQuest> ().spawnNote ();
 		}
 
 		if (newQuest.progress == Quest.QuestProgress.ACCEPTED) {

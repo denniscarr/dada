@@ -21,9 +21,11 @@ public class MusicTrigger: MonoBehaviour {
 
 	public float totalObjects = 0f;
 	public float nonPickups = 0f;
+	public float pickups = 0f;
 	public float inkSprites = 0f;
 	public float imageSprites = 0f;
 	public float npcs = 0f;
+
 
 
 	// Use this for initialization
@@ -47,21 +49,26 @@ public class MusicTrigger: MonoBehaviour {
 
 		totalObjects = 0f;
 		nonPickups = 0f;
+		pickups = 0f;
 		inkSprites = 0f;
 		imageSprites = 0f;
 		npcs = 0f;
 
 		foreach (Collider collider in collidedObjects) {
 
-			if (collider.gameObject.tag == "ImageSprite") {
-				imageSprites++;
-			} else if (collider.gameObject.tag == "InkSprite") {
+			if (collider.gameObject.tag == "InkSprite") {
 				inkSprites++;
-			} else if (collider.gameObject.GetComponentInChildren<InteractionSettings> () != null &&
+			} else if (collider.gameObject.name == "Cross(Clone)") {
+				imageSprites++;
+			}else if (collider.gameObject.GetComponentInChildren<InteractionSettings> () != null &&
 			           collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried == false &&
 			           collider.gameObject.GetComponentInChildren<NPC> () == null) {
 				//Debug.Log ("nonpickup object");
 				nonPickups++;
+			} else if (collider.gameObject.GetComponentInChildren<InteractionSettings> () != null &&
+			           collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried == true &&
+			           collider.gameObject.GetComponentInChildren<NPC> () == null) {
+				pickups++;
 			} else if (collider.gameObject.GetComponentInChildren<NPC> () != null) {
 				npcs++;
 			} 
@@ -72,20 +79,21 @@ public class MusicTrigger: MonoBehaviour {
 			}
 		}
 
-		totalObjects = imageSprites + inkSprites + nonPickups + npcs;
+		totalObjects = imageSprites + inkSprites + nonPickups + pickups + npcs;
 
 		//Debug.Log (nonPickups);
 
-		imageSprites = Mathf.Clamp (imageSprites, 0f, 20f);
+		imageSprites = Mathf.Clamp (imageSprites, 0f, 2f);
 		inkSprites = Mathf.Clamp (inkSprites, 0f, 20f);
 		nonPickups = Mathf.Clamp (nonPickups, 0f, 20f);
+		pickups = Mathf.Clamp (pickups, 0f, 20f);
 		npcs = Mathf.Clamp (npcs, 0f, 15f);
 		totalObjects = Mathf.Clamp (totalObjects, 0f, 20f);
 
 		//Debug.Log (inkSprites);
 
 
-		Services.AudioManager.EqualizeStems (inkSprites, imageSprites, npcs, nonPickups, totalObjects);
+		Services.AudioManager.EqualizeStems (inkSprites, imageSprites, npcs, nonPickups, pickups, totalObjects);
 
 
 		//find all toneSources, find out if they're playing

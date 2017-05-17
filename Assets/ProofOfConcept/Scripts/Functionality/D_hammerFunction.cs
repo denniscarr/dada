@@ -28,6 +28,11 @@ public class D_hammerFunction : D_Function {
             float originalYScale = hammerHit.transform.localScale.y;
             if (hammerHit.name == "GROUND") return;
 
+            if (hammerHit.GetComponentInChildren<NPC>() != null)
+            {
+                hammerHit.GetComponentInChildren<NPC>().health -= 34f;
+            }
+
             Vector3 newScale = hammerHit.transform.localScale - new Vector3(-flattenMultiplier, flattenMultiplier, -flattenMultiplier);
             if (newScale.y < newScale.x * 0.001f) newScale.y = newScale.x * 0.001f;
             if (hammerHit.GetComponentInChildren<InteractionSettings>() != null) hammerHit.GetComponentInChildren<InteractionSettings>().savedScale = newScale;

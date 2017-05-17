@@ -6,8 +6,10 @@ using DG.Tweening;
 public class D_mirrorDeskFunction : D_Function {
 	private InteractionSettings[] items;
 	private LineRenderer pullBeam;
+
 	// Use this for initialization
 	new void Start () {
+
 		base.Start ();
 		items = GameObject.FindObjectsOfType<InteractionSettings> ();
 		pullBeam = gameObject.GetComponent<LineRenderer> ();
@@ -16,15 +18,18 @@ public class D_mirrorDeskFunction : D_Function {
 	
 	// Update is called once per frame
 	public override void Use () {
-		base.Use ();
-		Transform summoning = items [Random.Range (0, items.Length)].transform.parent;
+
+        base.Use();
+
+        items = GameObject.FindObjectsOfType<InteractionSettings>();
+        Transform summoning = items [Random.Range (0, items.Length)].transform.parent;
 		print (summoning);
-		pullBeam.enabled = true;
-		pullBeam.SetPosition (0, transform.position);
+		//pullBeam.enabled = true;
+		//pullBeam.SetPosition (0, transform.position);
 
 		if (summoning.GetComponent<Rigidbody> () != null) {
 			summoning.DOLocalMove (gameObject.transform.position, 2f);
-			pullBeam.SetPosition (1, summoning.localPosition);
+			//pullBeam.SetPosition (1, summoning.localPosition);
 		}
 	}
 }

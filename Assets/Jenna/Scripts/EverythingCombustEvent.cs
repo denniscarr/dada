@@ -18,7 +18,7 @@ public class EverythingCombustEvent : IncoherenceEvent {
         // Find all game objects.
         foreach (InteractionSettings intSet in FindObjectsOfType<InteractionSettings>())
         {
-            if (Random.value > 0.5f)
+            if (Random.value <= 0.25f)
             {
                 intSet.heat += 100;
             }

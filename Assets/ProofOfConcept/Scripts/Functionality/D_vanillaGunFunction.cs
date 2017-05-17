@@ -34,6 +34,10 @@ public class D_vanillaGunFunction : D_Function {
             }
             else
             {
+                if (atomicHit.GetComponentInChildren<NPC>() != null)
+                {
+                    atomicHit.GetComponentInChildren<NPC>().health -= 1000000000;
+                }
                 Vector3 atomicBox = atomicHit.transform.localScale;
                 Vector3 atomicPos = new Vector3(Random.value * atomicBox.x, Random.value * atomicBox.y, Random.value * atomicBox.z);
                 atomicPos = transform.TransformPoint(atomicBox * 0.5f);

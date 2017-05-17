@@ -5,7 +5,7 @@ using UnityEngine;
 public class BathSinkFunction : MonoBehaviour {
    // public GameObject bathSink;
     public GameObject explosionParticle;
-    float radius = 25.0F;
+    float radius = 30.0F;
     float power = 200.0F;
     public float fuseTime = 5f;
     public float bathSinkSpeed = 100f;
@@ -43,6 +43,11 @@ public class BathSinkFunction : MonoBehaviour {
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
         foreach (Collider hit in colliders)
         {
+            if (hit.GetComponentInChildren<NPC>() != null)
+            {
+                hit.GetComponentInChildren<NPC>().health -= 50f;
+            }
+
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             if (rb != null)

@@ -29,7 +29,9 @@ public class D_longxiaoGunFunction : D_Function {
 			line.SetPosition (1, Hit.point);
 			Services.AudioManager.Play3DSFX (shrinkSound, Hit.point, 1f, 1f);
 			Hit.transform.DOScale(zero, 1f);
-			Destroy (Hit.transform.gameObject, 5f);
+            if (Hit.collider.GetComponentInChildren<NPC>() != null)
+            Hit.collider.GetComponentInChildren<NPC>().health -= 1000000000;
+            Destroy(Hit.transform.gameObject, 5f);
 		}
 		else {
 			line.SetPosition(1, eliminationRay.GetPoint(100));	

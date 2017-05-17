@@ -155,9 +155,8 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 		if (playerHeightNormalized < 0) {
 			playerHeightNormalized = Mathf.Abs(playerHeightNormalized);
 		}
-
+		Services.LevelGen.cookieLight.intensity = Mathf.Lerp (Services.LevelGen.cookieLight.intensity, 0, Time.deltaTime);
 		ground.GetComponent<Renderer> ().material.color = Color.Lerp(Color.black, Color.white, NormalisedToHighestPoint);
-
 		Services.Player.GetComponentInChildren<ColorfulFog> ().gradient = gradient;
 		Services.Player.GetComponentInChildren<ColorfulFog> ().ApplyGradientChanges ();
 
@@ -184,7 +183,9 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				perlinVal = Mathf.Pow (perlinVal, 0.75f);
 				verts [i] = new Vector3 (x, perlinVal * 10, y) * tileScale;
 				verts[i] -= new Vector3(_width/2, 0, _length/2) * tileScale;
-				groundVerts [i] += Vector3.up * Mathf.Sin(Time.time/Services.IncoherenceManager.globalIncoherence + i + Random.Range(0, Services.IncoherenceManager.globalIncoherence)) * Time.deltaTime * Services.IncoherenceManager.globalIncoherence;
+				if (Services.LevelGen.levelNum < -1) {
+					groundVerts [i] += Vector3.up * Mathf.Sin (Time.time / Services.IncoherenceManager.globalIncoherence + i + Random.Range (0, Services.IncoherenceManager.globalIncoherence)) * Time.deltaTime * Services.IncoherenceManager.globalIncoherence;
+				}
 				float skyCoefficient = Mathf.Pow(perlinVal, 3);
 
 //				skyColor.SetPixel (x, y, Color.Lerp(Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.black, playerHeightNormalized), Color.Lerp(gradient.Evaluate (playerHeightNormalized), Color.white, playerHeightNormalized), skyCoefficient));

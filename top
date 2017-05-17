@@ -1,0 +1,557 @@
+[33mcommit 37520e47d66c7327d3ddb5621c1c2288e5406f6a[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 16 15:58:55 2017 -0400
+
+    chairsound
+
+[33mcommit 812e9a5d6c59fd0fe8c695e89b7f5eb08aa07205[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 16 15:46:42 2017 -0400
+
+    1812 overture
+
+[33mcommit e9e08e9551b44f9bbee12864eff35a051763e908[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 16 15:06:55 2017 -0400
+
+    Music/Sound Effect
+
+[33mcommit b6b755ab696a8475dded5c8baa96d4ee707c4f30[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 16 14:07:57 2017 -0400
+
+    Additional Music Stuff
+
+[33mcommit f0d386b835867f1ef187ea71deeec2d87beba0fe[m
+Merge: 22bdd07a b4b96a82
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 16 12:33:51 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 22bdd07a2e4459daf721b5ee4934f3fbf88901d0[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 16 12:33:46 2017 -0400
+
+    Revamped Music Incoherence
+    
+    and explosion sound adjustments
+
+[33mcommit b4b96a826467e699eaf28d2bf8f7e5aa47d96271[m
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 16 12:18:26 2017 -0400
+
+    fix outline bug
+
+[33mcommit 4be414cc5c326ac6bd0c2fb6add5b39efb32322b[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 16 01:49:43 2017 -0400
+
+    mushroom eat sounds
+
+[33mcommit 7ea0d3ef1c0db38ef7f71c905c759736c96bc948[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Mon May 15 21:42:26 2017 -0400
+
+    i dunno something maybe
+
+[33mcommit 9bd06276f213a140c45b61d5cad66d19593ebec7[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Mon May 15 18:55:27 2017 -0400
+
+    Aug A3 and tree grow sounds
+
+[33mcommit 33b05a1d31d6dba9e5c943a34c3ff97f29f7541d[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Mon May 15 18:14:45 2017 -0400
+
+    AK12 sound
+
+[33mcommit 4d9809a55e77eb8fe80aefe221b3507127bc1d84[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Mon May 15 17:43:22 2017 -0400
+
+    Trying to balance SFX
+
+[33mcommit 7d6cb553609432ea78f30004be23c93c554d95b7[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Mon May 15 17:43:10 2017 -0400
+
+    Longxiao Gun Sounds
+
+[33mcommit c97d16887f9ac2872d83745981713eca58ad2d41[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Mon May 15 15:59:58 2017 -0400
+
+    some mushroom fixes
+
+[33mcommit 970e1499ca36031c0ba103f8ce338227ac1620a1[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Sun May 14 17:26:39 2017 -0400
+
+    Ugly visor
+
+[33mcommit 0dad96a86cefc91bc8333adfaa598d539abc3b95[m
+Merge: 8e06f81d 1e1a90a1
+Author: milank-s <mks554@nyu.edu>
+Date:   Sat May 13 23:08:10 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 8e06f81db5f9b383174cc45c12f1168a211d42cb[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Sat May 13 23:08:07 2017 -0400
+
+    ugly visor changes, sky changes, money spawn changes
+    
+    FBX for all models
+
+[33mcommit 1e1a90a19b043966f3e32e7a540c4b4226201df4[m
+Merge: 0974ca06 91968edd
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 22:14:18 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 0974ca06e1c042ec4cb83362b04d9da94cad9c38[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 22:14:13 2017 -0400
+
+    SFX test scene
+
+[33mcommit 91968edd238e71108affae0a7e953792745667c9[m
+Merge: 1fbe1736 0856081c
+Author: milank-s <mks554@nyu.edu>
+Date:   Sat May 13 21:44:16 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 1fbe1736289923a71db5bf6ecf2bc99cc5ce71f6[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Sat May 13 21:44:12 2017 -0400
+
+    Sky added, terrain undulating, crosses as trees, no quest lights
+
+[33mcommit 0856081ce2ea3deeacfe4958a6c571a947bb95ba[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 21:27:58 2017 -0400
+
+    Mushrooms are all single-use
+    
+    And screen effects fade over time
+
+[33mcommit f24adfac1c93c04cf1259c194eca7ed7a9e9d6cf[m
+Merge: 98acac93 e0a94e7b
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 19:32:13 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 98acac93e8db6ba0f68c0e154a5a53281fae319e[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 19:32:05 2017 -0400
+
+    TV now changes music playback
+
+[33mcommit e0a94e7b4b12f72a27cfbdb8fefcedcfe3559538[m
+Merge: 07812bb4 d3d16b7a
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Sat May 13 19:31:00 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 07812bb47057d107bb77b193bbe688e935ecc948[m
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Sat May 13 19:28:28 2017 -0400
+
+    I have almost completed the NPC elimination quest.
+    Now, one pickup quest and one elimination quest will be generated when player hit the ground.
+    However, the quest item of both quests is the very same thing.
+
+[33mcommit d3d16b7a4a22cc61cfd89f4aeaf779907f24ac90[m
+Merge: d573b49e ef6283ad
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 19:25:55 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit d573b49e2bcbe7ef0a6219b5d5f7eebabd3a4c72[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 19:25:45 2017 -0400
+
+    Brown and Green Mushrooms Consumable
+
+[33mcommit ef6283ade48961cfa1294f2a695faac94f6f1f28[m
+Merge: 50091a55 b3e8e52a
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Sat May 13 18:17:07 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 50091a550892a3586204ef8b724667c2a2c85f3a[m
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Sat May 13 18:15:18 2017 -0400
+
+    Changed the tutorial script.
+    I commented out the redundent delarition and intiation of some variables already in the Quests.cs
+
+[33mcommit b3e8e52a4fd7178e783660cae37e003519a87f54[m
+Merge: f83bc267 db11a239
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 17:50:22 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit f83bc267dcb5e5084d228cb4a1e988abd7efb64d[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Sat May 13 17:50:05 2017 -0400
+
+    Blue Mushroom Now Consumable
+    
+    added tweening, also adjusted music things
+
+[33mcommit db11a239961b061be6851eaae9575c58718696cc[m
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Sat May 13 17:29:56 2017 -0400
+
+    Properly edited the Quest.cs
+    Now as a parent class it has all the nesessary variable declaritions and functions.
+
+[33mcommit c096ce5dc008029ae950f5b4650dda3c8a9bc52b[m
+Merge: 74ba4e81 b1b322dd
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 20:30:56 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 74ba4e811f2c72bd95651f80a8580010b3d2704f[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 20:30:41 2017 -0400
+
+    Fixed equip issues and made it so the player automatically unequips all items when using equip platform.
+
+[33mcommit 229778f87aa8e8d4852dcfccd109f3eca0fce11c[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 17:22:50 2017 -0400
+
+    Tried to make cannon smaller & fix winged demon. DELETED CIRCLE 0.
+
+[33mcommit b1b322ddb04f68d27e58d988fc393453350cfd3f[m
+Merge: 608e9412 d2b3206e
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Thu May 11 17:04:26 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 608e94125fc2f51191b5b6f40068884d7c32f4bf[m
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Thu May 11 17:03:33 2017 -0400
+
+    Tank NPC is able to shoot cannon shells now.
+
+[33mcommit d2b3206e27b602b61f62dbb9b8388d5a3bd2fa1b[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 17:01:46 2017 -0400
+
+    Made the get less dark when the grail spawns.
+
+[33mcommit 2ef64d6e6370d9a53082cf09888957b14617380f[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 16:59:06 2017 -0400
+
+    Grail no longer spawns a new level.
+
+[33mcommit f38b4541b42e44933197cdf27f65964e1e9c47c2[m
+Merge: 764d16ab e2d13a85
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 16:53:46 2017 -0400
+
+    merge
+
+[33mcommit 764d16ab7e702cae0ae7e834cf07ec704f8641d6[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 16:53:15 2017 -0400
+
+    Global incoherence now increases more quickly.
+
+[33mcommit e2d13a85a5f75c68aaa7b135fc357b353e981deb[m
+Author: 010011100010 <ll3305@nyu.edu>
+Date:   Thu May 11 16:51:38 2017 -0400
+
+    Fixed bathtub and grenades throwing distance.
+
+[33mcommit 81ef9cbcff9498e58a90d0f882720781cf5dedf0[m
+Merge: 3a09055d dae0af1a
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 16:28:27 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 3a09055d8e850e0d1df5e044c054bab412f031a2[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Thu May 11 16:27:53 2017 -0400
+
+    Removed 'circle 0' text from the screen. (That's a pretty good name for our game though)
+
+[33mcommit dae0af1a833caf432977a53a77656d6fa6ea519a[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Thu May 11 01:20:43 2017 -0400
+
+    fixed levels not spawning anything
+    
+    had a < instead of a > on level num
+
+[33mcommit bb04a4b248adcba769b417fe8b33aa413e704bd4[m
+Merge: 7afac01a df3140b9
+Author: milank-s <mks554@nyu.edu>
+Date:   Wed May 10 19:57:48 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 7afac01a696f4b9b8aa4b9aba8c3e83b2e75f760[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Wed May 10 19:56:25 2017 -0400
+
+    money point light removed, money spawns down
+
+[33mcommit df3140b91ed1cf378f2012b09d9f6ee66afb76bd[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 15:52:07 2017 -0400
+
+    making sure my push went through
+
+[33mcommit 1b1660ce2722a74544c888bdb3d87c360f01f20a[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 02:06:27 2017 -0400
+
+    Fixed problem where gun disappeared in tutorial.
+
+[33mcommit bd33eebf90e72f6a73c0d6d6fc69b57bbf434d64[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 01:25:27 2017 -0400
+
+    Made NPCs use items more frequently.
+
+[33mcommit a68c23db06849378dc0ffd1d60be2aae4e87ea1d[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 01:21:14 2017 -0400
+
+    Tried to fix some cursor problems.
+
+[33mcommit 6fc89898fd67ec0d7eac67ba3b28bed7f54884b7[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 01:03:43 2017 -0400
+
+    Added special messages for when the cursor is pointed at money.
+
+[33mcommit 451a59798c2df3d1ada5944c3f7b6538ac82dbb7[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 00:55:00 2017 -0400
+
+    Now you pick up money by walking over it.
+
+[33mcommit 0c9d35213e17229c2c60cf5d6411613b08ee5ff0[m
+Merge: 09284383 091e0e8d
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 00:22:28 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 09284383234f10e58f8dca3faa72ac7b4d25bffb[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Wed May 10 00:22:11 2017 -0400
+
+    sun intensity tweak
+
+[33mcommit 091e0e8d3f0d89e1f26bbda8c847bdc91bab7482[m
+Merge: 12725416 f9afb6be
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 22:37:11 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 127254160a7af54e0647432ef1c1839db4262ea1[m
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 22:37:02 2017 -0400
+
+    fix cursor disappear
+
+[33mcommit f9afb6be3c684d72eca79af94849424b561922dc[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 14:22:33 2017 -0400
+
+    level check added to spawning
+
+[33mcommit 72ac897678a0dffad31ae46f38c5ea85675df0e7[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 14:19:29 2017 -0400
+
+    debugs removed
+
+[33mcommit 178f40189e0266161d57237a0d1cc512fd5af11f[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 14:17:36 2017 -0400
+
+    money spawn
+
+[33mcommit 4056346f5bdb940d52c7cab4151bcd2af26144f2[m
+Merge: 49dc072f 261c4b2f
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 14:10:33 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 49dc072f5cf3b29ec2c0adf5c237ed25a3ab1bb6[m
+Merge: 8c2e26ae 38e58a00
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 14:10:30 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+    
+    # Conflicts:
+    #       Assets/Preproduction/Prefabs/PlayerControllerNew.prefab
+
+[33mcommit 261c4b2f0937b54f91bc330717342a140634ac70[m
+Merge: 96f763be 38e58a00
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 9 14:10:00 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 96f763be0186be9b3b79d4021d960696ab273307[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 9 14:09:55 2017 -0400
+
+    microwave sound redo
+
+[33mcommit 8c2e26ae806b08fc1d1af639023f0a2de3840117[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 14:09:06 2017 -0400
+
+    Room model changes
+
+[33mcommit 38e58a0011fe580d4af8e52863bb87a52035c98a[m
+Merge: 33acf45c 08a1a0af
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 14:06:00 2017 -0400
+
+    merge
+
+[33mcommit 33acf45c1778952a8fdd7e78b500a84bec4d119f[m
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 14:05:12 2017 -0400
+
+    add tween again
+
+[33mcommit 08a1a0affae003da78de8c61f1ffcb59818c8a97[m
+Merge: 37baac42 cd0fb63c
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 13:59:38 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 37baac42110569978cd338a68a694b0748e586f6[m
+Merge: f5b73dde 01aebf2b
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 13:59:31 2017 -0400
+
+    merge
+
+[33mcommit f5b73ddef972db342e90f303f978da21500f9d64[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 13:57:36 2017 -0400
+
+    various tweaks & fixes.
+
+[33mcommit cd0fb63c1040eca4f95c6a00d5b88c7e44fadd87[m
+Merge: a8f9fa53 01aebf2b
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 13:57:35 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit a8f9fa53f43fc00583e21ccf3175c481c4f7ae64[m
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 13:57:28 2017 -0400
+
+    when object is not close enough to equip, the mouse fade out
+
+[33mcommit 01aebf2bbce33544c13bdc94fcec71eab6d8903c[m
+Merge: 0379a12d c9c6f769
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 9 13:20:16 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 0379a12dc99931d967b39b06fddd7d78e3f5b7e8[m
+Author: 8ude <crbertelsen@gmail.com>
+Date:   Tue May 9 13:20:10 2017 -0400
+
+    new sounds
+
+[33mcommit a5ade81bc47525bfda65ad336dfca91e1068c661[m
+Merge: b179b89f c9c6f769
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 13:19:53 2017 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit b179b89fd6c53e3b7d253e8b00f6a0aca4897c17[m
+Author: milank-s <mks554@nyu.edu>
+Date:   Tue May 9 13:19:37 2017 -0400
+
+    sprite shader finally fixed
+
+[33mcommit c9c6f76948d79015ad875362ee0d4fbbe40d3377[m
+Merge: 7a8d7062 d3314b3a
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 13:13:43 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada.git; branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 7a8d7062d19d61ea94e358a760fbcab91c3ac158[m
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 13:13:30 2017 -0400
+
+    fix a tween bug
+
+[33mcommit d3314b3ad8ee93a23124e1e20d28a22b90c41218[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 12:37:03 2017 -0400
+
+    typo
+
+[33mcommit a1bc67849263a987ab2e2842d6918cc9d3c5f864[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 12:36:12 2017 -0400
+
+    tweak
+
+[33mcommit 3b1a30b8c33dd2af83a5b997a42d6ff8d5f654cb[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 12:34:22 2017 -0400
+
+    Changed tutorial text a bit.
+
+[33mcommit d21544728d4548e14a4648a551806364f57791e8[m
+Merge: 1798a2da 5e99e090
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 12:12:16 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit 1798a2da36bb717b279be529b4bac69b0c586960[m
+Author: denniscarr <dcarr1@gmail.com>
+Date:   Tue May 9 12:12:09 2017 -0400
+
+    Fixed some grail problems.
+
+[33mcommit 5e99e090456a1120cde17b6e4d7a8e4f045942a7[m
+Merge: abcc8c40 f8d04c7f
+Author: Vanilla <swingliu0831@foxmail.com>
+Date:   Tue May 9 12:08:02 2017 -0400
+
+    Merge branch 'master' of https://github.com/denniscarr/dada
+
+[33mcommit abcc8c40c3abf1b51278096baa9d6ef5a0b49710[m
+Author: Vanilla <swingliu0831@f

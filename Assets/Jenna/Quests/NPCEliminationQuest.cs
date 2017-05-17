@@ -11,13 +11,15 @@ public class NPCEliminationQuest : Quest {
 	
 	// Update is called once per frame
 	public void FixedUpdate () {
-		if (targetObject != null && targetObject.GetComponentInChildren<NPC> () != null && targetObject.GetComponentInChildren<NPC> ().died == true) {
+		if (targetObject != null && targetObject.GetComponentInChildren<NPC> () != null && targetObject.GetComponentInChildren<NPC> ().health < 1) {
+			print ("Mission accomplished");
 			FinishQuest();
 		}
+
 	}
 
-	public override void makeTheQuest(){
-		base.makeTheQuest ();
+	public override void makeTheQuest(GameObject _targetObject){
+		base.makeTheQuest (_targetObject);
 		rewardMoney = Mathf.RoundToInt (Random.Range(1, 10000));
 		title = ("Eliminate the glowing " + targetObject.name + " ");
 		progress = Quest.QuestProgress.AVAILABLE;

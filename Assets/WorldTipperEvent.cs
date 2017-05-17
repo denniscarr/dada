@@ -26,7 +26,9 @@ public class WorldTipperEvent : IncoherenceEvent {
             );
 
         Transform level = FindObjectOfType<Level>().transform;
-
         level.DORotate(newRotation, Random.Range(1f, 10f), RotateMode.Fast);
+
+        Transform killzone = FindObjectOfType<Killzone>().transform;
+        killzone.DORotate(newRotation, Random.Range(1f, 10f), RotateMode.Fast);
     }
 }

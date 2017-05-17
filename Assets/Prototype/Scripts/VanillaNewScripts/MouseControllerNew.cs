@@ -129,7 +129,9 @@ public class MouseControllerNew : MonoBehaviour {
 			//Debug.Log("select "+selectedObject.name);
 			UpdateDraggedObjectPosition(selectedObject);
 			DetectPlacing(selectedObject);
-		}else if(isTweening == false){
+		}
+        else if(isTweening == false)
+        {
 			Ray ray = UpperCamera.ScreenPointToRay(Input.mousePosition);
 			//Debug.DrawRay(ray.origin,ray.direction);
 			RaycastHit hit;
@@ -171,7 +173,11 @@ public class MouseControllerNew : MonoBehaviour {
 	public void OutlineTargetObject(Transform t_hit){
 		DeoutlineTargetObject();
 		GetComponent<Image>().DOFade(1f,0.5f);
-        if (t_hit.name.Contains("Grail")) return;
+        if (t_hit.name.Contains("Grail"))
+        {
+            t_hit.GetComponentInChildren<GrailFunction>().ReadyToRunAway();
+            return;
+        }
 
 		//Debug.Log("OutlineTargetObject in zoom out");
 		renderList = new List<Renderer>();
@@ -416,13 +422,14 @@ public class MouseControllerNew : MonoBehaviour {
         if (hitVisor)
         {
             helperText = "Release Left Mouse Button to place " + draggedObject.name + " in your room.";
-
+            ChangeCursor("dropInVisor");
         }
         else
         {
             helperText = "Release Left Mouse Button to throw " + draggedObject.name + ".";
+            ChangeCursor("throwItem");
         }
-        
+
 
         if (writer.lastWrite != helperText)
         {
@@ -548,6 +555,8 @@ public class MouseControllerNew : MonoBehaviour {
         myAnimator.SetBool("cantBuy", false);
         myAnimator.SetBool("openHand", false);
         myAnimator.SetBool("closedHand", false);
+        myAnimator.SetBool("dropInVisor", false);
+        myAnimator.SetBool("throwItem", false);
 
         myAnimator.SetBool(cursorName, true);
 
