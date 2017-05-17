@@ -6,12 +6,12 @@ public class Killzone : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
     {
-        // If the grail has fallen off the level, spawn a new level.
-        //if (other.name == "Grail")
-        //{
-        //    Services.LevelGen.Create();
-        //    other.GetComponent<Grail>().GetReadyToDie();
-        //}
+        //If the grail has fallen off the level, kill it and turn the lights on.
+        if (other.name == "Grail")
+        {
+            //Services.LevelGen.Create();
+            other.GetComponent<Grail>().GetReadyToDie();
+        }
 
         // If this object is not the grail, put it back on the level.
         if ((other.GetComponentInChildren<InteractionSettings>() != null && !other.GetComponentInChildren<InteractionSettings>().IsEquipped) || other.gameObject == Services.Player)

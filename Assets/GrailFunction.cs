@@ -5,6 +5,7 @@ using UnityEngine;
 public class GrailFunction : D_Function {
 
     bool readyToRunAway;
+    bool tutorialMessageSent;
 
     new void Start()
     {
@@ -40,7 +41,14 @@ public class GrailFunction : D_Function {
 
         Services.AudioManager.PlaySFX(Services.AudioManager.grailRejectionClip);
 
-        if (Services.LevelGen.levelNum == -1) FindObjectOfType<Tutorial>().OnGrabGrail();
+        readyToRunAway = false;
+
+        if (Services.LevelGen.levelNum == -1)
+        {
+            if (tutorialMessageSent) return;
+            FindObjectOfType<Tutorial>().OnGrabGrail();
+            tutorialMessageSent = true;
+        }
     }
 
 

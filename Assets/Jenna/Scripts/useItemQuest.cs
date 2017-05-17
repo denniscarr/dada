@@ -20,7 +20,7 @@ public class useItemQuest : Quest {
 	public override void makeTheQuest(GameObject _targetObject){
 		base.makeTheQuest (_targetObject);
 		rewardMoney = Mathf.RoundToInt (Random.Range (1, 10000));
-		title = ("Use this " + targetObject.name + " " + timeToUse + " times. ");
+		title = ("Use the glowing " + targetObject.name + " " + timeToUse + " times. ");
 		progress = Quest.QuestProgress.AVAILABLE;
 		description = (title + "Reward: $" + rewardMoney);
 		CopyComponent(this, targetObject);
