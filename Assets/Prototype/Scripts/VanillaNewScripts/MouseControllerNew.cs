@@ -76,15 +76,25 @@ public class MouseControllerNew : MonoBehaviour {
 		cubeOnDraggedPlane.gameObject.SetActive(false);
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void FixedUpdate(){
 		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
 			transform.position = Input.mousePosition;
 			clickGapCount += Time.fixedDeltaTime;
 			if(clickGapCount > CLICKGAPTIME){
 				DetectSelection();
 			}
+		}
+	}
+
+	// Update is called once per frame
+	void Update () {
+		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
+//			transform.position = Input.mousePosition;
+//			clickGapCount += Time.fixedDeltaTime;
+//			if(clickGapCount > CLICKGAPTIME){
+//				DetectSelection();
+//			}
 		}else{
 			GetComponent<RectTransform>().localPosition = Vector3.zero;
 
@@ -105,14 +115,6 @@ public class MouseControllerNew : MonoBehaviour {
 					selectedObject = null;
 					//change state back
 				}
-//				Ray ray = playercontroller.m_Camera.ScreenPointToRay(Input.mousePosition);
-//				//Debug.DrawRay(ray.origin,ray.direction);
-//				RaycastHit hit;
-//				if (Physics.Raycast (ray, out hit)) {
-//					//if()
-//					//CheckPointedObject(hit.transform);
-//				}
-
 
 			}
 
@@ -124,6 +126,7 @@ public class MouseControllerNew : MonoBehaviour {
 
 	//detect if mouse click on something, then switch and save the selected object
 	void DetectSelection(){
+		//writer.DeleteTextBox();
 		//get the ray to check whether player points at visor from upper camera
 		if(selectedObject){
 			//Debug.Log("select "+selectedObject.name);
@@ -208,6 +211,7 @@ public class MouseControllerNew : MonoBehaviour {
 	void CheckPointedObject(Transform pointedObject){
 		InteractionSettings inSets = pointedObject.GetComponentInChildren<InteractionSettings>();
 
+		//writer.DeleteTextBox();
         // HELPER TEXT STUFF:
 		if (inSets != null)
         {
