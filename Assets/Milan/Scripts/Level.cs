@@ -245,21 +245,19 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 
 				float perlinVal = OctavePerlin (xCoord * noiseScale, yCoord * noiseScale, 3, 0.5f);
 
-//				if (perlinVal < 0.5f) {
-					int remapIndex = Mathf.RoundToInt (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1));
-					float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1)) - (float)remapIndex;
+				int remapIndex = Mathf.RoundToInt (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1));
+				float difference = (perlinVal * (Services.LevelGen.NoiseRemapping.Length - 1)) - (float)remapIndex;
 
 
-					perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
+				perlinVal = Services.LevelGen.NoiseRemapping [remapIndex];
 
-					if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0) {
-						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
-					} else {
-						if (remapIndex > 0 && difference < 0) {
-							perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs (difference));
-						}
+				if (remapIndex < Services.LevelGen.NoiseRemapping.Length - 1 && difference > 0) {
+					perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex + 1], difference);
+				} else {
+					if (remapIndex > 0 && difference < 0) {
+						perlinVal = Mathf.Lerp (perlinVal, Services.LevelGen.NoiseRemapping [remapIndex - 1], Mathf.Abs (difference));
 					}
-//				}
+				}
 
 				perlinVal = Mathf.Pow (perlinVal, 1f);
 
@@ -364,6 +362,7 @@ public class Level : MonoBehaviour, SimpleManager.IManaged {
 				newObject = LevelObjectFactory (Random.Range(0.00f, 1.00f), Random.Range(0, Services.Prefabs.PREFABS.Length), vertices [indice], index);
 			} else {
 				newObject = LevelObjectFactory (0, (int)Services.TYPES.Sprite, vertices [indice], index);
+				newObject.tag = "ImageSprite";
 			}
 
 			if (newObject == null) {
