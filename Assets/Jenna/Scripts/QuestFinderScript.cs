@@ -126,13 +126,14 @@ public class QuestFinderScript : MonoBehaviour
 				equipsToRemove.Add (equippable);
 			}
 		}
-			
 
-		foreach (Quest questy in QuestManager.questManager.questList) {
-			if (questy == null) {
-				questsToRemove.Add(questy);
-			}
-		}
+        foreach (Quest questy in Services.Quests.questList)
+        {
+            if (questy == null)
+            {
+                questsToRemove.Add(questy);
+            }
+        }
 			
 		ClearNullListItems ();
 	}
@@ -140,7 +141,7 @@ public class QuestFinderScript : MonoBehaviour
 	void ClearNullListItems()
     {
 		foreach (Quest q in questsToRemove) {
-			QuestManager.questManager.questList.Remove (q);
+			Services.Quests.questList.Remove (q);
 		}
 
 		foreach (GameObject pickup in pickupsToRemove) {

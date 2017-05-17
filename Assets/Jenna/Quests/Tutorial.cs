@@ -64,7 +64,7 @@ public class Tutorial : Quest {
 	int numPressTab = 0;
 
 	void Start () {
-
+		rewardMoney = 25;
 		GetComponent<QuestManager>().enabled = false;
 		GetComponent<QuestFinderScript>().enabled = false;
 		GetComponent<QuestBuilderScript>().enabled = false;
@@ -177,6 +177,16 @@ public class Tutorial : Quest {
 
 	}
 
+	void TaskFinished(){
+		if(questItNote){
+			questItNote.transform.DOScale(Vector3.zero, 0.4f);
+			GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
+			stars.transform.position = questItNote.transform.position;
+			GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
+		}
+
+	}
+
 	void AddNewNote(string notes){
         //wait to add do tween
         QuestItNoreText.DOText("",0.1f).OnComplete(()=>OnDisappearComplete(notes));
@@ -190,9 +200,11 @@ public class Tutorial : Quest {
 	}
 
 	void OnDisappearComplete(string notes){
+		TaskFinished();
 		if(questItNote){
 			Destroy(questItNote);
 		}
+
 		questItNote = null;
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 		Services.AudioManager.PlaySFX (Services.AudioManager.tutorialTones [Random.Range (0, Services.AudioManager.tutorialTones.Length)]);
@@ -212,6 +224,7 @@ public class Tutorial : Quest {
 
 		if (visor.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer) {
 			AddNewNote("Good. Now left click again to put it on.");
+			//TaskFinished();
 			//QuestItNoreText.text = "Pick up your visor.";		// lmao silly and redundant
 			state = TutorialState.PICKUP_VISOR;
 		}
@@ -227,7 +240,7 @@ public class Tutorial : Quest {
 			if(textSpawn){
 				Destroy(textSpawn); // for good measure
 			}
-
+			//TaskFinished();
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
 
 //			Debug.Log("Skip tutorial");
@@ -248,17 +261,6 @@ public class Tutorial : Quest {
 	void OnPickUpVisor(){
 
 		if (intSet._carryingObject == player) {
-			// yay! step one done
-//			state = TutorialState.USE_PLATFORM;
-//
-//			// destroy it bc its now useless
-//			Destroy(visor);
-//			Destroy(textSpawn); // for good measure
-//
-//			AddNewNote("Now find and click the observation platform.");
-//
-//			controls.Mode = ControlMode.ZOOM_OUT_MODE;
-			//platformWriter.WriteAtPoint("Click me to revert to visor mode",platformWriter.transform.position+new Vector3(0,0,1));
 
 		}
 	}
@@ -285,7 +287,6 @@ public class Tutorial : Quest {
 					state = TutorialState.THROW_NOTE_OUT;
 					mouseControllerNew.writer.WriteAtPoint("Use the mouse to drag this note out of your visor and into the world.", mouseControllerNew.textPosition);
 					AddNewNote("Use the mouse to drag this note out of your visor and into the world.");
-					//QuestItNoreText.text = "Drag note out of your visor into the world.";
 				}
 
 			}
@@ -296,21 +297,17 @@ public class Tutorial : Quest {
 		mouseControllerNew.writer.WriteAtPoint("Now drag this note back into your visor with the mouse.", mouseControllerNew.textPosition);
 		if(Input.GetMouseButtonUp(0) && questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.PRESS_TAB;
-			//QuestItNoreText.text = "Press Tab 5 times";
 			AddNewNote("Press Tab 5 times");
-			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();//useless?
 		}
 	}
 
 	void OnThrowNoteOut(){
 		mouseControllerNew.writer.WriteAtPoint("Drag this note into your visor with the mouse.", mouseControllerNew.textPosition);
-		//Debug.Log(questItNote.transform.parent);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.DRAG_NOTE_IN;
-			//AddNewNote("Drag the note into your visor with the mouse.");
-			//AddNewNote("Drag the note into the visor with your mouse.");
+			TaskFinished();
+			questItNote.transform.DOScale(Vector3.one, 0.4f).SetDelay(0.4f);
 			QuestItNoreText.text = "Drag the note into your visor with the mouse.";
-			//questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
 
 		}
 	}

@@ -85,7 +85,7 @@ public class QuestBuilderScript : MonoBehaviour {
 		// pick an object for it
 		//questThing = ranger % length;
 		objeto = finder.pickups [Random.Range (0, finder.pickups.Count)];
-		print (objeto);
+		//print (objeto);
         if (objeto == null) return;
 		objectScript = objeto.GetComponent<QuestObject> ();
 
@@ -119,7 +119,7 @@ public class QuestBuilderScript : MonoBehaviour {
 		if (Services.LevelGen.levelNum == 0) return;
 		enemies = GameObject.FindObjectsOfType<NPC> ();
 		GameObject enemy = enemies[Random.Range (0, enemies.Length)].transform.parent.gameObject;
-		print (enemy);
+		//print (enemy);
 		if (enemy.GetComponent<NPCEliminationQuest> () != null)
 			return;
 		NPCEliminationQuest newQuest = enemy.AddComponent<NPCEliminationQuest> ();
@@ -146,7 +146,7 @@ public class QuestBuilderScript : MonoBehaviour {
 		if (Services.LevelGen.levelNum == 0) return;
 		usableItems = GameObject.FindObjectsOfType<InteractionSettings> ();
 		GameObject usableItem = usableItems [Random.Range (0, usableItems.Length)].transform.parent.gameObject;
-		print (usableItem);
+		//print (usableItem);
 
 		if (usableItem.GetComponent<useItemQuest> () != null)
 			return;
