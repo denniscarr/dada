@@ -138,7 +138,7 @@ public class Quest: MonoBehaviour {
 
 		questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
 		questItNote.transform.DOScale(Vector3.one, 0.4f);
-		questText.DOText(description, 1f);
+		questText.DOText(description, 1f).SetDelay(0.5f);
 
 		// Stick em to the wall.
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
