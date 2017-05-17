@@ -141,7 +141,7 @@ public class QuestFinderScript : MonoBehaviour
 	void ClearNullListItems()
     {
 		foreach (Quest q in questsToRemove) {
-			QuestManager.questManager.questList.Remove (q);
+			Services.Quests.questList.Remove (q);
 		}
 
 		foreach (GameObject pickup in pickupsToRemove) {
