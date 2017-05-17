@@ -392,17 +392,17 @@ public class EquippableFinder : MonoBehaviour {
             //Debug.Log("Coroutine finished");
             equippedObjects.Add(_equipTarget);
             Debug.Log("Added " + _equipTarget + " to list. Count: " + equippedObjects.Count);
-			GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
         }
-	}
+        GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
+    }
 
-	//void myCompleteFunction(Transform _equipTarget){
-	//	Debug.Log("on my complete "+equippedObject.name);
-	//	equippedObject = _equipTarget;
-	//	equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
-	//	//return new TweenCallback();
-	//}
+    //void myCompleteFunction(Transform _equipTarget){
+    //	Debug.Log("on my complete "+equippedObject.name);
+    //	equippedObject = _equipTarget;
+    //	equippedObject.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+    //	//return new TweenCallback();
+    //}
 
     public void MoveEquippedItemsOutside()
     {

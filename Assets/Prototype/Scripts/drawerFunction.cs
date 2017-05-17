@@ -15,7 +15,6 @@ public class drawerFunction : MonoBehaviour {
 	void Update () {
 		if (drawer.transform.parent != null && Input.GetKey (useDrawer)) {
 			Instantiate (steam, transform.position, Quaternion.identity);
-
 		}
 	}
 }

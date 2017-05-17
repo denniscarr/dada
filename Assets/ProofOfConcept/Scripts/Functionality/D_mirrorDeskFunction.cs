@@ -19,8 +19,10 @@ public class D_mirrorDeskFunction : D_Function {
 	// Update is called once per frame
 	public override void Use () {
 
-		base.Use ();
-		Transform summoning = items [Random.Range (0, items.Length)].transform.parent;
+        base.Use();
+
+        items = GameObject.FindObjectsOfType<InteractionSettings>();
+        Transform summoning = items [Random.Range (0, items.Length)].transform.parent;
 		print (summoning);
 		//pullBeam.enabled = true;
 		//pullBeam.SetPosition (0, transform.position);
