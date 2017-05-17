@@ -416,13 +416,14 @@ public class MouseControllerNew : MonoBehaviour {
         if (hitVisor)
         {
             helperText = "Release Left Mouse Button to place " + draggedObject.name + " in your room.";
-
+            ChangeCursor("dropInVisor");
         }
         else
         {
             helperText = "Release Left Mouse Button to throw " + draggedObject.name + ".";
+            ChangeCursor("throwItem");
         }
-        
+
 
         if (writer.lastWrite != helperText)
         {
@@ -548,6 +549,8 @@ public class MouseControllerNew : MonoBehaviour {
         myAnimator.SetBool("cantBuy", false);
         myAnimator.SetBool("openHand", false);
         myAnimator.SetBool("closedHand", false);
+        myAnimator.SetBool("dropInVisor", false);
+        myAnimator.SetBool("throwItem", false);
 
         myAnimator.SetBool(cursorName, true);
 
