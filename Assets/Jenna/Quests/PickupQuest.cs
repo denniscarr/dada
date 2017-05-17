@@ -24,41 +24,48 @@ public class PickupQuest : Quest {
 
 	}
 
-	public void FixedUpdate(){
-//	 check to see if the thing has been picked up
-//	 if so YAY FINISH
+    public void FixedUpdate()
+    {
+        //	 check to see if the thing has been picked up
+        //	 if so YAY FINISH
 
-		if (targetObject != null && targetObject.GetComponentInChildren<InteractionSettings>() != null)
-		{
-			//if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
-			//    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
-			//    !pickedUp)
-   //         {
-			//	numberofPickups++;
-			//	text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
+        if (targetObject != null && targetObject.GetComponentInChildren<InteractionSettings>() != null)
+        {
+            //if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject != null &&
+            //    parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject.name == "Player" &&
+            //    !pickedUp)
+            //         {
+            //	numberofPickups++;
+            //	text.text = ("Picked up " + numberofPickups.ToString () + " " + "times");
 
-			//	if (numberofPickups >= requiredPickups) {
-			//		FinishQuest ();
-			//	}
+            //	if (numberofPickups >= requiredPickups) {
+            //		FinishQuest ();
+            //	}
 
-			//	pickedUp = true;
-			
-			//} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
-			//	pickedUp = false;
-			//}
+            //	pickedUp = true;
 
-            if (targetObject.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            //} else if (parentObject.GetComponentInChildren<InteractionSettings> ().carryingObject == null) {
+            //	pickedUp = false;
+            //}
+
+            if (Input.GetMouseButtonUp(0) && targetObject.transform.parent.name.Equals("INROOMOBJECTS"))
             {
-                if (targetObject.GetComponent<CollisionReporter>() == null) targetObject.AddComponent<CollisionReporter>();
-
-                if (targetObject.GetComponent<CollisionReporter>() != null && targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player && targetObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
-                {
-                    Destroy(targetObject.GetComponent<CollisionReporter>());
-                    FinishQuest();
-                }
+                FinishQuest();
             }
-		}
+
+            //if (targetObject.GetComponentInChildren<InteractionSettings>().IsInVisor)
+            //{
+            //    if (targetObject.GetComponent<CollisionReporter>() == null) targetObject.AddComponent<CollisionReporter>();
+
+            //    if (targetObject.GetComponent<CollisionReporter>() != null && targetObject.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player && targetObject.GetComponent<CollisionReporter>().collidedWithSomethingAtLeastOnce)
+            //    {
+            //        Destroy(targetObject.GetComponent<CollisionReporter>());
+            //        FinishQuest();
+            //    }
+            //}
+        }
     }
+
 
 	public override void makeTheQuest(GameObject _targetObject){
 		base.makeTheQuest (_targetObject);
