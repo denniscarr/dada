@@ -43,7 +43,7 @@ public class Tutorial : Quest {
 
 	// quest it note
 	//GameObject questItNote;
-	Text QuestItNoreText;
+	Text QuestItNoteText;
 
 	// temporary items
 	GameObject visor;
@@ -191,8 +191,7 @@ public class Tutorial : Quest {
 
 	void AddNewNote(string notes){
         //wait to add do tween
-		QuestItNoreText.DOText("",0.1f).OnComplete(()=>TaskFinished(notes));
-
+		QuestItNoteText.DOText("",0.1f).OnComplete(()=>TaskFinished(notes));
 	}
 
 	void OnDisappearComplete(string notes){
@@ -204,12 +203,12 @@ public class Tutorial : Quest {
 		questItNote = null;
 		questItNote = Instantiate(Resources.Load("QuestItNote", typeof (GameObject))) as GameObject;
 		Services.AudioManager.PlaySFX (Services.AudioManager.tutorialTones [Random.Range (0, Services.AudioManager.tutorialTones.Length)]);
-		QuestItNoreText = questItNote.GetComponentInChildren<Text>();
+		QuestItNoteText = questItNote.GetComponentInChildren<Text>();
 		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
         questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
         questItNote.transform.DOScale(Vector3.one, 0.4f);
 		notes = notes + " Reward:$25";
-		QuestItNoreText.DOText(notes,1f).SetDelay(0.5f);;
+		QuestItNoteText.DOText(notes,1f).SetDelay(0.5f);;
 		//QuestItNoreText.text = notes;
 
 	}
@@ -317,7 +316,7 @@ public class Tutorial : Quest {
 			int rest = 5 - numPressTab;
 			if(rest > 0){
 				
-				QuestItNoreText.text = "Press Tab "+ rest.ToString() +" times.";
+				QuestItNoteText.text = "Press Tab "+ rest.ToString() +" times.";
 			}else{
 				state = TutorialState.EQUIP_GUN;//go_AK12 = Resources.Load("Pickups/AK12") as GameObject;
 				go_AK12 = Instantiate(Resources.Load<GameObject>("Pickups/AK12"));
@@ -361,14 +360,14 @@ public class Tutorial : Quest {
 	void OnDragGun(){
 		if(Input.GetMouseButtonUp(0) && go_AK12.transform.parent && go_AK12.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.GRAIl_SPAWN;
-			AddNewNote("Wow, it's a grail! Go grab it.");	
+			AddNewNote("Wow, what is that shiny thing? Go take a look at it!");	
 			//QuestItNoreText.text = "Try to store the gun in your visor.";
 		}
 	}
 
     public void OnGrabGrail()
     {
-        AddNewNote("It got away! Too bad. Be brave to jump off.");
+        AddNewNote("Too expensive for now... Just jump off the edge.");
         GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
         GetComponent<QuestManager>().enabled = true;
         GetComponent<QuestFinderScript>().enabled = true;

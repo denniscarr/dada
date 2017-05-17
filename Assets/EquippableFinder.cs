@@ -248,7 +248,7 @@ public class EquippableFinder : MonoBehaviour {
         // Abandoning equipped items.
         if (equippedObjects.Count >= 0 && Input.GetKeyDown(abandonKey))
         {
-            Debug.Log("equipped object count " + equippedObjects.Count);
+            Debug.Log(gameObject.name + " equipped object count " + equippedObjects.Count);
             AbandonItem();
         }
     }
@@ -402,7 +402,7 @@ public class EquippableFinder : MonoBehaviour {
             //Debug.Log("complete " + _equipTarget.name);
             //Debug.Log("Coroutine finished");
             equippedObjects.Add(_equipTarget);
-            Debug.Log("Added " + _equipTarget + " to list. Count: " + equippedObjects.Count);
+            Debug.Log(gameObject.name + " Added " + _equipTarget + " to list. Count: " + equippedObjects.Count);
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
         }
         GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
@@ -422,7 +422,7 @@ public class EquippableFinder : MonoBehaviour {
             if (equippedObjects[i] != null)
             {
                 equippedObjects[i].localScale = equippedObjects[i].GetComponentInChildren<InteractionSettings>().savedScale;
-                MoveToCamera(equippedObjects[i], GameObject.Find("Equip Reference").transform);
+                GameObject.Find("Player Camera").GetComponent<EquippableFinder>().MoveToCamera(equippedObjects[i], GameObject.Find("Equip Reference").transform);
             }
         }
 
