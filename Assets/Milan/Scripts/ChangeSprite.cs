@@ -30,5 +30,7 @@ public class ChangeSprite : MonoBehaviour {
 
 	public void changeSprite(){
 		GetComponent<SpriteRenderer> ().sprite = Services.Prefabs.SPRITES [SpriteIndex] [Random.Range (0, Services.Prefabs.SPRITES [SpriteIndex].Length)];
+		Services.LevelGen.cookieLight.cookie = GetComponent<SpriteRenderer> ().sprite.texture;
+		Services.LevelGen.cookieLight.intensity = 0.5f;
 	}
 }
