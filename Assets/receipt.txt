@@ -55,3 +55,5 @@ AUG A3 $899
 "Pull the trigger", says Longxiao $5999
 Gohei of reverse exorcism $0
 Tree Grenade $579
+visor $9499
+AK12 $99
