@@ -14,6 +14,7 @@ public class EquippableFinder : MonoBehaviour {
     Transform equipTarget;  // The object that can currently be equipped.
     public Transform equippedObject;
     public List<Transform> equippedObjects;
+    public List<Transform> tweeningObjects;
 
     Transform buyTarget;    // The object that can currently be bought.
 
@@ -74,6 +75,7 @@ public class EquippableFinder : MonoBehaviour {
         }
 
         equippedObjects = new List<Transform>();
+        tweeningObjects = new List<Transform>();
 
         writer.textSize = 0.1f;
         textPosition = transform.position + transform.forward * 20f;
@@ -385,6 +387,8 @@ public class EquippableFinder : MonoBehaviour {
         _equipTarget.transform.DOScale(equipScale, 1.5f).OnStart(StopPickUpAction);
         //equippedObject.transform.localPosition = equippedObject.GetComponentInChildren<InteractionSettings>().equipPosition;
 
+        tweeningObjects.Add(_equipTarget);
+
         StartCoroutine("complete", _equipTarget);
 
 		equipTarget = null;
@@ -396,6 +400,7 @@ public class EquippableFinder : MonoBehaviour {
 	}
 
 	IEnumerator complete(Transform _equipTarget){
+
         yield return new WaitForSeconds(1.5f);
         if (_equipTarget != null)
         {
@@ -404,8 +409,17 @@ public class EquippableFinder : MonoBehaviour {
             equippedObjects.Add(_equipTarget);
             Debug.Log(gameObject.name + " Added " + _equipTarget + " to list. Count: " + equippedObjects.Count);
 		    _equipTarget.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
+            tweeningObjects.Remove(_equipTarget);
         }
         GameObject.FindObjectOfType<MouseControllerNew>().isTweening = false;
+    }
+
+    void CompleteInstant(Transform target)
+    {
+        target.DOKill();
+        equippedObjects.Add(target);
+        tweeningObjects.Remove(target);
+        target.GetComponentInChildren<InteractionSettings>().carryingObject = Services.Player.transform;
     }
 
     //void myCompleteFunction(Transform _equipTarget){
@@ -427,12 +441,23 @@ public class EquippableFinder : MonoBehaviour {
         }
 
         equippedObjects.Clear();
+
+        for (int i = 0; i < tweeningObjects.Count; i++)
+        {
+            if (tweeningObjects[i] != null)
+            {
+                CompleteInstant(tweeningObjects[i]);
+                equippedObjects[i].localScale = equippedObjects[i].GetComponentInChildren<InteractionSettings>().savedScale;
+                GameObject.Find("Player Camera").GetComponent<EquippableFinder>().MoveToCamera(equippedObjects[i], GameObject.Find("Equip Reference").transform);
+            }
+        }
+
+        tweeningObjects.Clear();
     }
 
     public void AbandonItem()
     {
         if (equippedObjects.Count <= 0) return;
-
 
         if (!active && gameObject.name == "Player Camera")
         {
