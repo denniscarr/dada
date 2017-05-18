@@ -11,10 +11,10 @@ public class GrailSpawner : MonoBehaviour {
 
     private void Update()
     {
-        if (GameObject.Find("QuestManager").GetComponent<QuestManager>().allQuestsCompleted)
-        {
-            SpawnGrail();
-        }
+        //if (GameObject.Find("QuestManager").GetComponent<QuestManager>().allQuestsCompleted)
+        //{
+        //    SpawnGrail();
+        //}
     }
 
 

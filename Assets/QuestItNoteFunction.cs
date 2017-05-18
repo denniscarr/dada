@@ -177,6 +177,7 @@ public class QuestItNoteFunction : D_Function {
     /// </summary>
     public void GetDestroyedFlashy()
     {
+		//destory the note and play particles
         transform.parent.DOScale(Vector3.zero, 0.4f);
         GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
         stars.transform.position = transform.parent.position;

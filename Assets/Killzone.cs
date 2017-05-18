@@ -14,7 +14,7 @@ public class Killzone : MonoBehaviour {
         }
 
         // If this object is not the grail, put it back on the level.
-        if ((other.GetComponentInChildren<InteractionSettings>() != null && !other.GetComponentInChildren<InteractionSettings>().IsEquipped) || other.gameObject == Services.Player)
+        if ((other.GetComponentInChildren<InteractionSettings>() != null && !other.GetComponentInChildren<InteractionSettings>().IsEquipped) || (Services.LevelGen.levelNum == -1 && other.gameObject == Services.Player))
         {
             //Debug.Log("Killzone wrapped " + other.name);
             float currentLevelRadius = Services.LevelGen.currentLevel._width * Services.LevelGen.tileScale;

@@ -9,9 +9,6 @@ using DG.Tweening;
 
 public class PickupQuest : Quest {
 
-
-
-
 	// for finishing quest
 	public int requiredPickups;
 	public int numberofPickups;

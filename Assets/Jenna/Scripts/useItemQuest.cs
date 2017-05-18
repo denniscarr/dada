@@ -12,7 +12,7 @@ public class useItemQuest : Quest {
 	
 	// Update is called once per frame
 	public void FixedUpdate () {
-		if (targetObject != null && targetObject.GetComponentInChildren<D_Function> () && targetObject.GetComponentInChildren<D_Function> ().timeUsed > timeToUse) {
+		if (targetObject != null && targetObject.GetComponentInChildren<D_Function> () != null && targetObject.GetComponentInChildren<D_Function> ().timeUsed >= timeToUse) {
 			FinishQuest ();
 		}
 	}
@@ -20,7 +20,7 @@ public class useItemQuest : Quest {
 	public override void makeTheQuest(GameObject _targetObject){
 		base.makeTheQuest (_targetObject);
 		rewardMoney = Mathf.RoundToInt (Random.Range (1, 10000));
-		title = ("Use the glowing " + targetObject.name + " " + timeToUse + " times. ");
+		title = ("Use the glowing " + targetObject.name + " several times. ");
 		progress = Quest.QuestProgress.AVAILABLE;
 		description = (title + "Reward: $" + rewardMoney);
 		CopyComponent(this, targetObject);

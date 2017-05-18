@@ -22,7 +22,7 @@ public class GrailFunction : D_Function {
     {
         if (readyToRunAway) return;
 
-        Invoke("RunAway", 2f);
+        Invoke("RunAway", 4f);
         readyToRunAway = true;
     }
 
