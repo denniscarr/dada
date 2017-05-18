@@ -332,7 +332,7 @@ public class Tutorial : Quest {
 
     public void OnGrabGrail()
     {
-        AddNewNote("Too expensive for now... Just jump off the edge.");
+        AddNewNote("Too expensive for now. Jump off the edge to find a new world.");
         GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
         GetComponent<QuestManager>().enabled = true;
         GetComponent<QuestFinderScript>().enabled = true;

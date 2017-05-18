@@ -11,7 +11,8 @@ public class NPCEliminationQuest : Quest {
 	
 	// Update is called once per frame
 	public void FixedUpdate () {
-		if (targetObject != null && targetObject.GetComponentInChildren<NPC> () != null && targetObject.GetComponentInChildren<NPC> ().health < 1) {
+		//if (targetObject != null && targetObject.GetComponentInChildren<NPC> () != null && targetObject.GetComponentInChildren<NPC> ().health < 1) {
+        if (targetObject != null && targetObject.GetComponentInChildren<NPC>() == null) { 
 			print ("Mission accomplished");
 			FinishQuest();
 		}
