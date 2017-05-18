@@ -207,10 +207,13 @@ public class Quest: MonoBehaviour {
 
 		targetObject.GetComponentInChildren<InteractionSettings>().DestroyAssociatedNotes();
 
+        if (Random.value >= 0.23f)
+        {
+            FindObjectOfType<GrailSpawner>().SpawnGrail();
+        }
+
 		if (targetObject.GetComponentInChildren<IncoherenceController>() != null) targetObject.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += Services.IncoherenceManager.questIncrease;
 
 		completed = true;
-
-
 	}
 }

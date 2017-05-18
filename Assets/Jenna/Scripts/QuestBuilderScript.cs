@@ -34,8 +34,15 @@ public class QuestBuilderScript : MonoBehaviour {
 	private NPC[] enemies;
 	private InteractionSettings[] usableItems;
 
+    float timeToSpawnQuestMax = 60f;
+    float timeToSpawnQuestMin = 15f;
+    float timeToSpawnQuestCurrent = 0f;
+    float timeSinceLastQuestSpawn = 0f;
+
 
 	void Start () {
+
+        timeToSpawnQuestCurrent = Random.Range(timeToSpawnQuestMin, timeToSpawnQuestMax);
 
 		// get scripts
 		finder = this.gameObject.GetComponent<QuestFinderScript> ();
@@ -50,22 +57,37 @@ public class QuestBuilderScript : MonoBehaviour {
 
 	void Update () {
 
-		ranger = Random.Range (0, finder.questItems.Count);
-		length = finder.questItems.Count;
+        if (Services.LevelGen.levelNum != -1)
+        {
+            if (timeSinceLastQuestSpawn >= timeToSpawnQuestCurrent)
+            {
+                float rando = Random.value;
+                if (rando >= 0.6f) GeneratePickup();
+                else if (rando >= 0.2f) GenerateUse();
+                else GenerateElimination();
+
+                timeSinceLastQuestSpawn = 0f;
+            }
+
+            timeSinceLastQuestSpawn += Time.deltaTime;
+        }
+
+		//ranger = Random.Range (0, finder.questItems.Count);
+		//length = finder.questItems.Count;
 
 		// CHANGE THIS TO BE A RANDOM ROLL
 		// AND CERTAIN NUMBERS TURN OUT TO BE GENERATING CERTAIN QUEST TYPES
 
 		//if (Input.GetKeyDown(KeyCode.Tab)){
 			//if (finder.pickups.Count > 0) {
-            if (manager.questsGeneratedInCurrentLevel < Services.Quests.questsToComplete)
-            {
-                GeneratePickup();
-				GenerateElimination ();
-				GenerateUse ();
+            //if (manager.questsGeneratedInCurrentLevel < Services.Quests.questsToComplete)
+            //{
+    //            GeneratePickup();
+				//GenerateElimination ();
+				//GenerateUse ();
 //                Debug.Log("Quests genereated in current level: " + manager.questsGeneratedInCurrentLevel);
 //                Debug.Log("Quests to complete: " + manager.questsToComplete);
-			}
+			//}
                 //else if (manager.questList.Count >= (Mathf.Abs (levelman.levelNum + 1))) {
 					//for (int i = 0; i < Random.Range (10, 30); i++) {
 					//	NoteSpawnerScript rain = spawner.GetComponent<NoteSpawnerScript> ();
