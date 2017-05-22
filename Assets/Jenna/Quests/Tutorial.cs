@@ -325,14 +325,14 @@ public class Tutorial : Quest {
 	void OnDragGun(){
 		if(Input.GetMouseButtonUp(0) && go_AK12.transform.parent && go_AK12.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.GRAIl_SPAWN;
-			AddNewNote("Wow, what is that shiny thing? Go take a look at it!");	
+			AddNewNote("Purchase the Holy Grail.");	
 			//QuestItNoreText.text = "Try to store the gun in your visor.";
 		}
 	}
 
     public void OnGrabGrail()
     {
-        AddNewNote("Too expensive for now. Jump off the edge to find a new world.");
+        AddNewNote("You couldn't afford it anyway. Follow it down.");
         GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
         GetComponent<QuestManager>().enabled = true;
         GetComponent<QuestFinderScript>().enabled = true;
