@@ -453,6 +453,12 @@ public class NPC : MonoBehaviour {
 
             SeeIfTargetObjectWasPickedUp();
 
+            if (targetObject == null)
+            {
+                EvaluateSurroundings();
+                return;
+            }
+
             // Check if target object is in range. If so, pick it up.
             if (Vector3.Distance(targetObject.position, transform.parent.position) <= objectPickupRange)
             {
@@ -657,8 +663,8 @@ public class NPC : MonoBehaviour {
 
     void AttachToHand()
     {
-//        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
-
+        //        writer.WriteSpecifiedString("Ah, what a nice " + targetObject.name);
+        if (targetObject == null) return;
         carriedObject = targetObject;
         carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = transform.parent;
         targetObject.position = handTransform.position;

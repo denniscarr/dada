@@ -58,7 +58,7 @@ public class MoneyFunction : D_Function {
         }
 
         // If I was used by an NPC give them money.
-        else if (intSet.carryingObject.GetComponentInChildren<NPC>() != null)
+        else if (intSet.carryingObject != null && intSet.carryingObject.GetComponentInChildren<NPC>() != null)
         {
             intSet.carryingObject.GetComponentInChildren<NPC>().funds += value;
         }

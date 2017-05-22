@@ -24,7 +24,10 @@ public class MakeSomethingHugeEvent : IncoherenceEvent {
             chosenOne = FindObjectsOfType<InteractionSettings>()[Random.Range(0, FindObjectsOfType<InteractionSettings>().Length)];
             if (!chosenOne.transform.parent.name.Contains("QuestItNote"))
             {
-                chosenOne.GetComponent<Rigidbody>().detectCollisions = false;
+                if (chosenOne.GetComponentInParent<MeshCollider>() != null)
+                {
+                    Destroy(chosenOne.GetComponentInParent<MeshCollider>());
+                }
                 chosenOne.transform.parent.DOScale(chosenOne.transform.parent.localScale * 100f, Random.Range(1f, 10f));
                 chosenOneChosen = true;
             }

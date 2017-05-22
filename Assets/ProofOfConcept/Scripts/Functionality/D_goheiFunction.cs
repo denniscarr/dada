@@ -26,9 +26,6 @@ public class D_goheiFunction : D_Function {
 			GameObject pellet = Instantiate (pelletPrefab [Random.Range (0, pelletPrefab.Length - 1)], transform.position, pelletRotation);
 			//pellet.GetComponent<Rigidbody> ().velocity = transform.up * pelletVelocity;
 		}
-			
-
-
 	}
 		
 }

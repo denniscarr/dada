@@ -23,7 +23,7 @@ public class soulParticle : MonoBehaviour {
 		//while (i < numCollisionEvents) {
 		//	print (futureNPC.name);
 		//}
-		if (futureNPC.name != "GROUND" && futureNPC.GetComponentInChildren<NPC>() == null) {
+		if (futureNPC.name != "GROUND" && futureNPC != Services.Player && futureNPC.GetComponentInChildren<NPC>() == null) {
 			print (futureNPC.name +" needs a soul");
 			Instantiate (soul, futureNPC.transform.position, Quaternion.identity, futureNPC.transform);
 //			soul.transform.parent = futureNPC.transform;
