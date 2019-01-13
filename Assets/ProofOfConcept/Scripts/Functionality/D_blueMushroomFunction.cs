@@ -26,7 +26,7 @@ public class D_blueMushroomFunction : D_Function {
 
     // Update is called once per frame
     public override void Use() {
-
+        
 		if (!beingUsed) {
 			base.Use ();
 			//print ("Blue mushroom function triggered");

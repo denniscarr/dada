@@ -32,6 +32,7 @@ public class D_starryExpolsion : D_Function {
 
 	public void Explosion()
 	{
+        transform.parent.BroadcastMessage("Use");
 
 		//Instantiate particle system and add force
 		for (int i=0; i<fragmentCount; i++){

@@ -78,24 +78,24 @@ public class MouseControllerNew : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
-			transform.position = Input.mousePosition;
-			clickGapCount += Time.fixedDeltaTime;
-			if(clickGapCount > CLICKGAPTIME){
-				DetectSelection();
-			}
-		}
+		//if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
+		//	transform.position = Input.mousePosition;
+		//	clickGapCount += Time.fixedDeltaTime;
+		//	if(clickGapCount > CLICKGAPTIME){
+		//		DetectSelection();
+		//	}
+		//}
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if(playercontroller.Mode == ControlMode.ZOOM_OUT_MODE){
-//			transform.position = Input.mousePosition;
-//			clickGapCount += Time.fixedDeltaTime;
-//			if(clickGapCount > CLICKGAPTIME){
-//				DetectSelection();
-//			}
-		}else{
+            transform.position = Input.mousePosition;
+            clickGapCount += Time.deltaTime;
+            if (clickGapCount > CLICKGAPTIME) {
+                DetectSelection();
+            }
+        } else{
 			GetComponent<RectTransform>().localPosition = Vector3.zero;
 
 			if(playercontroller.Mode == ControlMode.ZOOM_IN_MODE){
@@ -108,8 +108,8 @@ public class MouseControllerNew : MonoBehaviour {
 						body.useGravity = true;
 						body.freezeRotation = false;
 					}
-					if (selectedObject.FindChild("Incoherence Controller") != null) selectedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
-					if (selectedObject.FindChild("NPC AI") != null) selectedObject.FindChild("NPC AI").gameObject.SetActive(true);
+					if (selectedObject.Find("Incoherence Controller") != null) selectedObject.Find("Incoherence Controller").gameObject.SetActive(true);
+					if (selectedObject.Find("NPC AI") != null) selectedObject.Find("NPC AI").gameObject.SetActive(true);
 					selectedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
 					selectedObject = null;
@@ -489,8 +489,8 @@ public class MouseControllerNew : MonoBehaviour {
 	            body.useGravity = true;
 	            body.freezeRotation = false;
 			}
-            if (selectedObject.FindChild("Incoherence Controller") != null) selectedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
-            if (selectedObject.FindChild("NPC AI") != null) selectedObject.FindChild("NPC AI").gameObject.SetActive(true);
+            if (selectedObject.Find("Incoherence Controller") != null) selectedObject.Find("Incoherence Controller").gameObject.SetActive(true);
+            if (selectedObject.Find("NPC AI") != null) selectedObject.Find("NPC AI").gameObject.SetActive(true);
             selectedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
             selectedObject = null;

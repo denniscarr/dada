@@ -35,6 +35,7 @@ public class D_Function : MonoBehaviour {
             // If we're being carried by the player and the player presses the use key then get used.
 			if (intSet.IsEquipped && Input.GetKey(useKey))
             {
+                Debug.Log("Tried to use " + transform.parent.name);
                 Use();
                 currentCooldown = cooldownTimer;
             }
@@ -47,11 +48,14 @@ public class D_Function : MonoBehaviour {
         if (transform.parent.GetComponentInChildren<IncoherenceController>() != null)
             transform.parent.GetComponentInChildren<IncoherenceController>().incoherenceMagnitude += 
                 Services.IncoherenceManager.interactionIncrease;
+        
         float pitchJitter = (Random.value - 0.5f) * audioJitter + 1f;
+
         if (useSFX.Length > 0)
         {
 			Services.AudioManager.Play3DSFX(useSFX[Random.Range(0, useSFX.Length)], transform.position, soundFXVol, pitchJitter);
         }
+
 		timeUsed += 1;
 		//print (timeUsed);
     }

@@ -475,8 +475,8 @@ public class NPC : MonoBehaviour {
 
 				}
                 // Disable Incoherence controller && NPC AI
-                if (targetObject.FindChild("Incoherence Controller") != null) targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
-                if (targetObject.FindChild("NPC AI") != null) targetObject.FindChild("NPC AI").gameObject.SetActive(false);
+                if (targetObject.Find("Incoherence Controller") != null) targetObject.Find("Incoherence Controller").gameObject.SetActive(false);
+                if (targetObject.Find("NPC AI") != null) targetObject.Find("NPC AI").gameObject.SetActive(false);
 
                 // Tell this object that it is being carried by me.
                 targetObject.GetComponentInChildren<InteractionSettings>().carryingObject = transform.parent;
@@ -720,8 +720,8 @@ public class NPC : MonoBehaviour {
             carriedObject.gameObject.GetComponent<Rigidbody> ().isKinematic = false;
             carriedObject.gameObject.GetComponent<Rigidbody> ().useGravity = true;
             carriedObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = true;
-            if (carriedObject.FindChild("Incoherence Controller") != null) carriedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
-            if (carriedObject.FindChild("NPC AI") != null) carriedObject.FindChild("NPC AI").gameObject.SetActive(true);
+            if (carriedObject.Find("Incoherence Controller") != null) carriedObject.Find("Incoherence Controller").gameObject.SetActive(true);
+            if (carriedObject.Find("NPC AI") != null) carriedObject.Find("NPC AI").gameObject.SetActive(true);
             carriedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
             // Deparent object.

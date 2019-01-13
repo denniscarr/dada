@@ -19,6 +19,7 @@ public class FreezeEverythingEvent : IncoherenceEvent {
 
         foreach (InteractionSettings intSet in FindObjectsOfType<InteractionSettings>())
         {
+            if (intSet.transform.parent.name.Contains("Grail")) return;
             if (intSet.transform.parent.GetComponent<Rigidbody>() != null) intSet.transform.parent.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         }
 

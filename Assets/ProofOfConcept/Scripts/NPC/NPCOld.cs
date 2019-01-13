@@ -141,7 +141,7 @@ public class NPCOld : MonoBehaviour {
                 targetObject.gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 
                 // Disable Incoherence controller.
-                targetObject.FindChild("Incoherence Controller").gameObject.SetActive(false);
+                targetObject.Find("Incoherence Controller").gameObject.SetActive(false);
 
                 // Tell my animator to show the picking up animation.
                 npcAnimation.PickupObject();
@@ -291,7 +291,7 @@ public class NPCOld : MonoBehaviour {
             carriedObject.gameObject.GetComponent<Rigidbody> ().isKinematic = false;
             carriedObject.gameObject.GetComponent<Rigidbody> ().useGravity = true;
             carriedObject.gameObject.GetComponent<Rigidbody> ().detectCollisions = true;
-            carriedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
+            carriedObject.Find("Incoherence Controller").gameObject.SetActive(true);
 
             // Deparent object.
             carriedObject.transform.parent = null;

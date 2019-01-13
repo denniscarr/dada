@@ -136,7 +136,7 @@ public class Tutorial : Quest {
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
 			VisorGenerate();
-			TaskFinished("Welcome. Go close to the visor there so that you can left click on it to purchase.");
+			TaskFinished("Welcome. Left click on that object to purchase it.");
 			state = TutorialState.PURCHASE_VISOR;
 		}
 
@@ -184,7 +184,7 @@ public class Tutorial : Quest {
 		}
 
 		if (visor.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer) {
-			AddNewNote("Good. Now left click again to put it on.");
+			AddNewNote("Nice visor! Now left click again to put it on.");
 			//TaskFinished();
 			//QuestItNoreText.text = "Pick up your visor.";		// lmao silly and redundant
 			state = TutorialState.PICKUP_VISOR;
@@ -233,7 +233,7 @@ public class Tutorial : Quest {
 		Destroy(visor);
 		Destroy(textSpawn); // for good measure
 
-		AddNewNote("Now find and click the Observation Platform.");
+		AddNewNote("Use WASD to find and click the Observation Platform.");
 
 		controls.Mode = ControlMode.ZOOM_OUT_MODE;
 	}
@@ -297,7 +297,7 @@ public class Tutorial : Quest {
 	void OnEquipGun(){
 		if(go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
 			state = TutorialState.USE_GUN;
-			AddNewNote("Right click with the gun equipped to use it.");
+			AddNewNote("Right click while the gun is equipped to use it.");
 			//QuestItNoreText.text = "Right click on the gun to use it.";
 		}
 
@@ -314,7 +314,7 @@ public class Tutorial : Quest {
 
 	void OnDropGun(){
 		if(!go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
-			AddNewNote("Now try to store the gun in your visor.");			
+			AddNewNote("Now drag the gun in your visor for safe keeping.");			
 			//QuestItNoreText.text = "Try to store the gun in your visor.";
 			state = TutorialState.DRAG_GUN_IN;
             //Destroy(questItNote);
@@ -332,7 +332,7 @@ public class Tutorial : Quest {
 
     public void OnGrabGrail()
     {
-        AddNewNote("You couldn't afford it anyway. Follow it down.");
+        AddNewNote("You could never afford it anyway. Jump off the edge to continue. This works any time.");
         GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
         GetComponent<QuestManager>().enabled = true;
         GetComponent<QuestFinderScript>().enabled = true;

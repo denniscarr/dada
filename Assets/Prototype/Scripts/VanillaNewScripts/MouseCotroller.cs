@@ -349,8 +349,8 @@ public class MouseCotroller : MonoBehaviour {
 	            body.useGravity = true;
 	            body.freezeRotation = false;
 			}
-            if (selectedObject.FindChild("Incoherence Controller") != null) selectedObject.FindChild("Incoherence Controller").gameObject.SetActive(true);
-            if (selectedObject.FindChild("NPC AI") != null) selectedObject.FindChild("NPC AI").gameObject.SetActive(true);
+            if (selectedObject.Find("Incoherence Controller") != null) selectedObject.Find("Incoherence Controller").gameObject.SetActive(true);
+            if (selectedObject.Find("NPC AI") != null) selectedObject.Find("NPC AI").gameObject.SetActive(true);
             selectedObject.GetComponentInChildren<InteractionSettings>().carryingObject = null;
 
             selectedObject = null;

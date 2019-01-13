@@ -280,11 +280,11 @@ public class EquippableFinder : MonoBehaviour {
 		}
 
         // SPECIAL CASE FOR TRYING TO EQUIP GRAIL
-        if (_equipTarget.GetComponentInChildren<GrailFunction>() != null)
-        {
-            _equipTarget.GetComponentInChildren<GrailFunction>().Use();
-            return;
-        }
+        //if (_equipTarget.GetComponentInChildren<GrailFunction>() != null)
+        //{
+        //    _equipTarget.GetComponentInChildren<GrailFunction>().Use();
+        //    return;
+        //}
 
         // Disable collision & gravity.
         _equipTarget.GetComponent<Collider>().isTrigger = true;

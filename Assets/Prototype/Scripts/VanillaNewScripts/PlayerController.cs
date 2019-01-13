@@ -44,11 +44,11 @@ public class PlayerController : MonoBehaviour {
 		mode = ControlMode.ZOOM_OUT_MODE;
 		fpController = this.GetComponent<FirstPersonController>();
 		Transform root = transform.parent;
-		canvas = root.FindChild("Canvas").gameObject;
-		uppernode = root.FindChild("UpperNode");
-		inRoomNode = uppernode.FindChild("InRoomNode");
+		canvas = root.Find("Canvas").gameObject;
+		uppernode = root.Find("UpperNode");
+		inRoomNode = uppernode.Find("InRoomNode");
 		pressGapCount = 0f;
-		uppercamera = uppernode.FindChild("UpperCamera").GetComponent<Camera>();
+		uppercamera = uppernode.Find("UpperCamera").GetComponent<Camera>();
 		myCamera = transform.GetChild(0).GetComponent<Camera>();
 
 
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour {
 			ChangeToInRoomMode();
 		}
 
-		instructionText = canvas.transform.FindChild ("Instructions").GetComponent<Text> ();;
+		instructionText = canvas.transform.Find ("Instructions").GetComponent<Text> ();;
 
 	}
 		
@@ -156,8 +156,8 @@ public class PlayerController : MonoBehaviour {
 		Debug.Log("upper camera fov:"+uppercamera.fieldOfView);
 		mode = ControlMode.IN_ROOM_MODE;
 		Debug.Log(mode);
-		inRoomNode.FindChild("CameraForScreen").position = Camera.main.transform.position;
-		inRoomNode.FindChild("CameraForScreen").rotation = Camera.main.transform.rotation;
+		inRoomNode.Find("CameraForScreen").position = Camera.main.transform.position;
+		inRoomNode.Find("CameraForScreen").rotation = Camera.main.transform.rotation;
 
 		//?????????
 		uppercamera.enabled = false;

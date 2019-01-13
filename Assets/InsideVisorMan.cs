@@ -39,7 +39,7 @@ public class InsideVisorMan : MonoBehaviour
     void Start()
     {
         controlledObjectCurrentMoveSpeed = controlledObjectMoveSpeedSlow;
-        objectCamera = objectCamGameObject.transform.FindChild("Pivot").GetComponentInChildren<Camera>();
+        objectCamera = objectCamGameObject.transform.Find("Pivot").GetComponentInChildren<Camera>();
     }
 
 

@@ -15,7 +15,7 @@ public class QuestItNote : MonoBehaviour {
 	void Start () {
 
 		interactionSettings = GetComponentInChildren<InteractionSettings> ();
-		questText = transform.FindChild ("Canvas").GetComponentInChildren<Text> ();
+		questText = transform.Find ("Canvas").GetComponentInChildren<Text> ();
 
 	}
 	
