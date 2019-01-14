@@ -1,9 +1,7 @@
 fileFormatVersion: 2
 guid: 080590ae6caa65d44892c07ff174f52f
-timeCreated: 1492314661
-licenseType: Free
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: Armature
     100002: breast_L
@@ -399,26 +397,69 @@ ModelImporter:
     13700010: Pre_Adaminte_eyes
     13700012: Pre_Adaminte_teeth
     13700014: Pre_Adaminte_tongue
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pre_Adaminte_Body__Pre_Adaminte_skin_D_tga
+    second: {fileID: 2100000, guid: 1a5270a13700c3048826cae4a16de079, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pre_Adaminte_clothes__Pre_Adaminte_cloth_D_tga
+    second: {fileID: 2100000, guid: eba0271d9980c174388268bab6bc30eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pre_Adaminte_eyebrow__Pre_Adaminte_eyebrow_D_tga
+    second: {fileID: 2100000, guid: a8e37507c62b2d24db58fe58de3414a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pre_Adaminte_eyelashes__Pre_Adaminte_eyelashes_D_tga
+    second: {fileID: 2100000, guid: 66d9d58c2cfb1674c92b7adad02a0471, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pre_Adaminte_eyes__Pre_Adaminte_eye_D_tga
+    second: {fileID: 2100000, guid: bed4f2e361142fd4ba4f67389bd7872c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pre_Adaminte_teeth__Pre_Adaminte_teeth_D_tga
+    second: {fileID: 2100000, guid: 1c6a215c79a09b7409e4dac26d5f0c64, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pre_Adaminte_tongue__Pre_Adaminte_tongue_D_tga
+    second: {fileID: 2100000, guid: 250599d08005db84d8f188b7f509e4cd, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -426,22 +467,34 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -1831,7 +1884,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1

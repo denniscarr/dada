@@ -1,9 +1,7 @@
 fileFormatVersion: 2
 guid: f739e44d289db9b46bc9efd9d04987d5
-timeCreated: 1492312560
-licenseType: Free
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: Blendshape1
     100002: Bottom_Lip_Ctrl
@@ -1217,26 +1215,119 @@ ModelImporter:
     13700078: polySurface66
     13700080: polySurface67
     13700082: polySurface76
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn1_blue_glow
+    second: {fileID: 2100000, guid: ad12465701e44d14c9be051d46cd172b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: female_head__2__lambert4_black_rubber
+    second: {fileID: 2100000, guid: f0f0ffcce6d582d48afb9c70d98f3653, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: female_head__2__phong4_robot_body
+    second: {fileID: 2100000, guid: 3656ccc9fe077d94e8865634cd000c8c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: female_head__2__phong7_border_blue
+    second: {fileID: 2100000, guid: d906f07c88b5ed342864128b254f3149, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: female_head__2__phong_eye_colorShape1
+    second: {fileID: 2100000, guid: 197d5a831a14fab4595b66c42380736d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hand_lambert4_black_rubber
+    second: {fileID: 2100000, guid: cec50d22311d3ae4ba6e68fe3152b72d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hand_phong4_robot_body
+    second: {fileID: 2100000, guid: e97c01c125138a341be8639069bc7964, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hand_phong7_border_blue
+    second: {fileID: 2100000, guid: 5077717f81e80cf418e6aec231848332, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: 2762381f6ddd9cd40b0e88b60c519e1c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert4_black_rubber
+    second: {fileID: 2100000, guid: efb09f4f361f0ef4f9c12f67174457c6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leg1_blinn1_blue_glow
+    second: {fileID: 2100000, guid: df8c3c14fe0a8d244ac15cff8c40a9e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leg1_lambert4_black_rubber
+    second: {fileID: 2100000, guid: f2a7b9220bb3bfc4f9ca21003c03f83d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leg1_phong4_robot_body
+    second: {fileID: 2100000, guid: bede2425a9a7c8145893776a995b8819, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leg1_phong7_border_blue
+    second: {fileID: 2100000, guid: cb402938a419b2949a42432ed9027e2e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: phong2
+    second: {fileID: 2100000, guid: 1523bfa7dfc569d4bbce487f3ea0f9d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: phong4_robot_body
+    second: {fileID: 2100000, guid: efc3ed5f1dfeac848a513ed1cbd1fa9b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: phong7_border_blue
+    second: {fileID: 2100000, guid: de4abbbcb96df5f47a3009a43ac2c087, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -1244,22 +1335,34 @@ ModelImporter:
     globalScale: 20
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 0.19999999
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -4179,7 +4282,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
