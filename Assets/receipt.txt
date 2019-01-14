@@ -194,3 +194,4 @@ Bathtub $525
 Small Table $10
 AUG A3 $899
 Hammer $1999
+visor $9499
