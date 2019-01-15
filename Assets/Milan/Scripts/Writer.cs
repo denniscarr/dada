@@ -251,6 +251,10 @@ public class Writer : MonoBehaviour {
 		newWord.AddComponent<BoxCollider2D> ();
 		newWord.transform.localScale = Vector3.one * textSize;
 		spawnPosition2.x += newWord.GetComponent<MeshRenderer> ().bounds.size.x + tracking;
+        if (spawnPosition2.x > lineLength) {
+            spawnPosition2.x = 0f;
+            spawnPosition2.y -= lineSpacing;
+        }
 		newWord.transform.localPosition = pos;
 		newWord.transform.localRotation = Quaternion.Euler (Vector3.zero);
 		t.fade = false;
