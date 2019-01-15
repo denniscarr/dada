@@ -147,7 +147,11 @@ public class NPC : MonoBehaviour {
             transform.parent.gameObject.AddComponent<CollisionReporterNPC>();
         }
 
-        rb = transform.parent.GetComponent<Rigidbody>();
+        if (transform.parent.GetComponent<Rigidbody>() != null) {
+            rb = transform.parent.GetComponent<Rigidbody>();
+        } else {
+            rb = transform.parent.gameObject.AddComponent<Rigidbody>();
+        }
 
         speakSource = GetComponent<AudioSource> ();
 

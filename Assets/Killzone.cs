@@ -7,7 +7,7 @@ public class Killzone : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
     {
         //If the grail has fallen off the level, kill it and turn the lights on.
-        if (other.name == "Grail")
+        if (other.gameObject.name.ToLower().Contains("grail"))
         {
             //Services.LevelGen.Create();
             other.GetComponent<Grail>().GetReadyToDie();

@@ -77,7 +77,7 @@ public class GrailFunction : D_Function {
 
         foreach (Collider collider in GetComponentsInParent<Collider>())
         {
-            collider.enabled = false;
+            collider.isTrigger = true;
         }
 
         GetComponentInParent<Rigidbody>().AddForce(directionFromPlayer * 30000f, ForceMode.Impulse);

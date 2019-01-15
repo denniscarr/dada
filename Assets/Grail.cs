@@ -10,7 +10,7 @@ public class Grail : MonoBehaviour {
     Vector3 originalScale;
     float sine;
 
-
+    
     private void Start()
     {
         originalScale = Vector3.one * 5f;
@@ -85,6 +85,7 @@ public class Grail : MonoBehaviour {
 
     public void GetReadyToDie()
     {
+        Debug.Log("grail being destroyed");
         GetComponent<Collider>().enabled = false;
         FindObjectOfType<GrailSpawner>().TurnOnTheLights();
         Destroy(gameObject, 1f);
