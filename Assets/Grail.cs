@@ -87,6 +87,7 @@ public class Grail : MonoBehaviour {
     {
         Debug.Log("grail being destroyed");
         GetComponent<Collider>().enabled = false;
+        Services.IncoherenceManager.timeInLevel = 1000000f;
         FindObjectOfType<GrailSpawner>().TurnOnTheLights();
         Destroy(gameObject, 1f);
         dying = true;

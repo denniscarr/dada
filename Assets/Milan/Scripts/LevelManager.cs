@@ -84,16 +84,24 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 		if (currentLevel != null) {
 			Destroy (currentLevel.gameObject);
-			GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject> ();
-			foreach (GameObject go in allObjects) {
-				if (go.GetComponentInChildren<InteractionSettings> () != null) {
-					if (go.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player.transform) {
-						if (go.GetComponentInChildren<InteractionSettings> ().transform.parent == go.transform) {
-							Destroy (go);
-						}
-					}
-				}
-			}
+            InteractionSettings[] allIntSet = FindObjectsOfType<InteractionSettings>();
+            foreach (InteractionSettings intSet in allIntSet) {
+                Debug.Log("killing: " + intSet.transform.parent.name);
+                if (intSet.transform.parent.name.Contains("tree")) { Debug.Break(); }
+                if (intSet.carryingObject != Services.Player.transform) {
+                    Destroy(intSet.transform.parent.gameObject);
+                }
+            }
+			//GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject> ();
+			//foreach (GameObject go in allObjects) {
+			//	if (go.GetComponentInChildren<InteractionSettings> () != null) {
+			//		if (go.GetComponentInChildren<InteractionSettings>().carryingObject != Services.Player.transform) {
+   //                     if (go.GetComponentInChildren<InteractionSettings>().transform.parent == go.transform) {
+   //                         Destroy (go);
+   //                     }
+   //                 }
+			//	}
+			//}
 		}
 
 		Level.xOrigin = Random.Range (0, 10000);

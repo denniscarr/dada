@@ -48,7 +48,7 @@ public class IncoherenceManager : MonoBehaviour {
     float timeSinceLastEvent = 0f;
     float timeUntilNextEvent = 0f;
 
-    float timeInLevel = 0f;
+    [HideInInspector] public float timeInLevel = 0f;
     float timeUntilLevelShrinks = 90f;
     float levelShrinkDuration = 90f;
     bool levelShrinking;
