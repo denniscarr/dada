@@ -18,7 +18,7 @@ public class D_Function : MonoBehaviour {
         intSet = transform.parent.GetComponentInChildren<InteractionSettings>();
     }
 
-    public void Update()
+    public virtual void Update()
     {
         if (currentCooldown > 0)
         {
