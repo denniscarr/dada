@@ -11,7 +11,7 @@ public class ResetScene : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.P)) {
+		if (Input.GetKeyDown (KeyCode.O)) {
 			SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 		}
 	}
