@@ -183,11 +183,13 @@ public class Tutorial : Quest {
     }
 
     public void RemoveAllExtraNotes() {
-        foreach (GameObject extraNote in extraNotes) {
-            extraNote.transform.DOScale(Vector3.zero, 0.4f).OnComplete(() => DeleteThisNote(extraNote));
+        for (int i = 0; i < extraNotes.Count; i++) {
+            extraNotes[i].transform.DOScale(Vector3.zero, 0.4f).OnComplete(() => DeleteThisNote(extraNotes[i]));
             GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
-            stars.transform.position = extraNote.transform.position;
+            stars.transform.position = extraNotes[i].transform.position;
         }
+
+        extraNotes.Clear();
     }
 
     void DeleteThisNote(GameObject thisNote) {
@@ -392,99 +394,143 @@ public class Tutorial : Quest {
         GameObject.Find("Bootstrapper").GetComponent<GrailSpawner>().SpawnGrail();
 	}
 
+    int savedNum = 0;
+    public void ShowLevelSpecificNote() {
+        CancelInvoke("HeeHeeHawHaw");   
+        savedNum = Services.LevelGen.levelNumber;
+        Invoke("HeeHeeHawHaw", 10f);
+    }
 
-	/// <summary>
-	/// jenna's great work below
-	/// </summary>
-//	void visorPickedUp(){
-//
-//		// yay! step one done
-//		//visorEquipped = true;
-//
-//		// destroy it bc its now useless
-//		Destroy(visor);
-//		Destroy (textSpawn); // for good measure
-//
-//		// change the text
-//		QuestItNoreText.text = "Click the platform to go back.";
-//
-//		// stick the note to the screen
-//		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
-//
-//		controls.Mode = ControlMode.ZOOM_OUT_MODE;
-//	}
+    void HeeHeeHawHaw() {
+        switch (savedNum) {
+            case 1:
+                AddExtraNote("You will start being assigned tasks shortly. Complete them to earn money.");
+                break;
+            case 2:
+                AddExtraNote("Be sure to buy as many items as possible. Keep them all in your visor.");
+                break;
+            case 4:
+                AddExtraNote("Are you spending all of your money? Spend it all.");
+                break;
+            case 6:
+                AddExtraNote("Things are starting to break down. Please be patient.");
+                break;
+            case 7:
+                AddExtraNote("Do you think you can find beauty here?");
+                break;
+            case 8:
+                AddExtraNote("It hurts when the frame rate gets low. But I like it.");
+                break;
+            case 9:
+                AddExtraNote("This is what's supposed to happen.");
+                break;
+            case 11:
+                AddExtraNote("I hope all the items you bought are coming in handy.");
+                break;
+            case 12:
+                AddExtraNote("You can be ok with this.");
+                break;
+            case 15:
+                AddExtraNote("It's getting deep now.");
+                break;
 
-//	void enterRoom(){
-//		Debug.Log("enter room");
-//
-//		// mark off the bool
-//		//roomEntered = true;
-//
-//		GameObject fakeVisor = GameObject.Find ("FakeVisor");
-//		// spawn something for the player to use
-//		colostomyBag = Instantiate (Resources.Load("Pickups/Colostomy Bag")) as GameObject;
-//		colostomyBag.transform.position = new Vector3 (fakeVisor.transform.position.x, fakeVisor.transform.position.y - 2, fakeVisor.transform.position.z);
-//
-//		//inRoomItem = colostomyBag;
-//
-//		// spawn a new quest it note for good measure
-//		questItNote2 = Instantiate(Resources.Load("QuestItNote")) as GameObject;
-//		questItNote2.transform.position = fakeVisor.transform.position;
-////		questItNote2.transform.parent = platform.transform;
-//		questItNote2.GetComponentInChildren<Text> ().text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
-//
-//		// change the text
-//		QuestItNoreText.text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
-//
-//		// change the in room text, too
-//		txtInfo = GameObject.Find("txtInfo").GetComponent<Text>();
-//		txtInfo.text = "Click to move bag.";
-//
-//	}
+            default: break;
+        }
+    }
 
 
-//	void nowExit(){
-//		// mark off the bool
-//		//thingMoved = true;
-//
-//		//inRoomItem = null;
-//
-//		Destroy (questItNote2);
-//		txtInfo.text = "Click platform. Press tab.";
-//
-//		// change the text
-//		QuestItNoreText.text = "Click on the viewing platform and press tab.";
-//
-//	}
-//
-//	void interactWithAThing(){
-//
-//		//mark off the bool
-//		//tabPressed = true;
-//
-//		controls.Mode = ControlMode.ZOOM_OUT_MODE;
-//
-//		// instantiate an item and put it somewhere else
-//		GameObject newThing = Instantiate(Resources.Load("Pickups/Bathroom Sink", typeof(GameObject))) as GameObject;
-//		newThing.transform.position = new Vector3 (this.transform.position.x - 5, this.transform.position.y + 15, this.transform.position.z + 10);
-//
-//		// change the text
-//		QuestItNoreText.text = "Find something in the world. Press right mouse button to interact.";
-//
-//	}
-//
-//	void OnCollisionEnter (Collision col){
-//		if (col.gameObject.name == "Killzone") {
-//			if (manager.allQuestsCompleted) {
-////				jumpedOff = true;
-////				if (jumpedOff == true) {
-////					finished = true;
-////					if (finished == true) {
-////						Destroy (this);
-////					}
-////				}
-//			}
-//		}
-//	}
+    /// <summary>
+    /// jenna's great work below
+    /// </summary>
+    //	void visorPickedUp(){
+    //
+    //		// yay! step one done
+    //		//visorEquipped = true;
+    //
+    //		// destroy it bc its now useless
+    //		Destroy(visor);
+    //		Destroy (textSpawn); // for good measure
+    //
+    //		// change the text
+    //		QuestItNoreText.text = "Click the platform to go back.";
+    //
+    //		// stick the note to the screen
+    //		questItNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+    //
+    //		controls.Mode = ControlMode.ZOOM_OUT_MODE;
+    //	}
+
+    //	void enterRoom(){
+    //		Debug.Log("enter room");
+    //
+    //		// mark off the bool
+    //		//roomEntered = true;
+    //
+    //		GameObject fakeVisor = GameObject.Find ("FakeVisor");
+    //		// spawn something for the player to use
+    //		colostomyBag = Instantiate (Resources.Load("Pickups/Colostomy Bag")) as GameObject;
+    //		colostomyBag.transform.position = new Vector3 (fakeVisor.transform.position.x, fakeVisor.transform.position.y - 2, fakeVisor.transform.position.z);
+    //
+    //		//inRoomItem = colostomyBag;
+    //
+    //		// spawn a new quest it note for good measure
+    //		questItNote2 = Instantiate(Resources.Load("QuestItNote")) as GameObject;
+    //		questItNote2.transform.position = fakeVisor.transform.position;
+    ////		questItNote2.transform.parent = platform.transform;
+    //		questItNote2.GetComponentInChildren<Text> ().text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
+    //
+    //		// change the text
+    //		QuestItNoreText.text = "Now that you've walked around, try to move the Colostomy Bag. Click.";
+    //
+    //		// change the in room text, too
+    //		txtInfo = GameObject.Find("txtInfo").GetComponent<Text>();
+    //		txtInfo.text = "Click to move bag.";
+    //
+    //	}
+
+
+    //	void nowExit(){
+    //		// mark off the bool
+    //		//thingMoved = true;
+    //
+    //		//inRoomItem = null;
+    //
+    //		Destroy (questItNote2);
+    //		txtInfo.text = "Click platform. Press tab.";
+    //
+    //		// change the text
+    //		QuestItNoreText.text = "Click on the viewing platform and press tab.";
+    //
+    //	}
+    //
+    //	void interactWithAThing(){
+    //
+    //		//mark off the bool
+    //		//tabPressed = true;
+    //
+    //		controls.Mode = ControlMode.ZOOM_OUT_MODE;
+    //
+    //		// instantiate an item and put it somewhere else
+    //		GameObject newThing = Instantiate(Resources.Load("Pickups/Bathroom Sink", typeof(GameObject))) as GameObject;
+    //		newThing.transform.position = new Vector3 (this.transform.position.x - 5, this.transform.position.y + 15, this.transform.position.z + 10);
+    //
+    //		// change the text
+    //		QuestItNoreText.text = "Find something in the world. Press right mouse button to interact.";
+    //
+    //	}
+    //
+    //	void OnCollisionEnter (Collision col){
+    //		if (col.gameObject.name == "Killzone") {
+    //			if (manager.allQuestsCompleted) {
+    ////				jumpedOff = true;
+    ////				if (jumpedOff == true) {
+    ////					finished = true;
+    ////					if (finished == true) {
+    ////						Destroy (this);
+    ////					}
+    ////				}
+    //			}
+    //		}
+    //	}
 
 }
