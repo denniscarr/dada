@@ -125,7 +125,7 @@ public class Tutorial : Quest {
 		visor.transform.localScale = Vector3.zero;
 		visor.transform.DOScale(Vector3.one*15f,1.5f);
 		//Debug.Log(visor);
-		visor.transform.position = new Vector3 (player.transform.position.x + player.transform.forward.x*7f, player.transform.position.y-2f, player.transform.position.z + player.transform.forward.z*7f);
+		visor.transform.position = new Vector3 (player.transform.position.x + player.transform.forward.x*7f, -415.3f, player.transform.position.z + player.transform.forward.z*7f);
         // interaction settings, rip soon);
         Quaternion newRotation = Quaternion.LookRotation(visor.transform.position - Services.Player.transform.position);
         newRotation = Quaternion.Euler(0f, newRotation.eulerAngles.y, 0f);
