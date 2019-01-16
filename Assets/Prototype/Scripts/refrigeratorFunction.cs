@@ -43,7 +43,7 @@ public class refrigeratorFunction: D_Function
             GetDropped();
 		}
 
-		GetComponentInParent<Rigidbody>().AddForce(transform.right * refrigeratorSpeed);
+		GetComponentInParent<Rigidbody>().AddForce(transform.right * refrigeratorSpeed * Time.deltaTime);
 		//Debug.Log("lol");
 	}
 }
