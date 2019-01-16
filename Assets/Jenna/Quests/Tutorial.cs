@@ -52,6 +52,8 @@ public class Tutorial : Quest {
 	Text txtInfo;
 	GameObject colostomyBag;
 
+    List<GameObject> extraNotes = new List<GameObject>();
+
 	Transform player;
 
 	GameObject go_AK12;
@@ -123,7 +125,7 @@ public class Tutorial : Quest {
 		visor.transform.localScale = Vector3.zero;
 		visor.transform.DOScale(Vector3.one*15f,1.5f);
 		//Debug.Log(visor);
-		visor.transform.position = new Vector3 (player.transform.position.x + player.transform.forward.x*8f, player.transform.position.y-2f, player.transform.position.z + player.transform.forward.z*8f);
+		visor.transform.position = new Vector3 (player.transform.position.x + player.transform.forward.x*7f, player.transform.position.y-2f, player.transform.position.z + player.transform.forward.z*7f);
         // interaction settings, rip soon);
         Quaternion newRotation = Quaternion.LookRotation(visor.transform.position - Services.Player.transform.position);
         newRotation = Quaternion.Euler(0f, newRotation.eulerAngles.y, 0f);
@@ -135,16 +137,27 @@ public class Tutorial : Quest {
 	void InitFirstNode(){
 		if(state == TutorialState.BEFORE_LAND){
 			Debug.Log("first node init");
-			VisorGenerate();
-			TaskFinished("Welcome. Left click on that object to purchase it.");
-			state = TutorialState.PURCHASE_VISOR;
+            AddExtraNote("Welcome. I'm glad you could make it.");
+            Invoke("DumpTruck", 5f);
 		}
-
 	}
 
-	void TaskFinished(string notes){
+    void DumpTruck() {
+        RemoveAllExtraNotes();
+        AddExtraNote("I will teach you how to exist in this world. Are you ready?");
+        Invoke("FuckDuck", 5f);
+    }
+
+    void FuckDuck() {
+        TaskFinished("Left click on that object to purchase it.");
+        RemoveAllExtraNotes();
+        VisorGenerate();
+        state = TutorialState.PURCHASE_VISOR;
+    }
+
+    void TaskFinished(string notes){
 		if(questItNote){
-			questItNote.transform.DOScale(Vector3.zero, 0.4f).OnComplete(()=>OnDisappearComplete(notes));
+            questItNote.transform.DOScale(Vector3.zero, 0.4f).OnComplete(()=>OnDisappearComplete(notes));
 			GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
 			stars.transform.position = questItNote.transform.position;
 			GameObject.Find("Bootstrapper").GetComponent<PlayerMoneyManager>().funds += rewardMoney;
@@ -159,7 +172,30 @@ public class Tutorial : Quest {
 		QuestItNoteText.DOText("",0.1f).OnComplete(()=>TaskFinished(notes));
 	}
 
-	void OnDisappearComplete(string notes){
+    public void AddExtraNote(string noteText) {
+        GameObject newNote = Instantiate(Resources.Load("QuestItNote", typeof(GameObject))) as GameObject;
+        Services.AudioManager.PlaySFX(Services.AudioManager.tutorialTones[Random.Range(0, Services.AudioManager.tutorialTones.Length)]);
+        newNote.GetComponentInChildren<QuestItNoteFunction>().StickToScreen();
+        newNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
+        newNote.transform.DOScale(Vector3.one, 0.4f);
+        newNote.GetComponentInChildren<Text>().DOText(noteText, 1f).SetDelay(0.5f);
+        extraNotes.Add(newNote);
+    }
+
+    public void RemoveAllExtraNotes() {
+        foreach (GameObject extraNote in extraNotes) {
+            extraNote.transform.DOScale(Vector3.zero, 0.4f).OnComplete(() => DeleteThisNote(extraNote));
+            GameObject stars = Instantiate(Resources.Load("explosion-noforce", typeof(GameObject))) as GameObject;
+            stars.transform.position = extraNote.transform.position;
+        }
+    }
+
+    void DeleteThisNote(GameObject thisNote) {
+        extraNotes.Remove(thisNote);
+        Destroy(thisNote);
+    }
+
+    void OnDisappearComplete(string notes){
 		//TaskFinished();
 		if(questItNote){
 			Destroy(questItNote);
@@ -184,7 +220,7 @@ public class Tutorial : Quest {
 		}
 
 		if (visor.GetComponentInChildren<InteractionSettings>().isOwnedByPlayer) {
-			AddNewNote("Nice visor! Now left click again to put it on.");
+			AddNewNote("Now that it is yours, left click it again to equip it.");
 			//TaskFinished();
 			//QuestItNoreText.text = "Pick up your visor.";		// lmao silly and redundant
 			state = TutorialState.PICKUP_VISOR;
@@ -203,6 +239,10 @@ public class Tutorial : Quest {
 			}
 			//TaskFinished();
 			GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
+
+            CancelInvoke("FuckDuck");
+            CancelInvoke("DumpTruck");
+            RemoveAllExtraNotes();
 
 //			Debug.Log("Skip tutorial");
 			TaskFinished("Looks like you've been here before. Feel free to jump off at any time.");
@@ -233,7 +273,7 @@ public class Tutorial : Quest {
 		Destroy(visor);
 		Destroy(textSpawn); // for good measure
 
-		AddNewNote("Use WASD to find and click the Observation Platform.");
+		AddNewNote("Use WASD to move. Find and click the Observation Platform.");
 
 		controls.Mode = ControlMode.ZOOM_OUT_MODE;
 	}
@@ -262,7 +302,7 @@ public class Tutorial : Quest {
 	}
 
 	void OnThrowNoteOut(){
-		mouseControllerNew.writer.WriteAtPoint("Drag this note into your visor with the mouse.", mouseControllerNew.textPosition);
+		mouseControllerNew.writer.WriteAtPoint("Use the mouse to drag this note out of your visor and into the world.", mouseControllerNew.textPosition);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.DRAG_NOTE_IN;
 
@@ -313,7 +353,7 @@ public class Tutorial : Quest {
 
 	void OnDropGun(){
 		if(!go_AK12.GetComponentInChildren<InteractionSettings>().IsEquipped){
-			AddNewNote("Now drag the gun in your visor for safe keeping.");			
+			AddNewNote("Now press tab and drag the gun in your visor for safe keeping.");			
 			//QuestItNoreText.text = "Try to store the gun in your visor.";
 			state = TutorialState.DRAG_GUN_IN;
             //Destroy(questItNote);
@@ -331,13 +371,19 @@ public class Tutorial : Quest {
 
     public void OnGrabGrail()
     {
-        AddNewNote("You could never afford it anyway. Jump off the edge to continue. This works any time.");
-        GameObject.FindObjectOfType<LevelManager>().isTutorialCompleted = true;
+        AddExtraNote("Maybe you'll be able to afford it someday.");
+        Invoke("PissShit", 1.9f);
+
+        FindObjectOfType<LevelManager>().isTutorialCompleted = true;
         GetComponent<QuestManager>().enabled = true;
         GetComponent<QuestFinderScript>().enabled = true;
         GetComponent<QuestBuilderScript>().enabled = true;
         GetComponent<PickupQuest>().enabled = true;
         this.enabled = false;
+    }
+
+    void PissShit() {
+        AddNewNote("Jump off the edge of the island to continue downwards.");
     }
 
     void OnSpawnGrail(){

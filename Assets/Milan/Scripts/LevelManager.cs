@@ -135,8 +135,9 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		StartCoroutine (writer.WriteText ());
 
         Services.IncoherenceManager.HandleObjects();
-	
 
+        FindObjectOfType<Tutorial>().RemoveAllExtraNotes();
+	
         if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
