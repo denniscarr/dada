@@ -419,13 +419,13 @@ public class Tutorial : Quest {
                 AddExtraNote("Do you think you can find beauty here?");
                 break;
             case 8:
-                AddExtraNote("It hurts when the frame rate gets low. But I like it.");
+                AddExtraNote("I hope all the items you bought are coming in handy.");
                 break;
             case 9:
                 AddExtraNote("This is what's supposed to happen.");
                 break;
             case 11:
-                AddExtraNote("I hope all the items you bought are coming in handy.");
+                AddExtraNote("It hurts when the frame rate gets low. But I like it.");
                 break;
             case 12:
                 AddExtraNote("You can be ok with this.");
