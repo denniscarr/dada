@@ -844,6 +844,13 @@ public class NPC : MonoBehaviour {
     public void CatchOnFire()
     {
         writer.WriteSpecifiedString("Argh! I'm on fire!");
-		Services.AudioManager.Play3DSFX(Services.AudioManager.NPCOnFire, transform.parent.position);
+        
+        
+        //Adjusted this so it doesn't happen all of the time
+        if (Random.value > 0.66f) {
+            Services.AudioManager.Play3DSFX(Services.AudioManager.NPCOnFire, transform.parent.position);
+        } else if (Random.value > 0.8f) {
+            Services.AudioManager.Play3DSFX(Services.AudioManager.NPCOnFireAlt, transform.parent.position);
+        }
     }
 }
