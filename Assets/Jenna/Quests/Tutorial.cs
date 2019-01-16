@@ -173,7 +173,7 @@ public class Tutorial : Quest {
         questItNote.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
         questItNote.transform.DOScale(Vector3.one, 0.4f);
 		notes = notes + " Reward:$25";
-		QuestItNoteText.DOText(notes,1f).SetDelay(0.5f);;
+		QuestItNoteText.DOText(notes,1f).SetDelay(0.5f);
 		//QuestItNoreText.text = notes;
 
 	}
@@ -249,7 +249,6 @@ public class Tutorial : Quest {
 					mouseControllerNew.writer.WriteAtPoint("Use the mouse to drag this note out of your visor and into the world.", mouseControllerNew.textPosition);
 					AddNewNote("Use the mouse to drag this note out of your visor and into the world.");
 				}
-
 			}
 		}
 	}
