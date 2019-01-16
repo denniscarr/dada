@@ -25,6 +25,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
 	public bool isTutorialCompleted = false;
 
+    public int levelNumber { get { return ManagedObjects.Count; } }
+
 	void Awake(){
 		maxNPCs = 0;
 		maxObjects = 0;
@@ -40,7 +42,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         //SceneManager.sceneLoaded += OnSceneChange;
 		writer = Services.Player.GetComponentInChildren<Writer>();
-
 
 		Level.xOrigin = Random.Range (0, 10000);
 		Level.yOrigin = Random.Range (0, 10000);
@@ -125,7 +126,10 @@ public class LevelManager : SimpleManager.Manager<Level> {
 		sun.transform.position = newLevel.transform.position;
 		newLevel.name = "Level " + ManagedObjects.Count;
 
-		l.OnCreated ();
+        FindObjectOfType<Tutorial>().RemoveAllExtraNotes();
+        FindObjectOfType<Tutorial>().ShowLevelSpecificNote();
+
+        l.OnCreated ();
 
         //writer.textSize = 0.25f;
         if (ManagedObjects.Count > 0)
@@ -136,7 +140,6 @@ public class LevelManager : SimpleManager.Manager<Level> {
 
         Services.IncoherenceManager.HandleObjects();
 	
-
         if (FindObjectOfType<Grail>() != null) FindObjectOfType<Grail>().GetReadyToDie();
         FindObjectOfType<MyFirstPersonController>().isFirstLanding = true;
 
@@ -149,7 +152,8 @@ public class LevelManager : SimpleManager.Manager<Level> {
         if (levelNum < -1) Services.IncoherenceManager.TallyIncoherence();
 
         ManagedObjects.Add (l);
-		return l;
+
+        return l;
 	}
 
 	public override void Destroy(Level l){

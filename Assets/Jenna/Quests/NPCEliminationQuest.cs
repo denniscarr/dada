@@ -24,7 +24,7 @@ public class NPCEliminationQuest : Quest {
 		rewardMoney = Mathf.RoundToInt (Random.Range(2000, 10000));
 		title = ("Eliminate the glowing " + targetObject.name + " ");
 		progress = Quest.QuestProgress.AVAILABLE;
-		description = (title + " by any means possible. Reward: $" + rewardMoney);
+		description = (title + " by any means necessary. Reward: $" + rewardMoney);
 		CopyComponent(this, targetObject);
 		spawnNote ();
 	}
