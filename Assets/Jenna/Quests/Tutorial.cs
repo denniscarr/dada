@@ -281,14 +281,12 @@ public class Tutorial : Quest {
 	}
 
 	void OnUsePlatform(){
-		mouseControllerNew.writer.WriteAtPoint("Find and click the observation platform.", mouseControllerNew.textPosition);
 		if (Input.GetMouseButtonDown(0)){ // if left button pressed...
 			Ray ray = GameObject.Find("UpperCamera").GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit)){
 				if(hit.collider.transform.parent.name.Equals("Viewing Platform")){
 					state = TutorialState.THROW_NOTE_OUT;
-					mouseControllerNew.writer.WriteAtPoint("Use the mouse to drag this note out of your visor and into the world.", mouseControllerNew.textPosition);
 					AddNewNote("Use the mouse to drag this note out of your visor and into the world.");
 				}
 			}
@@ -296,7 +294,6 @@ public class Tutorial : Quest {
 	}
 
 	void OnDragNoteIn(){
-		mouseControllerNew.writer.WriteAtPoint("Now drag this note back into your visor with the mouse.", mouseControllerNew.textPosition);
 		if(Input.GetMouseButtonUp(0) && questItNote.transform.parent && questItNote.transform.parent.name.Equals("INROOMOBJECTS")){
 			state = TutorialState.PRESS_TAB;
 			AddNewNote("Press Tab to Zoom visor in or out. Now try it 5 times");
@@ -304,7 +301,6 @@ public class Tutorial : Quest {
 	}
 
 	void OnThrowNoteOut(){
-		mouseControllerNew.writer.WriteAtPoint("Use the mouse to drag this note out of your visor and into the world.", mouseControllerNew.textPosition);
 		if(questItNote.transform.parent == null){
 			state = TutorialState.DRAG_NOTE_IN;
 
@@ -316,7 +312,6 @@ public class Tutorial : Quest {
 	}
 
 	void OnPressTab(){
-		mouseControllerNew.writer.WriteAtPoint("Press TAB "+ (5 - numPressTab).ToString() +" times.", mouseControllerNew.textPosition);
 		if(Input.GetKeyDown(KeyCode.Tab)){
 			numPressTab ++;
 			int rest = 5 - numPressTab;

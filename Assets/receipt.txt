@@ -223,3 +223,5 @@ Bathtub $525
 visor $9499
 visor $9499
 AK12 $99
+visor $9499
+visor $9499
