@@ -159,7 +159,8 @@ public class MouseControllerNew : MonoBehaviour {
 		if(renderList != null){
 			for(int i = 0; i < renderList.Count;i++){
 				if(renderList[i]){
-					renderList[i].material.shader = Shader.Find(shaderList[i]);
+                    //renderList[i].material.shader = Shader.Find(shaderList[i]);
+                    renderList[i].materials = RemoveOutlineShaderFromMaterials(renderList[i].materials);
 				}
 				//Debug.Log(shaderList[i]);
 			}
@@ -174,8 +175,8 @@ public class MouseControllerNew : MonoBehaviour {
 
 
 	public void OutlineTargetObject(Transform t_hit){
-		DeoutlineTargetObject();
-		GetComponent<Image>().DOFade(1f,0.5f);
+        DeoutlineTargetObject();
+        GetComponent<Image>().DOFade(1f,0.5f);
         if (t_hit.name.Contains("Grail"))
         {
             t_hit.GetComponentInChildren<GrailFunction>().ReadyToRunAway();
@@ -190,7 +191,8 @@ public class MouseControllerNew : MonoBehaviour {
 			shaderList.Add(renderer.material.shader.name);
 			//Debug.Log(renderer.material.shader.name);
 			renderList.Add(renderer);
-			renderer.material.shader = Shader.Find("Mistral/Outline");
+            //renderer.material.shader = Shader.Find("Mistral/Outline");
+            renderer.materials = AddOutlineShaderToMaterials(renderer.materials);
 		}else{
 			Renderer[] renderers = t_hit.GetComponentsInChildren<Renderer>();
 			for(int i = 0;i<renderers.Length;i++){
@@ -198,13 +200,51 @@ public class MouseControllerNew : MonoBehaviour {
 					renderList.Add(renderers[i]);
 					//Debug.Log(renderers[i].material.shader.name);
 					shaderList.Add(renderers[i].material.shader.name);
-					renderers[i].material.shader = Shader.Find("Mistral/Outline");
-				}
+                    //renderers[i].material.shader = Shader.Find("Mistral/Outline");
+                    renderers[i].materials = AddOutlineShaderToMaterials(renderers[i].materials);
+                }
 			}
 		}
 	}
 
-	public void TutorialPressTabTip(int num){
+    Material[] RemoveOutlineShaderFromMaterials(Material[] input) {
+        if (input.Length == 1) { return input; }
+        Material[] modifiedList = new Material[input.Length - 1];
+        for (int i = 0; i < modifiedList.Length; i++) {
+            modifiedList[i] = input[i+1];
+            modifiedList[i].SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+            modifiedList[i].SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+            modifiedList[i].SetInt("_ZWrite", 1);
+            modifiedList[i].DisableKeyword("_ALPHATEST_ON");
+            modifiedList[i].DisableKeyword("_ALPHABLEND_ON");
+            modifiedList[i].DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            modifiedList[i].renderQueue = -1;
+        }
+        return modifiedList;
+    }
+
+    Material[] AddOutlineShaderToMaterials(Material[] input) {
+        if (input[0].name.ToLower().Contains("outline")) { return input; }
+        Material[] newMaterials = new Material[input.Length + 1];
+        newMaterials[0] = new Material(Shader.Find("Mistral/Outline"));
+        newMaterials[0].SetFloat("_Outline", 0.1f);
+        newMaterials[0].SetFloat("_Factor", 0.1f);
+        for (int i = 1; i < newMaterials.Length; i++) {
+            newMaterials[i] = input[i-1];
+            newMaterials[i].SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+            newMaterials[i].SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+            newMaterials[i].SetInt("_ZWrite", 1);
+            newMaterials[i].EnableKeyword("_ALPHATEST_ON");
+            newMaterials[i].DisableKeyword("_ALPHABLEND_ON");
+            newMaterials[i].DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            newMaterials[i].renderQueue = 2450;
+        }
+        //Material outlineMaterial = new Material(Shader.Find("Mistral/Outline"));
+        //newMaterials[newMaterials.Length - 1] = outlineMaterial;
+        return newMaterials;
+    }
+
+    public void TutorialPressTabTip(int num){
 		writer.WriteAtPoint("Press Tab " + num.ToString() + " times", textPosition);
 	}
 
