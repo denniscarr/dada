@@ -6,7 +6,7 @@ public class disableChildren : MonoBehaviour {
     public GameObject canvas;
 	// Use this for initialization
 	void Start () {
-        for (int i = 0; i < canvas.transform.GetChildCount(); ++i)
+        for (int i = 0; i < canvas.transform.childCount; ++i)
         {
             canvas.transform.GetChild(i).gameObject.SetActive(false);
         }
