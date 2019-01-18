@@ -249,3 +249,19 @@ Gas Grenade $549
 Lamp $49
 Макаров $999
 Milan's Regret $2499
+visor $9499
+AK12 $99
+visor $9499
+AK12 $99
+visor $9499
+AK12 $99
+Drawer $15
+visor $9499
+AK12 $99
+Blue mushroom $149
+Purple mushroom $149
+Lamp $49
+Bathroom Sink $799
+Yellow mushroom $149
+visor $9499
+AK12 $99

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class GrailFunction : D_Function {
@@ -83,6 +84,12 @@ public class GrailFunction : D_Function {
         GetComponentInParent<Rigidbody>().AddForce(directionFromPlayer * 30000f, ForceMode.Impulse);
 
         Services.AudioManager.PlaySFX(Services.AudioManager.grailRejectionClip);
+        
+        //Mute grail stem
+        if (transform.GetComponentInParent<AudioSource>() != null) {
+            transform.GetComponentInParent<AudioSource>().DOFade(0f, 1f);
+        }
+        
 
         //readyToRunAway = false;
 

@@ -61,6 +61,9 @@ public class CS_AudioManager : MonoBehaviour {
 	//private static CS_AudioManager instance = null;
 
 
+	private bool tutorialInProgress = false;
+
+
 	[SerializeField] GameObject myPrefabSFX;
 
 
@@ -182,7 +185,10 @@ public class CS_AudioManager : MonoBehaviour {
 	}
 
 	public void EqualizeStems (float n_ink, float n_image, float n_npc, float n_nonPickup, float n_pickup, float totalObjects) {
-
+		if (GameObject.FindObjectOfType<Tutorial>() != null) {
+			tutorialInProgress = true;
+		}
+		else tutorialInProgress = false;
 
 		float newImageSpriteVol = -60f;
 		float newInkSpriteVol = -60f;
@@ -190,20 +196,20 @@ public class CS_AudioManager : MonoBehaviour {
 		float newNonPickupVol = -60f;
 		float newPickupVol = -60f;
 
-		if (totalObjects != 0f) {
-			if (n_image != 0f) {
-				newImageSpriteVol = remapRange (n_image, 0.0f, 2f, -20f, 0f);
+		if (totalObjects > 0f) {
+			if (n_image > 0f) {
+				newImageSpriteVol = remapRange (n_image, 0.0f, 2f, -20f, -8f);
 			}
-			if (n_ink != 0f) {
-				newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -20f, -5f);
+			if (n_ink > 0f) {
+				newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -20f, -10f);
 			}
-			if (n_npc != 0f) {
+			if (n_npc > 0f) {
 				newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -10f, 5f);
 			}
-			if (n_nonPickup != 0f) {
+			if (n_nonPickup > 0f) {
 				newNonPickupVol = remapRange (n_nonPickup, 0.0f, totalObjects, -20f, -10f);
 			}
-			if (n_pickup != 0f) {
+			if (n_pickup > 0f ) {
 				newPickupVol = remapRange (n_pickup, 0.0f, totalObjects, -30f, -10f);
 			}
 		}

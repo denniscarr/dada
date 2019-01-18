@@ -56,9 +56,9 @@ public class MusicTrigger: MonoBehaviour {
 
 		foreach (Collider collider in collidedObjects) {
 
-			if (collider.gameObject.tag == "InkSprite") {
+			if (collider.gameObject.CompareTag("InkSprite")) {
 				inkSprites++;
-			} else if (collider.gameObject.name == "Cross(Clone)") {
+			} else if (collider.gameObject.CompareTag("ImageSprite")) {
 				imageSprites++;
 			}else if (collider.gameObject.GetComponentInChildren<InteractionSettings> () != null &&
 			           collider.gameObject.GetComponentInChildren<InteractionSettings> ().ableToBeCarried == false &&
