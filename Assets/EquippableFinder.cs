@@ -86,6 +86,7 @@ public class EquippableFinder : MonoBehaviour {
     {
         if (!active)
         {
+            Debug.Log(gameObject.name + " Equippable finder is inactive.");
             return;
         }
 
@@ -94,6 +95,7 @@ public class EquippableFinder : MonoBehaviour {
         // Don't do anything if the player is in zoom out mode.
         if (GameObject.Find("PlayerInRoom").GetComponent<PlayerControllerNew>().Mode == ControlMode.ZOOM_OUT_MODE)
         {
+            Debug.Log("Not using equippable finder because player is in zoom out mode.");
             writer.DeleteTextBox();
             return;
         }
@@ -114,11 +116,14 @@ public class EquippableFinder : MonoBehaviour {
             transform.position + transform.forward, transform.position + transform.forward*1.0f, equipSize, transform.forward, equipRange
             ))
         {
-			
+
             if (hit.transform.name != "Player" && hit.transform.GetComponentInChildren<InteractionSettings>() != null &&
                 !hit.transform.GetComponentInChildren<InteractionSettings>().IsEquipped && hit.transform.name != "GROUND")
             {
-				//Debug.Log(hit.transform.name);
+
+                Debug.Log("checking: " + hit.collider.gameObject.name + " to see if it can be picked up.");
+
+                //Debug.Log(hit.transform.name);
                 // Get the distance of this object and, if it's the closest to the player then save it.
                 float distance = Vector3.Distance(hit.point, transform.position);
 
@@ -163,7 +168,11 @@ public class EquippableFinder : MonoBehaviour {
             {
                 sawPlatform = true;
             }
-        }
+
+            else {
+                Debug.Log("Determined that " + hit.collider.name + " is not able to be picked up.");
+            }
+        } 
 
         if (!sawPlatform && nearestObject == null || (lastObjectInspected != null && nearestObject != lastObjectInspected))
         {
