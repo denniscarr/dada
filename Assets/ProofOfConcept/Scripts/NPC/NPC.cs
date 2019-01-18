@@ -474,10 +474,10 @@ public class NPC : MonoBehaviour {
                 }
 
 				if(targetObject.gameObject.GetComponent<Rigidbody>()){
-					targetObject.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                    targetObject.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 					targetObject.gameObject.GetComponent<Rigidbody>().useGravity = false;
-
 				}
+
                 // Disable Incoherence controller && NPC AI
                 if (targetObject.Find("Incoherence Controller") != null) targetObject.Find("Incoherence Controller").gameObject.SetActive(false);
                 if (targetObject.Find("NPC AI") != null) targetObject.Find("NPC AI").gameObject.SetActive(false);

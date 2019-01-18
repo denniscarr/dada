@@ -235,6 +235,10 @@ public class InteractionSettings : MonoBehaviour {
             price = 0;
             isOwnedByPlayer = true;
         }
+
+        if (transform.position.magnitude > 10000) {
+            Destroy(transform.parent.gameObject);
+        }
     }
 
 
