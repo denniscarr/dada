@@ -53482,6 +53482,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9f94080586ba24ffcb49dd0027b631e8, type: 3}
   - {fileID: 8300000, guid: da21824f3f77746f8bd20d01b5673937, type: 3}
   NPCOnFire: {fileID: 8300000, guid: 3c986ae2bc8684cd39ba2d18cbc0da4e, type: 3}
+  NPCOnFireAlt: {fileID: 8300000, guid: aa500f25d828b43deacc49f844e011c8, type: 3}
   NPCDie: {fileID: 8300000, guid: 9772d4559e854456c8a40d26319d8ddd, type: 3}
   enterRoomClip: {fileID: 8300000, guid: 6d2b73f1f0ab24c1ca76d693f2feb844, type: 3}
   exitRoomClip: {fileID: 8300000, guid: 7d9bfa186dd3f4539bc9d863a78b6fd1, type: 3}

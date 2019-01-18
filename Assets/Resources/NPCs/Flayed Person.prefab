@@ -932,12 +932,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useSFX:
-  - {fileID: 8300000, guid: 66c4ee9bfd581a142bf68d46aa338f7d, type: 3}
-  soundFXVol: 1
-  audioJitter: 0
+  - {fileID: 8300000, guid: db35a9c900f9c415392bb11a53417605, type: 3}
+  - {fileID: 8300000, guid: 25c1119ebebbc44fca185f964a504735, type: 3}
+  - {fileID: 8300000, guid: 61840f4a5ac2d40f19c4f95656a16ef5, type: 3}
+  - {fileID: 8300000, guid: 715f6fdd0e22443be8cd2a7bb5bb02aa, type: 3}
+  soundFXVol: 0.5
+  audioJitter: 0.3
   timeUsed: 0
   scream:
-  - {fileID: 8300000, guid: 66c4ee9bfd581a142bf68d46aa338f7d, type: 3}
+  - {fileID: 8300000, guid: db35a9c900f9c415392bb11a53417605, type: 3}
+  - {fileID: 8300000, guid: 61840f4a5ac2d40f19c4f95656a16ef5, type: 3}
+  - {fileID: 8300000, guid: 715f6fdd0e22443be8cd2a7bb5bb02aa, type: 3}
 --- !u!1 &1240889359988966
 GameObject:
   m_ObjectHideFlags: 0
@@ -1578,11 +1583,11 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  DopplerLevel: 0.25
+  MinDistance: 10
+  MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -1590,10 +1595,19 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.06629334
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.2956911
+      outSlope: -1.2956911
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.8794565
+    - serializedVersion: 3
+      time: 0.26713583
+      value: 0.2561168
+      inSlope: -1.1111113
+      outSlope: -1.1111113
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
@@ -1601,12 +1615,12 @@ AudioSource:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.24722221
+      outSlope: -0.24722221
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0.516316
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

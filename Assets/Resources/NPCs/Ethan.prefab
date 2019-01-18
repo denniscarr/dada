@@ -1649,9 +1649,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useSFX:
-  - {fileID: 8300000, guid: 66c4ee9bfd581a142bf68d46aa338f7d, type: 3}
-  soundFXVol: 1
-  audioJitter: 0
+  - {fileID: 8300000, guid: 61840f4a5ac2d40f19c4f95656a16ef5, type: 3}
+  - {fileID: 8300000, guid: db35a9c900f9c415392bb11a53417605, type: 3}
+  - {fileID: 8300000, guid: 715f6fdd0e22443be8cd2a7bb5bb02aa, type: 3}
+  - {fileID: 8300000, guid: 25c1119ebebbc44fca185f964a504735, type: 3}
+  soundFXVol: 0.4
+  audioJitter: 0.3
   timeUsed: 0
   scream:
   - {fileID: 8300000, guid: db35a9c900f9c415392bb11a53417605, type: 3}

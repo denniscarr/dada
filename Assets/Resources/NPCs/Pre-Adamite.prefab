@@ -3157,11 +3157,11 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  DopplerLevel: 0.25
+  MinDistance: 10
+  MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -3169,10 +3169,19 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.06629334
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.2956911
+      outSlope: -1.2956911
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.8794565
+    - serializedVersion: 3
+      time: 0.26713583
+      value: 0.2561168
+      inSlope: -1.1111113
+      outSlope: -1.1111113
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
@@ -3180,12 +3189,12 @@ AudioSource:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.24722221
+      outSlope: -0.24722221
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0.516316
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
