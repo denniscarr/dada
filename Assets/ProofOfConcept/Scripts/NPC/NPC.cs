@@ -760,7 +760,7 @@ public class NPC : MonoBehaviour {
     //this does audio stuff
 	void Speak() {
 
-		if (Services.AudioManager != null)
+		if (Services.AudioManager != null && !speakSource.isPlaying)
 		{
 
 

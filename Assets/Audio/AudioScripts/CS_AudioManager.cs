@@ -18,7 +18,6 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	//POPULATE THIS - Audio Clips
-	[HideInInspector]
 	public AudioClip[] voiceClipPool;
 	
 	
@@ -96,7 +95,11 @@ public class CS_AudioManager : MonoBehaviour {
 		//altitudeBlend = new AudioMixerSnapshot[] {hiLandsSnapshot, loLandsSnapshot};
 		
 		tonesClipPool = Resources.LoadAll<AudioClip> ("Tones");
-		voiceClipPool = Resources.LoadAll<AudioClip> ("Voice");
+
+		if (voiceClipPool.Length == 0) {
+			voiceClipPool = Resources.LoadAll<AudioClip>("Voice");
+		}
+
 		confirmationTones = Resources.LoadAll<AudioClip> ("ConfirmationTones");
 		tutorialTones = Resources.LoadAll<AudioClip> ("TutorialTones");
 

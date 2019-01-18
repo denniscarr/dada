@@ -6,27 +6,27 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Jenna/Scenes/Blue.unity
+    path: 
     guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Jenna/Scenes/Green.unity
+    path: 
     guid: 00000000000000000000000000000000
   - enabled: 0
     path: Assets/Jenna/Scenes/QuestSceneTest.unity
-    guid: 00000000000000000000000000000000
+    guid: d19921bbb400c4fc093b9ad3ff62b4fa
   - enabled: 0
-    path: Assets/Jenna/Scenes/Red.unity
+    path: 
     guid: 00000000000000000000000000000000
   - enabled: 0
     path: Assets/Prototype/Scenes/OfficeScene.unity
-    guid: 00000000000000000000000000000000
+    guid: c0cbfa9176b3e4470a020ee3d3ce9ae4
   - enabled: 0
     path: Assets/Prototype/Scenes/Audio Prototype.unity
-    guid: 00000000000000000000000000000000
+    guid: b0d477c664d48394499d69f9869a054b
   - enabled: 0
     path: Assets/Milan/StartScreen.unity
-    guid: 00000000000000000000000000000000
+    guid: fc376ceaa97c34132a23fce4aee74eb4
   - enabled: 1
     path: Assets/ProofOfConcept/ProofOfConcept.unity
-    guid: 00000000000000000000000000000000
+    guid: 26330358bbf094ffab67c2df5c3d8abd
   m_configObjects: {}
