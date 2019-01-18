@@ -265,12 +265,24 @@ public class PlayerControllerNew : MonoBehaviour {
         GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().MoveEquippedItemsOutside();
         GameObject.Find("UpperCamera").GetComponent<EquippableFinder>().active = false;
         UpperCamera.DOFieldOfView(33f, 1.5f);
+        Invoke("PrintPlatformHelper", 1.5f);
         mode = ControlMode.ZOOM_OUT_MODE;
         Services.AudioManager.PlaySFX(Services.AudioManager.exitRoomClip, sfxVolume);
         InitZoomOutMode();
     }
 
-	Transform CameraRayCast(Camera camera){
+    void PrintPlatformHelper() {
+        Debug.Log("i'm doing this!!!!!");
+        //FindObjectOfType<MouseControllerNew>().writer.
+        GameObject upperCamera = GameObject.Find("UpperCamera");
+        Vector3 position = upperCamera.transform.position + upperCamera.transform.forward * 30f;
+        position += upperCamera.transform.right * -6f;
+        position += upperCamera.transform.up * -5f;
+        GetComponent<Writer>().DeleteTextBox();
+        GetComponent<Writer>().WriteAtPoint("Press tab to access the outside world.", position);
+    }
+
+    Transform CameraRayCast(Camera camera){
 		Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 		Debug.DrawRay(ray.origin,ray.direction);
 		RaycastHit hit;

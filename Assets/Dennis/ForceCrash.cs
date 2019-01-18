@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ForceCrash : MonoBehaviour
 {
-    const float CRASHTIME = 15f;
+    const float CRASHTIME = 45f;
     const float crashFps = 1f;
     float crashTimer = 0f;
 
