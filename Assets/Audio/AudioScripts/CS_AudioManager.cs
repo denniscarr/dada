@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Audio;
 using DG.Tweening;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// This is mostly by Hang Ruan, using it also to assign music clips randomly
@@ -46,15 +47,6 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public AudioClip grailRejectionClip;
 
-
-
-
-	public GameObject tonePillowObject;
-
-	public float thisClipPosition;
-
-	public float objectDensity;
-
 	public float musicFaderTime = 8.0f;
 
 
@@ -63,14 +55,13 @@ public class CS_AudioManager : MonoBehaviour {
 
 	private bool tutorialInProgress = false;
 
+	//TEMP - testing sfx priority, would like more audio overloading glitches to occur
+	[SerializeField] int SFXPriority;
 
-	[SerializeField] GameObject myPrefabSFX;
-
-
-	[SerializeField] AudioSource myAudioSource;
 
 	#region Mixer Variables
 
+	[Header("Audio Mixer Variables")]
 	[SerializeField] AudioMixer dadaMixer;
 
 	[SerializeField] AudioMixerGroup SFXGroup;
@@ -80,9 +71,13 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public float npcStemVol, inkStemVol, imageStemVol, nonPickupVol, pickupVol;
 
-
-
 	#endregion
+	
+	[FormerlySerializedAs("myPrefabSFX")]
+	[Header("SFX Prefab Objects")]
+	[SerializeField] GameObject genSFXPrefab;
+
+	[SerializeField] GameObject useSFXPrefab;
 
 
 
@@ -116,34 +111,122 @@ public class CS_AudioManager : MonoBehaviour {
 	//SFX INSTANTIATION
 	//========================================================================
 
-	//right now have 2 overloads one for just playing an SFX clip, another for pitch ctrl
-	//could make more overloads for PLaySFX in the future
-
-
-
 	public void PlaySFX (AudioClip g_SFX, float g_volume = 1.0f, float g_Pitch = 1.0f) {
         if (g_SFX == null) return;
-		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
+		
+		//Seeing if high priority makes a difference
+		
+		
+		GameObject t_SFX = Instantiate (genSFXPrefab) as GameObject;
 		t_SFX.name = "SFX_" + g_SFX.name;
-		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
-		t_SFX.GetComponent<AudioSource> ().pitch = g_Pitch;
-		t_SFX.GetComponent<AudioSource> ().spatialBlend = 0.0f;
-		t_SFX.GetComponent<AudioSource> ().outputAudioMixerGroup = SFXGroup;
-		t_SFX.GetComponent<AudioSource> ().volume = g_volume;
-		t_SFX.GetComponent<AudioSource> ().Play ();
+		AudioSource sfxSource = t_SFX.GetComponent<AudioSource>();
+		
+		//Seeing if high priority makes a difference
+		int priority = Mathf.RoundToInt(
+			remapRange(
+				Services.IncoherenceManager._globalIncoherence,
+				0f, 1f,
+				1f, 0f
+			) * 255
+		);
+
+		sfxSource.priority = SFXPriority;
+		sfxSource.clip = g_SFX;
+		sfxSource.pitch = g_Pitch;
+		sfxSource.spatialBlend = 0.0f;
+		sfxSource.outputAudioMixerGroup = SFXGroup;
+		sfxSource.volume = g_volume;
+		sfxSource.Play ();
 		DestroyObject(t_SFX, g_SFX.length);
 	}
 
 	public void Play3DSFX(AudioClip g_SFX, Vector3 g_position, float g_volume = 1.0f, float g_pitch = 1.0f) {
         if (g_SFX == null) return;
-		GameObject t_SFX = Instantiate (myPrefabSFX) as GameObject;
+		GameObject t_SFX = Instantiate (genSFXPrefab) as GameObject;
+		AudioSource sfxSource = t_SFX.GetComponent<AudioSource>();
+		
+		//Seeing if high priority makes a difference
+		int priority = Mathf.RoundToInt(
+			remapRange(
+				Services.IncoherenceManager._globalIncoherence,
+				0f, 1f,
+				1f, 0f
+			) * 255
+		);
+		
 		t_SFX.name = "SFX_" + g_SFX.name;
 		t_SFX.transform.position = g_position;
-		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
-		t_SFX.GetComponent<AudioSource> ().volume = g_volume;
-		t_SFX.GetComponent<AudioSource> ().pitch = g_pitch;
-		t_SFX.GetComponent<AudioSource> ().outputAudioMixerGroup = SFXGroup;
-		t_SFX.GetComponent<AudioSource> ().Play ();
+		sfxSource.priority = SFXPriority;
+		sfxSource.clip = g_SFX;
+		sfxSource.volume = g_volume;
+		sfxSource.pitch = g_pitch;
+		sfxSource.outputAudioMixerGroup = SFXGroup;
+		sfxSource.Play ();
+		DestroyObject(t_SFX, g_SFX.length);
+	}
+
+	/// <summary>
+	/// Plays a 3D sound effect with the UseSFXPrefab on the Services Game Object, using an input position
+	/// </summary>
+	/// <param name="g_SFX">AudioClip to Play</param>
+	/// <param name="g_position">Position to play the clip</param>
+	/// <param name="g_volume">volume of the clip</param>
+	/// <param name="g_pitch">pitch of the clip</param>
+	public void PlayUseSFX(AudioClip g_SFX, Vector3 g_position, float g_volume = 1.0f, float g_pitch = 1.0f) {
+		if (g_SFX == null) return;
+		GameObject t_SFX = Instantiate (useSFXPrefab) as GameObject;
+		AudioSource sfxSource = t_SFX.GetComponent<AudioSource>();
+		
+		//Seeing if high priority makes a difference
+		int priority = Mathf.RoundToInt(
+			remapRange(
+				Services.IncoherenceManager._globalIncoherence,
+				0f, 1f,
+				1f, 0f
+			) * 255
+		);
+		
+		t_SFX.name = "SFX_" + g_SFX.name;
+		t_SFX.transform.position = g_position;
+		sfxSource.priority = SFXPriority;
+		sfxSource.clip = g_SFX;
+		sfxSource.volume = g_volume;
+		sfxSource.pitch = g_pitch;
+		sfxSource.outputAudioMixerGroup = SFXGroup;
+		sfxSource.Play ();
+		DestroyObject(t_SFX, g_SFX.length);
+	}
+	
+	/// <summary>
+	/// Plays a 3D sound effect with the UseSFXPrefab on the Services Game Object, using an input transform
+	/// </summary>
+	/// <param name="g_SFX">AudioClip to Play</param>
+	/// <param name="g_transform">Parent transform of the audio</param>
+	/// <param name="g_volume">volume of the clip</param>
+	/// <param name="g_pitch">pitch of the clip</param>
+	public void PlayUseSFX(AudioClip g_SFX, Transform g_transform, float g_volume = 1.0f, float g_pitch = 1.0f) {
+		if (g_SFX == null) return;
+		GameObject t_SFX = Instantiate (useSFXPrefab) as GameObject;
+		AudioSource sfxSource = t_SFX.GetComponent<AudioSource>();
+		
+		//Seeing if high priority makes a difference
+		int priority = Mathf.RoundToInt(
+			remapRange(
+				Services.IncoherenceManager._globalIncoherence,
+				0f, 1f,
+				1f, 0f
+			) * 255
+		);
+		
+		t_SFX.name = "SFX_" + g_SFX.name;
+		t_SFX.transform.position = g_transform.position;
+		t_SFX.transform.parent = g_transform;
+		sfxSource.priority = SFXPriority;
+		sfxSource.clip = g_SFX;
+		sfxSource.volume = g_volume;
+		sfxSource.pitch = g_pitch;
+		sfxSource.outputAudioMixerGroup = SFXGroup;
+		sfxSource.Play ();
 		DestroyObject(t_SFX, g_SFX.length);
 	}
 

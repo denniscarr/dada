@@ -96,7 +96,7 @@ public class AmbientMusic : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (shuffleTrigger == true) {
+		if (shuffleTrigger) {
 			shuffleTrigger = false;
 		}
 
@@ -217,7 +217,7 @@ public class AmbientMusic : MonoBehaviour {
 //			} 
 			#endregion
 
-			incoherenceSource.volume = Services.IncoherenceManager.globalIncoherence / 3f;
+			incoherenceSource.volume = Services.IncoherenceManager.globalIncoherence;
 
 		}
 

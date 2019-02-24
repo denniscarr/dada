@@ -53,7 +53,7 @@ public class D_Function : MonoBehaviour {
 
         if (useSFX.Length > 0)
         {
-			Services.AudioManager.Play3DSFX(useSFX[Random.Range(0, useSFX.Length)], transform.position, soundFXVol, pitchJitter);
+			Services.AudioManager.PlayUseSFX(useSFX[Random.Range(0, useSFX.Length)], transform, soundFXVol, pitchJitter);
         }
 
 		timeUsed += 1;
