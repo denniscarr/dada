@@ -27,6 +27,6 @@ EditorBuildSettings:
     path: Assets/Milan/StartScreen.unity
     guid: fc376ceaa97c34132a23fce4aee74eb4
   - enabled: 1
-    path: Assets/ProofOfConcept/ProofOfConcept.unity
+    path: Assets/Scenes/ProofOfConcept.unity
     guid: 26330358bbf094ffab67c2df5c3d8abd
   m_configObjects: {}

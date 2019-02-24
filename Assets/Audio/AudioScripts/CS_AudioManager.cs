@@ -18,25 +18,26 @@ public class CS_AudioManager : MonoBehaviour {
 
 
 	//POPULATE THIS - Audio Clips
+	[Header("NPC Audio")]
 	public AudioClip[] voiceClipPool;
-	
-	
+
 	public AudioClip[] NPCHitPool;
+	[Range(0f, 1f)] public float NPCHitVolume = 0.5f;
 	public AudioClip NPCOnFire, NPCOnFireAlt;
 	public AudioClip NPCDie;
 	//private List<int> voiceClipPlaylist = new List<int> ();
 	//int lastVoiceSamplePlayed = int.MaxValue;
-
+	
+	[Header("Visor Audio")]
 	public AudioClip enterRoomClip, exitRoomClip;
 	public AudioClip toggleVisor;
 
 	public AudioClip[] tonesClipPool;
-	public AudioClip[] confirmationTones;
-	public AudioClip[] tutorialTones;
+	[HideInInspector] public AudioClip[] confirmationTones;
+	[HideInInspector] public AudioClip[] tutorialTones;
 	public List<AudioClip> instClipPool;
 
 	public AudioClip equipSound;
-	public AudioClip equipSoundEnd;
 	public AudioClip dropSound;
 
 	public AudioClip pickupSound;
@@ -150,33 +151,11 @@ public class CS_AudioManager : MonoBehaviour {
 	//DADA-SPECIFIC FUNCTIONS
 	//========================================================================
 
-
-
-	void Start() {
-
+	public void PlayNPCImpactSound(Vector3 npcPosition) {
+		Play3DSFX (Services.AudioManager.NPCHitPool [Random.Range (0, NPCHitPool.Length - 1)], 
+			npcPosition,
+			NPCHitVolume, 1.0f + Random.Range(-0.1f, 0.1f));
 	}
-
-	void Update() {
-		//AltitudeMusic ();
-
-
-	}
-
-
-
-
-
-
-
-	public void Speak() {
-
-	}
-
-	void RandWithoutRepeat() {
-
-	}
-
-
 
 	public static float remapRange(float oldValue, float oldMin, float oldMax, float newMin, float newMax )
 	{

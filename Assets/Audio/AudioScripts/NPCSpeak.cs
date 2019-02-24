@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class NPCSpeak : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+	private AudioSource _audioSource;
+	private AudioClip _voiceClip;
+
+	void Awake() {
+		_audioSource = GetComponent<AudioSource>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	/// <summary>
+	/// Picks and plays a random clip from the AudioManager VoiceClipPool
+	/// Does nothing if already playing a voice clip.
+	/// </summary>
+	public void PlayNPCSpeak() {
+		if (Services.AudioManager != null && !_audioSource.isPlaying)
+		{
+			_audioSource.clip = Services.AudioManager.voiceClipPool [Random.Range (0, Services.AudioManager.voiceClipPool.Length)];
+			_audioSource.Play ();
+		}
 		
 	}
 }

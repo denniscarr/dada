@@ -30,7 +30,7 @@ public class MusicToVertex : MonoBehaviour {
 
 		listOfMeshRenderers = new List<Renderer> ();
 
-		GetAllMeshRenderersInChildren (transform.parent.gameObject);
+		GetAllMeshRenderersInChildren (transform.root.gameObject);
 		 
 
 		foreach (Renderer renderer in listOfMeshRenderers) {
@@ -40,9 +40,8 @@ public class MusicToVertex : MonoBehaviour {
                 originalLacunarity = audioReactiveMaterial.GetFloat("_Lacunarity");
                 originalLowColor = audioReactiveMaterial.GetColor("_LowColor");
             }
-			//Debug.Log (renderer.gameObject.name);
 		}
-		parentTransform = gameObject.transform.parent;
+		parentTransform = gameObject.transform.root;
 		//Debug.Log (parentTransform.name);
 		thisAnalyzer = gameObject.GetComponent<SpectrumAnalysis> ();
 		//thisMesh = gameObject.GetComponent<MeshFilter>().mesh;

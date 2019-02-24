@@ -130,7 +130,7 @@ public class NPC : MonoBehaviour {
     Rigidbody rb;
     NPCAnimation npcAnimation;
     Writer writer;
-	AudioSource speakSource;
+	NPCSpeak npcSpeak;
     InteractionSettings interactionSettings;
 
 
@@ -153,7 +153,7 @@ public class NPC : MonoBehaviour {
             rb = transform.parent.gameObject.AddComponent<Rigidbody>();
         }
 
-        speakSource = GetComponent<AudioSource> ();
+        npcSpeak = transform.GetComponentInChildren<NPCSpeak>();
 
         // See if I have an animator before I try to use NPCAnimation.
         if (transform.parent.GetComponentInChildren<Animator>() != null && transform.parent.GetComponentInChildren<Animator>().isHuman)
@@ -759,15 +759,7 @@ public class NPC : MonoBehaviour {
 	
     //this does audio stuff
 	void Speak() {
-
-		if (Services.AudioManager != null && !speakSource.isPlaying)
-		{
-
-
-			speakSource.clip = Services.AudioManager.voiceClipPool [Random.Range (0, Services.AudioManager.voiceClipPool.Length)];
-
-			speakSource.Play ();
-		}
+		npcSpeak.PlayNPCSpeak();
 	}
 
 
