@@ -2629,7 +2629,6 @@ GameObject:
   - component: {fileID: 824}
   - component: {fileID: 703}
   - component: {fileID: 828}
-  - component: {fileID: 827}
   - component: {fileID: 823}
   - component: {fileID: 826}
   - component: {fileID: 847}
@@ -13473,7 +13472,8 @@ AudioSource:
   m_GameObject: {fileID: 7}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243688234140929222, guid: 6b95ba97533f7418fa350511573a306b,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.1
@@ -54242,19 +54242,6 @@ MonoBehaviour:
   questAvailableSprite: {fileID: 0}
   questReceivableSprite: {fileID: 0}
   assigned: 0
---- !u!114 &827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114498209209716932, guid: db4bfb7e0751c48e697a8e8946abfbba,
-    type: 3}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &828
 MonoBehaviour:
   m_ObjectHideFlags: 0

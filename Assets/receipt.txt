@@ -266,3 +266,6 @@ Yellow mushroom $149
 visor $9499
 AK12 $99
 Refrigerator $199
+Cannon $599
+Small Table $10
+Bed $5999

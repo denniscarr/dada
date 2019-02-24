@@ -201,10 +201,10 @@ public class CS_AudioManager : MonoBehaviour {
 
 		if (totalObjects > 0f) {
 			if (n_image > 0f) {
-				newImageSpriteVol = remapRange (n_image, 0.0f, 2f, -20f, -8f);
+				newImageSpriteVol = remapRange (n_image, 0.0f, 2f, -25f, -12f);
 			}
 			if (n_ink > 0f) {
-				newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -20f, -10f);
+				newInkSpriteVol = remapRange (n_ink, 0.0f, 20f, -25f, -15f);
 			}
 			if (n_npc > 0f) {
 				newNPCStemVol = remapRange (n_npc, 0.0f, 15f, -10f, 5f);
