@@ -66,7 +66,7 @@ Material:
     - _Displacement: 0.07
     - _DistanceFunction: 1
     - _DstBlend: 0
-    - _Frequency: 0.59
+    - _Frequency: 0.74
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -85,6 +85,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HighColor: {r: 0.37, g: 1.06, b: 0.86, a: 1}
-    - _LowColor: {r: 1.23, g: 0.44, b: 1.48, a: 1}
+    - _HighColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+    - _LowColor: {r: 0.5, g: 0.4, b: 0.9, a: 0}
     - _Offset: {r: 1.65, g: 0, b: 0, a: 0}

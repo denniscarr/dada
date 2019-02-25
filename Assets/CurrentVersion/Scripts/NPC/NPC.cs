@@ -792,6 +792,11 @@ public class NPC : MonoBehaviour {
 
     void Die()
     {
+        
+        //Known bug with unity 2018.3 prefab workflow - possible work around
+        if (UnityEditor.PrefabUtility.IsPartOfPrefabInstance(transform))
+            UnityEditor.PrefabUtility.UnpackPrefabInstance(transform.root.gameObject, UnityEditor.PrefabUnpackMode.Completely, UnityEditor.InteractionMode.AutomatedAction);
+        
         writer.WriteSpecifiedString("Aargh! I've been murdered!");
 		died = true;
         // Turn into ghost
@@ -811,7 +816,8 @@ public class NPC : MonoBehaviour {
         transform.parent.GetComponent<Rigidbody>().AddTorque(Random.insideUnitCircle * 10f, ForceMode.Impulse);
 
 		//scream
-		Services.AudioManager.Play3DSFX(Services.AudioManager.NPCDie, transform.parent.position);
+		Services.AudioManager.Play3DSFX(Services.AudioManager.NPCDie[
+		    Random.Range(0, Services.AudioManager.NPCDie.Length)], transform.parent);
 		
         
 		// Drop money
@@ -836,13 +842,14 @@ public class NPC : MonoBehaviour {
     public void CatchOnFire()
     {
         writer.WriteSpecifiedString("Argh! I'm on fire!");
-        
-        
+
+        float NPCFireSelector = Random.value;
         //Adjusted this so it doesn't happen all of the time
-        if (Random.value > 0.66f) {
-            Services.AudioManager.Play3DSFX(Services.AudioManager.NPCOnFire, transform.parent.position);
-        } else if (Random.value > 0.8f) {
-            Services.AudioManager.Play3DSFX(Services.AudioManager.NPCOnFireAlt, transform.parent.position);
+        if (NPCFireSelector > 0.4f) {
+            Services.AudioManager.Play3DSFX(Services.AudioManager.NPCOnFire[
+                    Random.Range(0, Services.AudioManager.NPCOnFire.Length)],
+                transform
+            );
         }
     }
 }

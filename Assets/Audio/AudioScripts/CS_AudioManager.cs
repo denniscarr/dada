@@ -24,8 +24,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public AudioClip[] NPCHitPool;
 	[Range(0f, 1f)] public float NPCHitVolume = 0.5f;
-	public AudioClip NPCOnFire, NPCOnFireAlt;
-	public AudioClip NPCDie;
+	public AudioClip[] NPCOnFire;
+	public AudioClip[] NPCDie;
 	//private List<int> voiceClipPlaylist = new List<int> ();
 	//int lastVoiceSamplePlayed = int.MaxValue;
 	
@@ -116,7 +116,6 @@ public class CS_AudioManager : MonoBehaviour {
 		
 		//Seeing if high priority makes a difference
 		
-		
 		GameObject t_SFX = Instantiate (genSFXPrefab) as GameObject;
 		t_SFX.name = "SFX_" + g_SFX.name;
 		AudioSource sfxSource = t_SFX.GetComponent<AudioSource>();
@@ -140,6 +139,13 @@ public class CS_AudioManager : MonoBehaviour {
 		DestroyObject(t_SFX, g_SFX.length);
 	}
 
+	/// <summary>
+	/// Play AudioClip in 3D space with input position
+	/// </summary>
+	/// <param name="g_SFX">AudioClip to Play</param>
+	/// <param name="g_position">Global position to play (fixed)</param>
+	/// <param name="g_volume">clip volume</param>
+	/// <param name="g_pitch">clip pitch</param>
 	public void Play3DSFX(AudioClip g_SFX, Vector3 g_position, float g_volume = 1.0f, float g_pitch = 1.0f) {
         if (g_SFX == null) return;
 		GameObject t_SFX = Instantiate (genSFXPrefab) as GameObject;
@@ -156,6 +162,40 @@ public class CS_AudioManager : MonoBehaviour {
 		
 		t_SFX.name = "SFX_" + g_SFX.name;
 		t_SFX.transform.position = g_position;
+		sfxSource.priority = SFXPriority;
+		sfxSource.clip = g_SFX;
+		sfxSource.volume = g_volume;
+		sfxSource.pitch = g_pitch;
+		sfxSource.outputAudioMixerGroup = SFXGroup;
+		sfxSource.Play ();
+		DestroyObject(t_SFX, g_SFX.length);
+	}
+	
+	
+	/// <summary>
+	/// Play AudioClip in 3D space with input transform parent
+	/// </summary>
+	/// <param name="g_SFX">AudioClip to play</param>
+	/// <param name="g_transform">Transform parent (position will be the parent's)</param>
+	/// <param name="g_volume">Clip volume</param>
+	/// <param name="g_pitch">Clip pitch</param>
+	public void Play3DSFX(AudioClip g_SFX, Transform g_transform, float g_volume = 1.0f, float g_pitch = 1.0f) {
+		if (g_SFX == null) return;
+		GameObject t_SFX = Instantiate (genSFXPrefab) as GameObject;
+		AudioSource sfxSource = t_SFX.GetComponent<AudioSource>();
+		
+		//Seeing if high priority makes a difference
+		int priority = Mathf.RoundToInt(
+			remapRange(
+				Services.IncoherenceManager._globalIncoherence,
+				0f, 1f,
+				1f, 0f
+			) * 255
+		);
+		
+		t_SFX.name = "SFX_" + g_SFX.name;
+		t_SFX.transform.position = g_transform.position;
+		t_SFX.transform.parent = g_transform;
 		sfxSource.priority = SFXPriority;
 		sfxSource.clip = g_SFX;
 		sfxSource.volume = g_volume;

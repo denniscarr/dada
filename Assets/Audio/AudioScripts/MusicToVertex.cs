@@ -30,7 +30,7 @@ public class MusicToVertex : MonoBehaviour {
 
 		listOfMeshRenderers = new List<Renderer> ();
 
-		GetAllMeshRenderersInChildren (transform.root.gameObject);
+		GetAllMeshRenderersInChildren (transform.parent.parent.gameObject);
 		 
 
 		foreach (Renderer renderer in listOfMeshRenderers) {

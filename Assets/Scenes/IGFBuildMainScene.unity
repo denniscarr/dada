@@ -53482,9 +53482,23 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a7e62c531fd6e4d6b914d2b345096fd9, type: 3}
   - {fileID: 8300000, guid: 9f94080586ba24ffcb49dd0027b631e8, type: 3}
   - {fileID: 8300000, guid: da21824f3f77746f8bd20d01b5673937, type: 3}
-  NPCOnFire: {fileID: 8300000, guid: 3c986ae2bc8684cd39ba2d18cbc0da4e, type: 3}
-  NPCOnFireAlt: {fileID: 8300000, guid: aa500f25d828b43deacc49f844e011c8, type: 3}
-  NPCDie: {fileID: 8300000, guid: 9772d4559e854456c8a40d26319d8ddd, type: 3}
+  NPCHitVolume: 0.5
+  NPCOnFire:
+  - {fileID: 8300000, guid: d46b0811e27d841dcab9b62638e3ced4, type: 3}
+  - {fileID: 8300000, guid: 2ab8eb58d872744c191c2d818e41d306, type: 3}
+  - {fileID: 8300000, guid: 9aa0f375bec164bfc925dfb8dcdd8e3a, type: 3}
+  - {fileID: 8300000, guid: de9abad9597534e5f814754b70d533c9, type: 3}
+  - {fileID: 8300000, guid: de9269c33c31d496093e7ddbd195b8f3, type: 3}
+  - {fileID: 8300000, guid: aa500f25d828b43deacc49f844e011c8, type: 3}
+  - {fileID: 8300000, guid: 3c986ae2bc8684cd39ba2d18cbc0da4e, type: 3}
+  NPCDie:
+  - {fileID: 8300000, guid: 282ca13b8e84d4c0eb4d750917a8f32c, type: 3}
+  - {fileID: 8300000, guid: 2ef7ae29d308e4ef0b72b240f7a9de52, type: 3}
+  - {fileID: 8300000, guid: 3b475c985c19b4b75842642664322f3f, type: 3}
+  - {fileID: 8300000, guid: 8774c02fe8d744b56838fad67feaf13f, type: 3}
+  - {fileID: 8300000, guid: d93d2400caaee40618d919290cdc0646, type: 3}
+  - {fileID: 8300000, guid: 8215e0420d62b4b858828783a7c2381c, type: 3}
+  - {fileID: 8300000, guid: 9772d4559e854456c8a40d26319d8ddd, type: 3}
   enterRoomClip: {fileID: 8300000, guid: 6d2b73f1f0ab24c1ca76d693f2feb844, type: 3}
   exitRoomClip: {fileID: 8300000, guid: 7d9bfa186dd3f4539bc9d863a78b6fd1, type: 3}
   toggleVisor: {fileID: 8300000, guid: c67901a2b7e18424289b0775255efbcc, type: 3}
@@ -53493,20 +53507,13 @@ MonoBehaviour:
   tutorialTones: []
   instClipPool: []
   equipSound: {fileID: 8300000, guid: 3abfcc3745e2a413bb6bcb807d5e32ae, type: 3}
-  equipSoundEnd: {fileID: 0}
   dropSound: {fileID: 8300000, guid: fafaac7bbd49a435097e016ec3fa4694, type: 3}
   pickupSound: {fileID: 8300000, guid: d1f008cb240c541e492f22fbe8e87d60, type: 3}
   buySound: {fileID: 8300000, guid: 9de5716da682b4e83be110f465dec31a, type: 3}
   getMoney: {fileID: 8300000, guid: 2c8eb91a805e9405e960d0d598414cf8, type: 3}
   grailRejectionClip: {fileID: 8300000, guid: 9768b0f4a4a00439696214e02c3457e1, type: 3}
-  tonePillowObject: {fileID: 1656163169541016, guid: f4b3d2b58b11b48f7ad9701c06f44f73,
-    type: 3}
-  thisClipPosition: 0
-  objectDensity: 0
   musicFaderTime: 8
-  myPrefabSFX: {fileID: 1626878967278096, guid: abb080b07f53a45c98f681424d1b7ff2,
-    type: 3}
-  myAudioSource: {fileID: 0}
+  SFXPriority: 0
   dadaMixer: {fileID: 24100000, guid: 6b95ba97533f7418fa350511573a306b, type: 2}
   SFXGroup: {fileID: 243688234140929222, guid: 6b95ba97533f7418fa350511573a306b, type: 2}
   npcStemVol: 0
@@ -53514,6 +53521,10 @@ MonoBehaviour:
   imageStemVol: 0
   nonPickupVol: 0
   pickupVol: 0
+  genSFXPrefab: {fileID: 1626878967278096, guid: abb080b07f53a45c98f681424d1b7ff2,
+    type: 3}
+  useSFXPrefab: {fileID: 1626878967278096, guid: 6c8de9706b1344b769ba95d394eb2e52,
+    type: 3}
 --- !u!114 &795
 MonoBehaviour:
   m_ObjectHideFlags: 0
