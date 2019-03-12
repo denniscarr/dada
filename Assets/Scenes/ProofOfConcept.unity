@@ -838,6 +838,7 @@ GameObject:
   - component: {fileID: 793}
   - component: {fileID: 792}
   - component: {fileID: 846}
+  - component: {fileID: 848}
   m_Layer: 0
   m_Name: Bootstrapper
   m_TagString: Untagged
@@ -2629,6 +2630,7 @@ GameObject:
   - component: {fileID: 824}
   - component: {fileID: 703}
   - component: {fileID: 828}
+  - component: {fileID: 827}
   - component: {fileID: 823}
   - component: {fileID: 826}
   - component: {fileID: 847}
@@ -13472,8 +13474,7 @@ AudioSource:
   m_GameObject: {fileID: 7}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243688234140929222, guid: 6b95ba97533f7418fa350511573a306b,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.1
@@ -53482,9 +53483,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a7e62c531fd6e4d6b914d2b345096fd9, type: 3}
   - {fileID: 8300000, guid: 9f94080586ba24ffcb49dd0027b631e8, type: 3}
   - {fileID: 8300000, guid: da21824f3f77746f8bd20d01b5673937, type: 3}
-  NPCOnFire: {fileID: 8300000, guid: 3c986ae2bc8684cd39ba2d18cbc0da4e, type: 3}
-  NPCOnFireAlt: {fileID: 8300000, guid: aa500f25d828b43deacc49f844e011c8, type: 3}
-  NPCDie: {fileID: 8300000, guid: 9772d4559e854456c8a40d26319d8ddd, type: 3}
+  NPCHitVolume: 0.5
+  NPCOnFire: []
+  NPCDie: []
   enterRoomClip: {fileID: 8300000, guid: 6d2b73f1f0ab24c1ca76d693f2feb844, type: 3}
   exitRoomClip: {fileID: 8300000, guid: 7d9bfa186dd3f4539bc9d863a78b6fd1, type: 3}
   toggleVisor: {fileID: 8300000, guid: c67901a2b7e18424289b0775255efbcc, type: 3}
@@ -53493,20 +53494,13 @@ MonoBehaviour:
   tutorialTones: []
   instClipPool: []
   equipSound: {fileID: 8300000, guid: 3abfcc3745e2a413bb6bcb807d5e32ae, type: 3}
-  equipSoundEnd: {fileID: 0}
   dropSound: {fileID: 8300000, guid: fafaac7bbd49a435097e016ec3fa4694, type: 3}
   pickupSound: {fileID: 8300000, guid: d1f008cb240c541e492f22fbe8e87d60, type: 3}
   buySound: {fileID: 8300000, guid: 9de5716da682b4e83be110f465dec31a, type: 3}
   getMoney: {fileID: 8300000, guid: 2c8eb91a805e9405e960d0d598414cf8, type: 3}
   grailRejectionClip: {fileID: 8300000, guid: 9768b0f4a4a00439696214e02c3457e1, type: 3}
-  tonePillowObject: {fileID: 1656163169541016, guid: f4b3d2b58b11b48f7ad9701c06f44f73,
-    type: 3}
-  thisClipPosition: 0
-  objectDensity: 0
   musicFaderTime: 8
-  myPrefabSFX: {fileID: 1626878967278096, guid: abb080b07f53a45c98f681424d1b7ff2,
-    type: 3}
-  myAudioSource: {fileID: 0}
+  SFXPriority: 0
   dadaMixer: {fileID: 24100000, guid: 6b95ba97533f7418fa350511573a306b, type: 2}
   SFXGroup: {fileID: 243688234140929222, guid: 6b95ba97533f7418fa350511573a306b, type: 2}
   npcStemVol: 0
@@ -53514,6 +53508,9 @@ MonoBehaviour:
   imageStemVol: 0
   nonPickupVol: 0
   pickupVol: 0
+  genSFXPrefab: {fileID: 1626878967278096, guid: abb080b07f53a45c98f681424d1b7ff2,
+    type: 3}
+  useSFXPrefab: {fileID: 0}
 --- !u!114 &795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54242,6 +54239,19 @@ MonoBehaviour:
   questAvailableSprite: {fileID: 0}
   questReceivableSprite: {fileID: 0}
   assigned: 0
+--- !u!114 &827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 114498209209716932, guid: db4bfb7e0751c48e697a8e8946abfbba,
+    type: 3}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54664,6 +54674,21 @@ MonoBehaviour:
   yOffset: 3
   zOffset: 10
   cooldownTime: 5
+--- !u!114 &848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3130d8453b7bc8d478267178b05470e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenshotDirectory: 
+  screenCapName: CrashImage
+  fileType: .png
 --- !u!1 &420710976
 GameObject:
   m_ObjectHideFlags: 0

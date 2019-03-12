@@ -792,11 +792,13 @@ public class NPC : MonoBehaviour {
 
     void Die()
     {
-        
+
         //Known bug with unity 2018.3 prefab workflow - possible work around
+#if UNITY_EDITOR
         if (UnityEditor.PrefabUtility.IsPartOfPrefabInstance(transform))
             UnityEditor.PrefabUtility.UnpackPrefabInstance(transform.root.gameObject, UnityEditor.PrefabUnpackMode.Completely, UnityEditor.InteractionMode.AutomatedAction);
-        
+#endif
+
         writer.WriteSpecifiedString("Aargh! I've been murdered!");
 		died = true;
         // Turn into ghost

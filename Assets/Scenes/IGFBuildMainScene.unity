@@ -838,6 +838,7 @@ GameObject:
   - component: {fileID: 793}
   - component: {fileID: 792}
   - component: {fileID: 846}
+  - component: {fileID: 827}
   m_Layer: 0
   m_Name: Bootstrapper
   m_TagString: Untagged
@@ -54253,6 +54254,20 @@ MonoBehaviour:
   questAvailableSprite: {fileID: 0}
   questReceivableSprite: {fileID: 0}
   assigned: 0
+--- !u!114 &827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3130d8453b7bc8d478267178b05470e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenCapName: CrashImage
+  fileType: .png
 --- !u!114 &828
 MonoBehaviour:
   m_ObjectHideFlags: 0
