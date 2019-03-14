@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -137,6 +138,10 @@ public class LevelManager : SimpleManager.Manager<Level> {
             writer.SetScript(SetLevelText());
         }
 		StartCoroutine (writer.WriteText ());
+
+        string[] textToWrite = new string[1];
+        textToWrite[0] = ManagedObjects.Count.ToString();
+        File.WriteAllLines(Application.dataPath + "/../" + "Level Number.txt", textToWrite);
 
         Services.IncoherenceManager.HandleObjects();
 	

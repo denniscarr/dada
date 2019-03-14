@@ -26,7 +26,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Milan/StartScreen.unity
     guid: fc376ceaa97c34132a23fce4aee74eb4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ProofOfConcept.unity
     guid: 26330358bbf094ffab67c2df5c3d8abd
+  - enabled: 1
+    path: Assets/Scenes/IGFBuildMainScene.unity
+    guid: 7b5e39233b0234c2481a2fbdb7dac671
   m_configObjects: {}

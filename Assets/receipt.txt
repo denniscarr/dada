@@ -301,3 +301,6 @@ Bed $5999
 Bathtub $525
 Bathtub $525
 AUG A3 $899
+Clone gun $4079
+Clone gun $4079
+Макаров $999
